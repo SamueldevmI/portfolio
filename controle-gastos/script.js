@@ -6,7 +6,9 @@ const filtro = document.getElementById("filtro");
 const formatoMoeda = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
 const formatoData = new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "short" });
 
-let transacoes = JSON.parse(localStorage.getItem(CHAVE)) || [];
+let transacoes = [];
+try { transacoes = JSON.parse(localStorage.getItem(CHAVE)) || []; }
+catch { transacoes = []; }
 
 function salvar() {
     localStorage.setItem(CHAVE, JSON.stringify(transacoes));

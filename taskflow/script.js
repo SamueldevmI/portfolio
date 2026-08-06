@@ -1,4 +1,4 @@
-const chave="taskflowTarefas";let tarefas=JSON.parse(localStorage.getItem(chave))||[];const $=id=>document.getElementById(id);const lista=$("lista"),filtro=$("filtro");const rotulosPrioridade={alta:"Alta",media:"Média",baixa:"Baixa"};
+const chave="taskflowTarefas";let tarefas=[];try{tarefas=JSON.parse(localStorage.getItem(chave))||[]}catch{tarefas=[]}const $=id=>document.getElementById(id);const lista=$("lista"),filtro=$("filtro");const rotulosPrioridade={alta:"Alta",media:"Média",baixa:"Baixa"};
 const dataHoje=()=>new Date().toISOString().slice(0,10);$("data").value=dataHoje();
 function salvar(){localStorage.setItem(chave,JSON.stringify(tarefas))}function toast(texto){const t=$("toast");t.textContent=texto;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2200)}
 function resumo(){const concluidas=tarefas.filter(t=>t.concluida).length;$("total").textContent=tarefas.length;$("pendentes").textContent=tarefas.length-concluidas;$("concluidas").textContent=concluidas;$("percentual").textContent=tarefas.length?`${Math.round(concluidas/tarefas.length*100)}%`:"0%"}
