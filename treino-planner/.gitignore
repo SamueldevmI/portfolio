@@ -1,2 +1,4 @@
 dados_treino.json
 __pycache__/
+.pytest_cache/
+*.egg-info/
