@@ -2,6 +2,8 @@
 
 Aplicação de terminal para montar, consultar e remover uma rotina de treinos da semana, com interface colorida (via [rich](https://github.com/Textualize/rich)) e dados persistidos em JSON.
 
+![Demonstração do Planejador de Treino no terminal](demo.gif)
+
 ## Estrutura
 
 ```
