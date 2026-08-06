@@ -2,6 +2,10 @@
 
 Versão backend do [Controle de gastos](../controle-gastos/) do portfólio: em vez de salvar no navegador (LocalStorage), os dados ficam num banco de verdade (SQLite) por trás de uma API REST feita com Flask.
 
+**Ao vivo:** https://gastos-api-z0dt.onrender.com
+
+> Hospedado no plano gratuito do Render — se ninguém acessar por um tempo, a instância "dorme" e a primeira requisição depois disso pode levar uns 50 segundos pra responder. As próximas são rápidas.
+
 ## Estrutura
 
 ```
