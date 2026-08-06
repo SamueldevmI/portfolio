@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Portfólio de Samuel Mickael, desenvolvedor em constante evolução.">
+    <meta name="theme-color" content="#070b16">
+    <meta property="og:title" content="Samuel Mickael | Desenvolvedor">
+    <meta property="og:description" content="Projetos web, automações e experiências digitais desenvolvidas por Samuel Mickael.">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="style.css">
+    <title>Samuel Mickael | Portfólio</title>
+</head>
+
+<body>
+    <header class="hero" id="inicio">
+        <nav class="nav" aria-label="Navegação principal">
+            <a class="logo" href="#inicio">SM.</a>
+            <div class="nav-links">
+                <a href="#sobre-mim">Sobre mim</a>
+                <a href="#projetos">Projetos</a>
+                <a href="#servicos">Serviços</a>
+                <a href="curriculo.html">Currículo</a>
+                <a href="#contato">Contato</a>
+            </div>
+            <button id="temaEscuro" class="switch" type="button" aria-label="Ativar tema escuro" aria-pressed="false">
+                <span class="bola" aria-hidden="true">☀️</span>
+            </button>
+        </nav>
+
+        <div class="hero-conteudo">
+            <p class="eyebrow">PORTFÓLIO PESSOAL</p>
+            <h1>Olá, me chamo <span>Samuel Mickael.</span></h1>
+            <p class="hero-texto">Desenvolvedor em constante evolução, transformando ideias em experiências digitais simples e funcionais.</p>
+            <div class="hero-acoes">
+                <a class="botao botao-principal" href="#projetos">Ver projetos</a>
+                <a class="botao botao-secundario" href="#sobre-mim">Conheça minha trajetória</a>
+                <a class="botao botao-secundario" href="https://github.com/SamueldevmI" target="_blank" rel="noopener noreferrer">Ver GitHub ↗</a>
+            </div>
+            <div class="hero-numeros" aria-label="Resumo do portfólio">
+                <div><strong>05</strong><span>projetos em destaque</span></div>
+                <div><strong>04</strong><span>tecnologias em estudo</span></div>
+                <div><strong>100%</strong><span>dedicação em aprender</span></div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section id="sobre-mim" class="secao sobre">
+            <div class="titulo-secao">
+                <p class="eyebrow">QUEM SOU</p>
+                <h2>Sobre mim</h2>
+            </div>
+            <div class="sobre-conteudo">
+                <div class="foto-wrapper">
+                    <img src="imagem/minhafoto.jpeg" id="minhafoto" alt="Samuel Mickael">
+                    <div id="tooltip" class="tooltip" role="tooltip">Meu primeiro projeto usando HTML e CSS.</div>
+                </div>
+                <div>
+                    <p>Tenho 22 anos e estou me formando em Análise e Desenvolvimento de Sistemas. Trabalho com desenvolvimento back-end e front-end, com foco em Python.</p>
+                    <p>Gosto de aprender na prática e construir projetos que mostrem minha evolução. Abaixo, compartilho alguns trabalhos e a minha jornada na programação.</p>
+                    <ul class="habilidades" aria-label="Tecnologias e competências">
+                        <li>Python</li>
+                        <li>HTML</li>
+                        <li>CSS</li>
+                        <li>JavaScript</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="projetos" class="secao projetos">
+            <div class="titulo-secao">
+                <p class="eyebrow">PORTFÓLIO</p>
+                <h2>Projetos em destaque</h2>
+                <p>Alguns trabalhos que representam meu aprendizado até aqui.</p>
+            </div>
+            <div id="lista-projetos" class="lista-projetos">
+                <article class="card-projeto">
+                    <div class="projeto-visual visual-nexus" role="img" aria-label="Prévia visual do site Nexus Studio">
+                        <span class="nexus-logo">NEXUS/STUDIO</span>
+                        <strong>Ideias que viram<br>presença digital.</strong>
+                        <i class="nexus-orbe"></i>
+                    </div>
+                    <div class="card-conteudo">
+                        <p class="tag">HTML · CSS · JavaScript</p>
+                        <h3>Meu primeiro site</h3>
+                        <p>Landing page responsiva criada para apresentar uma marca com impacto visual, hierarquia e navegação clara.</p>
+                        <div class="links-projeto"><a class="link-projeto" href="./primeiro-projeto/index.html" target="_blank" rel="noopener">Abrir projeto <span aria-hidden="true">↗</span></a><a class="link-codigo" href="https://github.com/SamueldevmI?tab=repositories" target="_blank" rel="noopener">Ver no GitHub</a></div>
+                    </div>
+                </article>
+                <article class="card-projeto">
+                    <div class="projeto-visual visual-finance" role="img" aria-label="Prévia visual de um painel de controle de gastos">
+                        <div class="finance-topo"><span>GRANA EM DIA</span><b>R$ 2.222,60</b></div>
+                        <div class="finance-grafico"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+                        <div class="finance-linhas"><span></span><span></span><span></span></div>
+                    </div>
+                    <div class="card-conteudo">
+                        <p class="tag">JavaScript · LocalStorage</p>
+                        <h3>Controle de gastos</h3>
+                        <p>Uma aplicação interativa para acompanhar gastos, com resumo financeiro, filtros e dados salvos no navegador.</p>
+                        <div class="links-projeto"><a class="link-projeto" href="./controle-gastos/index.html" target="_blank" rel="noopener">Abrir projeto <span aria-hidden="true">↗</span></a><a class="link-codigo" href="https://github.com/SamueldevmI?tab=repositories" target="_blank" rel="noopener">Ver no GitHub</a></div>
+                    </div>
+                </article>
+                <article class="card-projeto">
+                    <div class="projeto-visual visual-taskflow" role="img" aria-label="Ilustração de uma lista de tarefas organizada">
+                        <span class="mini-card mini-card-1">✓ Design da página</span>
+                        <span class="mini-card mini-card-2">✓ Revisar código</span>
+                        <span class="mini-card mini-card-3">○ Publicar projeto</span>
+                    </div>
+                    <div class="card-conteudo">
+                        <p class="tag">JavaScript · LocalStorage</p>
+                        <h3>TaskFlow</h3>
+                        <p>Um organizador de tarefas para priorizar o dia, acompanhar entregas e manter tudo em ordem.</p>
+                        <div class="links-projeto"><a class="link-projeto" href="./taskflow/index.html" target="_blank" rel="noopener">Abrir projeto <span aria-hidden="true">↗</span></a><a class="link-codigo" href="https://github.com/SamueldevmI?tab=repositories" target="_blank" rel="noopener">Ver no GitHub</a></div>
+                    </div>
+                </article>
+                <article class="card-projeto">
+                    <div class="projeto-visual visual-focus" role="img" aria-label="Ilustração de um cronômetro de foco Pomodoro">
+                        <span class="anel-foco"><strong>25</strong><small>min</small></span>
+                        <span class="ponto-foco ponto-1"></span><span class="ponto-foco ponto-2"></span><span class="ponto-foco ponto-3"></span>
+                    </div>
+                    <div class="card-conteudo">
+                        <p class="tag">JavaScript · Timer</p>
+                        <h3>FocusFlow</h3>
+                        <p>Um timer Pomodoro para sessões de foco, pausas equilibradas e registro de ciclos concluídos.</p>
+                        <div class="links-projeto"><a class="link-projeto" href="./focusflow/index.html" target="_blank" rel="noopener">Abrir projeto <span aria-hidden="true">↗</span></a><a class="link-codigo" href="https://github.com/SamueldevmI?tab=repositories" target="_blank" rel="noopener">Ver no GitHub</a></div>
+                    </div>
+                </article>
+                <article class="card-projeto">
+                    <div class="projeto-visual visual-kanban" role="img" aria-label="Quadro Kanban com tarefas em colunas">
+                        <div><span>Backlog</span><i></i><i></i></div>
+                        <div><span>Em andamento</span><i></i><i></i></div>
+                        <div><span>Concluído</span><i></i></div>
+                    </div>
+                    <div class="card-conteudo">
+                        <p class="tag">JavaScript · Drag and Drop</p>
+                        <h3>FlowBoard</h3>
+                        <p>Um quadro Kanban completo para organizar projetos em colunas, mover tarefas e acompanhar prioridades.</p>
+                        <div class="links-projeto"><a class="link-projeto" href="./flowboard/index.html" target="_blank" rel="noopener">Abrir projeto <span aria-hidden="true">↗</span></a><a class="link-codigo" href="https://github.com/SamueldevmI?tab=repositories" target="_blank" rel="noopener">Ver no GitHub</a></div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section id="servicos" class="secao servicos">
+            <div class="titulo-secao">
+                <p class="eyebrow">COMO POSSO AJUDAR</p>
+                <h2>Transformo ideias em produtos digitais.</h2>
+                <p>Projetos pensados com clareza, organização e atenção à experiência de quem vai usar.</p>
+            </div>
+            <div class="lista-servicos">
+                <article>
+                    <span>01</span>
+                    <h3>Sites e landing pages</h3>
+                    <p>Páginas responsivas para apresentar serviços, produtos ou uma marca pessoal.</p>
+                </article>
+                <article>
+                    <span>02</span>
+                    <h3>Aplicações web</h3>
+                    <p>Ferramentas interativas que resolvem tarefas reais, do planejamento ao controle financeiro.</p>
+                </article>
+                <article>
+                    <span>03</span>
+                    <h3>Automações em Python</h3>
+                    <p>Soluções para reduzir tarefas repetitivas e deixar processos mais rápidos.</p>
+                </article>
+            </div>
+        </section>
+
+        <section id="jornada" class="secao jornada">
+            <div class="titulo-secao">
+                <p class="eyebrow">EVOLUÇÃO</p>
+                <h2>Minha jornada</h2>
+            </div>
+            <div class="lista-jornada">
+                <article><span>01</span><div><h3>HTML</h3><p>Aprendi a estruturar páginas com títulos, textos, imagens, links e seções.</p></div></article>
+                <article><span>02</span><div><h3>CSS</h3><p>Aprendi a trabalhar cores, espaçamentos, layouts e interações visuais.</p></div></article>
+                <article><span>03</span><div><h3>JavaScript</h3><p>Agora estou criando experiências mais dinâmicas, interações e funcionalidades para meus projetos.</p></div></article>
+            </div>
+            <div class="status-area">
+                <p>JavaScript desbloqueado. Próximo objetivo: evoluir criando aplicações cada vez mais completas.</p>
+            </div>
+        </section>
+
+        <section id="contato" class="secao contato">
+            <p class="eyebrow">VAMOS CONVERSAR</p>
+            <h2>Tem um projeto em mente?</h2>
+            <p>Estou disponível para conversar sobre sites, aplicações web e automações. Me chame pelo LinkedIn e conte sua ideia.</p>
+            <div class="contato-acoes">
+                <a class="botao botao-principal" href="https://www.linkedin.com/in/samuel-rondon-94b570306/" target="_blank" rel="noopener noreferrer">Entrar em contato</a>
+                <a class="botao botao-secundario" href="https://github.com/SamueldevmI" target="_blank" rel="noopener noreferrer">Acessar GitHub ↗</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>© <span id="ano"></span> Samuel Mickael. Feito com dedicação. · <a href="https://github.com/SamueldevmI" target="_blank" rel="noopener noreferrer">GitHub</a></footer>
+    <a class="voltar-topo" href="#inicio" aria-label="Voltar ao topo">↑</a>
+    <script src="script.js"></script>
+    
+</body>
+</html>

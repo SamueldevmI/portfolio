@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Controle de gastos pessoal desenvolvido por Samuel Mickael.">
+    <link rel="stylesheet" href="style.css">
+    <title>Grana em Dia | Controle de Gastos</title>
+</head>
+<body>
+    <header class="topo">
+        <a class="marca" href="#inicio" aria-label="Grana em Dia, início"><span>G</span> Grana em Dia</a>
+        <button class="botao-tema" id="botaoTema" type="button" aria-label="Ativar tema escuro" aria-pressed="false">☀️</button>
+    </header>
+
+    <main id="inicio" class="container">
+        <section class="boas-vindas">
+            <div>
+                <p class="sobretitulo">ORGANIZAÇÃO FINANCEIRA</p>
+                <h1>Seu dinheiro, <span>mais claro.</span></h1>
+                <p>Acompanhe seus ganhos e gastos em um só lugar.</p>
+            </div>
+            <div class="acoes-dados">
+                <button class="link-exemplo" id="carregarExemplo" type="button">Ver exemplo</button>
+                <button class="link-limpar" id="limparTudo" type="button">Limpar dados</button>
+            </div>
+        </section>
+
+        <section class="resumo" aria-label="Resumo financeiro">
+            <article class="cartao saldo"><p>Saldo atual</p><strong id="saldo">R$ 0,00</strong><span id="mensagemSaldo">Comece adicionando uma transação.</span></article>
+            <article class="cartao receitas"><p>Receitas</p><strong id="totalReceitas">R$ 0,00</strong><span>Entradas registradas</span></article>
+            <article class="cartao despesas"><p>Despesas</p><strong id="totalDespesas">R$ 0,00</strong><span>Saídas registradas</span></article>
+        </section>
+
+        <section class="conteudo">
+            <aside class="painel-formulario">
+                <p class="sobretitulo">NOVA TRANSAÇÃO</p>
+                <h2>Adicione um lançamento</h2>
+                <form id="formTransacao">
+                    <label for="descricao">Descrição</label>
+                    <input id="descricao" name="descricao" type="text" placeholder="Ex.: Freelance de site" maxlength="50" required>
+
+                    <label for="valor">Valor</label>
+                    <div class="campo-valor"><span>R$</span><input id="valor" name="valor" type="number" min="0.01" step="0.01" placeholder="0,00" required></div>
+
+                    <label for="categoria">Categoria</label>
+                    <select id="categoria" name="categoria" required>
+                        <option value="Alimentação">Alimentação</option>
+                        <option value="Moradia">Moradia</option>
+                        <option value="Transporte">Transporte</option>
+                        <option value="Lazer">Lazer</option>
+                        <option value="Saúde">Saúde</option>
+                        <option value="Educação">Educação</option>
+                        <option value="Trabalho">Trabalho</option>
+                        <option value="Outros">Outros</option>
+                    </select>
+
+                    <label for="data">Data</label>
+                    <input id="data" name="data" type="date" required>
+
+                    <fieldset>
+                        <legend>Tipo</legend>
+                        <label class="opcao"><input type="radio" name="tipo" value="receita" checked><span>Receita</span></label>
+                        <label class="opcao"><input type="radio" name="tipo" value="despesa"><span>Despesa</span></label>
+                    </fieldset>
+                    <button class="botao-principal" type="submit">Adicionar transação</button>
+                </form>
+            </aside>
+
+            <section class="transacoes" aria-labelledby="tituloTransacoes">
+                <div class="cabecalho-lista">
+                    <div><p class="sobretitulo">HISTÓRICO</p><h2 id="tituloTransacoes">Suas transações</h2></div>
+                    <select id="filtro" aria-label="Filtrar transações">
+                        <option value="todos">Todos</option>
+                        <option value="receita">Receitas</option>
+                        <option value="despesa">Despesas</option>
+                    </select>
+                </div>
+                <div id="listaTransacoes" class="lista-transacoes"></div>
+                <p id="estadoVazio" class="estado-vazio">Nenhuma transação por aqui. Adicione a primeira ao lado.</p>
+            </section>
+        </section>
+
+        <section class="visao-categorias" aria-labelledby="tituloCategorias">
+            <div class="cabecalho-categorias">
+                <div><p class="sobretitulo">ANÁLISE</p><h2 id="tituloCategorias">Despesas por categoria</h2></div>
+                <p>Veja para onde seu dinheiro está indo.</p>
+            </div>
+            <div id="categorias" class="categorias"></div>
+            <p id="categoriasVazias" class="estado-vazio">Adicione despesas para ver o resumo por categoria.</p>
+        </section>
+    </main>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <footer>Feito por Samuel Mickael · Seus dados ficam salvos apenas neste navegador.</footer>
+    <script src="script.js"></script>
+</body>
+</html>

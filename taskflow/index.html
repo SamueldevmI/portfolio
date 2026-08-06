@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="TaskFlow: gerenciador de tarefas desenvolvido por Samuel Mickael.">
+  <link rel="stylesheet" href="style.css"><title>TaskFlow | Organize seu dia</title>
+</head>
+<body>
+  <header><a class="marca" href="#">✓ <span>Task</span>Flow</a><button id="tema" class="tema" type="button" aria-label="Alternar tema">☀️</button></header>
+  <main class="container">
+    <section class="intro"><div><p class="eyebrow">ORGANIZAÇÃO SEM COMPLICAÇÃO</p><h1>Seu dia, no <span>controle.</span></h1><p>Transforme tarefas em progresso, uma por vez.</p></div><div class="progresso" aria-label="Progresso das tarefas"><strong id="percentual">0%</strong><span>concluído hoje</span></div></section>
+    <section class="painel-resumo"><article><span>📋</span><div><strong id="total">0</strong><p>Total de tarefas</p></div></article><article><span>⚡</span><div><strong id="pendentes">0</strong><p>Para fazer</p></div></article><article><span>✓</span><div><strong id="concluidas">0</strong><p>Concluídas</p></div></article></section>
+    <section class="grade">
+      <aside class="nova-tarefa"><p class="eyebrow">NOVA TAREFA</p><h2>O que importa agora?</h2><form id="form"><label for="titulo">Tarefa</label><input id="titulo" name="titulo" maxlength="70" placeholder="Ex.: Finalizar o portfólio" required><div class="duas-colunas"><div><label for="categoria">Categoria</label><select id="categoria" name="categoria"><option>Trabalho</option><option>Estudos</option><option>Pessoal</option><option>Saúde</option></select></div><div><label for="prioridade">Prioridade</label><select id="prioridade" name="prioridade"><option value="alta">Alta</option><option value="media" selected>Média</option><option value="baixa">Baixa</option></select></div></div><label for="data">Prazo</label><input id="data" name="data" type="date"><button class="principal" type="submit">Adicionar tarefa</button></form></aside>
+      <section class="tarefas"><div class="lista-topo"><div><p class="eyebrow">MINHAS TAREFAS</p><h2>Planejamento diário</h2></div><select id="filtro" aria-label="Filtrar tarefas"><option value="todas">Todas</option><option value="pendente">Pendentes</option><option value="concluida">Concluídas</option></select></div><div id="lista" class="lista"></div><p id="vazio" class="vazio">Sua lista está vazia. Adicione uma tarefa para começar.</p></section>
+    </section>
+  </main>
+  <div id="toast" class="toast" role="status"></div><footer>TaskFlow · Seus dados ficam salvos neste navegador.</footer><script src="script.js"></script>
+</body>
+</html>
