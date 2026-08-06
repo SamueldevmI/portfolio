@@ -1,5 +1,7 @@
 # Portfólio — Samuel Mickael
 
+[![Testes](https://github.com/SamueldevmI/portfolio/actions/workflows/tests.yml/badge.svg)](https://github.com/SamueldevmI/portfolio/actions/workflows/tests.yml)
+
 Site pessoal com apresentação, projetos e contato.
 
 **Ao vivo:** https://samueldevmi.github.io/portfolio/
