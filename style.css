@@ -37,4 +37,13 @@ html { scrollbar-color:var(--surface-2) var(--bg); scrollbar-width:thin; }
 .lista-projetos .card-projeto:nth-child(2n).reveal { transition-delay:.1s; }
 .lista-jornada article:nth-child(2).reveal { transition-delay:.08s; }
 .lista-jornada article:nth-child(3).reveal { transition-delay:.16s; }
+
+@keyframes subir-fade { from { opacity:0; transform:translateY(22px); } to { opacity:1; transform:translateY(0); } }
+.hero-conteudo > * { animation:subir-fade .7s ease both; }
+.hero-conteudo .eyebrow { animation-delay:.05s; }
+.hero-conteudo h1 { animation-delay:.15s; }
+.hero-conteudo .hero-texto { animation-delay:.32s; }
+.hero-conteudo .hero-acoes { animation-delay:.46s; }
+.hero-conteudo .hero-numeros { animation-delay:.6s; }
+@media (prefers-reduced-motion:reduce) { .hero-conteudo > * { animation:none; } }
 @media (prefers-reduced-motion:reduce) { .reveal { opacity:1; transform:none; transition:none; } }
