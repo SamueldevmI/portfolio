@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Demonstração ao vivo da API de Controle de Gastos, feita com Flask e SQLAlchemy.">
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../style.css">
+    <title>Controle de Gastos — Demonstração da API</title>
+    <style>
+        .demo-wrap { width:min(880px,calc(100% - 44px)); margin:60px auto 100px; }
+        .demo-voltar { display:inline-flex; align-items:center; gap:6px; margin-bottom:28px; color:var(--muted); font:.8rem "DM Mono",monospace; text-decoration:none; }
+        .demo-voltar:hover { color:var(--cyan); }
+        .demo-aviso { margin-bottom:28px; padding:14px 18px; border:1px solid rgba(93,244,208,.35); background:rgba(93,244,208,.06); color:var(--cyan); font:.82rem "DM Mono",monospace; }
+        .demo-grid { display:grid; grid-template-columns:1fr 1.3fr; gap:24px; align-items:start; }
+        .demo-card { padding:24px; border:1px solid var(--line); background:rgba(15,23,43,.6); }
+        .demo-card h2 { margin:0 0 18px; font-size:1.2rem; }
+        .demo-campo { display:block; margin-bottom:14px; }
+        .demo-campo label { display:block; margin-bottom:6px; color:var(--muted); font-size:.78rem; }
+        .demo-campo input { width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:4px; background:#0e1626; color:var(--text); font:inherit; }
+        .demo-campo input:focus { outline:2px solid var(--cyan); outline-offset:1px; }
+        .demo-botao { width:100%; padding:11px; border:1px solid var(--cyan); border-radius:4px; background:var(--cyan); color:#061018; font:600 .86rem "Space Grotesk",sans-serif; cursor:pointer; }
+        .demo-botao:hover { transform:translateY(-2px); }
+        .demo-botao:disabled { opacity:.5; cursor:wait; transform:none; }
+        .demo-resumo { display:flex; gap:14px; margin-bottom:18px; flex-wrap:wrap; }
+        .demo-resumo div { flex:1; min-width:120px; padding:12px 14px; border:1px solid var(--line); background:rgba(15,23,43,.4); }
+        .demo-resumo strong { display:block; font:500 1.4rem "DM Mono",monospace; color:var(--cyan); }
+        .demo-resumo span { color:var(--muted); font-size:.72rem; }
+        .demo-lista { list-style:none; margin:0; padding:0; display:grid; gap:8px; max-height:360px; overflow-y:auto; }
+        .demo-item { display:flex; justify-content:space-between; align-items:center; gap:12px; padding:12px 14px; border:1px solid var(--line); background:rgba(15,23,43,.4); }
+        .demo-item small { display:block; color:var(--muted); font-size:.72rem; margin-top:2px; }
+        .demo-item b { color:var(--cyan); font:500 1rem "DM Mono",monospace; }
+        .demo-remover { border:0; background:none; color:var(--pink); cursor:pointer; font-size:1rem; padding:4px 8px; }
+        .demo-vazio, .demo-status { color:var(--muted); font-size:.85rem; padding:20px 0; text-align:center; }
+        .demo-erro { color:var(--pink); font-size:.8rem; margin-top:8px; }
+        @media (max-width:720px) { .demo-grid { grid-template-columns:1fr; } }
+    </style>
+</head>
+<body>
+    <div class="demo-wrap">
+        <a class="demo-voltar" href="../index.html#projetos">&larr; voltar ao portfólio</a>
+        <p class="eyebrow">DEMONSTRAÇÃO AO VIVO</p>
+        <h1 style="font-size:clamp(2rem,5vw,3rem);letter-spacing:-.05em;margin:6px 0 18px;">Controle de Gastos — API</h1>
+        <p style="color:var(--muted);max-width:640px;">Esta página consome direto a <a href="https://gastos-api-z0dt.onrender.com" target="_blank" rel="noopener">API Flask hospedada no Render</a>. Tudo que você adicionar ou remover aqui é salvo de verdade no banco de dados.</p>
+
+        <div class="demo-aviso" id="aviso-cold-start">
+            Plano gratuito: se a API estiver "dormindo", a primeira ação pode levar até 50 segundos. Só na primeira vez.
+        </div>
+
+        <div class="demo-grid">
+            <div class="demo-card">
+                <h2>Novo gasto</h2>
+                <form id="form-gasto">
+                    <label class="demo-campo">
+                        <span>Descrição</span>
+                        <input type="text" id="campo-descricao" required maxlength="140" placeholder="Ex: Mercado">
+                    </label>
+                    <label class="demo-campo">
+                        <span>Valor (R$)</span>
+                        <input type="number" id="campo-valor" required min="0.01" step="0.01" placeholder="0,00">
+                    </label>
+                    <label class="demo-campo">
+                        <span>Categoria</span>
+                        <input type="text" id="campo-categoria" required maxlength="60" placeholder="Ex: alimentação">
+                    </label>
+                    <button class="demo-botao" type="submit" id="botao-salvar">Adicionar gasto</button>
+                    <p class="demo-erro" id="erro-form" hidden></p>
+                </form>
+            </div>
+
+            <div class="demo-card">
+                <h2>Resumo</h2>
+                <div class="demo-resumo" id="resumo">
+                    <div><strong id="resumo-total">—</strong><span>total gasto</span></div>
+                    <div><strong id="resumo-qtd">—</strong><span>lançamentos</span></div>
+                </div>
+                <h2>Lançamentos</h2>
+                <p class="demo-status" id="status-lista">Carregando...</p>
+                <ul class="demo-lista" id="lista-gastos"></ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API = "https://gastos-api-z0dt.onrender.com";
+        const listaEl = document.getElementById("lista-gastos");
+        const statusEl = document.getElementById("status-lista");
+        const totalEl = document.getElementById("resumo-total");
+        const qtdEl = document.getElementById("resumo-qtd");
+        const formEl = document.getElementById("form-gasto");
+        const botaoEl = document.getElementById("botao-salvar");
+        const erroEl = document.getElementById("erro-form");
+
+        function formatarMoeda(valor) {
+            return valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+        }
+
+        function formatarData(iso) {
+            const [ano, mes, dia] = iso.split("-");
+            return `${dia}/${mes}/${ano}`;
+        }
+
+        async function carregarResumo() {
+            const resposta = await fetch(`${API}/gastos/resumo`);
+            const dados = await resposta.json();
+            totalEl.textContent = formatarMoeda(dados.total);
+            qtdEl.textContent = dados.quantidade;
+        }
+
+        async function carregarLista() {
+            statusEl.hidden = false;
+            statusEl.textContent = "Carregando... (pode levar um tempo se a API estava dormindo)";
+            listaEl.innerHTML = "";
+
+            try {
+                const resposta = await fetch(`${API}/gastos`);
+                const gastos = await resposta.json();
+
+                if (gastos.length === 0) {
+                    statusEl.textContent = "Nenhum gasto cadastrado ainda. Adicione o primeiro ao lado.";
+                    statusEl.hidden = false;
+                } else {
+                    statusEl.hidden = true;
+                    for (const gasto of gastos) {
+                        const item = document.createElement("li");
+                        item.className = "demo-item";
+                        item.innerHTML = `
+                            <div>
+                                ${gasto.descricao}
+                                <small>${gasto.categoria} · ${formatarData(gasto.data)}</small>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:10px;">
+                                <b>${formatarMoeda(gasto.valor)}</b>
+                                <button class="demo-remover" title="Remover" data-id="${gasto.id}">✕</button>
+                            </div>`;
+                        listaEl.appendChild(item);
+                    }
+                }
+
+                await carregarResumo();
+            } catch (erro) {
+                statusEl.hidden = false;
+                statusEl.textContent = "Não foi possível carregar os dados agora. Tente novamente em instantes.";
+            }
+        }
+
+        listaEl.addEventListener("click", async (evento) => {
+            const botao = evento.target.closest(".demo-remover");
+            if (!botao) return;
+            botao.disabled = true;
+            await fetch(`${API}/gastos/${botao.dataset.id}`, { method: "DELETE" });
+            carregarLista();
+        });
+
+        formEl.addEventListener("submit", async (evento) => {
+            evento.preventDefault();
+            erroEl.hidden = true;
+            botaoEl.disabled = true;
+            botaoEl.textContent = "Salvando...";
+
+            const corpo = {
+                descricao: document.getElementById("campo-descricao").value,
+                valor: parseFloat(document.getElementById("campo-valor").value),
+                categoria: document.getElementById("campo-categoria").value,
+            };
+
+            try {
+                const resposta = await fetch(`${API}/gastos`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(corpo),
+                });
+
+                if (!resposta.ok) {
+                    const erro = await resposta.json();
+                    throw new Error(erro.erro || "Erro ao salvar.");
+                }
+
+                formEl.reset();
+                await carregarLista();
+            } catch (erro) {
+                erroEl.textContent = erro.message;
+                erroEl.hidden = false;
+            } finally {
+                botaoEl.disabled = false;
+                botaoEl.textContent = "Adicionar gasto";
+            }
+        });
+
+        carregarLista();
+    </script>
+</body>
+</html>

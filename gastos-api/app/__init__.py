@@ -1,6 +1,12 @@
 from flask import Flask
+from flask_cors import CORS
 
 from .database import db
+
+ORIGENS_PERMITIDAS = [
+    "https://samueldevmi.github.io",
+    "http://localhost:8765",
+]
 
 
 def create_app(database_uri: str = "sqlite:///gastos.db") -> Flask:
@@ -8,6 +14,7 @@ def create_app(database_uri: str = "sqlite:///gastos.db") -> Flask:
     app.config["SQLALCHEMY_DATABASE_URI"] = database_uri
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
+    CORS(app, origins=ORIGENS_PERMITIDAS)
     db.init_app(app)
 
     from . import models  # noqa: F401  (garante que os modelos sejam registrados)

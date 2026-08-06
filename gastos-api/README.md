@@ -1,5 +1,7 @@
 # Controle de Gastos — API
 
+![Testes](https://github.com/SamueldevmI/portfolio/actions/workflows/tests.yml/badge.svg)
+
 Versão backend do [Controle de gastos](../controle-gastos/) do portfólio: em vez de salvar no navegador (LocalStorage), os dados ficam num banco de verdade (SQLite) por trás de uma API REST feita com Flask.
 
 **Ao vivo:** https://gastos-api-z0dt.onrender.com
