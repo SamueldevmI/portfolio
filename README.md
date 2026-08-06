@@ -13,6 +13,7 @@ Site pessoal com apresentação, projetos e contato.
 | [FlowBoard](flowboard/) | Quadro Kanban com criação de tarefas e drag-and-drop | JavaScript, LocalStorage |
 | [TaskFlow](taskflow/) | Organizador de tarefas diárias | JavaScript, LocalStorage |
 | [FocusFlow](focusflow/) | Timer Pomodoro para sessões de foco | JavaScript, LocalStorage |
+| [Planejador de Treino](treino-planner/) | Script de terminal para montar a rotina semanal de treinos | Python, JSON |
 
 ## Estrutura
 
