@@ -1,11 +1,9 @@
 const botaoTema = document.getElementById("temaEscuro");
-const bola = document.querySelector(".bola");
 
 function atualizarTema(escuro) {
     document.body.classList.toggle("dark-mode", escuro);
     botaoTema.setAttribute("aria-pressed", String(escuro));
     botaoTema.setAttribute("aria-label", escuro ? "Ativar tema claro" : "Ativar tema escuro");
-    bola.textContent = escuro ? "" : "☀️";
 }
 
 const temaSalvo = localStorage.getItem("tema");
