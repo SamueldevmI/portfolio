@@ -39,3 +39,26 @@ if (prefereMenosMovimento || !("IntersectionObserver" in window)) {
 
     elementosRevelar.forEach((el) => observador.observe(el));
 }
+
+const numerosContaveis = document.querySelectorAll("[data-contar]");
+
+if (!prefereMenosMovimento) {
+    numerosContaveis.forEach((el) => {
+        const alvo = Number(el.dataset.contar);
+        const sufixo = el.dataset.sufixo || "";
+        const pad2 = el.dataset.formato === "pad2";
+        const duracao = 1200;
+        let inicio = null;
+
+        function passo(tempo) {
+            if (inicio === null) inicio = tempo;
+            const progresso = Math.min((tempo - inicio) / duracao, 1);
+            const facilitado = 1 - Math.pow(1 - progresso, 3);
+            const valor = Math.round(alvo * facilitado);
+            el.textContent = (pad2 ? String(valor).padStart(2, "0") : String(valor)) + sufixo;
+            if (progresso < 1) requestAnimationFrame(passo);
+        }
+
+        requestAnimationFrame(passo);
+    });
+}
