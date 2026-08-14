@@ -33,7 +33,23 @@ def test_cria_gasto(client):
     corpo = resposta.get_json()
     assert corpo["descricao"] == "Mercado"
     assert corpo["valor"] == 150.5
+    assert corpo["tipo"] == "despesa"
     assert "id" in corpo
+
+
+def test_cria_receita(client):
+    resposta = client.post("/gastos", json={
+        "descricao": "Salário", "valor": 3000, "categoria": "trabalho", "tipo": "receita",
+    })
+    assert resposta.status_code == 201
+    assert resposta.get_json()["tipo"] == "receita"
+
+
+def test_cria_gasto_com_tipo_invalido_falha(client):
+    resposta = client.post("/gastos", json={
+        "descricao": "Erro", "valor": 10, "categoria": "lazer", "tipo": "investimento",
+    })
+    assert resposta.status_code == 400
 
 
 def test_cria_gasto_sem_descricao_falha(client):

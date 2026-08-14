@@ -48,6 +48,14 @@ def _validar_payload(dados: dict, exigir_todos: bool = True) -> dict:
         except ValueError as erro:
             erros.append(str(erro))
 
+    if "tipo" in dados:
+        tipo = str(dados.get("tipo") or "despesa").strip().lower()
+        if tipo not in ("receita", "despesa"):
+            erros.append("O campo 'tipo' deve ser 'receita' ou 'despesa'.")
+        resultado["tipo"] = tipo
+    elif exigir_todos:
+        resultado["tipo"] = "despesa"
+
     if erros:
         raise ValueError(" ".join(erros))
     return resultado

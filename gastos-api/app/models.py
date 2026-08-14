@@ -11,6 +11,7 @@ class Gasto(db.Model):
     valor = db.Column(db.Float, nullable=False)
     categoria = db.Column(db.String(60), nullable=False)
     data = db.Column(db.Date, nullable=False, default=date.today)
+    tipo = db.Column(db.String(10), nullable=False, default="despesa")
 
     def to_dict(self) -> dict:
         return {
@@ -19,4 +20,5 @@ class Gasto(db.Model):
             "valor": self.valor,
             "categoria": self.categoria,
             "data": self.data.isoformat(),
+            "tipo": self.tipo,
         }

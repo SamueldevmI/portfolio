@@ -2,7 +2,7 @@
 
 ![Testes](https://github.com/SamueldevmI/portfolio/actions/workflows/tests.yml/badge.svg)
 
-Versão backend do [Controle de gastos](../controle-gastos/) do portfólio: em vez de salvar no navegador (LocalStorage), os dados ficam num banco de verdade (SQLite) por trás de uma API REST feita com Flask.
+Versão backend do [Controle de gastos](../controle-gastos/) do portfólio — é essa API que o front consome direto, com os dados persistidos num banco de verdade (SQLite) por trás de uma API REST feita com Flask.
 
 **Ao vivo:** https://gastos-api-z0dt.onrender.com
 
@@ -42,7 +42,7 @@ pytest
 | Método | Rota | Descrição |
 |---|---|---|
 | GET | `/gastos` | Lista todos os gastos (aceita `?categoria=` para filtrar) |
-| POST | `/gastos` | Cria um gasto — `{descricao, valor, categoria, data}` (`data` é opcional, AAAA-MM-DD) |
+| POST | `/gastos` | Cria um gasto — `{descricao, valor, categoria, data, tipo}` (`data` é opcional, AAAA-MM-DD; `tipo` é opcional, `"receita"` ou `"despesa"`, padrão `"despesa"`) |
 | GET | `/gastos/<id>` | Busca um gasto pelo id |
 | PUT | `/gastos/<id>` | Atualiza um ou mais campos de um gasto |
 | DELETE | `/gastos/<id>` | Remove um gasto |

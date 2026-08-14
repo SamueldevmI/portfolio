@@ -1,5 +1,7 @@
-const CHAVE = "granaEmDiaTransacoes";
+const API = "https://gastos-api-z0dt.onrender.com";
+
 const form = document.getElementById("formTransacao");
+const botaoSalvar = form.querySelector('button[type="submit"]');
 const lista = document.getElementById("listaTransacoes");
 const estadoVazio = document.getElementById("estadoVazio");
 const filtro = document.getElementById("filtro");
@@ -7,11 +9,25 @@ const formatoMoeda = new Intl.NumberFormat("pt-BR", { style: "currency", currenc
 const formatoData = new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "short" });
 
 let transacoes = [];
-try { transacoes = JSON.parse(localStorage.getItem(CHAVE)) || []; }
-catch { transacoes = []; }
+let carregando = true;
+let erroConexao = false;
 
-function salvar() {
-    localStorage.setItem(CHAVE, JSON.stringify(transacoes));
+async function api(caminho, opcoes = {}) {
+    const resposta = await fetch(`${API}${caminho}`, {
+        headers: opcoes.body ? { "Content-Type": "application/json" } : undefined,
+        ...opcoes,
+    });
+    if (!resposta.ok) {
+        let mensagem = `Erro ${resposta.status} ao falar com a API.`;
+        try {
+            const corpo = await resposta.json();
+            if (corpo?.erro) mensagem = corpo.erro;
+        } catch {
+            // resposta sem corpo JSON (ex.: 204) — mantém mensagem padrão
+        }
+        throw new Error(mensagem);
+    }
+    return resposta.status === 204 ? null : resposta.json();
 }
 
 function mostrarToast(mensagem) {
@@ -54,10 +70,25 @@ function atualizarCategorias() {
 }
 
 function renderizar() {
+    if (carregando) {
+        lista.innerHTML = "";
+        estadoVazio.hidden = false;
+        estadoVazio.textContent = "Carregando transações da API… (pode levar até 50s se ela estava dormindo)";
+        return;
+    }
+
+    if (erroConexao) {
+        lista.innerHTML = "";
+        estadoVazio.hidden = false;
+        estadoVazio.textContent = "Não foi possível conectar com a API agora. Tente recarregar a página em instantes.";
+        return;
+    }
+
     const tipoFiltro = filtro.value;
     const itens = transacoes.filter(item => tipoFiltro === "todos" || item.tipo === tipoFiltro);
     lista.innerHTML = "";
     estadoVazio.hidden = itens.length > 0;
+    estadoVazio.textContent = "Nenhuma transação por aqui. Adicione a primeira ao lado.";
 
     itens.slice().reverse().forEach(item => {
         const linha = document.createElement("article");
@@ -74,53 +105,96 @@ function renderizar() {
     atualizarCategorias();
 }
 
-form.addEventListener("submit", event => {
+async function carregarTransacoes() {
+    try {
+        transacoes = await api("/gastos");
+        erroConexao = false;
+    } catch (erro) {
+        erroConexao = true;
+        mostrarToast(erro.message);
+    } finally {
+        carregando = false;
+        renderizar();
+    }
+}
+
+form.addEventListener("submit", async event => {
     event.preventDefault();
     const dados = new FormData(form);
     const valor = Number(dados.get("valor"));
     if (!Number.isFinite(valor) || valor <= 0) return;
 
-    transacoes.push({ id: Date.now(), descricao: dados.get("descricao").trim(), valor, categoria: dados.get("categoria"), tipo: dados.get("tipo"), data: dados.get("data") });
-    salvar();
-    form.reset();
-    document.getElementById("data").value = new Date().toISOString().slice(0, 10);
-    renderizar();
-    mostrarToast("Transação adicionada com sucesso.");
-});
+    const payload = {
+        descricao: dados.get("descricao").trim(),
+        valor,
+        categoria: dados.get("categoria"),
+        tipo: dados.get("tipo"),
+        data: dados.get("data"),
+    };
 
-lista.addEventListener("click", event => {
-    const botao = event.target.closest(".excluir");
-    if (!botao) return;
-    transacoes = transacoes.filter(item => item.id !== Number(botao.dataset.id));
-    salvar();
-    renderizar();
-    mostrarToast("Transação removida.");
-});
-
-filtro.addEventListener("change", renderizar);
-document.getElementById("limparTudo").addEventListener("click", () => {
-    if (transacoes.length && confirm("Deseja apagar todas as transações?")) {
-        transacoes = [];
-        salvar();
-        renderizar();
-        mostrarToast("Dados removidos.");
+    botaoSalvar.disabled = true;
+    botaoSalvar.textContent = "Salvando…";
+    try {
+        await api("/gastos", { method: "POST", body: JSON.stringify(payload) });
+        form.reset();
+        document.getElementById("data").value = new Date().toISOString().slice(0, 10);
+        await carregarTransacoes();
+        mostrarToast("Transação adicionada com sucesso.");
+    } catch (erro) {
+        mostrarToast(erro.message);
+    } finally {
+        botaoSalvar.disabled = false;
+        botaoSalvar.textContent = "Adicionar transação";
     }
 });
 
-document.getElementById("carregarExemplo").addEventListener("click", () => {
+lista.addEventListener("click", async event => {
+    const botao = event.target.closest(".excluir");
+    if (!botao) return;
+    botao.disabled = true;
+    try {
+        await api(`/gastos/${botao.dataset.id}`, { method: "DELETE" });
+        await carregarTransacoes();
+        mostrarToast("Transação removida.");
+    } catch (erro) {
+        botao.disabled = false;
+        mostrarToast(erro.message);
+    }
+});
+
+filtro.addEventListener("change", renderizar);
+
+document.getElementById("limparTudo").addEventListener("click", async () => {
+    if (!transacoes.length || !confirm("Deseja apagar todas as transações?")) return;
+    try {
+        await Promise.all(transacoes.map(item => api(`/gastos/${item.id}`, { method: "DELETE" })));
+        await carregarTransacoes();
+        mostrarToast("Dados removidos.");
+    } catch (erro) {
+        mostrarToast(erro.message);
+    }
+});
+
+document.getElementById("carregarExemplo").addEventListener("click", async () => {
     if (transacoes.length && !confirm("Isso vai substituir suas transações pelos dados de exemplo. Continuar?")) return;
     const hoje = new Date().toISOString().slice(0, 10);
-    transacoes = [
-        { id: 1, descricao: "Salário", valor: 3200, categoria: "Trabalho", tipo: "receita", data: hoje },
-        { id: 2, descricao: "Freelance", valor: 450, categoria: "Trabalho", tipo: "receita", data: hoje },
-        { id: 3, descricao: "Supermercado", valor: 385.90, categoria: "Alimentação", tipo: "despesa", data: hoje },
-        { id: 4, descricao: "Aluguel", valor: 900, categoria: "Moradia", tipo: "despesa", data: hoje },
-        { id: 5, descricao: "Internet", valor: 99.90, categoria: "Moradia", tipo: "despesa", data: hoje },
-        { id: 6, descricao: "Uber", valor: 42.50, categoria: "Transporte", tipo: "despesa", data: hoje }
+    const exemplos = [
+        { descricao: "Salário", valor: 3200, categoria: "Trabalho", tipo: "receita", data: hoje },
+        { descricao: "Freelance", valor: 450, categoria: "Trabalho", tipo: "receita", data: hoje },
+        { descricao: "Supermercado", valor: 385.90, categoria: "Alimentação", tipo: "despesa", data: hoje },
+        { descricao: "Aluguel", valor: 900, categoria: "Moradia", tipo: "despesa", data: hoje },
+        { descricao: "Internet", valor: 99.90, categoria: "Moradia", tipo: "despesa", data: hoje },
+        { descricao: "Uber", valor: 42.50, categoria: "Transporte", tipo: "despesa", data: hoje },
     ];
-    salvar();
-    renderizar();
-    mostrarToast("Dados de exemplo carregados.");
+
+    try {
+        await Promise.all(transacoes.map(item => api(`/gastos/${item.id}`, { method: "DELETE" })));
+        await Promise.all(exemplos.map(item => api("/gastos", { method: "POST", body: JSON.stringify(item) })));
+        await carregarTransacoes();
+        mostrarToast("Dados de exemplo carregados.");
+    } catch (erro) {
+        mostrarToast(erro.message);
+    }
 });
 
 const botaoTema = document.getElementById("botaoTema");
@@ -137,5 +211,6 @@ botaoTema.addEventListener("click", () => {
     localStorage.setItem("granaEmDiaTema", escuro ? "escuro" : "claro");
 });
 
-renderizar();
 document.getElementById("data").value = new Date().toISOString().slice(0, 10);
+renderizar();
+carregarTransacoes();
