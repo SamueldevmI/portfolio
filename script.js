@@ -389,22 +389,26 @@ function posicionarTour() {
     const passo = passosTour[passoAtualTour];
     const alvo = document.querySelector(passo.seletor);
     if (!alvo || !tourRealce || !tourCaixa) return;
-    alvo.scrollIntoView({ behavior: prefereMenosMovimento ? "auto" : "smooth", block: "center" });
 
-    setTimeout(() => {
-        const rect = alvo.getBoundingClientRect();
-        const folga = 10;
-        tourRealce.style.top = Math.max(rect.top - folga, 0) + "px";
-        tourRealce.style.left = Math.max(rect.left - folga, 0) + "px";
-        tourRealce.style.width = rect.width + folga * 2 + "px";
-        tourRealce.style.height = rect.height + folga * 2 + "px";
+    // Scroll instantâneo e cálculo síncrono, na mesma execução: elimina qualquer corrida entre a
+    // animação do scroll e a leitura de getBoundingClientRect (scrollend/timeout se mostraram pouco
+    // confiáveis para distâncias grandes). Importante: "instant" e não "auto" — o CSS global tem
+    // scroll-behavior:smooth em html, e "auto" herda isso (continua animando). O visual continua
+    // suave porque .tour-caixa e .tour-realce já têm transition de top/left no CSS.
+    alvo.scrollIntoView({ behavior: "instant", block: "center" });
 
-        const espacoAbaixo = window.innerHeight - rect.bottom;
-        const caixaAcimaDoAlvo = espacoAbaixo < 220;
-        const topoCaixa = caixaAcimaDoAlvo ? Math.max(rect.top - 190, 12) : Math.min(rect.bottom + 12, window.innerHeight - 200);
-        tourCaixa.style.top = topoCaixa + "px";
-        tourCaixa.style.left = Math.min(Math.max(rect.left, 16), window.innerWidth - 356) + "px";
-    }, prefereMenosMovimento ? 0 : 380);
+    const rect = alvo.getBoundingClientRect();
+    const folga = 10;
+    tourRealce.style.top = Math.max(rect.top - folga, 0) + "px";
+    tourRealce.style.left = Math.max(rect.left - folga, 0) + "px";
+    tourRealce.style.width = rect.width + folga * 2 + "px";
+    tourRealce.style.height = rect.height + folga * 2 + "px";
+
+    const espacoAbaixo = window.innerHeight - rect.bottom;
+    const caixaAcimaDoAlvo = espacoAbaixo < 220;
+    const topoCaixa = caixaAcimaDoAlvo ? Math.max(rect.top - 190, 12) : Math.min(rect.bottom + 12, window.innerHeight - 200);
+    tourCaixa.style.top = Math.max(topoCaixa, 12) + "px";
+    tourCaixa.style.left = Math.min(Math.max(rect.left, 16), window.innerWidth - 356) + "px";
 
     tourPassoEl.textContent = `Passo ${passoAtualTour + 1} de ${passosTour.length}`;
     tourTituloEl.textContent = passo.titulo;
