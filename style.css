@@ -104,3 +104,53 @@ body.dark-mode .toast { background:#fff; }
 
 @media(max-width:720px) { .terminal-interativo { max-width:100%; margin-top:32px; } #terminalSaida { max-height:130px; } .modal-caixa { max-height:92vh; } .modal-corpo iframe { height:58vh; } .sobre-conteudo .github-atividade { margin-top:24px; padding:16px 16px; } }
 @media (prefers-reduced-motion:reduce) { .confete { animation:none; display:none; } }
+
+/* Barra de progresso de leitura */
+.barra-progresso { position:fixed; top:0; left:0; z-index:90; width:0%; height:3px; background:linear-gradient(90deg,var(--violet),var(--cyan)); transition:width .1s linear; }
+
+/* Tempo estimado de visita */
+.tempo-leitura { color:var(--muted); font-weight:400; letter-spacing:0; }
+
+/* Stats "ao vivo" — leve destaque quando atualizam */
+@keyframes piscar-atualizado { 0%,100% { text-shadow:none; } 40% { text-shadow:0 0 18px var(--cyan); } }
+.stat-atualizado { animation:piscar-atualizado .9s ease; }
+
+/* Botão de compartilhar por projeto */
+.botao-compartilhar { position:absolute; top:12px; right:12px; z-index:2; display:grid; place-items:center; width:34px; height:34px; border:1px solid rgba(255,255,255,.25); border-radius:50%; background:rgba(5,10,21,.55); color:#fff; font-size:1rem; line-height:1; cursor:pointer; opacity:0; transform:translateY(-4px); transition:opacity .25s ease,transform .25s ease,border-color .25s ease; backdrop-filter:blur(3px); }
+.card-projeto:hover .botao-compartilhar,.card-projeto:focus-within .botao-compartilhar,.botao-compartilhar:focus-visible { opacity:1; transform:translateY(0); }
+.botao-compartilhar:hover { border-color:var(--cyan); color:var(--cyan); }
+
+/* Changelog */
+.changelog { margin-top:20px; padding:22px 24px; border:1px solid var(--line); background:rgba(15,23,43,.45); }
+.changelog ul { margin:0; padding:0; list-style:none; display:grid; gap:10px; }
+.changelog li { color:var(--muted); font-size:.85rem; line-height:1.6; }
+.changelog li strong { color:var(--text); }
+body.dark-mode .changelog { background:rgba(255,255,255,.72); }
+
+/* Selo de visitas no rodapé */
+.selo-visitas { display:block; margin:10px auto 0; opacity:.85; }
+
+/* Cross-highlight: habilidades <-> projetos */
+.habilidades li { cursor:pointer; transition:.25s ease; }
+.habilidades li:hover,.habilidades li:focus-visible,.habilidades li.habilidade-ativa { border-color:var(--cyan); background:rgba(93,244,208,.1); }
+.card-projeto { transition:transform .35s ease,border-color .35s ease,box-shadow .35s ease,opacity .3s ease; }
+.lista-projetos.tem-destaque .card-projeto { opacity:.35; }
+.lista-projetos.tem-destaque .card-projeto.card-destacado { opacity:1; border-color:var(--cyan); box-shadow:0 0 0 1px var(--cyan),0 22px 48px -18px color-mix(in srgb,var(--cyan) 45%,transparent); }
+
+/* Tour guiado */
+.tour-overlay { position:fixed; inset:0; z-index:85; }
+.tour-overlay[hidden] { display:none; }
+.tour-realce { position:fixed; border-radius:8px; box-shadow:0 0 0 9999px rgba(4,7,16,.8); transition:top .35s ease,left .35s ease,width .35s ease,height .35s ease; pointer-events:none; }
+.tour-caixa { position:fixed; z-index:86; width:min(340px,calc(100% - 32px)); padding:20px 22px; border:1px solid var(--cyan); border-radius:8px; background:var(--surface); box-shadow:var(--shadow); transition:top .35s ease,left .35s ease; }
+.tour-passo { margin:0 0 6px; color:var(--cyan); font:500 .68rem "DM Mono",monospace; letter-spacing:.1em; }
+.tour-caixa h4 { margin:0 0 8px; font-size:1.1rem; }
+.tour-caixa p:not(.tour-passo) { margin:0; color:var(--muted); font-size:.88rem; line-height:1.5; }
+.tour-navegacao { display:flex; align-items:center; justify-content:space-between; gap:14px; margin-top:18px; }
+.tour-navegacao #tourPular { border:0; background:none; padding:0; color:var(--muted); font-size:.78rem; text-decoration:underline; cursor:pointer; }
+.tour-navegacao #tourPular:hover { color:var(--cyan); }
+.tour-botoes { display:flex; gap:8px; }
+.tour-botoes .botao { min-height:auto; padding:8px 14px; font-size:.78rem; }
+.tour-botoes .botao:disabled { opacity:.35; cursor:not-allowed; transform:none; box-shadow:none; }
+
+@media(max-width:720px) { .tempo-leitura { display:block; margin-top:4px; } .tour-caixa { width:calc(100% - 32px); } .botao-compartilhar { opacity:1; transform:none; width:30px; height:30px; top:8px; right:8px; } }
+@media (prefers-reduced-motion:reduce) { .tour-realce { transition:none; } .stat-atualizado { animation:none; } }

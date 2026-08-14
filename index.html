@@ -15,11 +15,14 @@
     <meta name="twitter:description" content="Projetos web, automações e experiências digitais desenvolvidas por Samuel Mickael.">
     <meta name="twitter:image" content="https://samueldevmi.github.io/portfolio/imagem/og-image.png">
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="style.css">
-    <title>Samuel Mickael | Portfólio</title>
+    <title id="tituloPagina">Samuel Mickael | Portfólio</title>
 </head>
 
 <body>
+    <div class="barra-progresso" id="barraProgresso"></div>
     <header class="hero" id="inicio">
         <nav class="nav" aria-label="Navegação principal">
             <a class="logo" href="#inicio">SM.</a>
@@ -39,17 +42,18 @@
         </nav>
 
         <div class="hero-conteudo">
-            <p class="eyebrow">PORTFÓLIO PESSOAL</p>
+            <p class="eyebrow">PORTFÓLIO PESSOAL · <span class="tempo-leitura">⏱ ~3 min pra conhecer o trampo</span></p>
             <h1>Olá, me chamo <span>Samuel Mickael.</span></h1>
             <p class="hero-texto">Desenvolvedor em constante evolução, transformando ideias em experiências digitais simples e funcionais.</p>
             <div class="hero-acoes">
                 <a class="botao botao-principal" href="#projetos">Ver projetos</a>
                 <a class="botao botao-secundario" href="#sobre-mim">Conheça minha trajetória</a>
                 <a class="botao botao-secundario" href="https://github.com/SamueldevmI" target="_blank" rel="noopener noreferrer">Ver GitHub ↗</a>
+                <button type="button" class="botao botao-secundario" id="botaoTour">Tour rápido</button>
             </div>
             <div class="hero-numeros" aria-label="Resumo do portfólio">
-                <div><strong data-contar="7" data-formato="pad2">07</strong><span>projetos em destaque</span></div>
-                <div><strong data-contar="4" data-formato="pad2">04</strong><span>tecnologias em estudo</span></div>
+                <div><strong id="statProjetos" data-contar="7" data-formato="pad2">07</strong><span>projetos em destaque</span></div>
+                <div><strong id="statTecnologias" data-contar="4" data-formato="pad2">04</strong><span>tecnologias em estudo</span></div>
                 <div><strong data-contar="100" data-sufixo="%">100%</strong><span>dedicação em aprender</span></div>
             </div>
             <div class="terminal-interativo" aria-label="Terminal interativo do portfólio">
@@ -73,17 +77,17 @@
             </div>
             <div class="sobre-conteudo">
                 <div class="foto-wrapper">
-                    <img src="imagem/minhafoto.jpeg" id="minhafoto" alt="Samuel Mickael">
+                    <img src="imagem/minhafoto.jpeg" id="minhafoto" alt="Samuel Mickael" width="600" height="800" loading="lazy">
                     <div id="tooltip" class="tooltip" role="tooltip">Meu primeiro projeto usando HTML e CSS.</div>
                 </div>
                 <div>
                     <p>Tenho 22 anos e estou cursando Análise e Desenvolvimento de Sistemas (4º semestre). Trabalho com desenvolvimento back-end e front-end, com foco em Python.</p>
                     <p>Gosto de aprender na prática e construir projetos que mostrem minha evolução. Abaixo, compartilho alguns trabalhos e a minha jornada na programação.</p>
-                    <ul class="habilidades" aria-label="Tecnologias e competências">
-                        <li>Python</li>
-                        <li>HTML</li>
-                        <li>CSS</li>
-                        <li>JavaScript</li>
+                    <ul class="habilidades" aria-label="Tecnologias e competências. Passe o mouse para destacar os projetos relacionados.">
+                        <li data-tecnologia="python" tabindex="0">Python</li>
+                        <li data-tecnologia="html" tabindex="0">HTML</li>
+                        <li data-tecnologia="css" tabindex="0">CSS</li>
+                        <li data-tecnologia="javascript" tabindex="0">JavaScript</li>
                     </ul>
                 </div>
                 <div class="github-atividade">
@@ -107,8 +111,9 @@
                 <button type="button" class="chip-filtro" data-filtro="cli">CLI</button>
             </div>
             <div id="lista-projetos" class="lista-projetos">
-                <article class="card-projeto" data-tecnologias="javascript">
+                <article class="card-projeto" data-tecnologias="javascript html css">
                     <div class="projeto-visual visual-nexus" role="img" aria-label="Prévia visual do site Nexus Studio">
+                        <button type="button" class="botao-compartilhar" data-compartilhar="./primeiro-projeto/index.html" data-compartilhar-titulo="Meu primeiro site" aria-label="Compartilhar projeto Meu primeiro site">⤴</button>
                         <span class="nexus-logo">NEXUS/STUDIO</span>
                         <strong>Ideias que viram<br>presença digital.</strong>
                         <i class="nexus-orbe"></i>
@@ -120,8 +125,9 @@
                         <div class="links-projeto"><a class="link-projeto" href="./primeiro-projeto/index.html" target="_blank" rel="noopener noreferrer">Abrir projeto <span aria-hidden="true">↗</span></a><button type="button" class="link-acao" data-demo="./primeiro-projeto/index.html" data-demo-titulo="Meu primeiro site">Visualizar aqui</button><a class="link-codigo" href="https://github.com/SamueldevmI/portfolio/tree/main/primeiro-projeto" target="_blank" rel="noopener noreferrer">Ver no GitHub</a></div>
                     </div>
                 </article>
-                <article class="card-projeto" data-tecnologias="javascript api">
+                <article class="card-projeto" data-tecnologias="javascript html css api">
                     <div class="projeto-visual visual-finance" role="img" aria-label="Prévia visual de um painel de controle de gastos">
+                        <button type="button" class="botao-compartilhar" data-compartilhar="./controle-gastos/index.html" data-compartilhar-titulo="Controle de gastos" aria-label="Compartilhar projeto Controle de gastos">⤴</button>
                         <div class="finance-topo"><span>GRANA EM DIA</span><b>R$ 2.222,60</b></div>
                         <div class="finance-grafico"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
                         <div class="finance-linhas"><span></span><span></span><span></span></div>
@@ -133,8 +139,9 @@
                         <div class="links-projeto"><a class="link-projeto" href="./controle-gastos/index.html" target="_blank" rel="noopener noreferrer">Abrir projeto <span aria-hidden="true">↗</span></a><button type="button" class="link-acao" data-demo="./controle-gastos/index.html" data-demo-titulo="Controle de gastos">Visualizar aqui</button><a class="link-codigo" href="https://github.com/SamueldevmI/portfolio/tree/main/controle-gastos" target="_blank" rel="noopener noreferrer">Ver no GitHub</a></div>
                     </div>
                 </article>
-                <article class="card-projeto" data-tecnologias="javascript">
+                <article class="card-projeto" data-tecnologias="javascript html css">
                     <div class="projeto-visual visual-taskflow" role="img" aria-label="Ilustração de uma lista de tarefas organizada">
+                        <button type="button" class="botao-compartilhar" data-compartilhar="./taskflow/index.html" data-compartilhar-titulo="TaskFlow" aria-label="Compartilhar projeto TaskFlow">⤴</button>
                         <span class="mini-card mini-card-1">✓ Design da página</span>
                         <span class="mini-card mini-card-2">✓ Revisar código</span>
                         <span class="mini-card mini-card-3">○ Publicar projeto</span>
@@ -146,8 +153,9 @@
                         <div class="links-projeto"><a class="link-projeto" href="./taskflow/index.html" target="_blank" rel="noopener noreferrer">Abrir projeto <span aria-hidden="true">↗</span></a><button type="button" class="link-acao" data-demo="./taskflow/index.html" data-demo-titulo="TaskFlow">Visualizar aqui</button><a class="link-codigo" href="https://github.com/SamueldevmI/portfolio/tree/main/taskflow" target="_blank" rel="noopener noreferrer">Ver no GitHub</a></div>
                     </div>
                 </article>
-                <article class="card-projeto" data-tecnologias="javascript">
+                <article class="card-projeto" data-tecnologias="javascript html css">
                     <div class="projeto-visual visual-focus" role="img" aria-label="Ilustração de um cronômetro de foco Pomodoro">
+                        <button type="button" class="botao-compartilhar" data-compartilhar="./focusflow/index.html" data-compartilhar-titulo="FocusFlow" aria-label="Compartilhar projeto FocusFlow">⤴</button>
                         <span class="anel-foco"><strong>25</strong><small>min</small></span>
                         <span class="ponto-foco ponto-1"></span><span class="ponto-foco ponto-2"></span><span class="ponto-foco ponto-3"></span>
                     </div>
@@ -158,8 +166,9 @@
                         <div class="links-projeto"><a class="link-projeto" href="./focusflow/index.html" target="_blank" rel="noopener noreferrer">Abrir projeto <span aria-hidden="true">↗</span></a><button type="button" class="link-acao" data-demo="./focusflow/index.html" data-demo-titulo="FocusFlow">Visualizar aqui</button><a class="link-codigo" href="https://github.com/SamueldevmI/portfolio/tree/main/focusflow" target="_blank" rel="noopener noreferrer">Ver no GitHub</a></div>
                     </div>
                 </article>
-                <article class="card-projeto" data-tecnologias="javascript">
+                <article class="card-projeto" data-tecnologias="javascript html css">
                     <div class="projeto-visual visual-kanban" role="img" aria-label="Quadro Kanban com tarefas em colunas">
+                        <button type="button" class="botao-compartilhar" data-compartilhar="./flowboard/index.html" data-compartilhar-titulo="FlowBoard" aria-label="Compartilhar projeto FlowBoard">⤴</button>
                         <div><span>Backlog</span><i></i><i></i></div>
                         <div><span>Em andamento</span><i></i><i></i></div>
                         <div><span>Concluído</span><i></i></div>
@@ -173,6 +182,7 @@
                 </article>
                 <article class="card-projeto" data-tecnologias="python cli">
                     <div class="projeto-visual visual-terminal" role="img" aria-label="Terminal executando o planejador de treino em Python">
+                        <button type="button" class="botao-compartilhar" data-compartilhar="https://github.com/SamueldevmI/portfolio/tree/main/treino-planner" data-compartilhar-titulo="Planejador de Treino" aria-label="Compartilhar projeto Planejador de Treino">⤴</button>
                         <div class="terminal-topo"><i></i><i></i><i></i></div>
                         <div class="terminal-corpo">
                             <p><span class="terminal-prompt">$</span> python main.py</p>
@@ -191,6 +201,7 @@
                 </article>
                 <article class="card-projeto" data-tecnologias="python api">
                     <div class="projeto-visual visual-api" role="img" aria-label="Endpoints de uma API REST de controle de gastos">
+                        <button type="button" class="botao-compartilhar" data-compartilhar="./gastos-api-demo/index.html" data-compartilhar-titulo="Controle de Gastos — API" aria-label="Compartilhar projeto Controle de Gastos API">⤴</button>
                         <div class="api-linha"><span class="api-metodo metodo-get">GET</span><span>/gastos</span></div>
                         <div class="api-linha"><span class="api-metodo metodo-post">POST</span><span>/gastos</span></div>
                         <div class="api-linha"><span class="api-metodo metodo-put">PUT</span><span>/gastos/&lt;id&gt;</span></div>
@@ -201,7 +212,7 @@
                         <p class="tag">Python · Flask · SQLAlchemy</p>
                         <h3>Controle de Gastos — API</h3>
                         <p>Versão backend do controle de gastos: API REST com banco de dados, validação de entrada e testes automatizados. Plano gratuito: a 1ª requisição após inatividade pode levar ~50s.</p>
-                        <div class="links-projeto"><a class="link-projeto" href="./gastos-api-demo/index.html" target="_blank" rel="noopener noreferrer">Testar API <span aria-hidden="true">↗</span></a><button type="button" class="link-acao" data-caso>Ver decisões técnicas</button><a class="link-codigo" href="https://github.com/SamueldevmI/portfolio/tree/main/gastos-api" target="_blank" rel="noopener noreferrer">Ver código</a></div>
+                        <div class="links-projeto"><a class="link-projeto" href="./gastos-api-demo/index.html" target="_blank" rel="noopener noreferrer">Testar API <span aria-hidden="true">↗</span></a><button type="button" class="link-acao" data-caso>Ver decisões técnicas</button><button type="button" class="link-acao" data-copiar-codigo='curl -X POST https://gastos-api-z0dt.onrender.com/gastos -H "Content-Type: application/json" -d "{\"descricao\": \"Almoço\", \"valor\": 35.90}"'>Copiar exemplo</button><a class="link-codigo" href="https://github.com/SamueldevmI/portfolio/tree/main/gastos-api" target="_blank" rel="noopener noreferrer">Ver código</a></div>
                     </div>
                 </article>
             </div>
@@ -245,6 +256,14 @@
             <div class="status-area">
                 <p>JavaScript desbloqueado. Próximo objetivo: evoluir criando aplicações cada vez mais completas.</p>
             </div>
+            <div class="changelog">
+                <p class="eyebrow-mini">SEMPRE EVOLUINDO</p>
+                <ul>
+                    <li><strong>Ago 2026</strong> — terminal interativo, filtro de projetos, demos embutidas, atividade do GitHub e mais 7 melhorias de navegação.</li>
+                    <li><strong>Ago 2026</strong> — API REST do controle de gastos em produção (Flask + SQLAlchemy + CI no GitHub Actions).</li>
+                    <li><strong>Ago 2026</strong> — lançamento do portfólio com os 5 primeiros projetos front-end.</li>
+                </ul>
+            </div>
         </section>
 
         <section id="contato" class="secao contato">
@@ -259,8 +278,26 @@
         </section>
     </main>
 
-    <footer>© <span id="ano"></span> Samuel Mickael. Feito com dedicação. · <a href="https://github.com/SamueldevmI" target="_blank" rel="noopener noreferrer">GitHub</a></footer>
+    <footer>© <span id="ano"></span> Samuel Mickael. Feito com dedicação. · <a href="https://github.com/SamueldevmI" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <img class="selo-visitas" src="https://visitor-badge.laobi.icu/badge?page_id=samueldevmi.github.io.portfolio&color=5df4d0&text_color=061018" alt="Contador de visitas do portfólio" loading="lazy" width="94" height="20">
+    </footer>
     <a class="voltar-topo" href="#inicio" aria-label="Voltar ao topo">↑</a>
+
+    <div class="tour-overlay" id="tourOverlay" hidden>
+        <div class="tour-realce" id="tourRealce"></div>
+        <div class="tour-caixa" id="tourCaixa" role="dialog" aria-modal="true" aria-labelledby="tourTitulo">
+            <p class="tour-passo" id="tourPasso"></p>
+            <h4 id="tourTitulo"></h4>
+            <p id="tourTexto"></p>
+            <div class="tour-navegacao">
+                <button type="button" id="tourPular">Pular tour</button>
+                <div class="tour-botoes">
+                    <button type="button" id="tourAnterior" class="botao botao-secundario">Anterior</button>
+                    <button type="button" id="tourProximo" class="botao botao-principal">Próximo</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="modal-overlay" id="modalOverlay" hidden>
         <div class="modal-caixa" role="dialog" aria-modal="true" aria-labelledby="modalTitulo">
