@@ -178,3 +178,49 @@ h1 span { -webkit-text-fill-color:transparent; background:linear-gradient(100deg
 .ponto-3 { animation-delay:1.2s; }
 
 @media (prefers-reduced-motion:reduce) { h1 span { animation:none; } .nexus-orbe,.ponto-foco { animation:none; } }
+
+/* Botão de busca (paleta de comandos) */
+.botao-busca { display:flex; align-items:center; gap:5px; padding:7px 11px; border:1px solid var(--line); border-radius:6px; background:rgba(15,23,43,.5); color:var(--muted); font:.72rem "Space Grotesk",sans-serif; cursor:pointer; transition:.25s ease; }
+.botao-busca kbd { padding:1px 5px; border:1px solid var(--line); border-radius:3px; font:.66rem "DM Mono",monospace; }
+.botao-busca:hover { border-color:var(--cyan); color:var(--cyan); }
+
+/* Indicador de seção (scroll-spy) */
+.indicador-secoes { position:fixed; top:50%; right:20px; z-index:60; display:flex; flex-direction:column; gap:14px; transform:translateY(-50%); }
+.indicador-secoes a { display:block; padding:6px; }
+.indicador-secoes a span { display:block; width:8px; height:8px; border:1px solid var(--muted); border-radius:50%; background:transparent; transition:.25s ease; }
+.indicador-secoes a:hover span { border-color:var(--cyan); }
+.indicador-secoes a.secao-ativa span { border-color:var(--cyan); background:var(--cyan); box-shadow:0 0 10px rgba(93,244,208,.6); }
+@media(max-width:900px) { .indicador-secoes { display:none; } }
+
+/* Botão "Me surpreenda" */
+.botao-surpresa { padding:8px 16px; border:1px solid var(--pink); border-radius:999px; background:transparent; color:var(--pink); font:.72rem "DM Mono",monospace; cursor:pointer; transition:.25s ease; }
+.botao-surpresa:hover { background:var(--pink); color:#061018; }
+.card-projeto.card-em-foco { border-color:var(--pink); box-shadow:0 0 0 1px var(--pink),0 22px 48px -18px color-mix(in srgb,var(--pink) 45%,transparent); }
+
+/* "Trabalhando agora em" */
+.trabalhando-agora { margin:0 0 14px; color:var(--muted); font-size:.85rem; }
+.trabalhando-agora strong { color:var(--text); }
+
+/* Paleta de comandos (Ctrl+K) */
+.paleta-overlay { position:fixed; inset:0; z-index:92; display:flex; align-items:flex-start; justify-content:center; padding:14vh 24px 24px; background:rgba(5,9,20,.78); backdrop-filter:blur(4px); }
+.paleta-overlay[hidden] { display:none; }
+.paleta-caixa { width:min(560px,100%); max-height:70vh; display:flex; flex-direction:column; overflow:hidden; border:1px solid var(--line); border-radius:8px; background:var(--surface); box-shadow:var(--shadow); }
+.paleta-campo { display:flex; align-items:center; gap:10px; padding:16px 18px; border-bottom:1px solid var(--line); }
+.paleta-campo input { flex:1; min-width:0; border:0; background:transparent; color:var(--text); font:1rem "Space Grotesk",sans-serif; outline:0; }
+.paleta-campo kbd { padding:2px 7px; border:1px solid var(--line); border-radius:4px; color:var(--muted); font:.7rem "DM Mono",monospace; }
+.paleta-lista { margin:0; padding:8px; overflow-y:auto; list-style:none; }
+.paleta-lista li button { display:flex; align-items:center; justify-content:space-between; gap:10px; width:100%; padding:11px 12px; border:0; border-radius:6px; background:none; color:var(--text); font:.88rem "Space Grotesk",sans-serif; text-align:left; cursor:pointer; }
+.paleta-lista li button::after { content:attr(data-grupo); color:var(--muted); font:.68rem "DM Mono",monospace; }
+.paleta-lista li button:hover,.paleta-lista li button.paleta-selecionado { background:rgba(93,244,208,.1); color:var(--cyan); }
+.paleta-lista li[hidden] { display:none; }
+.paleta-vazio { margin:0; padding:20px 18px; color:var(--muted); font-size:.85rem; text-align:center; }
+
+@media print {
+    .barra-progresso,.indicador-secoes,.nav,.terminal-interativo,.filtros-projetos,.botao-compartilhar,.link-acao,.voltar-topo,.toast,.modal-overlay,.tour-overlay,.paleta-overlay,.ruido,.selo-visitas,.botao,.chip-filtro,.hero-conteudo::after { display:none !important; }
+    body { background:#fff; color:#111; }
+    .hero { min-height:auto; }
+    .secao { padding:24px 0; }
+    a { color:#126e82; }
+}
+
+@media(max-width:720px) { .busca-atalho { display:none; } .paleta-overlay { padding-top:8vh; } }

@@ -7,7 +7,14 @@ function atualizarTema(escuro) {
 }
 
 const temaSalvo = localStorage.getItem("tema");
-atualizarTema(temaSalvo === "escuro");
+if (temaSalvo) {
+    atualizarTema(temaSalvo === "escuro");
+} else {
+    // Sem preferência salva ainda: sugere um tema com base no horário local (7h-18h = claro).
+    // O toggle manual sempre tem prioridade assim que a pessoa escolher.
+    const horaAtual = new Date().getHours();
+    atualizarTema(horaAtual >= 7 && horaAtual < 18);
+}
 
 botaoTema.addEventListener("click", () => {
     const escuro = !document.body.classList.contains("dark-mode");
@@ -290,6 +297,13 @@ async function carregarStatsGithub() {
         if (!prefereMenosMovimento) await new Promise((resolve) => setTimeout(resolve, 1250));
         if (totalRepos > 0) atualizarStatAoVivo(document.getElementById("statProjetos"), totalRepos, "pad2");
         if (linguagens.size > 0) atualizarStatAoVivo(document.getElementById("statTecnologias"), linguagens.size, "pad2");
+
+        const maisRecente = repos.filter((r) => !r.fork).sort((a, b) => new Date(b.pushed_at) - new Date(a.pushed_at))[0];
+        const trabalhandoEl = document.getElementById("trabalhandoAgora");
+        if (maisRecente && trabalhandoEl) {
+            trabalhandoEl.innerHTML = `🔨 Trabalhando agora em: <strong>${maisRecente.name}</strong>`;
+            trabalhandoEl.hidden = false;
+        }
     } catch {
         /* API do GitHub indisponível ou limite de requisições atingido: mantém os números estáticos do HTML */
     }
@@ -474,5 +488,147 @@ if (suportaHover && !prefereMenosMovimento) {
         card.addEventListener("mouseleave", () => {
             card.style.transform = "";
         });
+    });
+}
+
+/* Indicador de seção (scroll-spy) */
+const linksSecao = document.querySelectorAll(".indicador-secoes a");
+if (linksSecao.length) {
+    const observadorSecoes = new IntersectionObserver(
+        (entradas) => {
+            entradas.forEach((entrada) => {
+                if (!entrada.isIntersecting) return;
+                const linkAtivo = document.querySelector(`.indicador-secoes a[href="#${entrada.target.id}"]`);
+                if (!linkAtivo) return;
+                linksSecao.forEach((link) => link.classList.remove("secao-ativa"));
+                linkAtivo.classList.add("secao-ativa");
+            });
+        },
+        { rootMargin: "-45% 0px -45% 0px" }
+    );
+    linksSecao.forEach((link) => {
+        const secao = document.querySelector(link.getAttribute("href"));
+        if (secao) observadorSecoes.observe(secao);
+    });
+}
+
+/* Botão "Me surpreenda" */
+const botaoSurpresa = document.getElementById("botaoSurpresa");
+
+function surpreenderProjeto() {
+    const visiveis = Array.from(cardsProjeto).filter((card) => !card.classList.contains("card-oculto"));
+    if (!visiveis.length) return;
+    const escolhido = visiveis[Math.floor(Math.random() * visiveis.length)];
+    escolhido.scrollIntoView({ behavior: prefereMenosMovimento ? "instant" : "smooth", block: "center" });
+    cardsProjeto.forEach((card) => card.classList.remove("card-em-foco"));
+    escolhido.classList.add("card-em-foco");
+    setTimeout(() => escolhido.classList.remove("card-em-foco"), 2200);
+}
+
+botaoSurpresa?.addEventListener("click", surpreenderProjeto);
+
+/* Recompensa por tempo de permanência */
+setTimeout(() => {
+    mostrarToast("🎉 Você já está por aqui há um tempinho — obrigado por explorar o portfólio!");
+}, 90000);
+
+/* Paleta de comandos (Ctrl+K) */
+const botaoBusca = document.getElementById("botaoBusca");
+const paletaOverlay = document.getElementById("paletaOverlay");
+const paletaInput = document.getElementById("paletaInput");
+const paletaLista = document.getElementById("paletaLista");
+const paletaVazio = document.getElementById("paletaVazio");
+const itensPaleta = paletaLista ? Array.from(paletaLista.querySelectorAll("button")) : [];
+
+function itensVisiveisPaleta() {
+    return itensPaleta.filter((botao) => !botao.closest("li").hidden);
+}
+
+function filtrarPaleta(termo) {
+    const termoNormalizado = termo.trim().toLowerCase();
+    itensPaleta.forEach((botao) => {
+        const textoBusca = (botao.textContent + " " + (botao.dataset.busca || "")).toLowerCase();
+        const visivel = textoBusca.includes(termoNormalizado);
+        botao.closest("li").hidden = !visivel;
+        botao.classList.remove("paleta-selecionado");
+    });
+    const visiveis = itensVisiveisPaleta();
+    paletaVazio.hidden = visiveis.length > 0;
+    if (visiveis.length) visiveis[0].classList.add("paleta-selecionado");
+}
+
+function moverSelecaoPaleta(direcao) {
+    const visiveis = itensVisiveisPaleta();
+    if (!visiveis.length) return;
+    const atual = visiveis.findIndex((botao) => botao.classList.contains("paleta-selecionado"));
+    visiveis.forEach((botao) => botao.classList.remove("paleta-selecionado"));
+    let proximo = atual + direcao;
+    if (proximo < 0) proximo = visiveis.length - 1;
+    if (proximo >= visiveis.length) proximo = 0;
+    visiveis[proximo].classList.add("paleta-selecionado");
+    visiveis[proximo].scrollIntoView({ block: "nearest" });
+}
+
+function abrirPaleta() {
+    if (!paletaOverlay) return;
+    paletaOverlay.hidden = false;
+    paletaInput.value = "";
+    filtrarPaleta("");
+    paletaInput.focus();
+}
+
+function fecharPaleta() {
+    if (!paletaOverlay) return;
+    paletaOverlay.hidden = true;
+}
+
+function executarComandoPaleta(botao) {
+    const acao = botao.dataset.acao;
+    const alvo = botao.dataset.alvo;
+    fecharPaleta();
+    if (acao === "scroll") {
+        document.querySelector(alvo)?.scrollIntoView({ behavior: prefereMenosMovimento ? "instant" : "smooth", block: "start" });
+    } else if (acao === "link") {
+        window.open(alvo, alvo.startsWith("http") ? "_blank" : "_self");
+    } else if (acao === "tour") {
+        abrirTour();
+    } else if (acao === "tema") {
+        botaoTema.click();
+    } else if (acao === "surpresa") {
+        surpreenderProjeto();
+    }
+}
+
+if (botaoBusca && paletaOverlay) {
+    botaoBusca.addEventListener("click", abrirPaleta);
+    paletaInput.addEventListener("input", () => filtrarPaleta(paletaInput.value));
+    paletaOverlay.addEventListener("click", (evento) => {
+        if (evento.target === paletaOverlay) fecharPaleta();
+    });
+    itensPaleta.forEach((botao) => botao.addEventListener("click", () => executarComandoPaleta(botao)));
+
+    document.addEventListener("keydown", (evento) => {
+        if ((evento.ctrlKey || evento.metaKey) && evento.key.toLowerCase() === "k") {
+            evento.preventDefault();
+            if (paletaOverlay.hidden) abrirPaleta();
+            else fecharPaleta();
+            return;
+        }
+        if (paletaOverlay.hidden) return;
+        if (evento.key === "Escape") {
+            fecharPaleta();
+        } else if (evento.key === "ArrowDown") {
+            evento.preventDefault();
+            moverSelecaoPaleta(1);
+        } else if (evento.key === "ArrowUp") {
+            evento.preventDefault();
+            moverSelecaoPaleta(-1);
+        } else if (evento.key === "Enter") {
+            const selecionado = itensPaleta.find((botao) => botao.classList.contains("paleta-selecionado"));
+            if (selecionado) {
+                evento.preventDefault();
+                executarComandoPaleta(selecionado);
+            }
+        }
     });
 }

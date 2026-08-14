@@ -19,11 +19,35 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="style.css">
     <title id="tituloPagina">Samuel Mickael | Portfólio</title>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Samuel Mickael",
+        "url": "https://samueldevmi.github.io/portfolio/",
+        "image": "https://samueldevmi.github.io/portfolio/imagem/og-image.png",
+        "jobTitle": "Desenvolvedor Front-end & Back-end",
+        "description": "Estudante de Análise e Desenvolvimento de Sistemas, desenvolvedor front-end e back-end com foco em Python.",
+        "knowsAbout": ["Python", "Flask", "JavaScript", "HTML", "CSS", "SQLAlchemy", "Git"],
+        "sameAs": [
+            "https://github.com/SamueldevmI",
+            "https://www.linkedin.com/in/samuelrondon-dev/"
+        ]
+    }
+    </script>
 </head>
 
 <body>
     <div class="ruido" aria-hidden="true"></div>
     <div class="barra-progresso" id="barraProgresso"></div>
+    <nav class="indicador-secoes" aria-label="Navegação rápida por seção">
+        <a href="#inicio" data-secao="inicio" aria-label="Ir para Início"><span></span></a>
+        <a href="#sobre-mim" data-secao="sobre-mim" aria-label="Ir para Sobre mim"><span></span></a>
+        <a href="#projetos" data-secao="projetos" aria-label="Ir para Projetos"><span></span></a>
+        <a href="#servicos" data-secao="servicos" aria-label="Ir para Serviços"><span></span></a>
+        <a href="#jornada" data-secao="jornada" aria-label="Ir para Minha jornada"><span></span></a>
+        <a href="#contato" data-secao="contato" aria-label="Ir para Contato"><span></span></a>
+    </nav>
     <header class="hero" id="inicio">
         <nav class="nav" aria-label="Navegação principal">
             <a class="logo" href="#inicio">SM.</a>
@@ -34,6 +58,7 @@
                 <a href="curriculo.html">Currículo</a>
                 <a href="#contato">Contato</a>
             </div>
+            <button id="botaoBusca" class="botao-busca" type="button" aria-label="Buscar (Ctrl+K)" title="Buscar (Ctrl+K)">🔎<span class="busca-atalho"> <kbd>Ctrl</kbd>+<kbd>K</kbd></span></button>
             <button id="temaEscuro" class="switch" type="button" aria-label="Ativar tema claro" aria-pressed="true">
                 <span class="bola" aria-hidden="true">
                     <svg class="icone-sol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4 12H2M22 12h-2M5 5l1.4 1.4M17.6 17.6 19 19M19 5l-1.4 1.4M6.4 17.6 5 19"/></svg>
@@ -110,6 +135,7 @@
                 <button type="button" class="chip-filtro" data-filtro="python">Python</button>
                 <button type="button" class="chip-filtro" data-filtro="api">API</button>
                 <button type="button" class="chip-filtro" data-filtro="cli">CLI</button>
+                <button type="button" class="botao-surpresa" id="botaoSurpresa">🎲 Me surpreenda</button>
             </div>
             <div id="lista-projetos" class="lista-projetos">
                 <article class="card-projeto" data-tecnologias="javascript html css">
@@ -259,6 +285,7 @@
             </div>
             <div class="changelog">
                 <p class="eyebrow-mini">SEMPRE EVOLUINDO</p>
+                <p id="trabalhandoAgora" class="trabalhando-agora" hidden></p>
                 <ul>
                     <li><strong>Ago 2026</strong> — terminal interativo, filtro de projetos, demos embutidas, atividade do GitHub e mais 7 melhorias de navegação.</li>
                     <li><strong>Ago 2026</strong> — API REST do controle de gastos em produção (Flask + SQLAlchemy + CI no GitHub Actions).</li>
@@ -283,6 +310,36 @@
         <img class="selo-visitas" src="https://visitor-badge.laobi.icu/badge?page_id=samueldevmi.github.io.portfolio&color=5df4d0&text_color=061018" alt="Contador de visitas do portfólio" loading="lazy" width="94" height="20">
     </footer>
     <a class="voltar-topo" href="#inicio" aria-label="Voltar ao topo">↑</a>
+
+    <div class="paleta-overlay" id="paletaOverlay" hidden>
+        <div class="paleta-caixa" role="dialog" aria-modal="true" aria-label="Paleta de comandos">
+            <div class="paleta-campo">
+                <span aria-hidden="true">🔎</span>
+                <input type="text" id="paletaInput" placeholder="Buscar seção, projeto ou ação…" aria-label="Buscar" autocomplete="off" autocapitalize="off" spellcheck="false">
+                <kbd>Esc</kbd>
+            </div>
+            <ul class="paleta-lista" id="paletaLista">
+                <li><button type="button" data-acao="scroll" data-alvo="#inicio" data-grupo="Ir para">Início</button></li>
+                <li><button type="button" data-acao="scroll" data-alvo="#sobre-mim" data-grupo="Ir para">Sobre mim</button></li>
+                <li><button type="button" data-acao="scroll" data-alvo="#projetos" data-grupo="Ir para">Projetos em destaque</button></li>
+                <li><button type="button" data-acao="scroll" data-alvo="#servicos" data-grupo="Ir para">Serviços</button></li>
+                <li><button type="button" data-acao="scroll" data-alvo="#jornada" data-grupo="Ir para">Minha jornada</button></li>
+                <li><button type="button" data-acao="scroll" data-alvo="#contato" data-grupo="Ir para">Contato</button></li>
+                <li><button type="button" data-acao="link" data-alvo="./primeiro-projeto/index.html" data-grupo="Abrir projeto" data-busca="landing page nexus studio site">Meu primeiro site</button></li>
+                <li><button type="button" data-acao="link" data-alvo="./controle-gastos/index.html" data-grupo="Abrir projeto" data-busca="financas dinheiro despesas gastos">Controle de gastos</button></li>
+                <li><button type="button" data-acao="link" data-alvo="./taskflow/index.html" data-grupo="Abrir projeto" data-busca="tarefas lista organizador todo">TaskFlow</button></li>
+                <li><button type="button" data-acao="link" data-alvo="./focusflow/index.html" data-grupo="Abrir projeto" data-busca="pomodoro timer foco cronometro">FocusFlow</button></li>
+                <li><button type="button" data-acao="link" data-alvo="./flowboard/index.html" data-grupo="Abrir projeto" data-busca="kanban board colunas drag and drop">FlowBoard</button></li>
+                <li><button type="button" data-acao="link" data-alvo="./gastos-api-demo/index.html" data-grupo="Abrir projeto" data-busca="backend flask rest sqlalchemy python">Controle de Gastos — API</button></li>
+                <li><button type="button" data-acao="link" data-alvo="https://github.com/SamueldevmI" data-grupo="Ação">Ver GitHub</button></li>
+                <li><button type="button" data-acao="link" data-alvo="https://www.linkedin.com/in/samuelrondon-dev/" data-grupo="Ação">Ver LinkedIn</button></li>
+                <li><button type="button" data-acao="tour" data-grupo="Ação">Iniciar tour rápido</button></li>
+                <li><button type="button" data-acao="tema" data-grupo="Ação">Trocar tema claro/escuro</button></li>
+                <li><button type="button" data-acao="surpresa" data-grupo="Ação">Me surpreenda 🎲</button></li>
+            </ul>
+            <p class="paleta-vazio" id="paletaVazio" hidden>Nada encontrado. Tente outro termo.</p>
+        </div>
+    </div>
 
     <div class="tour-overlay" id="tourOverlay" hidden>
         <div class="tour-realce" id="tourRealce"></div>

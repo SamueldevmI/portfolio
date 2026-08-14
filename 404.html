@@ -7,21 +7,35 @@
     <meta name="description" content="Página não encontrada no portfólio de Samuel Mickael.">
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="style.css">
-    <title>Página não encontrada | Samuel Mickael</title>
+    <title>404 | Samuel Mickael</title>
     <style>
-        .pagina-404 { min-height:80vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:24px; }
-        .pagina-404 p.eyebrow { margin-bottom:10px; }
-        .pagina-404 h1 { font-size:clamp(3rem,10vw,6rem); margin-bottom:14px; }
-        .pagina-404 p.desc { color:var(--muted); max-width:420px; margin-bottom:28px; }
+        .pagina-404 { min-height:90vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:24px; }
+        .pagina-404 .terminal-interativo { width:min(560px,100%); margin:0 0 28px; text-align:left; animation:none; }
+        .pagina-404 .terminal-corpo p { color:#8fe3c8; }
+        .pagina-404 .terminal-corpo p.erro-404 { color:#ff6b6b; }
+        .pagina-404 h1 { font-size:clamp(2.2rem,7vw,3.4rem); margin-bottom:10px; letter-spacing:-.04em; }
+        .pagina-404 p.desc { color:var(--muted); max-width:420px; margin:0 auto 28px; }
     </style>
 </head>
 <body>
     <div class="pagina-404">
-        <p class="eyebrow">404</p>
-        <h1>Página não encontrada</h1>
+        <div class="terminal-interativo" aria-hidden="true">
+            <div class="terminal-topo"><i></i><i></i><i></i><span class="terminal-titulo">samuel@portfolio:~</span></div>
+            <div class="terminal-corpo">
+                <p><span class="terminal-prompt">$</span> cd <span id="rotaPedida">/rota-que-voce-tentou</span></p>
+                <p class="erro-404">bash: cd: rota não encontrada (erro 404)</p>
+                <p class="terminal-cursor">$ <span></span></p>
+            </div>
+        </div>
+        <h1>Essa página não existe.</h1>
         <p class="desc">O link que você seguiu não existe (ou foi movido). Que tal voltar pro início?</p>
         <a class="botao botao-principal" href="/portfolio/">Voltar ao portfólio</a>
     </div>
-    <script>document.body.classList.toggle("dark-mode", localStorage.getItem("tema") === "escuro");</script>
+    <script>
+        document.body.classList.toggle("dark-mode", localStorage.getItem("tema") === "escuro");
+        try {
+            document.getElementById("rotaPedida").textContent = location.pathname || "/rota-que-voce-tentou";
+        } catch { /* mantém o texto padrão */ }
+    </script>
 </body>
 </html>
