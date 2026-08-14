@@ -1,4 +1,5 @@
 from flask import Flask
+from flasgger import Swagger
 from flask_cors import CORS
 from sqlalchemy import inspect, text
 
@@ -8,6 +9,56 @@ ORIGENS_PERMITIDAS = [
     "https://samueldevmi.github.io",
     "http://localhost:8765",
 ]
+
+SWAGGER_TEMPLATE = {
+    "swagger": "2.0",
+    "info": {
+        "title": "Controle de Gastos API",
+        "description": "API REST em Flask + SQLAlchemy para registrar receitas e despesas. "
+                        "Projeto de portfólio de Samuel Mickael.",
+        "version": "1.0.0",
+        "contact": {
+            "name": "Samuel Mickael",
+            "url": "https://samueldevmi.github.io/portfolio/",
+        },
+    },
+    "definitions": {
+        "Gasto": {
+            "type": "object",
+            "properties": {
+                "id": {"type": "integer", "example": 1},
+                "descricao": {"type": "string", "example": "Mercado"},
+                "valor": {"type": "number", "format": "float", "example": 150.5},
+                "categoria": {"type": "string", "example": "alimentação"},
+                "data": {"type": "string", "format": "date", "example": "2026-08-01"},
+                "tipo": {"type": "string", "enum": ["receita", "despesa"], "example": "despesa"},
+            },
+        },
+        "NovoGasto": {
+            "type": "object",
+            "required": ["descricao", "valor", "categoria"],
+            "properties": {
+                "descricao": {"type": "string", "example": "Mercado"},
+                "valor": {"type": "number", "format": "float", "example": 150.5},
+                "categoria": {"type": "string", "example": "alimentação"},
+                "data": {"type": "string", "format": "date", "example": "2026-08-01"},
+                "tipo": {"type": "string", "enum": ["receita", "despesa"], "default": "despesa"},
+            },
+        },
+        "Erro": {
+            "type": "object",
+            "properties": {"erro": {"type": "string", "example": "O campo 'descricao' é obrigatório."}},
+        },
+    },
+}
+
+SWAGGER_CONFIG = {
+    "headers": [],
+    "specs": [{"endpoint": "apispec", "route": "/apispec.json", "rule_filter": lambda rule: True, "model_filter": lambda tag: True}],
+    "static_url_path": "/flasgger_static",
+    "swagger_ui": True,
+    "specs_route": "/docs",
+}
 
 
 def _migrar_coluna_tipo() -> None:
@@ -34,6 +85,7 @@ def create_app(database_uri: str = "sqlite:///gastos.db") -> Flask:
 
     CORS(app, origins=ORIGENS_PERMITIDAS)
     db.init_app(app)
+    Swagger(app, template=SWAGGER_TEMPLATE, config=SWAGGER_CONFIG)
 
     from . import models  # noqa: F401  (garante que os modelos sejam registrados)
     from .routes import bp as gastos_bp
@@ -46,6 +98,6 @@ def create_app(database_uri: str = "sqlite:///gastos.db") -> Flask:
 
     @app.get("/")
     def raiz():
-        return {"status": "ok", "servico": "Controle de Gastos API"}
+        return {"status": "ok", "servico": "Controle de Gastos API", "docs": "/docs"}
 
     return app

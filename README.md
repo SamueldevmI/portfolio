@@ -16,7 +16,7 @@ Site pessoal com apresentação, projetos e contato.
 | [TaskFlow](taskflow/) | Organizador de tarefas diárias | JavaScript, LocalStorage |
 | [FocusFlow](focusflow/) | Timer Pomodoro para sessões de foco | JavaScript, LocalStorage |
 | [Planejador de Treino](treino-planner/) | Aplicação de terminal para montar a rotina semanal de treinos, com testes automatizados | Python, Rich, Pytest |
-| [Controle de Gastos — API](gastos-api/) ([ao vivo](https://gastos-api-z0dt.onrender.com)) | API REST com banco de dados para o controle de gastos, com validação e testes automatizados | Python, Flask, SQLAlchemy |
+| [Controle de Gastos — API](gastos-api/) ([ao vivo](https://gastos-api-z0dt.onrender.com), [docs](https://gastos-api-z0dt.onrender.com/docs)) | API REST com banco de dados para o controle de gastos, com validação, testes automatizados e documentação Swagger | Python, Flask, SQLAlchemy |
 
 ## Estrutura
 
