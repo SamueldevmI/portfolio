@@ -30,7 +30,7 @@
                 <a href="curriculo.html">Currículo</a>
                 <a href="#contato">Contato</a>
             </div>
-            <button id="temaEscuro" class="switch" type="button" aria-label="Ativar tema escuro" aria-pressed="false">
+            <button id="temaEscuro" class="switch" type="button" aria-label="Ativar tema claro" aria-pressed="true">
                 <span class="bola" aria-hidden="true">
                     <svg class="icone-sol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4 12H2M22 12h-2M5 5l1.4 1.4M17.6 17.6 19 19M19 5l-1.4 1.4M6.4 17.6 5 19"/></svg>
                     <svg class="icone-lua" viewBox="0 0 24 24" fill="currentColor"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/></svg>
@@ -51,6 +51,16 @@
                 <div><strong data-contar="7" data-formato="pad2">07</strong><span>projetos em destaque</span></div>
                 <div><strong data-contar="4" data-formato="pad2">04</strong><span>tecnologias em estudo</span></div>
                 <div><strong data-contar="100" data-sufixo="%">100%</strong><span>dedicação em aprender</span></div>
+            </div>
+            <div class="terminal-interativo" aria-label="Terminal interativo do portfólio">
+                <div class="terminal-topo"><i></i><i></i><i></i><span class="terminal-titulo">samuel@portfolio:~</span></div>
+                <div class="terminal-corpo" id="terminalSaida">
+                    <p>Digite <span class="terminal-prompt">help</span> para conhecer os comandos disponíveis.</p>
+                </div>
+                <form id="terminalForm" class="terminal-linha" autocomplete="off">
+                    <span class="terminal-prompt">$</span>
+                    <input id="terminalInput" type="text" placeholder="digite um comando…" aria-label="Comando do terminal" autocapitalize="off" spellcheck="false">
+                </form>
             </div>
         </div>
     </header>
@@ -76,6 +86,10 @@
                         <li>JavaScript</li>
                     </ul>
                 </div>
+                <div class="github-atividade">
+                    <p class="eyebrow-mini">ATIVIDADE NO GITHUB</p>
+                    <img src="https://ghchart.rshah.org/5df4d0/SamueldevmI" alt="Gráfico de contribuições do GitHub de SamueldevmI nos últimos 12 meses" loading="lazy" width="722" height="112">
+                </div>
             </div>
         </section>
 
@@ -85,8 +99,15 @@
                 <h2>Projetos em destaque</h2>
                 <p>Alguns trabalhos que representam meu aprendizado até aqui.</p>
             </div>
+            <div class="filtros-projetos" role="group" aria-label="Filtrar projetos por tecnologia">
+                <button type="button" class="chip-filtro is-ativo" data-filtro="todos">Todos</button>
+                <button type="button" class="chip-filtro" data-filtro="javascript">JavaScript</button>
+                <button type="button" class="chip-filtro" data-filtro="python">Python</button>
+                <button type="button" class="chip-filtro" data-filtro="api">API</button>
+                <button type="button" class="chip-filtro" data-filtro="cli">CLI</button>
+            </div>
             <div id="lista-projetos" class="lista-projetos">
-                <article class="card-projeto">
+                <article class="card-projeto" data-tecnologias="javascript">
                     <div class="projeto-visual visual-nexus" role="img" aria-label="Prévia visual do site Nexus Studio">
                         <span class="nexus-logo">NEXUS/STUDIO</span>
                         <strong>Ideias que viram<br>presença digital.</strong>
@@ -96,10 +117,10 @@
                         <p class="tag">HTML · CSS · JavaScript</p>
                         <h3>Meu primeiro site</h3>
                         <p>Landing page responsiva criada para apresentar uma marca com impacto visual, hierarquia e navegação clara.</p>
-                        <div class="links-projeto"><a class="link-projeto" href="./primeiro-projeto/index.html" target="_blank" rel="noopener noreferrer">Abrir projeto <span aria-hidden="true">↗</span></a><a class="link-codigo" href="https://github.com/SamueldevmI/portfolio/tree/main/primeiro-projeto" target="_blank" rel="noopener noreferrer">Ver no GitHub</a></div>
+                        <div class="links-projeto"><a class="link-projeto" href="./primeiro-projeto/index.html" target="_blank" rel="noopener noreferrer">Abrir projeto <span aria-hidden="true">↗</span></a><button type="button" class="link-acao" data-demo="./primeiro-projeto/index.html" data-demo-titulo="Meu primeiro site">Visualizar aqui</button><a class="link-codigo" href="https://github.com/SamueldevmI/portfolio/tree/main/primeiro-projeto" target="_blank" rel="noopener noreferrer">Ver no GitHub</a></div>
                     </div>
                 </article>
-                <article class="card-projeto">
+                <article class="card-projeto" data-tecnologias="javascript api">
                     <div class="projeto-visual visual-finance" role="img" aria-label="Prévia visual de um painel de controle de gastos">
                         <div class="finance-topo"><span>GRANA EM DIA</span><b>R$ 2.222,60</b></div>
                         <div class="finance-grafico"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
@@ -109,10 +130,10 @@
                         <p class="tag">JavaScript · API Flask</p>
                         <h3>Controle de gastos</h3>
                         <p>Uma aplicação interativa para acompanhar gastos, com resumo financeiro, filtros e dados salvos numa API REST de verdade.</p>
-                        <div class="links-projeto"><a class="link-projeto" href="./controle-gastos/index.html" target="_blank" rel="noopener noreferrer">Abrir projeto <span aria-hidden="true">↗</span></a><a class="link-codigo" href="https://github.com/SamueldevmI/portfolio/tree/main/controle-gastos" target="_blank" rel="noopener noreferrer">Ver no GitHub</a></div>
+                        <div class="links-projeto"><a class="link-projeto" href="./controle-gastos/index.html" target="_blank" rel="noopener noreferrer">Abrir projeto <span aria-hidden="true">↗</span></a><button type="button" class="link-acao" data-demo="./controle-gastos/index.html" data-demo-titulo="Controle de gastos">Visualizar aqui</button><a class="link-codigo" href="https://github.com/SamueldevmI/portfolio/tree/main/controle-gastos" target="_blank" rel="noopener noreferrer">Ver no GitHub</a></div>
                     </div>
                 </article>
-                <article class="card-projeto">
+                <article class="card-projeto" data-tecnologias="javascript">
                     <div class="projeto-visual visual-taskflow" role="img" aria-label="Ilustração de uma lista de tarefas organizada">
                         <span class="mini-card mini-card-1">✓ Design da página</span>
                         <span class="mini-card mini-card-2">✓ Revisar código</span>
@@ -122,10 +143,10 @@
                         <p class="tag">JavaScript · LocalStorage</p>
                         <h3>TaskFlow</h3>
                         <p>Um organizador de tarefas para priorizar o dia, acompanhar entregas e manter tudo em ordem.</p>
-                        <div class="links-projeto"><a class="link-projeto" href="./taskflow/index.html" target="_blank" rel="noopener noreferrer">Abrir projeto <span aria-hidden="true">↗</span></a><a class="link-codigo" href="https://github.com/SamueldevmI/portfolio/tree/main/taskflow" target="_blank" rel="noopener noreferrer">Ver no GitHub</a></div>
+                        <div class="links-projeto"><a class="link-projeto" href="./taskflow/index.html" target="_blank" rel="noopener noreferrer">Abrir projeto <span aria-hidden="true">↗</span></a><button type="button" class="link-acao" data-demo="./taskflow/index.html" data-demo-titulo="TaskFlow">Visualizar aqui</button><a class="link-codigo" href="https://github.com/SamueldevmI/portfolio/tree/main/taskflow" target="_blank" rel="noopener noreferrer">Ver no GitHub</a></div>
                     </div>
                 </article>
-                <article class="card-projeto">
+                <article class="card-projeto" data-tecnologias="javascript">
                     <div class="projeto-visual visual-focus" role="img" aria-label="Ilustração de um cronômetro de foco Pomodoro">
                         <span class="anel-foco"><strong>25</strong><small>min</small></span>
                         <span class="ponto-foco ponto-1"></span><span class="ponto-foco ponto-2"></span><span class="ponto-foco ponto-3"></span>
@@ -134,10 +155,10 @@
                         <p class="tag">JavaScript · Timer</p>
                         <h3>FocusFlow</h3>
                         <p>Um timer Pomodoro para sessões de foco, pausas equilibradas e registro de ciclos concluídos.</p>
-                        <div class="links-projeto"><a class="link-projeto" href="./focusflow/index.html" target="_blank" rel="noopener noreferrer">Abrir projeto <span aria-hidden="true">↗</span></a><a class="link-codigo" href="https://github.com/SamueldevmI/portfolio/tree/main/focusflow" target="_blank" rel="noopener noreferrer">Ver no GitHub</a></div>
+                        <div class="links-projeto"><a class="link-projeto" href="./focusflow/index.html" target="_blank" rel="noopener noreferrer">Abrir projeto <span aria-hidden="true">↗</span></a><button type="button" class="link-acao" data-demo="./focusflow/index.html" data-demo-titulo="FocusFlow">Visualizar aqui</button><a class="link-codigo" href="https://github.com/SamueldevmI/portfolio/tree/main/focusflow" target="_blank" rel="noopener noreferrer">Ver no GitHub</a></div>
                     </div>
                 </article>
-                <article class="card-projeto">
+                <article class="card-projeto" data-tecnologias="javascript">
                     <div class="projeto-visual visual-kanban" role="img" aria-label="Quadro Kanban com tarefas em colunas">
                         <div><span>Backlog</span><i></i><i></i></div>
                         <div><span>Em andamento</span><i></i><i></i></div>
@@ -147,10 +168,10 @@
                         <p class="tag">JavaScript · Drag and Drop</p>
                         <h3>FlowBoard</h3>
                         <p>Um quadro Kanban completo para organizar projetos em colunas, mover tarefas e acompanhar prioridades.</p>
-                        <div class="links-projeto"><a class="link-projeto" href="./flowboard/index.html" target="_blank" rel="noopener noreferrer">Abrir projeto <span aria-hidden="true">↗</span></a><a class="link-codigo" href="https://github.com/SamueldevmI/portfolio/tree/main/flowboard" target="_blank" rel="noopener noreferrer">Ver no GitHub</a></div>
+                        <div class="links-projeto"><a class="link-projeto" href="./flowboard/index.html" target="_blank" rel="noopener noreferrer">Abrir projeto <span aria-hidden="true">↗</span></a><button type="button" class="link-acao" data-demo="./flowboard/index.html" data-demo-titulo="FlowBoard">Visualizar aqui</button><a class="link-codigo" href="https://github.com/SamueldevmI/portfolio/tree/main/flowboard" target="_blank" rel="noopener noreferrer">Ver no GitHub</a></div>
                     </div>
                 </article>
-                <article class="card-projeto">
+                <article class="card-projeto" data-tecnologias="python cli">
                     <div class="projeto-visual visual-terminal" role="img" aria-label="Terminal executando o planejador de treino em Python">
                         <div class="terminal-topo"><i></i><i></i><i></i></div>
                         <div class="terminal-corpo">
@@ -168,7 +189,7 @@
                         <div class="links-projeto"><a class="link-codigo" href="https://github.com/SamueldevmI/portfolio/tree/main/treino-planner" target="_blank" rel="noopener noreferrer">Ver código no GitHub ↗</a></div>
                     </div>
                 </article>
-                <article class="card-projeto">
+                <article class="card-projeto" data-tecnologias="python api">
                     <div class="projeto-visual visual-api" role="img" aria-label="Endpoints de uma API REST de controle de gastos">
                         <div class="api-linha"><span class="api-metodo metodo-get">GET</span><span>/gastos</span></div>
                         <div class="api-linha"><span class="api-metodo metodo-post">POST</span><span>/gastos</span></div>
@@ -180,7 +201,7 @@
                         <p class="tag">Python · Flask · SQLAlchemy</p>
                         <h3>Controle de Gastos — API</h3>
                         <p>Versão backend do controle de gastos: API REST com banco de dados, validação de entrada e testes automatizados. Plano gratuito: a 1ª requisição após inatividade pode levar ~50s.</p>
-                        <div class="links-projeto"><a class="link-projeto" href="./gastos-api-demo/index.html" target="_blank" rel="noopener noreferrer">Testar API <span aria-hidden="true">↗</span></a><a class="link-codigo" href="https://github.com/SamueldevmI/portfolio/tree/main/gastos-api" target="_blank" rel="noopener noreferrer">Ver código</a></div>
+                        <div class="links-projeto"><a class="link-projeto" href="./gastos-api-demo/index.html" target="_blank" rel="noopener noreferrer">Testar API <span aria-hidden="true">↗</span></a><button type="button" class="link-acao" data-caso>Ver decisões técnicas</button><a class="link-codigo" href="https://github.com/SamueldevmI/portfolio/tree/main/gastos-api" target="_blank" rel="noopener noreferrer">Ver código</a></div>
                     </div>
                 </article>
             </div>
@@ -233,13 +254,26 @@
             <div class="contato-acoes">
                 <a class="botao botao-principal" href="https://www.linkedin.com/in/samuel-rondon-94b570306/" target="_blank" rel="noopener noreferrer">Entrar em contato</a>
                 <a class="botao botao-secundario" href="https://github.com/SamueldevmI" target="_blank" rel="noopener noreferrer">Acessar GitHub ↗</a>
+                <button type="button" class="botao botao-secundario" id="botaoCopiarLink">Copiar link do LinkedIn</button>
             </div>
         </section>
     </main>
 
     <footer>© <span id="ano"></span> Samuel Mickael. Feito com dedicação. · <a href="https://github.com/SamueldevmI" target="_blank" rel="noopener noreferrer">GitHub</a></footer>
     <a class="voltar-topo" href="#inicio" aria-label="Voltar ao topo">↑</a>
+
+    <div class="modal-overlay" id="modalOverlay" hidden>
+        <div class="modal-caixa" role="dialog" aria-modal="true" aria-labelledby="modalTitulo">
+            <div class="modal-cabecalho">
+                <h3 id="modalTitulo"></h3>
+                <button type="button" class="modal-fechar" id="modalFechar" aria-label="Fechar">✕</button>
+            </div>
+            <div class="modal-corpo" id="modalCorpo"></div>
+        </div>
+    </div>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
     <script src="script.js"></script>
-    
+
 </body>
 </html>
