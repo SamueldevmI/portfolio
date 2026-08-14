@@ -442,3 +442,33 @@ tourProximo?.addEventListener("click", () => {
 document.addEventListener("keydown", (evento) => {
     if (evento.key === "Escape" && tourOverlay && !tourOverlay.hidden) fecharTour();
 });
+
+const suportaHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+/* Parallax sutil no círculo do hero */
+const heroConteudo = document.querySelector(".hero-conteudo");
+if (heroConteudo && !prefereMenosMovimento) {
+    window.addEventListener("scroll", () => {
+        heroConteudo.style.setProperty("--parallax", Math.min(window.scrollY * 0.15, 160) + "px");
+    });
+}
+
+/* Tilt 3D nos cards de projeto */
+if (suportaHover && !prefereMenosMovimento) {
+    document.body.classList.add("tem-tilt");
+    cardsProjeto.forEach((card) => {
+        card.addEventListener("mousemove", (evento) => {
+            const rect = card.getBoundingClientRect();
+            const centroX = rect.width / 2;
+            const centroY = rect.height / 2;
+            const x = evento.clientX - rect.left;
+            const y = evento.clientY - rect.top;
+            const rotY = ((x - centroX) / centroX) * 6;
+            const rotX = ((centroY - y) / centroY) * 6;
+            card.style.transform = `perspective(900px) rotateX(${rotX}deg) rotateY(${rotY}deg) translateY(-7px)`;
+        });
+        card.addEventListener("mouseleave", () => {
+            card.style.transform = "";
+        });
+    });
+}
