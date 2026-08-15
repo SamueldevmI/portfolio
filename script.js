@@ -260,16 +260,27 @@ function atualizarBarraProgresso() {
     barraProgresso.style.width = progresso + "%";
 }
 
+/* Nav vira camada de vidro flutuante ao rolar + fundo com parallax mais lento que o conteúdo */
+const navEl = document.querySelector(".nav");
+
+function atualizarCamadasScroll() {
+    atualizarBarraProgresso();
+    if (navEl) navEl.classList.toggle("nav-flutuante", window.scrollY > 40);
+    if (!prefereMenosMovimento) {
+        document.documentElement.style.setProperty("--scroll-parallax", Math.min(window.scrollY * 0.04, 40) + "px");
+    }
+}
+
 let ticandoBarra = false;
 window.addEventListener("scroll", () => {
     if (ticandoBarra) return;
     ticandoBarra = true;
     requestAnimationFrame(() => {
-        atualizarBarraProgresso();
+        atualizarCamadasScroll();
         ticandoBarra = false;
     });
 });
-atualizarBarraProgresso();
+atualizarCamadasScroll();
 
 /* Stats do hero "ao vivo" (GitHub API, com fallback silencioso pros valores estáticos) */
 function atualizarStatAoVivo(elemento, valor, formato) {
@@ -285,6 +296,13 @@ function atualizarStatAoVivo(elemento, valor, formato) {
     }
 }
 
+const statProjetosEl = document.getElementById("statProjetos");
+const statTecnologiasEl = document.getElementById("statTecnologias");
+if (!prefereMenosMovimento) {
+    statProjetosEl?.classList.add("stat-carregando");
+    statTecnologiasEl?.classList.add("stat-carregando");
+}
+
 async function carregarStatsGithub() {
     try {
         const resposta = await fetch("https://api.github.com/users/SamueldevmI/repos?per_page=100&type=owner");
@@ -295,8 +313,8 @@ async function carregarStatsGithub() {
         const linguagens = new Set(repos.map((r) => r.language).filter(Boolean));
         // Espera a contagem inicial (1200ms) terminar antes de atualizar, senão a animação estática sobrescreve o valor ao vivo.
         if (!prefereMenosMovimento) await new Promise((resolve) => setTimeout(resolve, 1250));
-        if (totalRepos > 0) atualizarStatAoVivo(document.getElementById("statProjetos"), totalRepos, "pad2");
-        if (linguagens.size > 0) atualizarStatAoVivo(document.getElementById("statTecnologias"), linguagens.size, "pad2");
+        if (totalRepos > 0) atualizarStatAoVivo(statProjetosEl, totalRepos, "pad2");
+        if (linguagens.size > 0) atualizarStatAoVivo(statTecnologiasEl, linguagens.size, "pad2");
 
         const maisRecente = repos.filter((r) => !r.fork).sort((a, b) => new Date(b.pushed_at) - new Date(a.pushed_at))[0];
         const trabalhandoEl = document.getElementById("trabalhandoAgora");
@@ -306,6 +324,9 @@ async function carregarStatsGithub() {
         }
     } catch {
         /* API do GitHub indisponível ou limite de requisições atingido: mantém os números estáticos do HTML */
+    } finally {
+        statProjetosEl?.classList.remove("stat-carregando");
+        statTecnologiasEl?.classList.remove("stat-carregando");
     }
 }
 carregarStatsGithub();
@@ -463,12 +484,34 @@ document.addEventListener("keydown", (evento) => {
 
 const suportaHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
-/* Parallax sutil no círculo do hero */
+/* Parallax sutil no círculo do hero (scroll + mouse) */
 const heroConteudo = document.querySelector(".hero-conteudo");
 if (heroConteudo && !prefereMenosMovimento) {
     window.addEventListener("scroll", () => {
         heroConteudo.style.setProperty("--parallax", Math.min(window.scrollY * 0.15, 160) + "px");
     });
+    heroConteudo.addEventListener("mousemove", (evento) => {
+        const relativoX = evento.clientX / window.innerWidth - 0.5;
+        heroConteudo.style.setProperty("--parallax-x", relativoX * -28 + "px");
+        const rect = heroConteudo.getBoundingClientRect();
+        heroConteudo.style.setProperty("--spot-x", evento.clientX - rect.left + "px");
+        heroConteudo.style.setProperty("--spot-y", evento.clientY - rect.top + "px");
+    });
+}
+
+/* Título de seção "afunda" numa camada mais distante ao passar do topo */
+const titulosSecao = document.querySelectorAll(".titulo-secao");
+if (titulosSecao.length && !prefereMenosMovimento && "IntersectionObserver" in window) {
+    const observadorTitulos = new IntersectionObserver(
+        (entradas) => {
+            entradas.forEach((entrada) => {
+                const passouDoTopo = !entrada.isIntersecting && entrada.boundingClientRect.top < 0;
+                entrada.target.classList.toggle("titulo-passado", passouDoTopo);
+            });
+        },
+        { threshold: 0, rootMargin: "-1px 0px -85% 0px" }
+    );
+    titulosSecao.forEach((el) => observadorTitulos.observe(el));
 }
 
 /* Tilt 3D nos cards de projeto */
@@ -487,6 +530,43 @@ if (suportaHover && !prefereMenosMovimento) {
         });
         card.addEventListener("mouseleave", () => {
             card.style.transform = "";
+        });
+    });
+}
+
+/* Cursor customizado: ponto que vira anel maior perto de elementos clicáveis */
+if (suportaHover && !prefereMenosMovimento) {
+    document.body.classList.add("tem-cursor-custom");
+    const cursorPonto = document.createElement("div");
+    cursorPonto.className = "cursor-ponto";
+    const cursorAnel = document.createElement("div");
+    cursorAnel.className = "cursor-anel";
+    document.body.append(cursorPonto, cursorAnel);
+
+    window.addEventListener("mousemove", (evento) => {
+        cursorPonto.style.left = evento.clientX + "px";
+        cursorPonto.style.top = evento.clientY + "px";
+        cursorAnel.style.left = evento.clientX + "px";
+        cursorAnel.style.top = evento.clientY + "px";
+    });
+
+    document.querySelectorAll("a, button, input, .chip-filtro, li[tabindex]").forEach((el) => {
+        el.addEventListener("mouseenter", () => cursorAnel.classList.add("cursor-anel-grande"));
+        el.addEventListener("mouseleave", () => cursorAnel.classList.remove("cursor-anel-grande"));
+    });
+}
+
+/* Botões magnéticos: deslizam levemente na direção do mouse */
+if (suportaHover && !prefereMenosMovimento) {
+    document.querySelectorAll(".botao").forEach((botao) => {
+        botao.addEventListener("mousemove", (evento) => {
+            const rect = botao.getBoundingClientRect();
+            const x = evento.clientX - rect.left - rect.width / 2;
+            const y = evento.clientY - rect.top - rect.height / 2;
+            botao.style.transform = `translate(${x * 0.22}px, ${y * 0.35 - 3}px)`;
+        });
+        botao.addEventListener("mouseleave", () => {
+            botao.style.transform = "";
         });
     });
 }
