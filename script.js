@@ -423,7 +423,8 @@ habilidadesItens.forEach((item) => {
 document.querySelectorAll(".botao-flip").forEach((botao) => {
     botao.addEventListener("click", (evento) => {
         evento.stopPropagation();
-        botao.closest(".projeto-visual")?.classList.toggle("visual-virado");
+        const virado = botao.closest(".projeto-visual")?.classList.toggle("visual-virado");
+        botao.setAttribute("aria-pressed", String(!!virado));
     });
 });
 

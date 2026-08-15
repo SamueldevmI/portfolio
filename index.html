@@ -38,6 +38,7 @@
 </head>
 
 <body>
+    <a class="pular-conteudo" href="#conteudo-principal">Pular para o conteúdo</a>
     <div class="ruido" aria-hidden="true"></div>
     <div class="barra-progresso" id="barraProgresso"></div>
     <nav class="indicador-secoes" aria-label="Navegação rápida por seção">
@@ -96,7 +97,7 @@
         </div>
     </header>
 
-    <main>
+    <main id="conteudo-principal">
         <section id="sobre-mim" class="secao sobre">
             <div class="titulo-secao">
                 <p class="eyebrow">QUEM SOU</p>
@@ -141,7 +142,7 @@
             <div id="lista-projetos" class="lista-projetos">
                 <article class="card-projeto" data-tecnologias="javascript html css">
                     <div class="projeto-visual visual-nexus" role="img" aria-label="Prévia visual do site Nexus Studio" data-stack="HTML · CSS · JavaScript">
-                        <button type="button" class="botao-flip" aria-label="Ver tecnologias usadas">⇄</button>
+                        <button type="button" class="botao-flip" aria-label="Ver tecnologias usadas" aria-pressed="false">⇄</button>
                         <button type="button" class="botao-compartilhar" data-compartilhar="./primeiro-projeto/index.html" data-compartilhar-titulo="Meu primeiro site" aria-label="Compartilhar projeto Meu primeiro site">⤴</button>
                         <span class="nexus-logo">NEXUS/STUDIO</span>
                         <strong>Ideias que viram<br>presença digital.</strong>
@@ -156,7 +157,7 @@
                 </article>
                 <article class="card-projeto" data-tecnologias="javascript html css api">
                     <div class="projeto-visual visual-finance" role="img" aria-label="Prévia visual de um painel de controle de gastos" data-stack="JavaScript · API Flask">
-                        <button type="button" class="botao-flip" aria-label="Ver tecnologias usadas">⇄</button>
+                        <button type="button" class="botao-flip" aria-label="Ver tecnologias usadas" aria-pressed="false">⇄</button>
                         <button type="button" class="botao-compartilhar" data-compartilhar="./controle-gastos/index.html" data-compartilhar-titulo="Controle de gastos" aria-label="Compartilhar projeto Controle de gastos">⤴</button>
                         <div class="finance-topo"><span>GRANA EM DIA</span><b>R$ 2.222,60</b></div>
                         <div class="finance-grafico"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
@@ -171,7 +172,7 @@
                 </article>
                 <article class="card-projeto" data-tecnologias="javascript html css">
                     <div class="projeto-visual visual-taskflow" role="img" aria-label="Ilustração de uma lista de tarefas organizada" data-stack="JavaScript · LocalStorage">
-                        <button type="button" class="botao-flip" aria-label="Ver tecnologias usadas">⇄</button>
+                        <button type="button" class="botao-flip" aria-label="Ver tecnologias usadas" aria-pressed="false">⇄</button>
                         <button type="button" class="botao-compartilhar" data-compartilhar="./taskflow/index.html" data-compartilhar-titulo="TaskFlow" aria-label="Compartilhar projeto TaskFlow">⤴</button>
                         <span class="mini-card mini-card-1">✓ Design da página</span>
                         <span class="mini-card mini-card-2">✓ Revisar código</span>
@@ -186,7 +187,7 @@
                 </article>
                 <article class="card-projeto" data-tecnologias="javascript html css">
                     <div class="projeto-visual visual-focus" role="img" aria-label="Ilustração de um cronômetro de foco Pomodoro" data-stack="JavaScript · Timer">
-                        <button type="button" class="botao-flip" aria-label="Ver tecnologias usadas">⇄</button>
+                        <button type="button" class="botao-flip" aria-label="Ver tecnologias usadas" aria-pressed="false">⇄</button>
                         <button type="button" class="botao-compartilhar" data-compartilhar="./focusflow/index.html" data-compartilhar-titulo="FocusFlow" aria-label="Compartilhar projeto FocusFlow">⤴</button>
                         <span class="anel-foco"><strong>25</strong><small>min</small></span>
                         <span class="ponto-foco ponto-1"></span><span class="ponto-foco ponto-2"></span><span class="ponto-foco ponto-3"></span>
@@ -200,7 +201,7 @@
                 </article>
                 <article class="card-projeto" data-tecnologias="javascript html css">
                     <div class="projeto-visual visual-kanban" role="img" aria-label="Quadro Kanban com tarefas em colunas" data-stack="JavaScript · Drag and Drop">
-                        <button type="button" class="botao-flip" aria-label="Ver tecnologias usadas">⇄</button>
+                        <button type="button" class="botao-flip" aria-label="Ver tecnologias usadas" aria-pressed="false">⇄</button>
                         <button type="button" class="botao-compartilhar" data-compartilhar="./flowboard/index.html" data-compartilhar-titulo="FlowBoard" aria-label="Compartilhar projeto FlowBoard">⤴</button>
                         <div><span>Backlog</span><i></i><i></i></div>
                         <div><span>Em andamento</span><i></i><i></i></div>
@@ -215,7 +216,7 @@
                 </article>
                 <article class="card-projeto" data-tecnologias="python cli">
                     <div class="projeto-visual visual-terminal" role="img" aria-label="Terminal executando o planejador de treino em Python" data-stack="Python · Rich · Pytest">
-                        <button type="button" class="botao-flip" aria-label="Ver tecnologias usadas">⇄</button>
+                        <button type="button" class="botao-flip" aria-label="Ver tecnologias usadas" aria-pressed="false">⇄</button>
                         <button type="button" class="botao-compartilhar" data-compartilhar="https://github.com/SamueldevmI/portfolio/tree/main/treino-planner" data-compartilhar-titulo="Planejador de Treino" aria-label="Compartilhar projeto Planejador de Treino">⤴</button>
                         <div class="terminal-topo"><i></i><i></i><i></i></div>
                         <div class="terminal-corpo">
@@ -235,7 +236,7 @@
                 </article>
                 <article class="card-projeto" data-tecnologias="python api">
                     <div class="projeto-visual visual-api" role="img" aria-label="Endpoints de uma API REST de controle de gastos" data-stack="Python · Flask · SQLAlchemy">
-                        <button type="button" class="botao-flip" aria-label="Ver tecnologias usadas">⇄</button>
+                        <button type="button" class="botao-flip" aria-label="Ver tecnologias usadas" aria-pressed="false">⇄</button>
                         <button type="button" class="botao-compartilhar" data-compartilhar="./gastos-api-demo/index.html" data-compartilhar-titulo="Controle de Gastos — API" aria-label="Compartilhar projeto Controle de Gastos API">⤴</button>
                         <div class="api-linha"><span class="api-metodo metodo-get">GET</span><span>/gastos</span></div>
                         <div class="api-linha"><span class="api-metodo metodo-post">POST</span><span>/gastos</span></div>
