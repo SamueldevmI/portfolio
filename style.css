@@ -349,13 +349,10 @@ body,.card-projeto,.nav,.botao,.chip-filtro,.habilidades li,footer,.contato,.lis
 .botao-flip { position:absolute; top:12px; left:12px; z-index:2; display:grid; place-items:center; width:34px; height:34px; border:1px solid rgba(255,255,255,.25); border-radius:50%; background:rgba(5,10,21,.55); color:#fff; font-size:1rem; line-height:1; cursor:pointer; opacity:0; transform:translateY(-4px); transition:opacity .25s ease,transform .6s ease,border-color .25s ease; backdrop-filter:blur(3px); }
 .card-projeto:hover .botao-flip,.card-projeto:focus-within .botao-flip,.botao-flip:focus-visible { opacity:1; transform:translateY(0); }
 .botao-flip:hover { border-color:var(--cyan); color:var(--cyan); }
-.projeto-visual { transition:transform .6s ease; }
-.projeto-visual.visual-virado { transform:rotateY(180deg); }
-.projeto-visual.visual-virado .botao-flip { transform:rotateY(180deg); }
-.projeto-visual > *:not(.botao-flip) { transition:opacity .2s ease .1s; }
-.projeto-visual.visual-virado > *:not(.botao-flip) { opacity:0; transition-delay:0s; }
-.projeto-visual::after { content:attr(data-stack); position:absolute; inset:0; z-index:1; display:grid; place-items:center; padding:20px; text-align:center; background:linear-gradient(135deg,#151a30,#221a3d); color:var(--cyan); font:600 1rem "DM Mono",monospace; opacity:0; transform:rotateY(180deg); transition:opacity .2s ease; pointer-events:none; }
-.projeto-visual.visual-virado::after { opacity:1; transition-delay:.15s; pointer-events:auto; }
+.projeto-visual > *:not(.botao-flip) { transition:opacity .3s ease, transform .3s ease; }
+.projeto-visual.visual-virado > *:not(.botao-flip) { opacity:0; transform:scale(.92); pointer-events:none; }
+.projeto-visual::after { content:attr(data-stack); position:absolute; inset:0; z-index:1; display:grid; place-items:center; padding:20px; text-align:center; background:linear-gradient(135deg,#151a30,#221a3d); color:var(--cyan); font:600 1rem "DM Mono",monospace; opacity:0; transform:scale(1.06); transition:opacity .3s ease .1s, transform .3s ease .1s; pointer-events:none; }
+.projeto-visual.visual-virado::after { opacity:1; transform:scale(1); pointer-events:auto; }
 
 /* Indicador de seção ganha um rótulo deslizante ao passar o mouse */
 .indicador-secoes a { position:relative; }
