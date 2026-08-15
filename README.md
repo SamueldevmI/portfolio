@@ -24,4 +24,4 @@ Site estático (HTML/CSS/JS puro), publicado com GitHub Pages a partir da branch
 
 ## Contato
 
-[LinkedIn](https://www.linkedin.com/in/samuel-rondon-94b570306/) · [GitHub](https://github.com/SamueldevmI)
+[LinkedIn](https://www.linkedin.com/in/samuelrondon-dev/) · [GitHub](https://github.com/SamueldevmI)
