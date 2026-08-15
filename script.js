@@ -24,7 +24,7 @@ botaoTema.addEventListener("click", () => {
 
 document.getElementById("ano").textContent = new Date().getFullYear();
 
-const elementosRevelar = document.querySelectorAll(".card-projeto, .lista-jornada article, .lista-servicos article");
+const elementosRevelar = document.querySelectorAll(".card-projeto, .lista-jornada article, .lista-servicos article, .sobre-conteudo > div:nth-child(2) > p");
 const prefereMenosMovimento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 elementosRevelar.forEach((el) => el.classList.add("reveal"));
@@ -45,6 +45,19 @@ if (prefereMenosMovimento || !("IntersectionObserver" in window)) {
     );
 
     elementosRevelar.forEach((el) => observador.observe(el));
+}
+
+/* Efeito de digitação no texto do hero, na primeira carga */
+const heroTexto = document.querySelector(".hero-texto");
+if (heroTexto && !prefereMenosMovimento) {
+    const textoCompletoHero = heroTexto.textContent;
+    heroTexto.textContent = "";
+    let indiceCharHero = 0;
+    setTimeout(function digitarHero() {
+        heroTexto.textContent = textoCompletoHero.slice(0, indiceCharHero);
+        indiceCharHero++;
+        if (indiceCharHero <= textoCompletoHero.length) setTimeout(digitarHero, 18);
+    }, 320);
 }
 
 const numerosContaveis = document.querySelectorAll("[data-contar]");
@@ -82,6 +95,31 @@ function mostrarToast(mensagem) {
     toastTimeout = setTimeout(() => toastEl.classList.remove("mostrar"), 2600);
 }
 
+/* Favicon "vivo": pisca por alguns segundos em momentos de destaque */
+function favIconTemporario(duracaoMs) {
+    const linkFavicon = document.querySelector('link[rel="icon"]');
+    if (!linkFavicon) return;
+    const original = linkFavicon.href;
+    linkFavicon.href = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='10' fill='%235df4d0'/%3E%3C/svg%3E";
+    setTimeout(() => { linkFavicon.href = original; }, duracaoMs);
+}
+
+/* Ripple ao clicar nos botões */
+document.querySelectorAll(".botao").forEach((botao) => {
+    botao.addEventListener("click", (evento) => {
+        if (prefereMenosMovimento) return;
+        const rect = botao.getBoundingClientRect();
+        const tamanho = Math.max(rect.width, rect.height);
+        const ripple = document.createElement("span");
+        ripple.className = "ripple";
+        ripple.style.width = ripple.style.height = tamanho + "px";
+        ripple.style.left = evento.clientX - rect.left - tamanho / 2 + "px";
+        ripple.style.top = evento.clientY - rect.top - tamanho / 2 + "px";
+        botao.appendChild(ripple);
+        ripple.addEventListener("animationend", () => ripple.remove());
+    });
+});
+
 /* Terminal interativo */
 const terminalForm = document.getElementById("terminalForm");
 const terminalInput = document.getElementById("terminalInput");
@@ -93,6 +131,24 @@ function imprimirNoTerminal(texto, classe) {
     p.textContent = texto;
     terminalSaida.appendChild(p);
     terminalSaida.scrollTop = terminalSaida.scrollHeight;
+}
+
+/* Boot sequence no terminal, antes de liberar o prompt */
+if (terminalSaida) {
+    const linhasBoot = ["Iniciando sessão...", "Carregando módulos: html, css, javascript...", "Pronto."];
+    if (prefereMenosMovimento) {
+        terminalSaida.innerHTML = '<p>Digite <span class="terminal-prompt">help</span> para conhecer os comandos disponíveis.</p>';
+    } else {
+        terminalSaida.innerHTML = "";
+        linhasBoot.forEach((linha, indice) => {
+            setTimeout(() => imprimirNoTerminal(linha, "terminal-echo"), indice * 320);
+        });
+        setTimeout(() => {
+            const p = document.createElement("p");
+            p.innerHTML = 'Digite <span class="terminal-prompt">help</span> para conhecer os comandos disponíveis.';
+            terminalSaida.appendChild(p);
+        }, linhasBoot.length * 320);
+    }
 }
 
 const comandosTerminal = {
@@ -146,6 +202,11 @@ chipsFiltro.forEach((chip) => {
             const tecnologias = (card.dataset.tecnologias || "").split(" ");
             const mostrar = filtro === "todos" || tecnologias.includes(filtro);
             card.classList.toggle("card-oculto", !mostrar);
+            if (mostrar && !prefereMenosMovimento) {
+                card.classList.remove("card-filtrado");
+                void card.offsetWidth;
+                card.classList.add("card-filtrado");
+            }
         });
     });
 });
@@ -236,6 +297,7 @@ document.addEventListener("keydown", (evento) => {
 
 function ativarEasterEgg() {
     mostrarToast("🕹️ Easter egg encontrado! Modo dev ativado.");
+    favIconTemporario(4000);
     if (prefereMenosMovimento) return;
     const emojis = ["💻", "🚀", "✨", "🐍", "⚡"];
     for (let i = 0; i < 24; i++) {
@@ -355,6 +417,14 @@ habilidadesItens.forEach((item) => {
     item.addEventListener("mouseleave", limparDestaqueProjetos);
     item.addEventListener("focus", () => destacarProjetosPorTecnologia(item.dataset.tecnologia));
     item.addEventListener("blur", limparDestaqueProjetos);
+});
+
+/* Flip nos cards de projeto: mostra a stack completa no verso */
+document.querySelectorAll(".botao-flip").forEach((botao) => {
+    botao.addEventListener("click", (evento) => {
+        evento.stopPropagation();
+        botao.closest(".projeto-visual")?.classList.toggle("visual-virado");
+    });
 });
 
 /* Compartilhar projeto (Web Share API, com fallback pra copiar o link) */
@@ -490,12 +560,24 @@ if (heroConteudo && !prefereMenosMovimento) {
     window.addEventListener("scroll", () => {
         heroConteudo.style.setProperty("--parallax", Math.min(window.scrollY * 0.15, 160) + "px");
     });
+    let ultimoRastro = 0;
     heroConteudo.addEventListener("mousemove", (evento) => {
         const relativoX = evento.clientX / window.innerWidth - 0.5;
         heroConteudo.style.setProperty("--parallax-x", relativoX * -28 + "px");
         const rect = heroConteudo.getBoundingClientRect();
         heroConteudo.style.setProperty("--spot-x", evento.clientX - rect.left + "px");
         heroConteudo.style.setProperty("--spot-y", evento.clientY - rect.top + "px");
+
+        const agora = Date.now();
+        if (agora - ultimoRastro > 90) {
+            ultimoRastro = agora;
+            const rastro = document.createElement("span");
+            rastro.className = "rastro-cursor";
+            rastro.style.left = evento.clientX + "px";
+            rastro.style.top = evento.clientY + "px";
+            document.body.appendChild(rastro);
+            rastro.addEventListener("animationend", () => rastro.remove());
+        }
     });
 }
 
@@ -610,6 +692,7 @@ botaoSurpresa?.addEventListener("click", surpreenderProjeto);
 /* Recompensa por tempo de permanência */
 setTimeout(() => {
     mostrarToast("🎉 Você já está por aqui há um tempinho — obrigado por explorar o portfólio!");
+    favIconTemporario(4000);
 }, 90000);
 
 /* Paleta de comandos (Ctrl+K) */
