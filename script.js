@@ -2,6 +2,7 @@ const botaoTema = document.getElementById("temaEscuro");
 
 function atualizarTema(escuro) {
     document.body.classList.toggle("dark-mode", escuro);
+    document.documentElement.classList.toggle("dark-mode", escuro);
     botaoTema.setAttribute("aria-pressed", String(!escuro));
     botaoTema.setAttribute("aria-label", escuro ? "Ativar tema escuro" : "Ativar tema claro");
 }
@@ -626,12 +627,35 @@ if (suportaHover && !prefereMenosMovimento) {
     cursorAnel.className = "cursor-anel";
     document.body.append(cursorPonto, cursorAnel);
 
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    let pontoX = mouseX, pontoY = mouseY, anelX = mouseX, anelY = mouseY;
+
     window.addEventListener("mousemove", (evento) => {
-        cursorPonto.style.left = evento.clientX + "px";
-        cursorPonto.style.top = evento.clientY + "px";
-        cursorAnel.style.left = evento.clientX + "px";
-        cursorAnel.style.top = evento.clientY + "px";
+        mouseX = evento.clientX;
+        mouseY = evento.clientY;
+        cursorPonto.style.opacity = "1";
+        cursorAnel.style.opacity = "1";
     });
+    document.addEventListener("mouseleave", () => {
+        cursorPonto.style.opacity = "0";
+        cursorAnel.style.opacity = "0";
+    });
+    window.addEventListener("mousedown", () => cursorAnel.classList.add("cursor-anel-clique"));
+    window.addEventListener("mouseup", () => cursorAnel.classList.remove("cursor-anel-clique"));
+
+    /* Suaviza o movimento por interpolação a cada frame, em vez de grudar direto no mousemove */
+    (function animarCursor() {
+        pontoX += (mouseX - pontoX) * 0.35;
+        pontoY += (mouseY - pontoY) * 0.35;
+        anelX += (mouseX - anelX) * 0.16;
+        anelY += (mouseY - anelY) * 0.16;
+        cursorPonto.style.left = pontoX + "px";
+        cursorPonto.style.top = pontoY + "px";
+        cursorAnel.style.left = anelX + "px";
+        cursorAnel.style.top = anelY + "px";
+        requestAnimationFrame(animarCursor);
+    })();
 
     document.querySelectorAll("a, button, input, .chip-filtro, li[tabindex]").forEach((el) => {
         el.addEventListener("mouseenter", () => cursorAnel.classList.add("cursor-anel-grande"));
