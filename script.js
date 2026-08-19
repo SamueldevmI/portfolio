@@ -345,39 +345,12 @@ window.addEventListener("scroll", () => {
 });
 atualizarCamadasScroll();
 
-/* Stats do hero "ao vivo" (GitHub API, com fallback silencioso pros valores estáticos) */
-function atualizarStatAoVivo(elemento, valor, formato) {
-    if (!elemento) return;
-    const texto = formato === "pad2" ? String(valor).padStart(2, "0") : String(valor);
-    if (elemento.textContent === texto) return;
-    elemento.textContent = texto;
-    elemento.dataset.contar = String(valor);
-    if (!prefereMenosMovimento) {
-        elemento.classList.remove("stat-atualizado");
-        void elemento.offsetWidth;
-        elemento.classList.add("stat-atualizado");
-    }
-}
-
-const statProjetosEl = document.getElementById("statProjetos");
-const statTecnologiasEl = document.getElementById("statTecnologias");
-if (!prefereMenosMovimento) {
-    statProjetosEl?.classList.add("stat-carregando");
-    statTecnologiasEl?.classList.add("stat-carregando");
-}
-
 async function carregarStatsGithub() {
     try {
         const resposta = await fetch("https://api.github.com/users/SamueldevmI/repos?per_page=100&type=owner");
         if (!resposta.ok) return;
         const repos = await resposta.json();
         if (!Array.isArray(repos)) return;
-        const totalRepos = repos.filter((r) => !r.fork).length;
-        const linguagens = new Set(repos.map((r) => r.language).filter(Boolean));
-        // Espera a contagem inicial (1200ms) terminar antes de atualizar, senão a animação estática sobrescreve o valor ao vivo.
-        if (!prefereMenosMovimento) await new Promise((resolve) => setTimeout(resolve, 1250));
-        if (totalRepos > 0) atualizarStatAoVivo(statProjetosEl, totalRepos, "pad2");
-        if (linguagens.size > 0) atualizarStatAoVivo(statTecnologiasEl, linguagens.size, "pad2");
 
         const maisRecente = repos.filter((r) => !r.fork).sort((a, b) => new Date(b.pushed_at) - new Date(a.pushed_at))[0];
         const trabalhandoEl = document.getElementById("trabalhandoAgora");
@@ -386,10 +359,7 @@ async function carregarStatsGithub() {
             trabalhandoEl.hidden = false;
         }
     } catch {
-        /* API do GitHub indisponível ou limite de requisições atingido: mantém os números estáticos do HTML */
-    } finally {
-        statProjetosEl?.classList.remove("stat-carregando");
-        statTecnologiasEl?.classList.remove("stat-carregando");
+        /* API do GitHub indisponível ou limite de requisições atingido: sem "trabalhando agora em" nesta visita */
     }
 }
 carregarStatsGithub();
