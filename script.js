@@ -5,6 +5,8 @@ function atualizarTema(escuro) {
     document.documentElement.classList.toggle("dark-mode", escuro);
     botaoTema.setAttribute("aria-pressed", String(!escuro));
     botaoTema.setAttribute("aria-label", escuro ? "Ativar tema escuro" : "Ativar tema claro");
+    const metaTema = document.querySelector('meta[name="theme-color"]');
+    if (metaTema) metaTema.setAttribute("content", escuro ? "#ffd9a0" : "#070b16");
 }
 
 const temaSalvo = localStorage.getItem("tema");
