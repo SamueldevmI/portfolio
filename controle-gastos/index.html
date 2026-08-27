@@ -11,6 +11,13 @@
     <meta property="og:image" content="https://samueldevmi.github.io/portfolio/imagem/og-image.png">
     <link rel="icon" href="../favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#196d7a">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Grana em Dia">
+    <link rel="apple-touch-icon" href="../favicon.svg">
     <title>Grana em Dia | Controle de Gastos</title>
 </head>
 <body>
@@ -100,5 +107,10 @@
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
     <footer>Feito por Samuel Mickael · Dados salvos numa API real (Flask + SQLAlchemy). No plano gratuito, a 1ª ação pode levar até 50s se a API estava "dormindo".</footer>
     <script src="script.js"></script>
+    <script>
+        if ("serviceWorker" in navigator) {
+            window.addEventListener("load", () => navigator.serviceWorker.register("sw.js"));
+        }
+    </script>
 </body>
 </html>

@@ -1,0 +1,18 @@
+{
+  "name": "Grana em Dia | Controle de Gastos",
+  "short_name": "Grana em Dia",
+  "description": "Controle de gastos pessoal desenvolvido por Samuel Mickael.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f5f7fb",
+  "theme_color": "#196d7a",
+  "icons": [
+    {
+      "src": "../favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
