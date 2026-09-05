@@ -47,8 +47,8 @@
 
         <section class="conteudo">
             <aside class="painel-formulario">
-                <p class="sobretitulo">NOVA TRANSAÇÃO</p>
-                <h2>Adicione um lançamento</h2>
+                <p class="sobretitulo" id="rotuloFormulario">NOVA TRANSAÇÃO</p>
+                <h2 id="tituloFormulario">Adicione um lançamento</h2>
                 <form id="formTransacao">
                     <label for="descricao">Descrição</label>
                     <input id="descricao" name="descricao" type="text" placeholder="Ex.: Freelance de site" maxlength="50" required>
@@ -77,6 +77,7 @@
                         <label class="opcao"><input type="radio" name="tipo" value="despesa"><span>Despesa</span></label>
                     </fieldset>
                     <button class="botao-principal" type="submit">Adicionar transação</button>
+                    <button class="botao-cancelar" id="botaoCancelarEdicao" type="button" hidden>Cancelar edição</button>
                 </form>
             </aside>
 

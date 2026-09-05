@@ -2,6 +2,9 @@ const API = "https://gastos-api-z0dt.onrender.com";
 
 const form = document.getElementById("formTransacao");
 const botaoSalvar = form.querySelector('button[type="submit"]');
+const botaoCancelarEdicao = document.getElementById("botaoCancelarEdicao");
+const rotuloFormulario = document.getElementById("rotuloFormulario");
+const tituloFormulario = document.getElementById("tituloFormulario");
 const lista = document.getElementById("listaTransacoes");
 const estadoVazio = document.getElementById("estadoVazio");
 const filtro = document.getElementById("filtro");
@@ -11,6 +14,7 @@ const formatoData = new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "s
 let transacoes = [];
 let carregando = true;
 let erroConexao = false;
+let editandoId = null;
 
 async function api(caminho, opcoes = {}) {
     const resposta = await fetch(`${API}${caminho}`, {
@@ -92,10 +96,10 @@ function renderizar() {
 
     itens.slice().reverse().forEach(item => {
         const linha = document.createElement("article");
-        linha.className = `transacao ${item.tipo}`;
+        linha.className = `transacao ${item.tipo}${item.id === editandoId ? " editando" : ""}`;
         const icone = item.tipo === "receita" ? "↗" : "↘";
         const sinal = item.tipo === "receita" ? "+" : "−";
-        linha.innerHTML = `<span class="icone" aria-hidden="true">${icone}</span><div><p class="nome"></p><p class="categoria"></p></div><strong class="valor-transacao">${sinal} ${formatoMoeda.format(item.valor)}</strong><button class="excluir" type="button" aria-label="Excluir ${item.descricao}" data-id="${item.id}">×</button>`;
+        linha.innerHTML = `<span class="icone" aria-hidden="true">${icone}</span><div><p class="nome"></p><p class="categoria"></p></div><strong class="valor-transacao">${sinal} ${formatoMoeda.format(item.valor)}</strong><button class="editar" type="button" aria-label="Editar ${item.descricao}" data-id="${item.id}">✎</button><button class="excluir" type="button" aria-label="Excluir ${item.descricao}" data-id="${item.id}">×</button>`;
         linha.querySelector(".nome").textContent = item.descricao;
         const data = item.data ? formatoData.format(new Date(`${item.data}T12:00:00`)) : "Sem data";
         linha.querySelector(".categoria").textContent = `${item.categoria} · ${data}`;
@@ -118,6 +122,33 @@ async function carregarTransacoes() {
     }
 }
 
+function entrarModoEdicao(item) {
+    editandoId = item.id;
+    form.descricao.value = item.descricao;
+    form.valor.value = item.valor;
+    form.categoria.value = item.categoria;
+    form.data.value = item.data;
+    form.tipo.value = item.tipo;
+
+    rotuloFormulario.textContent = "EDITAR TRANSAÇÃO";
+    tituloFormulario.textContent = "Atualize o lançamento";
+    botaoSalvar.textContent = "Salvar alterações";
+    botaoCancelarEdicao.hidden = false;
+    renderizar();
+    form.scrollIntoView({ behavior: "smooth", block: "start" });
+    form.descricao.focus();
+}
+
+function sairModoEdicao() {
+    editandoId = null;
+    form.reset();
+    document.getElementById("data").value = new Date().toISOString().slice(0, 10);
+    rotuloFormulario.textContent = "NOVA TRANSAÇÃO";
+    tituloFormulario.textContent = "Adicione um lançamento";
+    botaoSalvar.textContent = "Adicionar transação";
+    botaoCancelarEdicao.hidden = true;
+}
+
 form.addEventListener("submit", async event => {
     event.preventDefault();
     const dados = new FormData(form);
@@ -132,28 +163,49 @@ form.addEventListener("submit", async event => {
         data: dados.get("data"),
     };
 
+    const emEdicao = editandoId !== null;
     botaoSalvar.disabled = true;
     botaoSalvar.textContent = "Salvando…";
     try {
-        await api("/gastos", { method: "POST", body: JSON.stringify(payload) });
-        form.reset();
-        document.getElementById("data").value = new Date().toISOString().slice(0, 10);
-        await carregarTransacoes();
-        mostrarToast("Transação adicionada com sucesso.");
+        if (emEdicao) {
+            await api(`/gastos/${editandoId}`, { method: "PUT", body: JSON.stringify(payload) });
+            sairModoEdicao();
+            await carregarTransacoes();
+            mostrarToast("Transação atualizada com sucesso.");
+        } else {
+            await api("/gastos", { method: "POST", body: JSON.stringify(payload) });
+            form.reset();
+            document.getElementById("data").value = new Date().toISOString().slice(0, 10);
+            await carregarTransacoes();
+            mostrarToast("Transação adicionada com sucesso.");
+        }
     } catch (erro) {
         mostrarToast(erro.message);
     } finally {
         botaoSalvar.disabled = false;
-        botaoSalvar.textContent = "Adicionar transação";
+        botaoSalvar.textContent = editandoId !== null ? "Salvar alterações" : "Adicionar transação";
     }
 });
 
+botaoCancelarEdicao.addEventListener("click", () => {
+    sairModoEdicao();
+    renderizar();
+});
+
 lista.addEventListener("click", async event => {
+    const botaoEditar = event.target.closest(".editar");
+    if (botaoEditar) {
+        const item = transacoes.find(t => t.id === Number(botaoEditar.dataset.id));
+        if (item) entrarModoEdicao(item);
+        return;
+    }
+
     const botao = event.target.closest(".excluir");
     if (!botao) return;
     botao.disabled = true;
     try {
         await api(`/gastos/${botao.dataset.id}`, { method: "DELETE" });
+        if (editandoId === Number(botao.dataset.id)) sairModoEdicao();
         await carregarTransacoes();
         mostrarToast("Transação removida.");
     } catch (erro) {
@@ -167,6 +219,7 @@ filtro.addEventListener("change", renderizar);
 document.getElementById("limparTudo").addEventListener("click", async () => {
     if (!transacoes.length || !confirm("Deseja apagar todas as transações?")) return;
     try {
+        sairModoEdicao();
         await Promise.all(transacoes.map(item => api(`/gastos/${item.id}`, { method: "DELETE" })));
         await carregarTransacoes();
         mostrarToast("Dados removidos.");
@@ -188,6 +241,7 @@ document.getElementById("carregarExemplo").addEventListener("click", async () =>
     ];
 
     try {
+        sairModoEdicao();
         await Promise.all(transacoes.map(item => api(`/gastos/${item.id}`, { method: "DELETE" })));
         await Promise.all(exemplos.map(item => api("/gastos", { method: "POST", body: JSON.stringify(item) })));
         await carregarTransacoes();
