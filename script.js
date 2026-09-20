@@ -460,6 +460,7 @@ const passosTour = [
     { seletor: "#sobre-mim .titulo-secao", titulo: "Quem sou", texto: "Um resumo rápido sobre mim, minha formação e minhas competências principais." },
     { seletor: "#projetos .titulo-secao", titulo: "Projetos em destaque", texto: "Os trabalhos que representam meu aprendizado — dá pra filtrar por tecnologia e testar as demos direto aqui." },
     { seletor: "#servicos .titulo-secao", titulo: "Como posso ajudar", texto: "Os tipos de projeto que eu topo desenvolver: sites, aplicações web e automações em Python." },
+    { seletor: "#orcamento .orcamento-caixa", titulo: "Peça seu orçamento", texto: "Responda algumas perguntas e a mensagem já vai pronta para o meu WhatsApp." },
     { seletor: "#contato .contato-acoes", titulo: "Vamos conversar", texto: "Se tiver uma vaga, projeto ou só quiser trocar uma ideia, é por aqui." },
 ];
 let passoAtualTour = 0;
@@ -792,3 +793,452 @@ if (botaoBusca && paletaOverlay) {
         }
     });
 }
+
+/* Orçamento em passos: as respostas viram uma mensagem pronta para o WhatsApp */
+(() => {
+    const raiz = document.getElementById("orcamentoApp");
+    const linkDireto = document.querySelector('#orcamento a[href^="https://wa.me/"]');
+    if (!raiz || !linkDireto) return;
+
+    // O número vem do link "falar direto" da própria seção: um único lugar para trocar.
+    const numero = new URL(linkDireto.href).pathname.replace(/\//g, "");
+    const CHAVE = "orcamento-rascunho";
+    const VALIDADE_MS = 14 * 24 * 60 * 60 * 1000;
+
+    const TIPOS = {
+        site: {
+            rotulo: "Site ou página de vendas",
+            perguntas: [
+                { id: "dominio", modo: "escolha", pergunta: "Você já tem um endereço na internet (domínio)?", opcoes: ["Sim", "Ainda não", "Não sei o que é isso"], rotuloMsg: "Já tem domínio" },
+                { id: "identidade", modo: "escolha", pergunta: "Você já tem logo e cores da sua marca?", opcoes: ["Sim, tenho os dois", "Só o logo", "Ainda não tenho", "Não sei"], rotuloMsg: "Logo e cores" },
+            ],
+            recursos: ["Botão de WhatsApp", "Formulário de contato", "Galeria de fotos", "Loja online", "Agendamento", "Blog ou novidades"],
+        },
+        sistema: {
+            rotulo: "Sistema web (cadastro, controle, painel)",
+            perguntas: [
+                { id: "usuarios", modo: "escolha", pergunta: "Quantas pessoas vão usar o sistema?", opcoes: ["Só eu", "2 a 5 pessoas", "6 a 20 pessoas", "Mais de 20"], rotuloMsg: "Quantas pessoas vão usar" },
+                { id: "hoje", modo: "escolha", pergunta: "Como você controla isso hoje?", opcoes: ["Planilha", "Caderno ou papel", "Outro sistema", "Ainda não controlo"], rotuloMsg: "Como controla hoje" },
+            ],
+            recursos: ["Login de usuários", "Painel com gráficos", "Cadastro de clientes", "Relatórios em PDF ou Excel", "Avisos por WhatsApp ou e-mail", "Pagamento online"],
+        },
+        app: {
+            rotulo: "Aplicativo de celular",
+            perguntas: [
+                { id: "aparelho", modo: "escolha", pergunta: "Para qual celular?", opcoes: ["Android", "iPhone", "Os dois", "Não sei"], rotuloMsg: "Celular" },
+                { id: "offline", modo: "escolha", pergunta: "Ele precisa funcionar sem internet?", opcoes: ["Sim", "Não", "Não sei"], rotuloMsg: "Funcionar sem internet" },
+            ],
+            recursos: ["Login de usuários", "Notificações", "Câmera e fotos", "Mapa e localização", "Pagamento online", "Painel para administrar"],
+        },
+        automacao: {
+            rotulo: "Automação (acabar com tarefa repetitiva)",
+            perguntas: [
+                { id: "tarefa", modo: "texto", longo: true, max: 240, pergunta: "Qual tarefa você repete todo dia ou toda semana?", dica: "Ex.: copiar os dados dos e-mails para uma planilha", rotuloMsg: "Tarefa que se repete" },
+                { id: "frequencia", modo: "escolha", pergunta: "Com que frequência ela acontece?", opcoes: ["Todo dia", "Toda semana", "Todo mês", "Não sei"], rotuloMsg: "Frequência" },
+            ],
+            recursos: ["Planilhas (Excel ou Google)", "E-mail", "WhatsApp", "Relatórios prontos", "Ler PDFs e documentos", "Avisos automáticos"],
+        },
+        naosei: {
+            rotulo: "Ainda não sei o que preciso",
+            perguntas: [
+                { id: "problema", modo: "texto", longo: true, max: 240, pergunta: "Qual problema você quer resolver ou o que quer melhorar?", dica: "Ex.: perco muito tempo respondendo as mesmas perguntas", rotuloMsg: "O que quer resolver" },
+            ],
+            recursos: null,
+        },
+    };
+    const ORDEM = ["site", "sistema", "app", "automacao", "naosei"];
+
+    const PASSO_TIPO = { id: "tipo", modo: "escolha", pergunta: "Que tipo de projeto você quer?", opcoes: ORDEM.map((id) => ({ valor: id, texto: TIPOS[id].rotulo })) };
+    const PASSO_NEGOCIO = { id: "negocio", modo: "texto", opcional: true, max: 160, pergunta: "O que você faz ou vende?", dica: "Ex.: sou dentista e atendo em Campo Grande", rotuloMsg: "Sobre o negócio" };
+    const PASSO_PRAZO = { id: "prazo", modo: "escolha", opcional: true, pergunta: "Para quando você precisa?", opcoes: ["O quanto antes", "Em cerca de 1 mês", "Sem pressa", "Ainda não sei"], rotuloMsg: "Prazo" };
+    const PASSO_CONTATO = { id: "contato", modo: "contato", pergunta: "Como posso te chamar?" };
+    const TOTAL_TIPICO = 7;
+
+    let resp = {};
+    let indice = 0;
+    let retomado = false;
+    let larguraAnterior = 0;
+    let bloqueado = false;
+
+    const criar = (tag, classe, texto) => {
+        const elemento = document.createElement(tag);
+        if (classe) elemento.className = classe;
+        if (texto !== undefined) elemento.textContent = texto;
+        return elemento;
+    };
+
+    const tipoAtual = () => TIPOS[resp.tipo];
+
+    function passos() {
+        const tipo = tipoAtual();
+        const lista = [PASSO_TIPO, PASSO_NEGOCIO];
+        if (tipo) {
+            lista.push(...tipo.perguntas.map((pergunta) => ({ ...pergunta, opcional: true })));
+            if (tipo.recursos) {
+                lista.push({ id: "recursos", modo: "varias", opcional: true, pergunta: "O que o projeto precisa ter?", ajuda: "Marque o que quiser. Pode pular.", opcoes: tipo.recursos, rotuloMsg: "Precisa ter" });
+            }
+        }
+        lista.push(PASSO_PRAZO, PASSO_CONTATO);
+        return lista;
+    }
+
+    const totalDePerguntas = () => (tipoAtual() ? passos().length : TOTAL_TIPICO);
+
+    function limparDoTipo() {
+        const antigo = tipoAtual();
+        if (antigo) antigo.perguntas.forEach((pergunta) => delete resp[pergunta.id]);
+        delete resp.recursos;
+    }
+
+    /* Rascunho guardado só neste aparelho */
+    function carregar() {
+        try {
+            const salvo = JSON.parse(localStorage.getItem(CHAVE) || "null");
+            if (!salvo || salvo.v !== 1 || Date.now() - salvo.em > VALIDADE_MS || !salvo.resp || typeof salvo.resp !== "object") return;
+            Object.entries(salvo.resp).forEach(([chave, valor]) => {
+                if (typeof valor === "string") resp[chave] = valor.slice(0, 600);
+                else if (Array.isArray(valor)) resp[chave] = valor.filter((item) => typeof item === "string").slice(0, 12);
+            });
+            indice = Number.isInteger(salvo.indice) ? salvo.indice : 0;
+            retomado = Object.keys(resp).length > 0;
+        } catch (erro) {
+            /* sem armazenamento: segue sem rascunho */
+        }
+    }
+
+    function salvar() {
+        try {
+            if (Object.keys(resp).length === 0) localStorage.removeItem(CHAVE);
+            else localStorage.setItem(CHAVE, JSON.stringify({ v: 1, em: Date.now(), indice, resp }));
+        } catch (erro) {
+            /* sem armazenamento: o formulário continua funcionando */
+        }
+    }
+
+    /* Mensagem final */
+    function compor() {
+        const tipo = tipoAtual();
+        const nome = typeof resp.nome === "string" ? resp.nome.trim() : "";
+        const linhas = [nome ? `Oi, Samuel! Me chamo ${nome}. Vi seu portfólio e quero pedir um orçamento.` : "Oi, Samuel! Vi seu portfólio e quero pedir um orçamento.", ""];
+        if (tipo) linhas.push(`Projeto: ${tipo.rotulo}`);
+        passos().forEach((passo) => {
+            if (passo.id === "tipo" || passo.id === "contato") return;
+            const valor = passo.id === "recursos"
+                ? (Array.isArray(resp.recursos) ? resp.recursos.filter((item) => passo.opcoes.includes(item)).join(", ") : "")
+                : resp[passo.id];
+            if (valor) linhas.push(`${passo.rotuloMsg}: ${valor}`);
+        });
+        if (resp.obs) linhas.push(`Mais detalhes: ${resp.obs}`);
+        return linhas.join("\n");
+    }
+
+    async function copiarTexto(campo) {
+        try {
+            await navigator.clipboard.writeText(campo.value);
+            mostrarToast("Resumo copiado!");
+        } catch (erro) {
+            campo.select();
+            const copiou = typeof document.execCommand === "function" && document.execCommand("copy");
+            mostrarToast(copiou ? "Resumo copiado!" : "Não deu para copiar. Selecione o texto e copie.");
+        }
+    }
+
+    /* Navegação entre passos */
+    function ir(novo) {
+        retomado = false;
+        indice = Math.max(0, Math.min(novo, passos().length));
+        desenhar(true);
+        const caixa = raiz.closest(".orcamento-caixa");
+        if (caixa && caixa.getBoundingClientRect().top < 0) {
+            caixa.scrollIntoView({ block: "start", behavior: prefereMenosMovimento ? "instant" : "smooth" });
+        }
+    }
+
+    function recomecar() {
+        resp = {};
+        indice = 0;
+        retomado = false;
+        larguraAnterior = 0;
+        desenhar(true);
+    }
+
+    function escolher(passo, valor, grade, botao) {
+        if (bloqueado) return;
+        if (passo.id === "tipo" && resp.tipo && resp.tipo !== valor) limparDoTipo();
+        resp[passo.id] = valor;
+        grade.querySelectorAll(".orc-opcao").forEach((item) => item.setAttribute("aria-pressed", String(item === botao)));
+        salvar();
+        bloqueado = true;
+        const de = indice;
+        setTimeout(() => {
+            bloqueado = false;
+            if (indice === de) ir(de + 1);
+        }, prefereMenosMovimento ? 0 : 200);
+    }
+
+    /* Desenho */
+    function criarProgresso(feitos, total, pronto) {
+        const caixa = criar("div", "orc-progresso");
+        caixa.append(criar("p", "orc-etapa", pronto ? "Tudo certo!" : `Pergunta ${feitos + 1} de ${total}`));
+        const trilho = criar("div", "orc-trilho");
+        trilho.setAttribute("role", "progressbar");
+        trilho.setAttribute("aria-label", "Progresso do orçamento");
+        trilho.setAttribute("aria-valuemin", "0");
+        trilho.setAttribute("aria-valuemax", String(total));
+        trilho.setAttribute("aria-valuenow", String(feitos));
+        const barra = criar("span");
+        const largura = Math.round((feitos / total) * 100);
+        barra.style.width = largura + "%";
+        barra.style.setProperty("--de", larguraAnterior + "%");
+        larguraAnterior = largura;
+        trilho.append(barra);
+        caixa.append(trilho);
+        return caixa;
+    }
+
+    function criarNotaRetomado() {
+        const nota = criar("p", "orc-retomado", "Continuamos de onde você parou. ");
+        const botao = criar("button", "orc-link", "Recomeçar do zero");
+        botao.type = "button";
+        botao.addEventListener("click", recomecar);
+        nota.append(botao);
+        return nota;
+    }
+
+    function criarNavegacao(pai, principal, secundario) {
+        const nav = criar("div", "orc-nav");
+        if (indice > 0) {
+            const voltar = criar("button", "orc-link", "← Voltar");
+            voltar.type = "button";
+            voltar.addEventListener("click", () => ir(indice - 1));
+            nav.append(voltar);
+        }
+        const fim = criar("div", "orc-nav-fim");
+        if (secundario) {
+            const botao = criar("button", "orc-link", secundario.texto);
+            botao.type = "button";
+            botao.addEventListener("click", secundario.acao);
+            fim.append(botao);
+        }
+        let botaoPrincipal = null;
+        if (principal) {
+            botaoPrincipal = criar("button", "botao botao-principal", principal.texto);
+            botaoPrincipal.type = "button";
+            botaoPrincipal.addEventListener("click", principal.acao);
+            fim.append(botaoPrincipal);
+        }
+        nav.append(fim);
+        pai.append(nav);
+        return botaoPrincipal;
+    }
+
+    function criarEscolha(pai, passo) {
+        const grade = criar("div", "orc-opcoes");
+        grade.setAttribute("role", "group");
+        grade.setAttribute("aria-labelledby", "orcPergunta");
+        const textos = passo.opcoes.map((opcao) => (typeof opcao === "string" ? opcao : opcao.texto));
+        if (textos.every((texto) => texto.length <= 22)) grade.classList.add("orc-opcoes--duas");
+        passo.opcoes.forEach((opcao) => {
+            const valor = typeof opcao === "string" ? opcao : opcao.valor;
+            const texto = typeof opcao === "string" ? opcao : opcao.texto;
+            const botao = criar("button", "orc-opcao", texto);
+            botao.type = "button";
+            botao.setAttribute("aria-pressed", String(resp[passo.id] === valor));
+            botao.addEventListener("click", () => escolher(passo, valor, grade, botao));
+            grade.append(botao);
+        });
+        pai.append(grade);
+        if (resp[passo.id] !== undefined) {
+            criarNavegacao(pai, { texto: "Próximo", acao: () => ir(indice + 1) });
+        } else {
+            criarNavegacao(pai, null, passo.opcional ? { texto: "Pular", acao: () => ir(indice + 1) } : null);
+        }
+    }
+
+    function criarVarias(pai, passo) {
+        const marcados = new Set((Array.isArray(resp.recursos) ? resp.recursos : []).filter((item) => passo.opcoes.includes(item)));
+        const grade = criar("div", "orc-opcoes orc-opcoes--duas");
+        grade.setAttribute("role", "group");
+        grade.setAttribute("aria-labelledby", "orcPergunta");
+        let principal = null;
+        const atualizar = () => {
+            const lista = passo.opcoes.filter((item) => marcados.has(item));
+            if (lista.length) resp.recursos = lista;
+            else delete resp.recursos;
+            if (principal) principal.textContent = lista.length ? "Próximo" : "Pular";
+            salvar();
+        };
+        passo.opcoes.forEach((opcao) => {
+            const botao = criar("button", "orc-opcao", opcao);
+            botao.type = "button";
+            botao.setAttribute("aria-pressed", String(marcados.has(opcao)));
+            botao.addEventListener("click", () => {
+                if (marcados.has(opcao)) marcados.delete(opcao);
+                else marcados.add(opcao);
+                botao.setAttribute("aria-pressed", String(marcados.has(opcao)));
+                atualizar();
+            });
+            grade.append(botao);
+        });
+        pai.append(grade);
+        principal = criarNavegacao(pai, { texto: marcados.size ? "Próximo" : "Pular", acao: () => ir(indice + 1) });
+    }
+
+    function criarTexto(pai, passo) {
+        const campo = criar(passo.longo ? "textarea" : "input", "orc-campo");
+        if (passo.longo) campo.rows = 3;
+        else campo.type = "text";
+        campo.value = typeof resp[passo.id] === "string" ? resp[passo.id] : "";
+        campo.placeholder = passo.dica || "";
+        campo.maxLength = passo.max || 160;
+        campo.autocomplete = "off";
+        campo.setAttribute("aria-labelledby", "orcPergunta");
+        pai.append(campo);
+        let principal = null;
+        campo.addEventListener("input", () => {
+            const texto = campo.value.trim();
+            if (texto) resp[passo.id] = texto;
+            else delete resp[passo.id];
+            if (principal) principal.textContent = texto ? "Próximo" : "Pular";
+            salvar();
+        });
+        if (!passo.longo) {
+            campo.addEventListener("keydown", (evento) => {
+                if (evento.key === "Enter") {
+                    evento.preventDefault();
+                    ir(indice + 1);
+                }
+            });
+        }
+        principal = criarNavegacao(pai, { texto: campo.value.trim() ? "Próximo" : "Pular", acao: () => ir(indice + 1) });
+    }
+
+    function criarContato(pai) {
+        const rotuloNome = criar("label", "orc-rotulo", "Seu nome");
+        rotuloNome.htmlFor = "orcNome";
+        const nome = criar("input", "orc-campo");
+        nome.id = "orcNome";
+        nome.type = "text";
+        nome.maxLength = 60;
+        nome.autocomplete = "given-name";
+        nome.placeholder = "Ex.: Ana";
+        nome.value = typeof resp.nome === "string" ? resp.nome : "";
+        const rotuloObs = criar("label", "orc-rotulo", "Quer acrescentar algo? (opcional)");
+        rotuloObs.htmlFor = "orcObs";
+        const obs = criar("textarea", "orc-campo");
+        obs.id = "orcObs";
+        obs.rows = 3;
+        obs.maxLength = 500;
+        obs.placeholder = "Ex.: link de um site que você gosta, ou algo importante que eu deva saber";
+        obs.value = typeof resp.obs === "string" ? resp.obs : "";
+        const erro = criar("p", "orc-erro", "Escreva seu nome para eu saber com quem estou falando.");
+        erro.setAttribute("role", "alert");
+        erro.hidden = true;
+        pai.append(rotuloNome, nome, rotuloObs, obs, erro);
+
+        const seguir = () => {
+            if (nome.value.trim().length < 2) {
+                erro.hidden = false;
+                nome.focus();
+                return;
+            }
+            ir(indice + 1);
+        };
+        nome.addEventListener("input", () => {
+            const texto = nome.value.trim();
+            if (texto) resp.nome = texto;
+            else delete resp.nome;
+            if (texto.length >= 2) erro.hidden = true;
+            salvar();
+        });
+        nome.addEventListener("keydown", (evento) => {
+            if (evento.key === "Enter") {
+                evento.preventDefault();
+                seguir();
+            }
+        });
+        obs.addEventListener("input", () => {
+            const texto = obs.value.trim();
+            if (texto) resp.obs = texto;
+            else delete resp.obs;
+            salvar();
+        });
+        criarNavegacao(pai, { texto: "Ver minha mensagem", acao: seguir });
+    }
+
+    function criarPasso(passo) {
+        const caixa = criar("div", "orc-passo");
+        const titulo = criar("h3", "orc-pergunta", passo.pergunta);
+        titulo.id = "orcPergunta";
+        titulo.tabIndex = -1;
+        titulo.dataset.foco = "";
+        caixa.append(titulo);
+        if (passo.ajuda) caixa.append(criar("p", "orc-ajuda", passo.ajuda));
+        if (passo.modo === "escolha") criarEscolha(caixa, passo);
+        else if (passo.modo === "varias") criarVarias(caixa, passo);
+        else if (passo.modo === "texto") criarTexto(caixa, passo);
+        else criarContato(caixa);
+        return caixa;
+    }
+
+    function criarFinal() {
+        const caixa = criar("div", "orc-passo");
+        const titulo = criar("h3", "orc-pergunta", "Sua mensagem está pronta");
+        titulo.tabIndex = -1;
+        titulo.dataset.foco = "";
+        caixa.append(titulo, criar("p", "orc-ajuda", "Confira e mude o que quiser. Ao clicar em enviar, o WhatsApp abre com este texto. Falta só apertar enviar por lá."));
+
+        const campo = criar("textarea", "orc-campo orc-mensagem");
+        campo.rows = 10;
+        campo.maxLength = 1500;
+        campo.setAttribute("aria-label", "Mensagem para o WhatsApp");
+        campo.value = compor();
+
+        const enviar = criar("a", "botao botao-principal", "Enviar pelo WhatsApp");
+        enviar.target = "_blank";
+        enviar.rel = "noopener noreferrer";
+        const ajustarLink = () => { enviar.href = `https://wa.me/${numero}?text=${encodeURIComponent(campo.value)}`; };
+        ajustarLink();
+        campo.addEventListener("input", ajustarLink);
+
+        const copiar = criar("button", "botao botao-secundario", "Copiar resumo");
+        copiar.type = "button";
+        copiar.addEventListener("click", () => copiarTexto(campo));
+
+        const acoes = criar("div", "orc-acoes");
+        acoes.append(enviar, copiar);
+
+        const nav = criar("div", "orc-nav");
+        const voltar = criar("button", "orc-link", "← Voltar e mudar respostas");
+        voltar.type = "button";
+        voltar.addEventListener("click", () => ir(indice - 1));
+        const refazer = criar("button", "orc-link", "Recomeçar");
+        refazer.type = "button";
+        refazer.addEventListener("click", recomecar);
+        nav.append(voltar, refazer);
+
+        caixa.append(campo, acoes, nav);
+        return caixa;
+    }
+
+    function desenhar(foco) {
+        const lista = passos();
+        if (indice > lista.length) indice = lista.length;
+        const pronto = indice === lista.length;
+        const total = totalDePerguntas();
+        raiz.replaceChildren(criarProgresso(pronto ? total : indice, total, pronto));
+        if (retomado) raiz.append(criarNotaRetomado());
+        raiz.append(pronto ? criarFinal() : criarPasso(lista[indice]));
+        if (foco) raiz.querySelector("[data-foco]")?.focus({ preventScroll: true });
+        salvar();
+    }
+
+    carregar();
+    if (resp.tipo && !TIPOS[resp.tipo]) {
+        resp = {};
+        indice = 0;
+        retomado = false;
+    }
+    indice = Math.max(0, Math.min(indice, passos().length));
+    desenhar(false);
+})();
