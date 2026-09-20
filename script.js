@@ -541,24 +541,12 @@ if (heroConteudo && !prefereMenosMovimento) {
     window.addEventListener("scroll", () => {
         heroConteudo.style.setProperty("--parallax", Math.min(window.scrollY * 0.15, 160) + "px");
     });
-    let ultimoRastro = 0;
     heroConteudo.addEventListener("mousemove", (evento) => {
         const relativoX = evento.clientX / window.innerWidth - 0.5;
         heroConteudo.style.setProperty("--parallax-x", relativoX * -28 + "px");
         const rect = heroConteudo.getBoundingClientRect();
         heroConteudo.style.setProperty("--spot-x", evento.clientX - rect.left + "px");
         heroConteudo.style.setProperty("--spot-y", evento.clientY - rect.top + "px");
-
-        const agora = Date.now();
-        if (agora - ultimoRastro > 90) {
-            ultimoRastro = agora;
-            const rastro = document.createElement("span");
-            rastro.className = "rastro-cursor";
-            rastro.style.left = evento.clientX + "px";
-            rastro.style.top = evento.clientY + "px";
-            document.body.appendChild(rastro);
-            rastro.addEventListener("animationend", () => rastro.remove());
-        }
     });
 }
 
@@ -581,7 +569,10 @@ if (titulosSecao.length && !prefereMenosMovimento && "IntersectionObserver" in w
 if (suportaHover && !prefereMenosMovimento) {
     document.body.classList.add("tem-tilt");
     cardsProjeto.forEach((card) => {
+        if (card.hasAttribute("data-largo")) return; // a faixa de largura total não inclina: a borda dela se afastaria demais do mouse
         card.addEventListener("mousemove", (evento) => {
+            /* sobre link ou botão o card fica parado: o que está sob o mouse não foge, e o anel do cursor não desalinha */
+            if (evento.target.closest("a, button, summary")) return;
             const rect = card.getBoundingClientRect();
             const centroX = rect.width / 2;
             const centroY = rect.height / 2;
@@ -597,49 +588,110 @@ if (suportaHover && !prefereMenosMovimento) {
     });
 }
 
-/* Cursor customizado: ponto que vira anel maior perto de elementos clicáveis */
+/* Cursor: a seta vira um bloco de terminal (só CSS, sem atraso). Sobre o que clica, um anel nasce na
+   ponta do mouse e abraça o elemento, deslizando de um para o outro. */
 if (suportaHover && !prefereMenosMovimento) {
-    document.body.classList.add("tem-cursor-custom");
-    const cursorPonto = document.createElement("div");
-    cursorPonto.className = "cursor-ponto";
-    const cursorAnel = document.createElement("div");
-    cursorAnel.className = "cursor-anel";
-    document.body.append(cursorPonto, cursorAnel);
+    const CLICAVEL = "a[href], button:not(:disabled), summary, select, .switch, .chip-filtro, .orc-opcao, .habilidades li, [role='button']";
+    const FOLGA = 5;           // o anel fica alguns pixels para fora do elemento
+    const ALTURA_MAXIMA = 260; // elementos muito altos ficam só com o cursor ">"
+    const abraco = document.createElement("div");
+    abraco.className = "cursor-abraco";
+    abraco.setAttribute("aria-hidden", "true");
+    document.body.appendChild(abraco);
 
-    let mouseX = window.innerWidth / 2;
-    let mouseY = window.innerHeight / 2;
-    let pontoX = mouseX, pontoY = mouseY, anelX = mouseX, anelY = mouseY;
+    let mouseX = -100;
+    let mouseY = -100;
+    let alvo = null;
+    let quadro = 0;
+    let fimDoDeslize = 0;
+    let saida = 0;
+    let ultima = "";
 
-    window.addEventListener("mousemove", (evento) => {
+    /* Caixa do elemento; num link quebrado em várias linhas, só o pedaço que está sob o mouse */
+    const medir = (el) => {
+        const partes = el.getClientRects();
+        let r = el.getBoundingClientRect();
+        if (partes.length > 1) {
+            r = [...partes].find((p) => mouseX >= p.left - 2 && mouseX <= p.right + 2 && mouseY >= p.top - 2 && mouseY <= p.bottom + 2) || partes[0];
+        }
+        if (!r.width || !r.height || r.height > ALTURA_MAXIMA) return null;
+        const raioCss = getComputedStyle(el).borderTopLeftRadius;
+        let raio = parseFloat(raioCss) || 0;
+        if (raioCss.includes("%")) raio = (raio / 100) * Math.min(r.width, r.height);
+        const w = r.width + FOLGA * 2;
+        const h = r.height + FOLGA * 2;
+        return { x: r.left - FOLGA, y: r.top - FOLGA, w, h, r: Math.min(raio + FOLGA, Math.min(w, h) / 2) };
+    };
+    const naPonta = () => ({ x: mouseX - 5, y: mouseY - 5, w: 10, h: 10, r: 5 });
+    const aplicar = (c) => {
+        const chave = [c.x, c.y, c.w, c.h, c.r].map((n) => Math.round(n * 10)).join(",");
+        if (chave === ultima) return;
+        ultima = chave;
+        abraco.style.transform = "translate(" + c.x + "px," + c.y + "px)";
+        abraco.style.width = c.w + "px";
+        abraco.style.height = c.h + "px";
+        abraco.style.borderRadius = c.r + "px";
+    };
+    const terminarDeslize = () => {
+        clearTimeout(fimDoDeslize);
+        fimDoDeslize = setTimeout(() => abraco.classList.remove("cursor-abraco-desliza"), 320);
+    };
+
+    function esconder() {
+        clearTimeout(saida);
+        cancelAnimationFrame(quadro);
+        alvo = null;
+        abraco.classList.remove("cursor-abraco-ativo", "cursor-abraco-clique");
+        abraco.classList.add("cursor-abraco-desliza");
+        aplicar(naPonta()); // encolhe de volta para a ponta do mouse enquanto some
+        terminarDeslize();
+    }
+    /* Enquanto o mouse está num elemento, o anel acompanha ele (rolagem, botão magnético etc.) */
+    function seguir() {
+        if (!alvo) return;
+        const caixa = alvo.isConnected ? medir(alvo) : null;
+        if (!caixa) { esconder(); return; }
+        aplicar(caixa);
+        quadro = requestAnimationFrame(seguir);
+    }
+    function mostrar() {
+        const caixa = medir(alvo);
+        if (!caixa) { esconder(); return; }
+        if (!abraco.classList.contains("cursor-abraco-ativo")) {
+            /* nasce na ponta do mouse, sem animação, e só então cresce até o elemento */
+            abraco.classList.remove("cursor-abraco-desliza");
+            ultima = "";
+            aplicar(naPonta());
+            void abraco.offsetWidth;
+        }
+        abraco.classList.add("cursor-abraco-desliza", "cursor-abraco-ativo");
+        aplicar(caixa);
+        terminarDeslize();
+        cancelAnimationFrame(quadro);
+        quadro = requestAnimationFrame(seguir);
+    }
+
+    document.addEventListener("mousemove", (evento) => {
         mouseX = evento.clientX;
         mouseY = evento.clientY;
-        cursorPonto.style.opacity = "1";
-        cursorAnel.style.opacity = "1";
+    }, { passive: true });
+    document.addEventListener("mouseover", (evento) => {
+        mouseX = evento.clientX;
+        mouseY = evento.clientY;
+        const novo = evento.target.closest ? evento.target.closest(CLICAVEL) : null;
+        if (novo) {
+            clearTimeout(saida);
+            if (novo !== alvo) { alvo = novo; mostrar(); }
+        } else if (alvo) {
+            /* uma pausa curta: passando de um botão para o vizinho, o anel desliza em vez de sumir */
+            clearTimeout(saida);
+            saida = setTimeout(esconder, 90);
+        }
     });
-    document.addEventListener("mouseleave", () => {
-        cursorPonto.style.opacity = "0";
-        cursorAnel.style.opacity = "0";
-    });
-    window.addEventListener("mousedown", () => cursorAnel.classList.add("cursor-anel-clique"));
-    window.addEventListener("mouseup", () => cursorAnel.classList.remove("cursor-anel-clique"));
-
-    /* Suaviza o movimento por interpolação a cada frame, em vez de grudar direto no mousemove */
-    (function animarCursor() {
-        pontoX += (mouseX - pontoX) * 0.35;
-        pontoY += (mouseY - pontoY) * 0.35;
-        anelX += (mouseX - anelX) * 0.16;
-        anelY += (mouseY - anelY) * 0.16;
-        cursorPonto.style.left = pontoX + "px";
-        cursorPonto.style.top = pontoY + "px";
-        cursorAnel.style.left = anelX + "px";
-        cursorAnel.style.top = anelY + "px";
-        requestAnimationFrame(animarCursor);
-    })();
-
-    document.querySelectorAll("a, button, input, .chip-filtro, li[tabindex]").forEach((el) => {
-        el.addEventListener("mouseenter", () => cursorAnel.classList.add("cursor-anel-grande"));
-        el.addEventListener("mouseleave", () => cursorAnel.classList.remove("cursor-anel-grande"));
-    });
+    document.documentElement.addEventListener("mouseleave", () => { if (alvo) esconder(); });
+    window.addEventListener("blur", () => { if (alvo) esconder(); });
+    window.addEventListener("mousedown", () => { if (alvo) abraco.classList.add("cursor-abraco-clique"); });
+    window.addEventListener("mouseup", () => abraco.classList.remove("cursor-abraco-clique"));
 }
 
 /* Botões magnéticos: deslizam levemente na direção do mouse */
