@@ -561,3 +561,39 @@ body::before { --scroll-parallax:inherit; }
 /* Correção: no celular a seção de projetos ficava colada nas bordas da tela.
    O padding do .secao (mais abaixo no arquivo) zerava o recuo lateral do .projetos. */
 @media(max-width:720px) { .projetos { padding-left:22px; padding-right:22px; } }
+
+/* ===== Rodada: janelas suaves, mosaico de projetos e tipografia ===== */
+
+/* Busca (Ctrl+K), tour e demos: entram e saem com fade em vez de aparecer de repente */
+.paleta-overlay,.tour-overlay,.modal-overlay { transition:opacity .22s ease,display .22s allow-discrete; }
+.paleta-overlay[hidden],.tour-overlay[hidden],.modal-overlay[hidden] { opacity:0; }
+.paleta-caixa,.modal-caixa { transition:transform .22s ease; }
+.paleta-overlay[hidden] .paleta-caixa { transform:translateY(-10px) scale(.98); }
+.modal-overlay[hidden] .modal-caixa { transform:translateY(10px) scale(.98); }
+@starting-style {
+    .paleta-overlay:not([hidden]),.tour-overlay:not([hidden]),.modal-overlay:not([hidden]) { opacity:0; }
+    .paleta-overlay:not([hidden]) .paleta-caixa { transform:translateY(-10px) scale(.98); }
+    .modal-overlay:not([hidden]) .modal-caixa { transform:translateY(10px) scale(.98); }
+}
+@media (prefers-reduced-motion:reduce) {
+    .paleta-overlay,.tour-overlay,.modal-overlay,.paleta-caixa,.modal-caixa { transition:none; }
+}
+
+/* Projetos em mosaico (telas largas): os projetos de destaque ocupam mais espaço.
+   Com o filtro, os cartões escondidos saem da grade e o mosaico se reencaixa sozinho. */
+@media (min-width:1000px) {
+    .lista-projetos { grid-template-columns:repeat(6,minmax(0,1fr)); grid-auto-flow:dense; }
+    .lista-projetos .card-projeto { grid-column:span 2; }
+    .lista-projetos .card-projeto[data-destaque] { grid-column:span 4; }
+    /* só os de destaque à vista (filtro "API"): dividem a linha ao meio */
+    .lista-projetos:not(:has(.card-projeto:not([data-destaque]):not(.card-oculto))) .card-projeto[data-destaque] { grid-column:span 3; }
+    .lista-projetos .card-projeto[data-destaque] .projeto-visual { height:300px; }
+    /* cartões estreitos: "Abrir projeto" ganha a linha toda e os outros links ficam embaixo */
+    .lista-projetos .card-projeto:not([data-destaque]) .links-projeto { flex-wrap:wrap; gap:8px 16px; }
+    .lista-projetos .card-projeto:not([data-destaque]) .link-projeto { flex:1 1 100%; }
+}
+
+/* Tipografia: títulos sem palavra sozinha na última linha, parágrafos sem linhas soltas, números alinhados */
+:where(h1,h2,h3,h4) { text-wrap:balance; }
+:where(p,li,summary) { text-wrap:pretty; }
+.hero-numeros strong,.orc-etapa,.finance-topo b { font-variant-numeric:tabular-nums; }
