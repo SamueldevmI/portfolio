@@ -34,8 +34,7 @@ try {
   Confere 'player cheio: disco, braço da vitrola e onda sonora' (Js "!!document.querySelector('#cheio .disco') && !!document.querySelector('#cheio .braco') && getComputedStyle(document.querySelector('#cheio .seek-linha')).getPropertyValue('--onda').includes('svg')")
   Foto 'celular-cheio.png' | Out-Null
   Clicar '#cheio .js-curtir'
-  Esperar 300
-  Confere 'favoritar salva' (Js "JSON.parse(localStorage.getItem('eldev-music:v1')).curtidas.length === 1")
+  Confere 'favoritar salva' (Ate "(JSON.parse(localStorage.getItem('eldev-music:v1') || '{}').curtidas || []).length === 1" 5000)
   Clicar '#cheio [data-acao=fila]'
   Esperar 500
   Confere 'fila lista as músicas' (Js "document.querySelectorAll('#folha .faixa').length > 5")
@@ -66,8 +65,7 @@ try {
   Esperar 500
   Digitar 'Treino'
   Clicar '#dialogo button.primario'
-  Esperar 800
-  Confere 'criar playlist a partir do menu' (Js "(() => { const p = JSON.parse(localStorage.getItem('eldev-music:v1')).playlists; return p.length === 1 && p[0].nome === 'Treino' && p[0].faixas.length === 1; })()")
+  Confere 'criar playlist a partir do menu' (Ate "(() => { const p = JSON.parse(localStorage.getItem('eldev-music:v1') || '{}').playlists || []; return p.length === 1 && p[0].nome === 'Treino' && p[0].faixas.length === 1; })()" 5000)
   Ir "$Url#/biblioteca" -Espera 1200
   Confere 'biblioteca mostra a playlist' (Js "[...document.querySelectorAll('.faixa-txt b')].some(b => b.textContent === 'Treino')")
   Foto 'celular-biblioteca.png' | Out-Null
@@ -75,7 +73,7 @@ try {
   # ---- arquivos do aparelho (com etiqueta ID3) ----
   Ir "$Url#/meus" -Espera 1500
   Arquivos '#arquivos' @("$saida\Fulano - Tom de 440.wav", "$saida\com-etiqueta.mp3")
-  Esperar 3500
+  Ate "(JSON.parse(localStorage.getItem('eldev-music:v1') || '{}').meus || []).length === 2 && document.querySelectorAll('.lista .faixa-tocar').length === 2" 20000 | Out-Null
   Confere 'importar lê título e artista da etiqueta e do nome' (Js "(() => { const m = JSON.parse(localStorage.getItem('eldev-music:v1')).meus; return m.length === 2 && m[0].titulo === 'Título Real ção' && m[0].artista === 'Artista Real' && m[1].artista === 'Fulano'; })()")
   Clicar '.lista .faixa-tocar'
   Confere 'arquivo do aparelho toca' (Ate "document.body.classList.contains('som')" 6000)
