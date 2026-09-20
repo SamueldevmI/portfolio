@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Glitch District — Loja cyberpunk</title>
+    <meta name="description" content="Loja fictícia de roupas e acessórios cyberpunk: escolha o tamanho, monte o carrinho e envie o pedido pronto pelo WhatsApp. Projeto de portfólio de Samuel Mickael.">
+    <meta name="robots" content="noindex">
+    <meta name="theme-color" content="#07060d">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Glitch District — Loja cyberpunk">
+    <meta property="og:description" content="Carrinho de roupas cyberpunk que fecha o pedido no WhatsApp. Projeto de portfólio.">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2307060d'/%3E%3Cpath d='M24 10H10v12h14v-7h-7' fill='none' stroke='%2300f0ff' stroke-width='3'/%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <a class="pular" href="#colecao">Pular para os produtos</a>
+
+    <div class="aviso-demo">
+        <b>DEMO</b>
+        <span>Loja fictícia de portfólio. Produtos ilustrados, e o pedido abre o WhatsApp com a mensagem pronta.</span>
+        <a href="../index.html#projetos" target="_top">← Voltar ao portfólio</a>
+    </div>
+
+    <header class="topo">
+        <div class="miolo topo-in">
+            <a class="logo" href="#" aria-label="Glitch District, início">
+                <span class="logo-icone" aria-hidden="true">G</span>
+                <span data-nome-loja>GLITCH//DISTRICT</span>
+            </a>
+            <nav aria-label="Principal">
+                <a href="#colecao">Coleção</a>
+                <a href="#como">Como comprar</a>
+            </nav>
+            <button class="botao-carrinho" id="abrirCarrinho" type="button" aria-label="Abrir carrinho, vazio">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h2.5l2.2 10.2a1.5 1.5 0 0 0 1.5 1.2h8.2a1.5 1.5 0 0 0 1.5-1.1L20.5 8H6.2"/><circle cx="10" cy="19.5" r="1.4"/><circle cx="17" cy="19.5" r="1.4"/></svg>
+                <span class="carrinho-rotulo">Carrinho</span>
+                <span class="carrinho-contador" id="contadorCarrinho" hidden>0</span>
+            </button>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="miolo hero-in">
+            <div class="hero-texto">
+                <p class="eyebrow">Techwear · Drop 01</p>
+                <h1 class="glitch" data-text="VISTA O FUTURO">VISTA O FUTURO</h1>
+                <p class="hero-sub">Jaquetas, cargos e acessórios pra quem vive depois da meia-noite. Monte o carrinho aqui e feche o pedido direto no WhatsApp.</p>
+                <div class="hero-acoes">
+                    <a class="botao botao-neon" href="#colecao">Ver coleção</a>
+                    <a class="botao botao-linha" href="#como">Como comprar</a>
+                </div>
+            </div>
+            <div class="hero-arte" aria-hidden="true">
+                <div class="sol"></div>
+                <img src="produtos/corta-vento-vx7.svg" alt="" width="400" height="400">
+            </div>
+        </div>
+    </section>
+
+    <section class="como" id="como" aria-labelledby="comoTitulo">
+        <div class="miolo">
+            <h2 id="comoTitulo" class="visualmente-oculto">Como comprar</h2>
+            <ol>
+                <li><span class="num">01</span><div><h3>Escolha</h3><p>Abra a peça, marque o tamanho e adicione ao carrinho.</p></div></li>
+                <li><span class="num">02</span><div><h3>Revise</h3><p>Confira quantidades e o total. Nada de cadastro nem senha.</p></div></li>
+                <li><span class="num">03</span><div><h3>Envie no WhatsApp</h3><p>O pedido sai pronto pra conversa. Frete e pagamento você combina lá.</p></div></li>
+            </ol>
+        </div>
+    </section>
+
+    <main id="colecao" class="colecao">
+        <div class="miolo">
+            <div class="colecao-topo">
+                <h2>Coleção</h2>
+                <p id="contagem" class="contagem" aria-live="polite"></p>
+            </div>
+
+            <div class="ferramentas">
+                <div class="chips" id="chips" role="group" aria-label="Filtrar por categoria"></div>
+                <div class="campos">
+                    <label class="campo-busca">
+                        <span class="visualmente-oculto">Buscar produto</span>
+                        <input id="busca" type="search" placeholder="Buscar peça…" autocomplete="off">
+                    </label>
+                    <label class="campo-ordem">
+                        <span class="visualmente-oculto">Ordenar por</span>
+                        <select id="ordem">
+                            <option value="padrao">Destaques</option>
+                            <option value="menor">Menor preço</option>
+                            <option value="maior">Maior preço</option>
+                            <option value="nome">Nome (A–Z)</option>
+                        </select>
+                    </label>
+                </div>
+            </div>
+
+            <ul class="grade" id="grade"></ul>
+
+            <div class="vazio" id="vazio" hidden>
+                <p class="vazio-titulo">Nada encontrado neste setor.</p>
+                <p>Tente outra palavra ou volte pra todas as categorias.</p>
+                <button class="botao botao-linha" id="limparFiltros" type="button">Limpar filtros</button>
+            </div>
+
+            <noscript><p class="vazio">Ative o JavaScript para ver a loja.</p></noscript>
+        </div>
+    </main>
+
+    <footer class="rodape">
+        <div class="miolo rodape-in">
+            <div>
+                <p class="rodape-nome" data-nome-loja>GLITCH//DISTRICT</p>
+                <p>Projeto de portfólio de <strong>Samuel Mickael</strong>. Loja, preços e produtos fictícios; as ilustrações são originais, feitas em SVG.</p>
+            </div>
+            <div class="rodape-links">
+                <a href="../index.html?tipo=site#orcamento" target="_top">Quero uma loja assim →</a>
+                <a href="../index.html#projetos" target="_top">← Voltar ao portfólio</a>
+            </div>
+        </div>
+    </footer>
+
+    <dialog id="dialogoProduto" class="dialogo-produto" aria-labelledby="produtoTitulo"></dialog>
+
+    <dialog id="carrinho" class="carrinho" aria-labelledby="carrinhoTitulo">
+        <div class="carrinho-miolo">
+            <div class="carrinho-topo">
+                <h2 id="carrinhoTitulo">Seu carrinho</h2>
+                <button class="fechar" type="button" data-fechar aria-label="Fechar carrinho">×</button>
+            </div>
+            <div class="carrinho-corpo">
+                <ul class="itens" id="itens"></ul>
+                <div class="carrinho-vazio" id="carrinhoVazio" hidden>
+                    <p class="vazio-titulo">Carrinho vazio</p>
+                    <p>Escolha uma peça e o tamanho, e ela aparece aqui.</p>
+                    <button class="botao botao-linha" type="button" data-fechar>Continuar comprando</button>
+                </div>
+            </div>
+            <div class="carrinho-rodape" id="carrinhoRodape" hidden>
+                <div class="total"><span>Total</span><strong id="total">R$ 0,00</strong></div>
+                <label class="campo" for="campoNome">Seu nome <small>(opcional)</small></label>
+                <input id="campoNome" type="text" maxlength="60" autocomplete="name" placeholder="Como devo te chamar?">
+                <label class="campo" for="campoObs">Observação <small>(opcional)</small></label>
+                <textarea id="campoObs" rows="2" maxlength="200" placeholder="Ex.: prefiro retirar pessoalmente"></textarea>
+                <details class="previa">
+                    <summary>Ver a mensagem que será enviada</summary>
+                    <pre id="previa"></pre>
+                </details>
+                <a class="botao botao-neon botao-cheio" id="enviarZap" href="#" target="_blank" rel="noopener noreferrer">Enviar pedido pelo WhatsApp</a>
+                <div class="carrinho-acoes">
+                    <button class="link-fraco" id="copiarPedido" type="button">Copiar pedido</button>
+                    <button class="link-fraco" id="esvaziar" type="button">Esvaziar carrinho</button>
+                </div>
+                <p class="nota" id="nota" role="status">Frete, estoque e pagamento você combina direto no WhatsApp.</p>
+            </div>
+        </div>
+    </dialog>
+
+    <div class="avisos" id="avisos" role="status" aria-live="polite"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>

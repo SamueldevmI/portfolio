@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+<title>Camiseta Oversized Sunset Grid</title>
+<defs>
+<linearGradient id="t" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#26234a"/><stop offset="1" stop-color="#0d0c1b"/></linearGradient>
+<linearGradient id="sol" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fcee0a"/><stop offset="1" stop-color="#ff2bd6"/></linearGradient>
+<clipPath id="c"><circle cx="200" cy="204" r="46"/></clipPath>
+<filter id="n" x="-50%" y="-50%" width="200%" height="200%" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<g stroke-linejoin="round" stroke-linecap="round" fill="none">
+<path d="M165 78C150 82 120 92 108 100L52 172L92 202L118 170V340Q200 354 282 340V170L308 202L348 172L292 100C280 92 250 82 235 78Q200 114 165 78Z" fill="url(#t)" stroke="#5a5696" stroke-width="2"/>
+<path d="M165 78Q200 114 235 78" stroke="#5a5696" stroke-width="6"/>
+<path d="M172 84Q200 108 228 84" stroke="#0a0914" stroke-width="2"/>
+<path d="M52 172L92 202L102 192L62 162Z M348 172L308 202L298 192L338 162Z" fill="#151330" stroke="#5a5696" stroke-width="2"/>
+<g filter="url(#n)">
+<g clip-path="url(#c)">
+<rect x="150" y="156" width="100" height="100" fill="url(#sol)" stroke="none"/>
+<rect x="150" y="206" width="100" height="2" fill="#0d0c1b" stroke="none"/>
+<rect x="150" y="216" width="100" height="3" fill="#0d0c1b" stroke="none"/>
+<rect x="150" y="226" width="100" height="4" fill="#0d0c1b" stroke="none"/>
+<rect x="150" y="237" width="100" height="5" fill="#0d0c1b" stroke="none"/>
+</g>
+</g>
+<path d="M132 262H268" stroke="#00f0ff" stroke-width="2.5" filter="url(#n)"/>
+<path d="M200 262V300M170 262L142 300M230 262L258 300M150 274H250M138 288H262" stroke="#00f0ff" stroke-width="2" stroke-opacity=".8"/>
+</g>
+</svg>

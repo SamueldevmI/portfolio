@@ -597,3 +597,24 @@ body::before { --scroll-parallax:inherit; }
 :where(h1,h2,h3,h4) { text-wrap:balance; }
 :where(p,li,summary) { text-wrap:pretty; }
 .hero-numeros strong,.orc-etapa,.finance-topo b { font-variant-numeric:tabular-nums; }
+
+/* Loja cyberpunk: vitrine em faixa (largura total nas telas largas) */
+.visual-loja { display:grid; align-content:center; justify-items:center; gap:12px; padding:20px 16px 16px; background:radial-gradient(circle at 50% 118%,rgba(255,43,214,.5),transparent 58%),radial-gradient(circle at 12% -10%,rgba(0,240,255,.26),transparent 46%),linear-gradient(135deg,#0a0816,#1a1238); }
+.visual-loja::before { content:""; position:absolute; left:-10%; right:-10%; bottom:0; height:52%; background:repeating-linear-gradient(90deg,rgba(255,43,214,.4) 0 1px,transparent 1px 36px),repeating-linear-gradient(0deg,rgba(255,43,214,.4) 0 1px,transparent 1px 22px); transform:perspective(220px) rotateX(58deg); transform-origin:bottom; -webkit-mask-image:linear-gradient(to top,#000,transparent 92%); mask-image:linear-gradient(to top,#000,transparent 92%); opacity:.75; pointer-events:none; }
+.loja-logo,.loja-pecas { position:relative; }
+.loja-logo { color:#e9e7fb; font:600 .78rem "DM Mono",monospace; letter-spacing:.28em; text-shadow:0 0 12px rgba(0,240,255,.75); }
+.loja-pecas { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; width:100%; max-width:390px; }
+.loja-pecas img { display:block; width:100%; height:auto; filter:drop-shadow(0 8px 14px rgba(0,0,0,.6)); }
+.loja-pecas img:nth-child(n+4) { display:none; }
+.loja-carrinho { position:absolute; right:14px; bottom:12px; display:inline-flex; align-items:center; gap:8px; padding:5px 10px; border:1px solid #00f0ff; background:rgba(5,10,21,.7); color:#00f0ff; font:.7rem "DM Mono",monospace; letter-spacing:.14em; text-transform:uppercase; }
+.loja-carrinho b { display:grid; place-items:center; min-width:20px; height:20px; background:#ff2bd6; color:#0a0410; font-weight:700; }
+@media (max-width:999px) {
+    .loja-carrinho { position:relative; right:auto; bottom:auto; }
+    .loja-pecas { max-width:300px; }
+}
+@media (min-width:1000px) {
+    .lista-projetos .card-projeto[data-largo] { grid-column:1 / -1; }
+    .card-projeto[data-largo] .loja-pecas { max-width:920px; grid-template-columns:repeat(5,1fr); gap:10px; }
+    .card-projeto[data-largo] .loja-pecas img:nth-child(n+4) { display:block; }
+    .card-projeto[data-largo] .card-conteudo > p:not(.tag) { max-width:72ch; }
+}

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+<title>Calça Cargo Tática Onyx</title>
+<defs>
+<linearGradient id="t" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#26234a"/><stop offset="1" stop-color="#0d0c1b"/></linearGradient>
+<filter id="n" x="-50%" y="-50%" width="200%" height="200%" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<g stroke-linejoin="round" stroke-linecap="round" fill="none">
+<path d="M132 44H268L286 356H212L200 178L188 356H114Z" fill="url(#t)" stroke="#5a5696" stroke-width="2"/>
+<path d="M132 44H268V72H132Z" fill="#151330" stroke="#5a5696" stroke-width="2"/>
+<path d="M150 44V72M176 44V72M224 44V72M250 44V72" stroke="#0a0914" stroke-width="2"/>
+<path d="M200 72V178" stroke="#5a5696" stroke-width="2"/>
+<path d="M200 74V120" stroke="#00f0ff" stroke-width="2.5" filter="url(#n)"/>
+<path d="M124 190H172L174 262H120Z M228 190H276L280 262H226Z" stroke="#5a5696" stroke-width="2"/>
+<path d="M124 190H172V208H124Z M228 190H276V208H228Z" fill="#151330" stroke="#5a5696" stroke-width="2"/>
+<path d="M124 208H172M228 208H276" stroke="#00f0ff" stroke-width="2.5" filter="url(#n)"/>
+<path d="M118 292H190V308H118Z M210 292H282V308H210Z" fill="#fcee0a" stroke="none" fill-opacity=".92"/>
+<rect x="144" y="288" width="14" height="24" rx="2" fill="#0d0c1b" stroke="#fcee0a" stroke-width="2.5"/>
+<rect x="242" y="288" width="14" height="24" rx="2" fill="#0d0c1b" stroke="#fcee0a" stroke-width="2.5"/>
+<path d="M114 340H190M210 340H286" stroke="#ff2bd6" stroke-width="3" filter="url(#n)"/>
+<path d="M230 72V128" stroke="#ff2bd6" stroke-width="5"/>
+<rect x="224" y="124" width="12" height="16" rx="2" fill="#0d0c1b" stroke="#ff2bd6" stroke-width="2.5"/>
+</g>
+</svg>

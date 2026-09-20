@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+<title>Máscara Filter-X</title>
+<defs>
+<linearGradient id="t" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#26234a"/><stop offset="1" stop-color="#0d0c1b"/></linearGradient>
+<filter id="n" x="-50%" y="-50%" width="200%" height="200%" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<g stroke-linejoin="round" stroke-linecap="round" fill="none">
+<path d="M120 196C86 190 54 176 24 164M280 196C314 190 346 176 376 164M124 262C92 268 58 278 26 296M276 262C308 268 342 278 374 296" stroke="#5a5696" stroke-width="12"/>
+<path d="M120 196C86 190 54 176 24 164M280 196C314 190 346 176 376 164M124 262C92 268 58 278 26 296M276 262C308 268 342 278 374 296" stroke="#1a1836" stroke-width="8"/>
+<path d="M116 172Q200 126 284 172Q300 264 200 316Q100 264 116 172Z" fill="url(#t)" stroke="#5a5696" stroke-width="2"/>
+<path d="M148 184Q200 160 252 184" stroke="#5a5696" stroke-width="2"/>
+<circle cx="120" cy="242" r="42" fill="#151330" stroke="#5a5696" stroke-width="2"/>
+<circle cx="120" cy="242" r="29" fill="#05040b" stroke="#00f0ff" stroke-width="3" filter="url(#n)"/>
+<path d="M102 242H138M106 230H134M106 254H134" stroke="#00f0ff" stroke-width="2"/>
+<circle cx="280" cy="242" r="42" fill="#151330" stroke="#5a5696" stroke-width="2"/>
+<circle cx="280" cy="242" r="29" fill="#05040b" stroke="#ff2bd6" stroke-width="3" filter="url(#n)"/>
+<path d="M262 242H298M266 230H294M266 254H294" stroke="#ff2bd6" stroke-width="2"/>
+<rect x="174" y="212" width="52" height="58" rx="12" fill="#05040b" stroke="#5a5696" stroke-width="2"/>
+<path d="M186 226V258M196 226V258M206 226V258M216 226V258" stroke="#ff2bd6" stroke-width="3" filter="url(#n)"/>
+</g>
+</svg>

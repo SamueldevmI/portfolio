@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+<title>Bomber Cargo Nexus</title>
+<defs>
+<linearGradient id="t" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#26234a"/><stop offset="1" stop-color="#0d0c1b"/></linearGradient>
+<filter id="n" x="-50%" y="-50%" width="200%" height="200%" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<g stroke-linejoin="round" stroke-linecap="round" fill="none">
+<path d="M156 96L106 116L52 268L92 284L120 186V322H280V186L308 284L348 268L294 116L244 96Q200 124 156 96Z" fill="url(#t)" stroke="#5a5696" stroke-width="2"/>
+<path d="M52 268L92 284L86 304L44 288Z" fill="#151330" stroke="#5a5696" stroke-width="2"/>
+<path d="M348 268L308 284L314 304L356 288Z" fill="#151330" stroke="#5a5696" stroke-width="2"/>
+<rect x="120" y="300" width="160" height="28" rx="4" fill="#151330" stroke="#5a5696" stroke-width="2"/>
+<path d="M134 304V324M148 304V324M162 304V324M176 304V324M190 304V324M204 304V324M218 304V324M232 304V324M246 304V324M260 304V324" stroke="#0a0914" stroke-width="2"/>
+<path d="M150 94Q200 130 250 94L254 114Q200 152 146 114Z" fill="#151330" stroke="#5a5696" stroke-width="2"/>
+<path d="M200 138V300" stroke="#fcee0a" stroke-width="3" filter="url(#n)"/>
+<path d="M132 166H184V208H132Z M216 166H268V208H216Z" stroke="#5a5696" stroke-width="2"/>
+<path d="M132 166H184V182H132Z M216 166H268V182H216Z" fill="#151330" stroke="#5a5696" stroke-width="2"/>
+<circle cx="158" cy="182" r="3" fill="#fcee0a" stroke="none"/>
+<circle cx="242" cy="182" r="3" fill="#fcee0a" stroke="none"/>
+<path d="M80 198L106 208L102 244L72 234Z M320 198L294 208L298 244L328 234Z" stroke="#5a5696" stroke-width="2"/>
+<path d="M76 218L103 228M324 218L297 228" stroke="#fcee0a" stroke-width="2.5"/>
+<path d="M286 130L304 138L298 156L280 148Z" stroke="#ff2bd6" stroke-width="2.5" filter="url(#n)"/>
+</g>
+</svg>

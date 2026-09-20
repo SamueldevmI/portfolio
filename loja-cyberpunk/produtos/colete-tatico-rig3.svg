@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+<title>Colete Tático Rig-3</title>
+<defs>
+<linearGradient id="t" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#26234a"/><stop offset="1" stop-color="#0d0c1b"/></linearGradient>
+<filter id="n" x="-50%" y="-50%" width="200%" height="200%" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<g stroke-linejoin="round" stroke-linecap="round" fill="none">
+<path d="M136 46L170 46L200 118L230 46L264 46L286 126L296 356H104L114 126Z" fill="url(#t)" stroke="#5a5696" stroke-width="2"/>
+<path d="M200 118V356" stroke="#00f0ff" stroke-width="3" filter="url(#n)"/>
+<path d="M136 46L124 110M264 46L276 110" stroke="#5a5696" stroke-width="2"/>
+<path d="M120 162H190V208H120Z M210 162H280V208H210Z" stroke="#5a5696" stroke-width="2"/>
+<path d="M120 162H190V176H120Z M210 162H280V176H210Z" fill="#151330" stroke="#5a5696" stroke-width="2"/>
+<path d="M155 162V208M245 162V208" stroke="#5a5696" stroke-width="1.5"/>
+<path d="M118 222H190V286H118Z M210 222H282V286H210Z" stroke="#5a5696" stroke-width="2"/>
+<path d="M118 222H190V240H118Z M210 222H282V240H210Z" fill="#151330" stroke="#5a5696" stroke-width="2"/>
+<rect x="148" y="232" width="14" height="14" rx="2" fill="#0d0c1b" stroke="#00f0ff" stroke-width="2.5" filter="url(#n)"/>
+<rect x="238" y="232" width="14" height="14" rx="2" fill="#0d0c1b" stroke="#00f0ff" stroke-width="2.5" filter="url(#n)"/>
+<rect x="149" y="167" width="12" height="8" rx="2" fill="#00f0ff" stroke="none"/>
+<rect x="239" y="167" width="12" height="8" rx="2" fill="#00f0ff" stroke="none"/>
+<path d="M112 300H288" stroke="#5a5696" stroke-width="2"/>
+<path d="M112 306H288" stroke="#ff2bd6" stroke-width="3" stroke-dasharray="10 6" filter="url(#n)"/>
+<path d="M128 84L146 126M272 84L254 126" stroke="#ff2bd6" stroke-width="3" filter="url(#n)"/>
+</g>
+</svg>

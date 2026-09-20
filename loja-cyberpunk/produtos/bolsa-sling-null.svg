@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+<title>Bolsa Transversal Sling Null</title>
+<defs>
+<linearGradient id="t" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#26234a"/><stop offset="1" stop-color="#0d0c1b"/></linearGradient>
+<filter id="n" x="-50%" y="-50%" width="200%" height="200%" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<g stroke-linejoin="round" stroke-linecap="round" fill="none">
+<path d="M290 156L64 22" stroke="#5a5696" stroke-width="30"/>
+<path d="M290 156L64 22" stroke="#1a1836" stroke-width="26"/>
+<path d="M290 156L64 22" stroke="#00f0ff" stroke-width="1.5" stroke-dasharray="5 7" stroke-opacity=".8" transform="translate(-9 -6)"/>
+<path d="M92 176Q92 152 116 152H296Q320 152 322 178L334 292Q336 316 312 316H118Q96 316 94 292Z" fill="url(#t)" stroke="#5a5696" stroke-width="2"/>
+<path d="M108 198Q208 184 318 202" stroke="#ff2bd6" stroke-width="3" filter="url(#n)"/>
+<path d="M120 238H236Q250 238 250 252V296H120Z" stroke="#5a5696" stroke-width="2"/>
+<path d="M120 254H250" stroke="#5a5696" stroke-width="2"/>
+<rect x="270" y="238" width="30" height="34" rx="4" fill="#0d0c1b" stroke="#ff2bd6" stroke-width="3" filter="url(#n)"/>
+<rect x="278" y="188" width="14" height="20" rx="3" fill="#0d0c1b" stroke="#ff2bd6" stroke-width="2.5"/>
+</g>
+</svg>
