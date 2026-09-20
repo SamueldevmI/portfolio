@@ -622,3 +622,22 @@ body::before { --scroll-parallax:inherit; }
 .cursor-abraco-ativo { opacity:1; }
 .cursor-abraco-desliza { transition:opacity .16s ease,border-color .15s ease,background-color .15s ease,transform .28s cubic-bezier(.2,.8,.2,1),width .28s cubic-bezier(.2,.8,.2,1),height .28s cubic-bezier(.2,.8,.2,1),border-radius .28s ease; }
 .cursor-abraco-clique { border-color:var(--pink); background:color-mix(in srgb,var(--pink) 16%,transparent); }
+
+/* Eldev Music: prévia do app (disco de vinil + onda sonora) */
+.visual-eldev { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; padding:14px 16px 12px; background:radial-gradient(circle at 84% 6%,rgba(255,138,31,.36),transparent 52%),radial-gradient(circle at 6% 112%,rgba(255,77,109,.28),transparent 52%),linear-gradient(135deg,#1e1814,#100e0c); }
+.eldev-disco { position:relative; flex:none; width:92px; aspect-ratio:1; border-radius:50%; background:radial-gradient(circle,#12100e 0 5%,#ffcf8a 6% 8%,transparent 9%),radial-gradient(circle,#ff8a1f 0 24%,#ff4d6d 25% 30%,transparent 31%),conic-gradient(from 30deg,transparent 0 10%,rgba(255,255,255,.15) 17%,transparent 25% 60%,rgba(255,255,255,.1) 68%,transparent 76%),repeating-radial-gradient(circle,#0c0a08 0 2px,#1c1713 2px 3px); box-shadow:0 16px 34px rgba(0,0,0,.55),0 0 0 5px rgba(255,236,214,.05); }
+.eldev-info { display:grid; gap:7px; justify-items:center; width:100%; }
+.eldev-logo { color:#f5ede2; font:600 .78rem "DM Mono",monospace; letter-spacing:.28em; }
+.eldev-onda { display:flex; align-items:center; gap:3px; width:min(100%,300px); height:28px; }
+.eldev-onda i { flex:1; min-width:2px; height:calc(var(--h) * 100%); border-radius:2px; background:rgba(255,236,214,.24); }
+.eldev-onda i:nth-child(-n+12) { background:linear-gradient(#ffb52e,#ff5e3a); }
+.eldev-tocando { display:none; align-items:center; gap:8px; padding:4px 10px; border:1px solid #ffb46b; color:#ffb46b; font:.68rem "DM Mono",monospace; letter-spacing:.14em; text-transform:uppercase; }
+.eldev-tocando::before { content:""; width:7px; height:7px; border-radius:50%; background:#ff8a1f; }
+@keyframes eldev-gira { to { transform:rotate(360deg); } }
+@media (prefers-reduced-motion:no-preference) { html:not(.modo-leve) .eldev-disco { animation:eldev-gira 14s linear infinite; } }
+@media (min-width:1000px) {
+    .visual-eldev { flex-direction:row; gap:48px; }
+    .eldev-disco { width:210px; }
+    .eldev-info { width:auto; justify-items:start; gap:16px; }
+    .eldev-onda { width:340px; height:60px; } .eldev-tocando { display:inline-flex; }
+}

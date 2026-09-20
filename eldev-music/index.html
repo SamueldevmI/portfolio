@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Eldev Music</title>
+  <meta name="description" content="Eldev Music: música para ouvir de graça, no celular e no computador.">
+  <meta name="theme-color" content="#12100e">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Eldev Music">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="preload" href="fonts/bricolage-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/dmsans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="sem-mini">
+
+  <!-- ícones: um desenho só, usado em vários lugares com <use href="#i-nome"> -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="g-marca" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#ffb52e"/><stop offset="1" stop-color="#ff4d6d"/>
+      </linearGradient>
+    </defs>
+    <symbol id="i-logo" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="11.5" fill="url(#g-marca)"/>
+      <circle cx="12" cy="12" r="8.6" fill="none" stroke="#1c0f06" stroke-opacity=".3" stroke-width=".7"/>
+      <circle cx="12" cy="12" r="4.4" fill="#1c0f06"/>
+      <circle cx="12" cy="12" r="1.3" fill="#ffcf8a"/>
+      <path d="M5.2 8.6A8 8 0 0 1 9 5" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width="1.2" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M12 3 3 10.5V21h6.5v-6.5h5V21H21V10.5z"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></symbol>
+    <symbol id="i-biblioteca" viewBox="0 0 24 24"><path d="M4 4h3v16H4zM9.5 4h3v16h-3zM15 5.5l3-.8 3.9 14.3-3 .8z"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></symbol>
+    <symbol id="i-next" viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6zm10-12v12h2V6z"/></symbol>
+    <symbol id="i-prev" viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></symbol>
+    <symbol id="i-shuffle" viewBox="0 0 24 24"><path d="M10.59 9.17 5.41 4 4 5.41l5.17 5.17zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4zm.33 9.41-1.41 1.41 3.12 3.12L14.5 20H20v-5.5l-2.04 2.04z"/></symbol>
+    <symbol id="i-repeat" viewBox="0 0 24 24"><path d="M7 7h10v3l4-4-4-4v3H5v6h2zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2z"/></symbol>
+    <symbol id="i-estrela" viewBox="0 0 24 24"><path d="M22 9.24l-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.63-7.03L22 9.24zM12 15.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 6.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28L12 15.4z"/></symbol>
+    <symbol id="i-estrela-cheia" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></symbol>
+    <symbol id="i-mais" viewBox="0 0 24 24"><path d="M6 10a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm6 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm6 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/></symbol>
+    <symbol id="i-fila" viewBox="0 0 24 24"><path d="M15 6H3v2h12zm0 4H3v2h12zM3 16h8v-2H3zM17 6v8.18A3 3 0 0 0 16 14a3 3 0 1 0 3 3V8h3V6z"/></symbol>
+    <symbol id="i-baixo" viewBox="0 0 24 24"><path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></symbol>
+    <symbol id="i-esquerda" viewBox="0 0 24 24"><path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></symbol>
+    <symbol id="i-seta" viewBox="0 0 24 24"><path d="M6 6v2h8.59L5 17.59 6.41 19 16 9.41V18h2V6z"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></symbol>
+    <symbol id="i-adicionar" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></symbol>
+    <symbol id="i-nota" viewBox="0 0 24 24"><path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3z"/></symbol>
+    <symbol id="i-config" viewBox="0 0 24 24"><path d="M3 17v2h6v-2zM3 5v2h10V5zm10 16v-2h8v-2h-8v-2h-2v6zM7 9v2H3v2h4v2h2V9zm14 4v-2H11v2zm-6-4h2V7h4V5h-4V3h-2z"/></symbol>
+    <symbol id="i-baixar" viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7zM5 18v2h14v-2z"/></symbol>
+    <symbol id="i-lixo" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6zM19 4h-3.5l-1-1h-5l-1 1H5v2h14z"/></symbol>
+    <symbol id="i-volume" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9zm13.5 3A4.5 4.5 0 0 0 14 8v8a4.5 4.5 0 0 0 2.5-4zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></symbol>
+    <symbol id="i-pessoa" viewBox="0 0 24 24"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></symbol>
+    <symbol id="i-add-lista" viewBox="0 0 24 24"><path d="M14 10H2v2h12zm0-4H2v2h12zm4 8v-4h-2v4h-4v2h4v4h2v-4h4v-2zM2 16h8v-2H2z"/></symbol>
+    <symbol id="i-editar" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75z"/></symbol>
+    <symbol id="i-compartilhar" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 1 0-3-3c0 .24.04.47.09.7L8.04 9.81A3 3 0 0 0 6 9a3 3 0 1 0 0 6c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></symbol>
+    <symbol id="i-arquivo" viewBox="0 0 24 24"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></symbol>
+    <symbol id="i-aviso" viewBox="0 0 24 24"><path d="M12 2 1 21h22zm1 15h-2v-2h2zm0-4h-2V9h2z"/></symbol>
+    <!-- braço da vitrola do player em tela cheia -->
+    <symbol id="i-braco" viewBox="0 0 120 200">
+      <circle cx="90" cy="24" r="17" fill="#2a2520" stroke="#ffb46b" stroke-width="2.5"/>
+      <circle cx="90" cy="24" r="6" fill="#ffb46b"/>
+      <path d="M90 24 L90 92 L34 150" fill="none" stroke="#e9dccb" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="14" y="146" width="34" height="18" rx="4" transform="rotate(-38 31 155)" fill="#e9dccb"/>
+      <rect x="20" y="152" width="14" height="6" rx="2" transform="rotate(-38 27 155)" fill="#1c0f06"/>
+    </symbol>
+  </svg>
+
+  <nav class="abas" aria-label="Principal">
+    <a class="logo" href="#/" aria-label="Eldev Music, ir para o início"><svg class="i"><use href="#i-logo"/></svg><span><b>Eldev</b> Music</span></a>
+    <a class="aba" href="#/" data-rota="inicio"><svg class="i"><use href="#i-home"/></svg><span>Início</span></a>
+    <a class="aba" href="#/buscar" data-rota="buscar"><svg class="i"><use href="#i-search"/></svg><span>Buscar</span></a>
+    <a class="aba" href="#/biblioteca" data-rota="biblioteca"><svg class="i"><use href="#i-biblioteca"/></svg><span>Coleção</span></a>
+    <button class="icone nav-config" data-acao="config" aria-label="Configurações"><svg class="i"><use href="#i-config"/></svg></button>
+  </nav>
+
+  <main id="tela"></main>
+
+  <div id="mini" class="mini" hidden></div>
+  <section id="cheio" class="cheio" aria-label="Tocando agora" inert></section>
+  <div id="folha" class="folha" hidden></div>
+  <dialog id="dialogo"></dialog>
+  <div id="avisos" class="avisos" role="status" aria-live="polite"></div>
+  <input id="arquivos" type="file" accept="audio/*,.mp3,.m4a,.aac,.flac,.ogg,.opus,.wav" multiple hidden>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
