@@ -18,6 +18,16 @@
     <meta name="twitter:title" content="Samuel Mickael | Desenvolvedor Web &amp; Mobile">
     <meta name="twitter:description" content="Sites, sistemas e aplicativos sob medida. Veja meus projetos e peça um orçamento pelo WhatsApp.">
     <meta name="twitter:image" content="https://samueldevmi.github.io/portfolio/imagem/og-image-v2.jpg">
+    <script>
+        /* Modo leve: celular, economia de dados ou internet lenta desligam os efeitos mais pesados.
+           ?leve=1 força ligado e ?leve=0 força desligado. */
+        (function () {
+            var forcado = new URLSearchParams(location.search).get("leve");
+            var conexao = navigator.connection || {};
+            var leve = forcado === "1" || (forcado !== "0" && (matchMedia("(pointer:coarse)").matches || conexao.saveData === true || /(^|-)(2g|3g)$/.test(conexao.effectiveType || "")));
+            if (leve) document.documentElement.classList.add("modo-leve");
+        })();
+    </script>
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

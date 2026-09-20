@@ -337,8 +337,8 @@ const navEl = document.querySelector(".nav");
 function atualizarCamadasScroll() {
     atualizarBarraProgresso();
     if (navEl) navEl.classList.toggle("nav-flutuante", window.scrollY > 40);
-    if (!prefereMenosMovimento) {
-        document.documentElement.style.setProperty("--scroll-parallax", Math.min(window.scrollY * 0.04, 40) + "px");
+    if (!prefereMenosMovimento && !document.documentElement.classList.contains("modo-leve")) {
+        document.body.style.setProperty("--scroll-parallax", Math.min(window.scrollY * 0.04, 40) + "px");
     }
 }
 
@@ -1329,4 +1329,15 @@ if (botaoBusca && paletaOverlay) {
             }).observe(alvo);
         });
     }
+})();
+
+/* Esqueleto brilhante no lugar do gráfico do GitHub enquanto ele carrega */
+(() => {
+    const grafico = document.querySelector(".github-atividade img");
+    if (!grafico || grafico.complete) return;
+    grafico.classList.add("esqueleto");
+    const terminou = () => grafico.classList.remove("esqueleto");
+    grafico.addEventListener("load", terminou, { once: true });
+    grafico.addEventListener("error", terminou, { once: true });
+    setTimeout(terminou, 15000); // se o serviço do gráfico não responder, não deixa o esqueleto brilhando para sempre
 })();

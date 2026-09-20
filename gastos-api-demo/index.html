@@ -106,16 +106,27 @@
             const dados = await resposta.json();
             totalEl.textContent = formatarMoeda(dados.total);
             qtdEl.textContent = dados.quantidade;
+            totalEl.classList.remove("esqueleto-valor");
+            qtdEl.classList.remove("esqueleto-valor");
         }
 
         async function carregarLista() {
             statusEl.hidden = false;
             statusEl.textContent = "Carregando... (pode levar um tempo se a API estava dormindo)";
-            listaEl.innerHTML = "";
+            listaEl.innerHTML = '<li class="esqueleto-linha" aria-hidden="true"></li>'.repeat(3);
+            totalEl.classList.add("esqueleto-valor");
+            qtdEl.classList.add("esqueleto-valor");
+            const inicio = Date.now();
+            const relogio = setInterval(() => {
+                const segundos = Math.round((Date.now() - inicio) / 1000);
+                statusEl.textContent = `Carregando... ${segundos} s (a API grátis pode levar até 50 s para acordar)`;
+            }, 1000);
 
             try {
                 const resposta = await fetch(`${API}/gastos`);
                 const gastos = await resposta.json();
+                clearInterval(relogio);
+                listaEl.innerHTML = "";
 
                 if (gastos.length === 0) {
                     statusEl.textContent = "Nenhum gasto cadastrado ainda. Adicione o primeiro ao lado.";
@@ -140,6 +151,10 @@
 
                 await carregarResumo();
             } catch (erro) {
+                clearInterval(relogio);
+                listaEl.innerHTML = "";
+                totalEl.classList.remove("esqueleto-valor");
+                qtdEl.classList.remove("esqueleto-valor");
                 statusEl.hidden = false;
                 statusEl.textContent = "Não foi possível carregar os dados agora. Tente novamente em instantes.";
             }
