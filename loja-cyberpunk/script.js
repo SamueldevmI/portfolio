@@ -115,8 +115,8 @@ const PRODUTOS = [
 const $ = (seletor) => document.querySelector(seletor);
 const produto = (id) => PRODUTOS.find((p) => p.id === id);
 const esc = (texto) => String(texto).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-const brl = (centavos) => (centavos / 100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }).replace(/ /g, " ");
-const normalizar = (texto) => String(texto).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+const brl = (centavos) => (centavos / 100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }).replace(/\u00a0/g, " ");
+const normalizar = (texto) => String(texto).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 const codigo = (id) => "GD-" + String(PRODUTOS.findIndex((p) => p.id === id) + 1).padStart(2, "0");
 
 function ler(chave, padrao) {
@@ -258,11 +258,12 @@ function montarMensagem() {
         const p = produto(i.id);
         linhas.push(`• ${i.qtd}x ${p.nome}${i.tam ? " (" + i.tam + ")" : ""} — ${brl(p.preco * i.qtd)}`);
     });
-    linhas.push("", `*Total: ${brl(totalCentavos())}*`);
+    linhas.push("", `*Total estimado: ${brl(totalCentavos())}*`);
     const nome = campoNome.value.trim();
     const obs = campoObs.value.trim();
     if (nome) linhas.push(`Nome: ${nome}`);
     if (obs) linhas.push(`Obs.: ${obs}`);
+    linhas.push("", "Podemos combinar o valor final, o frete e o pagamento por aqui?");
     if (LOJA.demo) linhas.push("", "_(Pedido de teste da loja de demonstração do portfólio)_");
     return linhas.join("\n");
 }
