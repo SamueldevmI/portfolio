@@ -155,7 +155,7 @@ if (terminalSaida) {
 }
 
 const comandosTerminal = {
-    help: () => "Comandos: whoami, skills, projetos, contato, clear",
+    help: () => "Comandos: whoami, skills, projetos, orcamento, contato, clear",
     whoami: () => "Samuel Mickael — estudante de ADS (4º semestre), dev front-end & back-end. Buscando a primeira oportunidade em T.I.",
     skills: () => "Python · Flask · SQLAlchemy · JavaScript · HTML · CSS · Git · pytest",
     projetos() {
@@ -166,6 +166,10 @@ const comandosTerminal = {
         document.getElementById("contato").scrollIntoView({ behavior: prefereMenosMovimento ? "auto" : "smooth" });
         return "Abrindo a seção de contato ↓";
     },
+    orcamento() {
+        document.getElementById("orcamento")?.scrollIntoView({ behavior: prefereMenosMovimento ? "auto" : "smooth" });
+        return "Abrindo o orçamento ↓";
+    },
     clear() {
         terminalSaida.innerHTML = "";
         return null;
@@ -173,6 +177,8 @@ const comandosTerminal = {
 };
 comandosTerminal.projects = comandosTerminal.projetos;
 comandosTerminal.contact = comandosTerminal.contato;
+comandosTerminal["orçamento"] = comandosTerminal.orcamento;
+comandosTerminal.budget = comandosTerminal.orcamento;
 comandosTerminal.limpar = comandosTerminal.clear;
 
 if (terminalForm) {
@@ -805,6 +811,11 @@ if (botaoBusca && paletaOverlay) {
     const CHAVE = "orcamento-rascunho";
     const VALIDADE_MS = 14 * 24 * 60 * 60 * 1000;
 
+    // Links com ?origem=instagram e ?tipo=app (só valores conhecidos entram na mensagem)
+    const ORIGENS = { instagram: "Instagram", whatsapp: "WhatsApp", linkedin: "LinkedIn", github: "GitHub", facebook: "Facebook", google: "Google" };
+    const PARAMETROS = new URLSearchParams(location.search);
+    const ORIGEM = ORIGENS[(PARAMETROS.get("origem") || "").toLowerCase()] || "";
+
     const TIPOS = {
         site: {
             rotulo: "Site ou página de vendas",
@@ -919,8 +930,10 @@ if (botaoBusca && paletaOverlay) {
     function compor() {
         const tipo = tipoAtual();
         const nome = typeof resp.nome === "string" ? resp.nome.trim() : "";
-        const linhas = [nome ? `Oi, Samuel! Me chamo ${nome}. Vi seu portfólio e quero pedir um orçamento.` : "Oi, Samuel! Vi seu portfólio e quero pedir um orçamento.", ""];
+        const abertura = `Oi, Samuel! ${nome ? `Me chamo ${nome}. ` : ""}${ORIGEM ? `Vim pelo ${ORIGEM}` : "Vi seu portfólio"} e quero pedir um orçamento.`;
+        const linhas = [abertura, ""];
         if (tipo) linhas.push(`Projeto: ${tipo.rotulo}`);
+        if (resp.ref) linhas.push(`Referência: projeto ${resp.ref}`);
         passos().forEach((passo) => {
             if (passo.id === "tipo" || passo.id === "contato") return;
             const valor = passo.id === "recursos"
@@ -946,8 +959,9 @@ if (botaoBusca && paletaOverlay) {
     /* Navegação entre passos */
     function ir(novo) {
         retomado = false;
+        const direcao = novo >= indice ? 1 : -1;
         indice = Math.max(0, Math.min(novo, passos().length));
-        desenhar(true);
+        desenhar(true, direcao);
         const caixa = raiz.closest(".orcamento-caixa");
         if (caixa && caixa.getBoundingClientRect().top < 0) {
             caixa.scrollIntoView({ block: "start", behavior: prefereMenosMovimento ? "instant" : "smooth" });
@@ -1205,8 +1219,21 @@ if (botaoBusca && paletaOverlay) {
         copiar.type = "button";
         copiar.addEventListener("click", () => copiarTexto(campo));
 
+        enviar.classList.add("orc-pulso");
         const acoes = criar("div", "orc-acoes");
         acoes.append(enviar, copiar);
+
+        // O navegador de dentro do Instagram/Facebook nem sempre abre o WhatsApp: oferece outro caminho.
+        let avisoApp = null;
+        if (/Instagram|FBAN|FBAV|FB_IAB/i.test(navigator.userAgent)) {
+            avisoApp = criar("p", "orc-aviso-app", "Você está no navegador do Instagram. Se o WhatsApp não abrir, toque em Copiar resumo e me chame por lá.");
+            if (typeof navigator.share === "function") {
+                const compartilhar = criar("button", "botao botao-secundario", "Compartilhar");
+                compartilhar.type = "button";
+                compartilhar.addEventListener("click", () => navigator.share({ text: campo.value }).catch(() => {}));
+                acoes.append(compartilhar);
+            }
+        }
 
         const nav = criar("div", "orc-nav");
         const voltar = criar("button", "orc-link", "← Voltar e mudar respostas");
@@ -1217,18 +1244,25 @@ if (botaoBusca && paletaOverlay) {
         refazer.addEventListener("click", recomecar);
         nav.append(voltar, refazer);
 
-        caixa.append(campo, acoes, nav);
+        caixa.append(campo, acoes, ...(avisoApp ? [avisoApp] : []), nav);
         return caixa;
     }
 
-    function desenhar(foco) {
+    function desenhar(foco, direcao = 0) {
         const lista = passos();
         if (indice > lista.length) indice = lista.length;
         const pronto = indice === lista.length;
         const total = totalDePerguntas();
         raiz.replaceChildren(criarProgresso(pronto ? total : indice, total, pronto));
         if (retomado) raiz.append(criarNotaRetomado());
-        raiz.append(pronto ? criarFinal() : criarPasso(lista[indice]));
+        const passoEl = pronto ? criarFinal() : criarPasso(lista[indice]);
+        raiz.append(passoEl);
+        if (direcao && !prefereMenosMovimento && typeof passoEl.animate === "function") {
+            passoEl.animate(
+                [{ opacity: 0, transform: `translateX(${direcao * 18}px)` }, { opacity: 1, transform: "translateX(0)" }],
+                { duration: 240, easing: "cubic-bezier(.2,.7,.2,1)" }
+            );
+        }
         if (foco) raiz.querySelector("[data-foco]")?.focus({ preventScroll: true });
         salvar();
     }
@@ -1241,4 +1275,58 @@ if (botaoBusca && paletaOverlay) {
     }
     indice = Math.max(0, Math.min(indice, passos().length));
     desenhar(false);
+
+    /* Botões "Quero um assim" (projetos) e "Pedir orçamento disso" (serviços) */
+    function rolarAteOrcamento(comFoco) {
+        const caixa = raiz.closest(".orcamento-caixa");
+        caixa?.scrollIntoView({ block: "start", behavior: prefereMenosMovimento ? "instant" : "smooth" });
+        if (comFoco) setTimeout(() => raiz.querySelector("[data-foco]")?.focus({ preventScroll: true }), prefereMenosMovimento ? 0 : 500);
+    }
+
+    function preencher(tipo, referencia) {
+        if (!TIPOS[tipo]) return false;
+        const mudou = resp.tipo !== tipo;
+        if (mudou) limparDoTipo();
+        resp.tipo = tipo;
+        if (referencia !== undefined) {
+            if (referencia) resp.ref = String(referencia).slice(0, 80);
+            else delete resp.ref;
+        }
+        retomado = false;
+        if (mudou || indice === 0) indice = 1;
+        indice = Math.min(indice, passos().length);
+        desenhar(false);
+        return true;
+    }
+
+    document.addEventListener("click", (evento) => {
+        const gatilho = evento.target.closest("[data-orcamento-tipo]");
+        if (!gatilho) return;
+        if (preencher(gatilho.dataset.orcamentoTipo, gatilho.dataset.orcamentoRef || "")) rolarAteOrcamento(true);
+    });
+
+    // Link já com o tipo escolhido: .../portfolio/?tipo=app
+    if (preencher((PARAMETROS.get("tipo") || "").toLowerCase(), undefined)) {
+        const rolar = () => rolarAteOrcamento(false);
+        if (document.readyState === "complete") rolar();
+        else window.addEventListener("load", rolar, { once: true });
+    }
+
+    /* Botão fixo "Pedir orçamento" no celular: aparece depois do topo e some quando o orçamento ou o contato estão na tela */
+    const botaoFixo = document.querySelector(".orcamento-fixo");
+    if (botaoFixo && "IntersectionObserver" in window) {
+        const visivel = { hero: true, orcamento: false, contato: false };
+        const atualizar = () => botaoFixo.classList.toggle("is-visivel", !visivel.hero && !visivel.orcamento && !visivel.contato);
+        [["hero", ".hero"], ["orcamento", "#orcamento"], ["contato", "#contato"]].forEach(([chave, seletor]) => {
+            const alvo = document.querySelector(seletor);
+            if (!alvo) {
+                visivel[chave] = false;
+                return;
+            }
+            new IntersectionObserver(([entrada]) => {
+                visivel[chave] = entrada.isIntersecting;
+                atualizar();
+            }).observe(alvo);
+        });
+    }
 })();

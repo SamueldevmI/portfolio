@@ -467,3 +467,38 @@ textarea.orc-campo { min-height:96px; resize:vertical; }
     .orc-opcao { transition:none; }
 }
 @media print { .orcamento-caixa { display:none !important; } }
+
+/* ===== Rodada: orçamento mais esperto ===== */
+.card-orcamento { display:flex; align-items:center; justify-content:space-between; width:100%; margin-top:14px; padding:10px 14px; border:1px solid var(--line); border-radius:4px; background:transparent; color:var(--text); font:600 .82rem "Space Grotesk",sans-serif; text-align:left; cursor:pointer; transition:border-color .2s ease,color .2s ease; }
+.card-orcamento span { color:var(--cyan); transition:transform .2s ease; }
+.card-orcamento:hover { border-color:var(--cyan); color:var(--cyan); }
+.card-orcamento:hover span { transform:translateX(3px); }
+.lista-servicos .link-servico { grid-column:2; justify-self:start; margin-top:10px; }
+
+.orcamento-fixo { display:none; }
+@media(max-width:720px) {
+    .orcamento-fixo { position:fixed; left:14px; bottom:calc(14px + env(safe-area-inset-bottom)); z-index:60; display:inline-flex; align-items:center; min-height:46px; padding:10px 20px; border:1px solid var(--cyan); border-radius:999px; background:var(--cyan); color:#061018; font:600 .86rem "Space Grotesk",sans-serif; text-decoration:none; box-shadow:0 10px 30px -10px rgba(var(--cyan-rgb),.6); opacity:0; visibility:hidden; transform:translateY(14px); transition:opacity .25s ease,transform .25s ease,visibility 0s linear .25s; }
+    .orcamento-fixo.is-visivel { opacity:1; visibility:visible; transform:none; transition-delay:0s; }
+}
+body.dark-mode .orcamento-fixo { background:#ff8c14; border-color:#ff8c14; color:#2b1200; }
+
+.orcamento-caixa { position:relative; }
+.orcamento-caixa::after { content:""; position:absolute; inset:0; padding:1px; background:conic-gradient(from var(--borda-angulo,0deg),var(--cyan),var(--violet),var(--pink),var(--cyan)); -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0); -webkit-mask-composite:xor; mask-composite:exclude; opacity:0; transition:opacity .3s ease; pointer-events:none; }
+.orcamento-caixa:focus-within::after { opacity:1; animation:girar-borda 3s linear infinite; }
+
+.orc-opcao[aria-pressed="true"]::after { animation:orc-desenhar .3s ease-out both; }
+@keyframes orc-desenhar { from { clip-path:inset(0 100% 0 0); } to { clip-path:inset(0 0 0 0); } }
+.orc-trilho span { overflow:hidden; box-shadow:0 0 10px rgba(var(--cyan-rgb),.55); }
+.orc-trilho span::after { content:""; position:absolute; inset:0; background:linear-gradient(90deg,transparent,rgba(255,255,255,.6),transparent); transform:translateX(-100%); animation:orc-brilho 1.4s ease-in-out .3s 1 both; }
+@keyframes orc-brilho { to { transform:translateX(100%); } }
+.orc-trilho span { position:relative; }
+.orc-pulso { animation:orc-pulso 1.4s ease-out .4s 2 both; }
+@keyframes orc-pulso { 0% { box-shadow:0 0 0 0 rgba(var(--cyan-rgb),.55); } 100% { box-shadow:0 0 0 16px rgba(var(--cyan-rgb),0); } }
+.orc-aviso-app { margin:14px 0 0; padding:8px 12px; border-left:2px solid var(--pink); background:rgba(var(--pink-rgb),.08); color:var(--muted); font-size:.82rem; }
+
+@media (prefers-reduced-motion:reduce) {
+    .orcamento-caixa:focus-within::after { animation:none; }
+    .orc-opcao[aria-pressed="true"]::after,.orc-trilho span::after,.orc-pulso { animation:none; }
+    .orcamento-fixo { transition:none; }
+}
+@media print { .orcamento-fixo { display:none !important; } }
