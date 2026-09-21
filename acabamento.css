@@ -229,3 +229,46 @@ html.dark-mode body.dark-mode .habilidades li { color: #4a2ddb; }
     html.dark-mode { background: #fff; }
     html.dark-mode body.dark-mode::before, html.dark-mode body.dark-mode::after { display: none; }
 }
+
+/* ---------- Tema escuro: fundo fluido (aurora) ----------
+   Mesma ideia do tema claro: o body fica transparente sobre o fundo escuro do html e duas camadas
+   fixas (::before roxa, ::after azulada) derivam devagar. So transform: leve, roda ate no celular.
+   Ocupa o lugar do brilho neon e da grade que o CSS ja descrevia mas ficavam escondidos atras do
+   fundo do body. Com "reduzir movimento" ligado o mesmo fundo fica parado. */
+body { background: transparent; }
+html { transition: background-color .4s ease; }
+html:not(.dark-mode) body::before,
+html:not(.dark-mode) body::after { content: ""; position: fixed; inset: -22%; pointer-events: none; opacity: 1; filter: none; mask-image: none; background-size: auto; will-change: transform; }
+html:not(.dark-mode) body::before {
+    z-index: -2;
+    background:
+        radial-gradient(circle at 28% 30%, rgba(124, 72, 236, .3) 0, transparent 36%),
+        radial-gradient(circle at 76% 66%, rgba(168, 96, 255, .22) 0, transparent 32%),
+        linear-gradient(172deg, #150838 0%, #0e0524 46%, #0a0420 100%);
+    animation: aurora-a 30s ease-in-out infinite alternate;
+}
+html:not(.dark-mode) body::after {
+    z-index: -1;
+    background:
+        radial-gradient(circle at 72% 28%, rgba(46, 120, 232, .24) 0, transparent 34%),
+        radial-gradient(circle at 24% 74%, rgba(58, 150, 235, .2) 0, transparent 36%),
+        radial-gradient(circle at 52% 50%, rgba(255, 122, 217, .07) 0, transparent 28%);
+    animation: aurora-b 38s ease-in-out infinite alternate;
+}
+@keyframes aurora-a {
+    0%   { transform: translate3d(-5%, -4%, 0) rotate(-3deg) scale(1); }
+    50%  { transform: translate3d(4%, 3%, 0) rotate(3deg) scale(1.08); }
+    100% { transform: translate3d(-2%, 6%, 0) rotate(-1deg) scale(1.03); }
+}
+@keyframes aurora-b {
+    0%   { transform: translate3d(5%, 3%, 0) rotate(3deg) scale(1.06); }
+    50%  { transform: translate3d(-4%, -3%, 0) rotate(-4deg) scale(1); }
+    100% { transform: translate3d(3%, -6%, 0) rotate(2deg) scale(1.1); }
+}
+@media (prefers-reduced-motion: reduce) {
+    html:not(.dark-mode) body::before, html:not(.dark-mode) body::after { animation: none; }
+    html { transition: none; }
+}
+@media print {
+    html:not(.dark-mode) body::before, html:not(.dark-mode) body::after { display: none; }
+}
