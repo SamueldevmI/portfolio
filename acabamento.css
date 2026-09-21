@@ -337,3 +337,16 @@ footer, .link-rodape, .chip-filtro, .botao-surpresa { font-size: .8rem; }
     .gh-numeros b { font-size: 1.9rem; }
     .gh-numeros span { font-size: .76rem; }
 }
+
+/* ---------- Celular: area de toque de pelo menos 44 px ----------
+   O desenho dos botoes nao muda: so a area que responde ao dedo cresce, por um elemento invisivel
+   (no eixo vertical nos itens que ficam lado a lado, para uma area nao invadir a do vizinho).
+   As medidas contam a borda de 1 px, porque o elemento invisivel se apoia por dentro dela. */
+.switch, .nav-cta, .botao-busca, .logo, .chip-filtro, .botao-surpresa, .link-rodape { position: relative; }
+.botao-flip::after, .botao-compartilhar::after { content: ""; position: absolute; inset: -8px; }
+.voltar-topo::after { content: ""; position: absolute; inset: -2px; }
+.switch::after { content: ""; position: absolute; inset: -9px 0; }
+.nav-cta::after { content: ""; position: absolute; inset: -6px 0; }
+.botao-busca::after { content: ""; position: absolute; inset: -8px -3px; }
+.logo::after { content: ""; position: absolute; inset: -9px -6px; }
+.chip-filtro::after, .botao-surpresa::after, .link-rodape::after { content: ""; position: absolute; inset: -3px 0; }
