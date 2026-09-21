@@ -9,20 +9,37 @@ function atualizarTema(escuro) {
     if (metaTema) metaTema.setAttribute("content", escuro ? "#eee3ff" : "#0e0524");
 }
 
-const temaSalvo = localStorage.getItem("tema");
+function lerTemaSalvo() {
+    try { return localStorage.getItem("tema"); } catch (erro) { return null; } // alguns navegadores embutidos bloqueiam o armazenamento
+}
+
+// Tema quando a pessoa ainda não escolheu: segue o modo escuro do celular; sem ele, vale o horário local (7h-18h = claro).
+// Atenção: aqui "true" significa aparência CLARA (é a classe dark-mode, que neste site é o tema claro).
+const modoEscuroDoSistema = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
+function aparenciaClaraPadrao() {
+    if (modoEscuroDoSistema && modoEscuroDoSistema.matches) return false;
+    const horaAtual = new Date().getHours();
+    return horaAtual >= 7 && horaAtual < 18;
+}
+
+const temaSalvo = lerTemaSalvo();
 if (temaSalvo) {
     atualizarTema(temaSalvo === "escuro");
 } else {
-    // Sem preferência salva ainda: sugere um tema com base no horário local (7h-18h = claro).
-    // O toggle manual sempre tem prioridade assim que a pessoa escolher.
-    const horaAtual = new Date().getHours();
-    atualizarTema(horaAtual >= 7 && horaAtual < 18);
+    // Sem preferência salva ainda: o toggle manual sempre tem prioridade assim que a pessoa escolher.
+    atualizarTema(aparenciaClaraPadrao());
+}
+// Se a pessoa liga ou desliga o modo escuro do celular com o site aberto e ainda não escolheu um tema, acompanha.
+if (modoEscuroDoSistema && modoEscuroDoSistema.addEventListener) {
+    modoEscuroDoSistema.addEventListener("change", () => {
+        if (!lerTemaSalvo()) atualizarTema(aparenciaClaraPadrao());
+    });
 }
 
 botaoTema.addEventListener("click", () => {
     const escuro = !document.body.classList.contains("dark-mode");
     atualizarTema(escuro);
-    localStorage.setItem("tema", escuro ? "escuro" : "claro");
+    try { localStorage.setItem("tema", escuro ? "escuro" : "claro"); } catch (erro) { /* sem armazenamento: vale só nesta visita */ }
 });
 
 document.getElementById("ano").textContent = new Date().getFullYear();

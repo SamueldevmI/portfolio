@@ -356,3 +356,9 @@ footer, .link-rodape, .chip-filtro, .botao-surpresa { font-size: .8rem; }
 @media (pointer: coarse) {
     input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="button"]):not([type="submit"]), select, textarea { font-size: 16px; }
 }
+
+/* ---------- Cores nativas de acordo com o tema do site ----------
+   Barras de rolagem, campos e listas do sistema acompanham o tema (e o Chrome nao tenta escurecer
+   por conta propria o tema claro quando o celular esta em modo escuro). */
+html { color-scheme: dark; }
+html.dark-mode { color-scheme: light; }
