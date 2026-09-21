@@ -157,7 +157,7 @@ if (terminalSaida) {
 const comandosTerminal = {
     help: () => "Comandos: whoami, skills, projetos, orcamento, contato, clear",
     whoami: () => "Samuel Mickael — estudante de ADS (4º semestre), dev front-end & back-end. Buscando a primeira oportunidade em T.I.",
-    skills: () => "Python · Flask · SQLAlchemy · JavaScript · HTML · CSS · Git · pytest",
+    skills: () => "Python · Flask · SQLAlchemy · JavaScript · HTML · CSS · PWA · Git · pytest",
     projetos() {
         document.getElementById("projetos").scrollIntoView({ behavior: prefereMenosMovimento ? "auto" : "smooth" });
         return "Abrindo a seção de projetos ↓";

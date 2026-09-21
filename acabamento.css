@@ -10,10 +10,9 @@ main .eyebrow::before { content: counter(secao, decimal-leading-zero) " / "; col
 
 /* ---------- 3. Foto no anel do topo ---------- */
 .hero-foto { position: absolute; z-index: 1; right: calc(4% + 14px + var(--parallax-x, 0px)); top: calc(114px + var(--parallax, 0px)); width: 232px; height: 232px; margin: 0; overflow: hidden; border-radius: 50%; background: #140a34; box-shadow: 0 0 0 1px rgba(var(--cyan-rgb), .4), 0 26px 60px -18px rgba(0,0,0,.75); }
-.hero-foto img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 62% 30%; transform: scale(1.5); transform-origin: 62% 30%; filter: grayscale(1) contrast(1.08) brightness(.96); }
+.hero-foto img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; } /* a foto já vem quadrada e cortada no rosto */
 .hero-foto::after { content: ""; position: absolute; inset: 0; border-radius: 50%; pointer-events: none; background: linear-gradient(155deg, rgba(var(--cyan-rgb), .34), transparent 58%), radial-gradient(circle at 78% 92%, rgba(120,90,255,.28), transparent 62%); mix-blend-mode: soft-light; }
 body.dark-mode .hero-foto { background: #241a5c; box-shadow: 0 0 0 3px rgba(247,245,254,.7), 0 26px 60px -18px rgba(47,35,144,.55); }
-body.dark-mode .hero-foto img { filter: grayscale(1) contrast(1.05); }
 body.dark-mode .hero-foto::after { background: linear-gradient(155deg, rgba(109,74,255,.4), transparent 60%); mix-blend-mode: soft-light; }
 /* em telas estreitas a foto não cabe ao lado do texto: vira um avatar em linha e o anel vazio some */
 @media (max-width: 999px) {
@@ -50,6 +49,18 @@ body.dark-mode .habilidades li[data-tecnologia="python"] svg { color: #275d8c; }
 body.dark-mode .habilidades li[data-tecnologia="html"] svg { color: #d9431a; }
 body.dark-mode .habilidades li[data-tecnologia="css"] svg { color: #1264a0; }
 body.dark-mode .habilidades li[data-tecnologia="javascript"] svg { color: #b58900; }
+/* tecnologias novas (PWA, Flask, SQLAlchemy, Pytest, Git): ícones de linha próprios, sem logotipo de marca */
+.habilidades li svg.ic-linha { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.habilidades li[data-tecnologia="pwa"] svg { color: #a78bfa; }
+.habilidades li[data-tecnologia="flask"] svg { color: #dfe3ea; }
+.habilidades li[data-tecnologia="sqlalchemy"] svg { color: #ff6b57; }
+.habilidades li[data-tecnologia="pytest"] svg { color: #3bb6ea; }
+.habilidades li[data-tecnologia="git"] svg { color: #f05032; }
+body.dark-mode .habilidades li[data-tecnologia="pwa"] svg { color: #5b3fd0; }
+body.dark-mode .habilidades li[data-tecnologia="flask"] svg { color: #2b2f3a; }
+body.dark-mode .habilidades li[data-tecnologia="sqlalchemy"] svg { color: #b3260f; }
+body.dark-mode .habilidades li[data-tecnologia="pytest"] svg { color: #0a6f9c; }
+body.dark-mode .habilidades li[data-tecnologia="git"] svg { color: #c23a20; }
 
 .lista-servicos article { position: relative; transition: background .3s ease; }
 .lista-servicos article:hover { background: linear-gradient(90deg, rgba(var(--cyan-rgb), .08), transparent 72%); }
