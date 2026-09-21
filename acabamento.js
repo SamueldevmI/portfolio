@@ -126,15 +126,39 @@
             rolagem.scrollLeft = rolagem.scrollWidth; // no celular começa pelo mais recente
         }
 
-        fetch("https://github-contributions-api.jogruber.de/v4/" + USUARIO + "?y=last")
-            .then(function (resposta) { return resposta.ok ? resposta.json() : Promise.reject(new Error("sem dados")); })
-            .then(function (dados) {
-                const dias = dados && dados.contributions;
-                if (!Array.isArray(dias) || dias.length < 30) return;
-                const soma = (dados.total && dados.total.lastYear) || dias.reduce(function (s, d) { return s + d.count; }, 0);
-                desenhar(dias, soma);
-            })
-            .catch(function () { /* sem rede ou serviço fora do ar: fica a imagem de antes */ });
+        function mostrarImagemReserva() {
+            // O gráfico novo não veio (sem rede, serviço fora do ar): só agora baixa a imagem de antes.
+            if (imagemAntiga && imagemAntiga.dataset.src && !imagemAntiga.getAttribute("src")) {
+                imagemAntiga.src = imagemAntiga.dataset.src;
+                imagemAntiga.hidden = false;
+            }
+        }
+
+        function carregar() {
+            fetch("https://github-contributions-api.jogruber.de/v4/" + USUARIO + "?y=last")
+                .then(function (resposta) { return resposta.ok ? resposta.json() : Promise.reject(new Error("sem dados")); })
+                .then(function (dados) {
+                    const dias = dados && dados.contributions;
+                    if (!Array.isArray(dias) || dias.length < 30) { mostrarImagemReserva(); return; }
+                    const soma = (dados.total && dados.total.lastYear) || dias.reduce(function (s, d) { return s + d.count; }, 0);
+                    desenhar(dias, soma);
+                })
+                .catch(mostrarImagemReserva);
+        }
+
+        // Só busca quando o gráfico está perto de aparecer: no celular poupa uma conexão e dados na abertura da página.
+        const caixa = desenho.parentElement;
+        if ("IntersectionObserver" in window && caixa) {
+            const observador = new IntersectionObserver(function (entradas) {
+                if (entradas.some(function (e) { return e.isIntersecting; })) {
+                    observador.disconnect();
+                    carregar();
+                }
+            }, { rootMargin: "700px 0px" });
+            observador.observe(caixa);
+        } else {
+            carregar();
+        }
 
         let espera = 0;
         window.addEventListener("resize", function () {
