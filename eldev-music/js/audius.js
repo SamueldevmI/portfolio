@@ -5,7 +5,9 @@ const TTL = 5 * 60 * 1000;
 const cache = new Map();
 
 async function pegar(caminho, params = {}, sinal) {
-  const url = `${BASE}${caminho}?${new URLSearchParams({ ...params, app_name: APP })}`;
+  const q = new URLSearchParams();
+  for (const [k, v] of Object.entries({ ...params, app_name: APP })) (Array.isArray(v) ? v : [v]).forEach((x) => q.append(k, x));
+  const url = `${BASE}${caminho}?${q}`;
   const antigo = cache.get(url);
   if (antigo && Date.now() - antigo.t < TTL) return antigo.dados;
 
@@ -51,6 +53,10 @@ export const daFaixa = (t) => ({
   espelhos: espelhos(t.artwork),
   duracao: t.duration || 0,
   genero: t.genre || '',
+  bpm: Math.round(t.bpm) || 0,
+  tom: t.musical_key || '',
+  clima: t.mood || '',
+  plays: t.play_count || 0,
   link: t.permalink ? `https://audius.co${t.permalink}` : '',
 });
 
@@ -78,6 +84,20 @@ export async function emAlta({ genero = '', limite = 20, periodo = 'week' } = {}
   const p = { limit: limite, time: periodo };
   if (genero) p.genre = genero;
   return faixas(await pegar('/tracks/trending', p, sinal));
+}
+
+// artistas pequenos: o Audius separa uma lista de músicas boas que quase ninguém ouviu ainda
+export async function emAltaSubterranea({ genero = '', limite = 30 } = {}, sinal) {
+  const p = { limit: limite };
+  if (genero) p.genre = genero;
+  return faixas(await pegar('/tracks/trending/underground', p, sinal));
+}
+
+// várias faixas de uma vez, na mesma ordem dos números pedidos (playlist recebida por link)
+export async function faixasPorIds(ids, sinal) {
+  const dados = await pegar('/tracks', { id: ids }, sinal);
+  const porId = new Map(faixas(dados).map((f) => [f.ref, f]));
+  return ids.map((id) => porId.get(id)).filter(Boolean);
 }
 
 export const buscarFaixas = async (q, limite = 20, sinal) =>

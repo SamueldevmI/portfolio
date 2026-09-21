@@ -4,8 +4,8 @@ import { uid } from './util.js';
 
 const CHAVE = 'eldev-music:v1';
 const padrao = () => ({
-  curtidas: [], playlists: [], salvas: [], meus: [], recentes: [], buscas: [],
-  fila: null, config: { nome: '', volume: 1 },
+  curtidas: [], playlists: [], salvas: [], meus: [], baixadas: [], recentes: [], buscas: [],
+  fila: null, config: { nome: '', volume: 1, radio: true, dicaDisco: true },
 });
 
 function ler() {
@@ -19,6 +19,7 @@ function ler() {
 }
 
 let dados = ler();
+let idsBaixados = new Set(dados.baixadas.map((f) => f.id));
 const ouvintes = new Set();
 let espera = 0;
 
@@ -52,6 +53,7 @@ export const faixaMagra = (f) => ({
   id: f.id, src: f.src, ref: f.ref, titulo: f.titulo, artista: f.artista,
   artistaId: f.artistaId || '', capa: f.src === 'local' ? '' : f.capa || '', espelhos: f.espelhos || [],
   duracao: f.duracao || 0, genero: f.genero || '', link: f.link || '',
+  bpm: f.bpm || 0, tom: f.tom || '', clima: f.clima || '', plays: f.plays || 0,
 });
 
 // ---- configurações ----
@@ -137,6 +139,24 @@ export function esquecerFaixa(id) {
   mudou('meus');
 }
 
+// ---- músicas do Audius baixadas pra ouvir sem internet (o áudio fica no IndexedDB, aqui só a ficha) ----
+export const baixadas = () => dados.baixadas;
+export const estaBaixadaId = (id) => idsBaixados.has(id);
+export const bytesBaixados = () => dados.baixadas.reduce((s, f) => s + (f.bytes || 0), 0);
+
+export function adicionarBaixada(f, bytes) {
+  if (idsBaixados.has(f.id)) return;
+  dados.baixadas.unshift({ ...faixaMagra(f), bytes });
+  idsBaixados.add(f.id);
+  mudou('baixadas');
+}
+
+export function removerBaixada(id) {
+  dados.baixadas = dados.baixadas.filter((f) => f.id !== id);
+  idsBaixados.delete(id);
+  mudou('baixadas');
+}
+
 // ---- histórico ----
 export const recentes = () => dados.recentes;
 export function registrarRecente(f) {
@@ -165,6 +185,7 @@ export function guardarFila(f) {
 
 export function apagarTudo() {
   dados = padrao();
+  idsBaixados = new Set();
   gravar();
-  ['curtidas', 'playlists', 'salvas', 'meus', 'recentes', 'buscas', 'config'].forEach(mudou);
+  ['curtidas', 'playlists', 'salvas', 'meus', 'baixadas', 'recentes', 'buscas', 'config'].forEach(mudou);
 }

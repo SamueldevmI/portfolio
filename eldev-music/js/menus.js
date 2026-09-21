@@ -5,6 +5,7 @@ import { apagarArquivo } from './db.js';
 import { esc } from './util.js';
 import { abrirFolha, fecharFolha, folhaAberta, cabecaFolha, avisar, perguntar, icone, capaHtml, capaPeq } from './ui.js';
 import { navegar } from './nav.js';
+import { baixarLista, removerDownload } from './baixar.js';
 
 let alvo = null; // { faixa, playlistId }: sobre qual música o menu aberto está falando
 
@@ -19,6 +20,9 @@ export function menuFaixa(f, { playlistId = '' } = {}) {
       { icone: 'next', texto: 'Tocar em seguida', acao: 'm-seguinte' },
       { icone: 'fila', texto: 'Adicionar à fila', acao: 'm-fila' },
       { icone: 'add-lista', texto: 'Adicionar à playlist…', acao: 'm-playlist' },
+      f.src === 'audius' && (store.estaBaixadaId(f.id)
+        ? { icone: 'baixada', texto: 'Remover download', acao: 'm-desbaixar' }
+        : { icone: 'baixar', texto: 'Baixar pra ouvir sem internet', acao: 'm-baixar' }),
       playlistId && { icone: 'lixo', texto: 'Remover desta playlist', acao: 'm-tirar' },
       f.src === 'audius' && f.artistaId && { icone: 'pessoa', texto: 'Ir para o artista', acao: 'm-artista' },
       f.src === 'audius' && f.link && { icone: 'compartilhar', texto: 'Compartilhar', acao: 'm-compartilhar' },
@@ -52,6 +56,7 @@ export async function novaPlaylist(faixa = null) {
 export function abrirFila() {
   const e = player.estado();
   const linhas = e.lista.map((f, i) => `
+    ${f.radio && !e.lista[i - 1]?.radio ? '<p class="fila-sep">Da rádio · músicas parecidas</p>' : ''}
     <div class="faixa ${i === e.indice ? 'tocando' : ''}" data-id="${esc(f.id)}">
       <button class="faixa-tocar" data-acao="fila-ir" data-i="${i}" aria-label="Tocar ${esc(f.titulo)}">
         ${capaHtml(capaPeq(f), f.id, '', f.espelhos || [])}
@@ -77,6 +82,23 @@ player.on('fila', () => {
 player.on('faixa', () => {
   if (folhaAberta() && document.getElementById('folha').dataset.tipo === 'fila') abrirFila();
 });
+
+// ---- timer de sono ----
+export function abrirTimer() {
+  const t = player.timerAtual();
+  const item = (opcao, texto) => ({
+    icone: 'lua', texto, acao: 'timer-set', dados: { q: String(opcao) }, marca: !!t && t.opcao === opcao,
+  });
+  abrirFolha({
+    rotulo: 'Timer de sono',
+    cabeca: '<h2 class="folha-titulo">Timer de sono</h2><p class="sub" style="padding:0 12px 8px">A música pausa sozinha, com o volume descendo nos últimos 15 segundos.</p>',
+    itens: [
+      t && { icone: 'x', texto: 'Desligar o timer', acao: 'timer-set', dados: { q: '0' } },
+      item(15, '15 minutos'), item(30, '30 minutos'), item(45, '45 minutos'), item(60, '1 hora'),
+      item('fim', 'Ao fim desta música'),
+    ].filter(Boolean),
+  });
+}
 
 export async function compartilhar(f) {
   if (!f.link) return avisar('Só músicas do Audius têm link pra compartilhar');
@@ -126,6 +148,20 @@ export const acoesMenu = {
     try { await apagarArquivo(f.ref); } catch { /* já não existia */ }
     store.esquecerFaixa(f.id);
     avisar('Arquivo apagado');
+  },
+  'm-baixar': () => { const f = alvo.faixa; fecharFolha(); baixarLista([f]); },
+  'm-desbaixar': async () => {
+    const f = alvo.faixa;
+    fecharFolha();
+    await removerDownload(f);
+    avisar('Download removido');
+  },
+  'timer-set': (el) => {
+    const q = el.dataset.q;
+    const quando = q === 'fim' ? 'fim' : +q;
+    player.definirTimer(quando);
+    fecharFolha();
+    avisar(!quando ? 'Timer desligado' : quando === 'fim' ? 'Vai pausar ao fim desta música' : `A música pausa em ${quando === 60 ? '1 hora' : `${quando} minutos`}`);
   },
   'fila-ir': (el) => player.irPara(+el.dataset.i),
   'fila-tirar': (el) => player.removerDaFila(+el.dataset.i),

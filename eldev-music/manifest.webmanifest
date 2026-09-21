@@ -11,6 +11,7 @@
   "background_color": "#12100e",
   "theme_color": "#12100e",
   "categories": ["music", "entertainment"],
+  "prefer_related_applications": false,
   "icons": [
     { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
     { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
@@ -18,6 +19,12 @@
   ],
   "shortcuts": [
     { "name": "Buscar", "url": "./#/buscar", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
-    { "name": "Favoritas", "url": "./#/curtidas", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] }
+    { "name": "Favoritas", "url": "./#/curtidas", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Garimpo", "url": "./#/garimpo", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] }
+  ],
+  "screenshots": [
+    { "src": "screenshots/inicio.jpg", "sizes": "780x1688", "type": "image/jpeg", "form_factor": "narrow", "label": "Início com destaque, atalhos da coleção e paradas" },
+    { "src": "screenshots/player.jpg", "sizes": "780x1688", "type": "image/jpeg", "form_factor": "narrow", "label": "Player com disco de vinil, onda sonora e timer de sono" },
+    { "src": "screenshots/computador.jpg", "sizes": "1280x720", "type": "image/jpeg", "form_factor": "wide", "label": "Versão para computador" }
   ]
 }

@@ -5,7 +5,9 @@ import { $, $$, esc, fmtTempo, hash } from './util.js';
 import { icone, discoHtml, avisar } from './ui.js';
 import { capaDe } from './db.js';
 import { abrirCamada, fecharCamada, navegar } from './nav.js';
-import { menuFaixa, escolherPlaylist, abrirFila, compartilhar } from './menus.js';
+import { menuFaixa, escolherPlaylist, abrirFila, abrirTimer, compartilhar } from './menus.js';
+import { montarVitrola, girando } from './vitrola.js';
+import { atualizarBotoes } from './baixar.js';
 
 const enc = encodeURIComponent;
 
@@ -80,6 +82,8 @@ export function montarPlayer() {
         <div class="palco">
           <span class="js-disco-grande"></span>
           <svg class="braco" viewBox="0 0 120 200" aria-hidden="true"><use href="#i-braco"/></svg>
+          <i class="pivo" aria-hidden="true"></i>
+          <span class="dica" aria-hidden="true"></span>
         </div>
       </div>
       <div class="cheio-info">
@@ -90,6 +94,8 @@ export function montarPlayer() {
       ${controles()}
       <div class="cheio-acoes">
         <button class="icone" data-acao="fila" aria-label="Fila de reprodução">${icone('fila')}</button>
+        <button class="icone js-radio" data-acao="radio" aria-label="Rádio infinita" aria-pressed="true">${icone('radio')}</button>
+        <button class="icone js-timer" data-acao="timer" aria-label="Timer de sono">${icone('lua')}<span class="selo" hidden></span></button>
         <button class="icone" data-acao="add-atual" aria-label="Adicionar à playlist">${icone('add-lista')}</button>
         <button class="icone" data-acao="compartilhar-atual" aria-label="Compartilhar">${icone('compartilhar')}</button>
       </div>
@@ -97,6 +103,19 @@ export function montarPlayer() {
 
   const v = Math.round((store.config().volume ?? 1) * 100);
   $$('.volume-barra').forEach((s) => { s.value = v; s.style.setProperty('--p', v / 100); });
+
+  // girar o disco / arrastar o braço mostra a nova posição e só muda a música ao soltar
+  montarVitrola($('.palco'), {
+    aoPrevia: (t) => {
+      const { d } = player.tempo();
+      const p = d ? Math.min(1, t / d) : 0;
+      $$('.t-atual').forEach((el) => { el.textContent = fmtTempo(t); });
+      $$('.seek').forEach((s) => { s.value = Math.round(p * 1000); s.style.setProperty('--p', p); });
+      $$('.seek-linha').forEach((l) => l.style.setProperty('--p', p));
+      $('#cheio').style.setProperty('--p', p);
+    },
+    aoFim: () => pintarTempo(),
+  });
 }
 
 // ---- pintar a tela conforme o player muda ----
@@ -137,6 +156,10 @@ function pintarEstado() {
 function pintarModo() {
   const e = player.estado();
   $$('.js-emb').forEach((b) => b.setAttribute('aria-pressed', e.embaralhar));
+  $$('.js-radio').forEach((b) => {
+    b.setAttribute('aria-pressed', e.radio);
+    b.setAttribute('aria-label', e.radio ? 'Rádio infinita ligada' : 'Rádio infinita desligada');
+  });
   const rot = { off: 'Repetir', todas: 'Repetir tudo', uma: 'Repetir esta música' }[e.repetir];
   $$('.js-rep').forEach((b) => {
     b.dataset.modo = e.repetir;
@@ -154,10 +177,24 @@ function pintarCurtida() {
   });
 }
 
+// o botão da lua mostra quanto falta pro timer de sono
+function pintarTimer() {
+  const t = player.timerAtual();
+  let texto = '';
+  if (t) texto = t.aoFimDaFaixa ? 'fim' : `${Math.max(1, Math.ceil((t.fim - Date.now()) / 60000))}m`;
+  $$('.js-timer').forEach((b) => {
+    const selo = b.querySelector('.selo');
+    selo.hidden = !t;
+    selo.textContent = texto;
+    b.setAttribute('aria-pressed', !!t);
+    b.setAttribute('aria-label', t ? `Timer de sono: faltam ${texto === 'fim' ? 'até o fim da música' : texto}` : 'Timer de sono');
+  });
+}
+
 let arrastando = false;
 
 function pintarTempo() {
-  if (arrastando) return;
+  if (arrastando || girando()) return;
   const { t, d } = player.tempo();
   const p = d ? Math.min(1, t / d) : 0;
   $$('.seek').forEach((s) => {
@@ -169,12 +206,16 @@ function pintarTempo() {
   $$('.t-total').forEach((el) => { el.textContent = fmtTempo(d); });
   $$('.seek-linha').forEach((l) => l.style.setProperty('--p', p));
   $('#mini').style.setProperty('--p', p);
+  $('#cheio').style.setProperty('--p', p); // o braço da vitrola anda conforme a música toca
 }
 
 // destaca (com as barrinhas) a música que está tocando em qualquer lista da tela
 export function marcarTocando() {
   const id = player.atual()?.id;
-  $$('[data-id]').forEach((el) => el.classList.toggle('tocando', !!id && el.dataset.id === id));
+  $$('[data-id]').forEach((el) => {
+    el.classList.toggle('tocando', !!id && el.dataset.id === id);
+    el.classList.toggle('baixada', store.estaBaixadaId(el.dataset.id)); // ✓ nas músicas que já estão no aparelho
+  });
 }
 
 let quadro = 0;
@@ -187,8 +228,13 @@ player.on('faixa', pintarFaixa);
 player.on('estado', pintarEstado);
 player.on('modo', pintarModo);
 player.on('tempo', pintarTempo);
+player.on('timer', pintarTimer);
+player.on('aviso', avisar);
 player.on('erro', (f) => avisar(f ? `Não deu pra tocar “${f.titulo}”` : 'Não deu pra tocar essa música'));
-store.ouvir((t) => { if (t === 'curtidas') pintarCurtida(); });
+store.ouvir((t) => {
+  if (t === 'curtidas') pintarCurtida();
+  if (t === 'baixadas') { marcarTocando(); atualizarBotoes(); }
+});
 
 // barra de posição e de volume
 document.addEventListener('input', (e) => {
@@ -226,6 +272,7 @@ document.addEventListener('keydown', (e) => {
 function ocultarCheio() {
   const c = $('#cheio');
   c.classList.remove('aberto');
+  document.body.classList.remove('tela-cheia');
   c.inert = true;
   $('.mini-info')?.focus({ preventScroll: true });
 }
@@ -235,6 +282,7 @@ function abrirCheio() {
   if (!player.atual() || c.classList.contains('aberto')) return;
   c.inert = false;
   c.classList.add('aberto');
+  document.body.classList.add('tela-cheia');
   abrirCamada(ocultarCheio);
   c.querySelector('[data-acao="fechar-cheio"]').focus({ preventScroll: true });
 }
@@ -245,6 +293,11 @@ export const acoesPlayer = {
   anterior: () => player.anterior(),
   embaralhar: () => player.alternarEmbaralhar(),
   repetir: () => player.alternarRepetir(),
+  radio: () => {
+    player.alternarRadio();
+    avisar(player.estado().radio ? 'Rádio ligada: quando a lista acabar, continua com músicas parecidas' : 'Rádio desligada: o som para quando a lista acabar');
+  },
+  timer: abrirTimer,
   'abrir-cheio': abrirCheio,
   'fechar-cheio': fecharCamada,
   'curtir-atual': () => {

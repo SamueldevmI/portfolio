@@ -506,7 +506,7 @@ body:not(.som) .eq b { animation-play-state: paused; }
 /* ===== player em tela cheia ===== */
 .cheio {
   position: fixed; inset: 0; z-index: 40;
-  display: flex; flex-direction: column; overflow: hidden;
+  display: flex; flex-direction: column; overflow: hidden; overflow: clip; /* clip: nada rola sozinho aqui dentro */
   background: var(--bg);
   transform: translateY(100%); visibility: hidden;
   transition: transform .34s cubic-bezier(.2, .8, .2, 1), visibility 0s .34s;
@@ -614,6 +614,44 @@ body.sem-mini .avisos { bottom: calc(var(--nav) + var(--seguro) + 16px); }
 }
 .aviso button { font-weight: 800; color: #b34700; }
 
+/* ===== novidades: rádio, timer de sono, downloads, garimpo e vitrola ===== */
+.cheio-acoes .icone { position: relative; }
+.cheio-acoes .icone[aria-pressed='true'] { color: var(--ac-txt); }
+.selo {
+  position: absolute; top: 2px; right: -4px; min-width: 22px; padding: 1px 5px; border-radius: 999px;
+  background: var(--grad); color: var(--tinta); font: 800 10px/1.5 var(--f-texto); text-align: center;
+}
+.fila-sep { padding: 14px 12px 4px; font: 700 12px var(--f-texto); letter-spacing: .08em; text-transform: uppercase; color: var(--ac-txt); }
+
+/* ✓ nas músicas que já estão baixadas no aparelho */
+:root { --marca-baixada: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8z'/%3E%3C/svg%3E"); }
+.faixa.baixada .faixa-txt > span::before, .cartao.baixada .cartao-s::before {
+  content: ''; display: inline-block; width: 13px; height: 13px; margin-right: 5px; vertical-align: -2px;
+  background: var(--ac); -webkit-mask: var(--marca-baixada) center / contain no-repeat; mask: var(--marca-baixada) center / contain no-repeat;
+}
+
+/* atalhos e capas das áreas novas */
+.fig-ic.garimpo, .capa.especial.garimpo { background: linear-gradient(135deg, #c084fc, #f472b6); }
+.fig-ic.baixadas, .capa.especial.baixadas { background: linear-gradient(135deg, #86efac, #22d3ee); }
+.fig-ic.instalar { background: var(--tx); }
+.capa.especial.garimpo, .capa.especial.baixadas { color: var(--tinta); }
+
+/* vitrola: dá pra girar o disco e arrastar o braço; o braço anda conforme a música toca */
+.palco { touch-action: none; cursor: grab; }
+.palco.arrastando { cursor: grabbing; }
+.palco .disco { rotate: var(--giro, 0deg); }
+.braco { transform: rotate(var(--braco-ang, -24deg)); }
+body.som .braco { transform: rotate(var(--braco-ang, calc(-18deg + 36deg * var(--p, 0)))); }
+.palco.arrastando .braco { transition: none; }
+.braco use { pointer-events: auto; cursor: grab; }
+.pivo { position: absolute; left: 101.5%; top: -.2%; width: 2px; height: 2px; pointer-events: none; }
+.dica {
+  position: absolute; left: 50%; bottom: 7%; translate: -50% 0; z-index: 5; max-width: 92%;
+  padding: 6px 14px; border-radius: 999px; background: rgb(18 16 14 / .8); backdrop-filter: blur(8px);
+  border: 1px solid var(--linha); font: 700 12px var(--f-texto); color: var(--tx);
+  white-space: nowrap; pointer-events: none; font-variant-numeric: tabular-nums;
+}
+
 /* ===== computador: barra no topo + player flutuante embaixo ===== */
 @media (min-width: 900px) {
   :root { --mini: 80px; }
@@ -679,6 +717,9 @@ body.sem-mini .avisos { bottom: calc(var(--nav) + var(--seguro) + 16px); }
   .folha { align-items: center; }
   .folha-painel { border-radius: 28px; max-height: 80dvh; border-bottom: 1px solid var(--linha); }
 }
+
+/* com o player em tela cheia aberto, os avisos ficam no topo (embaixo eles tampariam os botões) */
+body.tela-cheia .avisos, body.tela-cheia.sem-mini .avisos { bottom: auto; top: calc(64px + env(safe-area-inset-top, 0px)); }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }

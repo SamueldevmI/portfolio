@@ -9,6 +9,9 @@ import {
   esqueleto, vazio, avisar, perguntar,
 } from './ui.js';
 import { novaPlaylist } from './menus.js';
+import { botaoBaixar, baixarLista, removerDownload, removerTodos } from './baixar.js';
+import { compartilharLink, deLink } from './compartilhar.js';
+import { podeInstalar } from './instalar.js';
 
 const enc = encodeURIComponent;
 
@@ -25,9 +28,9 @@ let generoAtivo = '';
 export const escolherChip = (g) => { generoAtivo = g; };
 
 // ---------- peças comuns ----------
-const cartoesFaixas = (faixas, rank = false) => {
+const cartoesFaixas = (faixas, rank = false, plays = false) => {
   const k = registrar(faixas);
-  return faixas.map((f, i) => cartaoFaixa(f, k, i, { rank })).join('');
+  return faixas.map((f, i) => cartaoFaixa(f, k, i, { rank, plays })).join('');
 };
 
 const subColecao = (c) => [c.dono, c.total ? `${c.total} músicas` : ''].filter(Boolean).join(' · ');
@@ -73,7 +76,8 @@ function capaDaColecao(faixas, semente) {
 const capaEspecial = (cls, ic) => `<span class="capa colecao-capa especial ${cls}">${icone(ic)}</span>`;
 
 // página de coleção: cabeçalho, botões grandes e a lista de músicas
-function paginaColecao({ tela, etiqueta, titulo, sub = '', subHtml = '', capa, semDisco = false, faixas, playlistId = '', botoes = '', filtros = '', vazioMsg = '', bio = '' }) {
+// baixar = botão de baixar tudo; link = botão de compartilhar a lista por link; plays = mostra plays em vez da duração
+function paginaColecao({ tela, etiqueta, titulo, sub = '', subHtml = '', capa, semDisco = false, faixas, playlistId = '', botoes = '', filtros = '', vazioMsg = '', bio = '', baixar = false, link = false, plays = false }) {
   const k = registrar(faixas);
   tela.innerHTML = `<div${playlistId ? ` data-playlist="${esc(playlistId)}"` : ''}>
     ${botaoVoltar}
@@ -88,11 +92,13 @@ function paginaColecao({ tela, etiqueta, titulo, sub = '', subHtml = '', capa, s
     </header>
     <div class="acoes">
       ${faixas.length ? `<button class="play-grande" data-acao="tocar-tudo" data-lista="${k}" aria-label="Tocar tudo">${icone('play')}</button>
-      <button class="icone" data-acao="misturar-tudo" data-lista="${k}" aria-label="Tocar em ordem aleatória">${icone('shuffle')}</button>` : ''}
+      <button class="icone" data-acao="misturar-tudo" data-lista="${k}" aria-label="Tocar em ordem aleatória">${icone('shuffle')}</button>
+      ${baixar ? botaoBaixar(k, faixas) : ''}
+      ${link ? `<button class="icone" data-acao="compartilhar-lista" data-lista="${k}" data-nome="${esc(titulo)}" aria-label="Compartilhar por link">${icone('compartilhar')}</button>` : ''}` : ''}
       ${botoes}
     </div>
     ${filtros}
-    ${faixas.length ? `<div class="lista">${faixas.map((f, i) => linhaFaixa(f, k, i, { duracao: true })).join('')}</div>` : vazioMsg}
+    ${faixas.length ? `<div class="lista">${faixas.map((f, i) => linhaFaixa(f, k, i, { duracao: !plays, plays })).join('')}</div>` : vazioMsg}
   </div>`;
 }
 
@@ -111,8 +117,11 @@ function canto() {
   const fig = (href, ic, cls, nome, sub) => `
     <a class="figurinha" href="${esc(href)}"><span class="fig-ic ${cls}">${icone(ic)}</span><span class="fig-txt"><b>${esc(nome)}</b><small>${esc(sub)}</small></span></a>`;
   return `<section class="canto" aria-label="Sua coleção">
+    ${podeInstalar() ? '<button class="figurinha" data-acao="instalar"><span class="fig-ic instalar"><svg class="i" aria-hidden="true"><use href="#i-baixar"/></svg></span><span class="fig-txt"><b>Instalar o app</b><small>Abre sem internet</small></span></button>' : ''}
     ${fig('#/curtidas', 'estrela-cheia', 'fav', 'Favoritas', plural(store.curtidas().length, 'música', 'músicas'))}
+    ${fig('#/garimpo', 'garimpo', 'garimpo', 'Garimpo', 'Artistas novos')}
     ${fig('#/meus', 'arquivo', 'aparelho', 'No aparelho', plural(store.meus().length, 'arquivo', 'arquivos'))}
+    ${fig('#/baixadas', 'baixada', 'baixadas', 'Baixadas', plural(store.baixadas().length, 'música', 'músicas'))}
     ${store.playlists().slice(0, 8).map((p) => fig(`#/playlist/${p.id}`, 'biblioteca', 'pl', p.nome, plural(p.faixas.length, 'música', 'músicas'))).join('')}
     <button class="figurinha nova" data-acao="nova-playlist"><span class="fig-ic">${icone('adicionar')}</span><span class="fig-txt"><b>Nova playlist</b><small>Crie a sua</small></span></button>
   </section>`;
@@ -152,7 +161,9 @@ async function preencher(b, sinal) {
     const itens = await b.busca(sinal);
     if (sinal.aborted || !sec?.isConnected) return true;
     if (!itens.length) { sec.remove(); return true; }
-    sec.querySelector('.prateleira').innerHTML = b.tipo === 'colecoes' ? itens.map(cartaoColecaoLargo).join('') : cartoesFaixas(itens, b.tipo === 'parada');
+    sec.querySelector('.prateleira').innerHTML = b.tipo === 'colecoes'
+      ? itens.map(cartaoColecaoLargo).join('')
+      : cartoesFaixas(itens, b.tipo === 'parada', b.tipo === 'garimpo');
     b.aoCarregar?.(itens);
     return true;
   } catch {
@@ -196,11 +207,13 @@ export async function inicio({ tela, sinal }) {
   const remotos = g
     ? [
         { titulo: `Top de ${nomeGenero(g)}`, tipo: 'parada', ver: `#/genero/${enc(g)}`, busca: (s) => audius.emAlta({ genero: g, limite: 20 }, s), aoCarregar: destaqueDe(`Em alta em ${nomeGenero(g)}`), aoFalhar: semDestaque },
+        { titulo: `Garimpo em ${nomeGenero(g)}`, tipo: 'garimpo', ver: `#/garimpo/${enc(g)}`, busca: (s) => audius.emAltaSubterranea({ genero: g, limite: 15 }, s) },
         { titulo: 'Em alta no mês', busca: (s) => audius.emAlta({ genero: g, limite: 20, periodo: 'month' }, s) },
         { titulo: 'Clássicas de todos os tempos', busca: (s) => audius.emAlta({ genero: g, limite: 20, periodo: 'allTime' }, s) },
       ]
     : [
         { titulo: 'Top da semana', tipo: 'parada', ver: '#/genero/todos', busca: (s) => audius.emAlta({ limite: 20 }, s), aoCarregar: destaqueDe('Em alta agora'), aoFalhar: semDestaque },
+        { titulo: 'Garimpo', tipo: 'garimpo', ver: '#/garimpo', busca: (s) => audius.emAltaSubterranea({ limite: 15 }, s) },
         { titulo: 'Playlists da comunidade', tipo: 'colecoes', busca: (s) => audius.playlistsEmAlta(12, s) },
         ...['Lo-Fi', 'Electronic', 'Hip-Hop/Rap', 'Pop', 'Rock'].map((gen) => ({
           titulo: nomeGenero(gen), ver: `#/genero/${enc(gen)}`, busca: (s) => audius.emAlta({ genero: gen, limite: 15 }, s),
@@ -243,7 +256,7 @@ export async function buscar({ tela, sinal, arg }) {
     res.innerHTML = `${rec.length ? `<h2 class="secao-titulo" style="margin-top:8px">Buscas recentes</h2><div class="recentes-busca">${rec.map((q) => `
         <span class="chip composto"><button data-acao="busca-recente" data-q="${esc(q)}">${esc(q)}</button><button data-acao="apagar-busca" data-q="${esc(q)}" aria-label="Apagar ${esc(q)} das buscas recentes">${icone('x')}</button></span>`).join('')}</div>` : ''}
       <h2 class="secao-titulo" style="margin-top:8px">Navegar por gênero</h2>
-      <div class="generos">${GENEROS.map(([v, n]) => `<a class="genero" href="#/genero/${enc(v)}" style="--g:${gradientePorId(v)}"><span>${esc(n)}</span>${icone('seta')}</a>`).join('')}</div>`;
+      <div class="generos"><a class="genero" href="#/garimpo" style="--g:linear-gradient(135deg,#a855f7,#ec4899)"><span>Garimpo</span>${icone('garimpo')}</a>${GENEROS.map(([v, n]) => `<a class="genero" href="#/genero/${enc(v)}" style="--g:${gradientePorId(v)}"><span>${esc(n)}</span>${icone('seta')}</a>`).join('')}</div>`;
   };
 
   const rodar = async (texto) => {
@@ -299,6 +312,7 @@ export function biblioteca({ tela }) {
     <div class="lista">
       ${linhaColecao({ href: '#/curtidas', capa: `<span class="capa especial curtidas">${icone('estrela-cheia')}</span>`, titulo: 'Favoritas', sub: plural(store.curtidas().length, 'música', 'músicas') })}
       ${linhaColecao({ href: '#/meus', capa: `<span class="capa especial meus">${icone('arquivo')}</span>`, titulo: 'No aparelho', sub: `${plural(meus.length, 'arquivo', 'arquivos')} guardados aqui` })}
+      ${linhaColecao({ href: '#/baixadas', capa: `<span class="capa especial baixadas">${icone('baixada')}</span>`, titulo: 'Baixadas', sub: `${plural(store.baixadas().length, 'música', 'músicas')} pra ouvir sem internet` })}
       ${store.playlists().map((p) => linhaColecao({
         href: `#/playlist/${p.id}`, capa: capaHtml(p.faixas[0] ? capaDe(p.faixas[0]) : '', p.id, '', p.faixas[0]?.espelhos || []),
         titulo: p.nome, sub: `Playlist · ${plural(p.faixas.length, 'música', 'músicas')}`,
@@ -313,7 +327,7 @@ export function biblioteca({ tela }) {
 export function curtidasTela({ tela }) {
   const faixas = store.curtidas();
   paginaColecao({
-    tela, etiqueta: 'Coleção', titulo: 'Favoritas', sub: resumo(faixas), capa: capaEspecial('curtidas', 'estrela-cheia'), faixas,
+    tela, etiqueta: 'Coleção', titulo: 'Favoritas', sub: resumo(faixas), capa: capaEspecial('curtidas', 'estrela-cheia'), faixas, baixar: true, link: true,
     vazioMsg: vazio({ icone: 'estrela', titulo: 'Suas favoritas aparecem aqui', texto: 'Toque na estrela de uma música pra guardar ela aqui.' }),
   });
 }
@@ -335,7 +349,7 @@ export function playlistTela({ tela, arg }) {
   const p = store.playlist(arg[1]);
   if (!p) return naoEncontrada({ tela }, 'Playlist não encontrada');
   paginaColecao({
-    tela, etiqueta: 'Playlist', titulo: p.nome, sub: resumo(p.faixas), capa: capaDaColecao(p.faixas, p.id), faixas: p.faixas, playlistId: p.id,
+    tela, etiqueta: 'Playlist', titulo: p.nome, sub: resumo(p.faixas), capa: capaDaColecao(p.faixas, p.id), faixas: p.faixas, playlistId: p.id, baixar: true, link: true,
     botoes: `<span class="espaco"></span>
       <button class="icone" data-acao="renomear-pl" data-id="${esc(p.id)}" aria-label="Renomear a playlist">${icone('editar')}</button>
       <button class="icone" data-acao="excluir-pl" data-id="${esc(p.id)}" aria-label="Excluir a playlist">${icone('lixo')}</button>`,
@@ -353,7 +367,7 @@ export async function playlistAudius({ tela, sinal, arg }) {
     colecaoAudius = c;
     const salva = store.colecaoSalva(c.id);
     paginaColecao({
-      tela, etiqueta: c.album ? 'Álbum' : 'Playlist', titulo: c.nome, capa: capaHtml(c.capa, c.id, 'colecao-capa', c.espelhos), faixas,
+      tela, etiqueta: c.album ? 'Álbum' : 'Playlist', titulo: c.nome, capa: capaHtml(c.capa, c.id, 'colecao-capa', c.espelhos), faixas, baixar: true,
       subHtml: `<p class="sub">${c.donoId ? `<a href="#/artista/${enc(c.donoId)}"><b>${esc(c.dono)}</b></a> · ` : ''}${esc(resumo(faixas))}</p>`,
       bio: c.descricao,
       botoes: `<span class="espaco"></span><button class="icone" data-acao="alternar-salva" aria-pressed="${salva}" aria-label="${salva ? 'Remover da coleção' : 'Salvar na coleção'}">${icone(salva ? 'estrela-cheia' : 'estrela')}</button>`,
@@ -370,7 +384,7 @@ export async function artistaTela({ tela, sinal, arg }) {
     const [a, faixas] = await Promise.all([audius.artista(arg[1], sinal), audius.faixasDoArtista(arg[1], 30, sinal)]);
     if (sinal.aborted) return;
     paginaColecao({
-      tela, etiqueta: 'Artista', titulo: a.nome, capa: capaHtml(a.foto, a.id, 'colecao-capa redonda', a.espelhos), semDisco: true, faixas, bio: a.bio,
+      tela, etiqueta: 'Artista', titulo: a.nome, capa: capaHtml(a.foto, a.id, 'colecao-capa redonda', a.espelhos), semDisco: true, faixas, bio: a.bio, baixar: true,
       sub: [a.seguidores ? `${fmtNumero(a.seguidores)} seguidores` : '', a.faixas ? plural(a.faixas, 'música', 'músicas') : ''].filter(Boolean).join(' · '),
       vazioMsg: vazio({ icone: 'nota', titulo: 'Nada pra tocar por aqui', texto: 'Este artista ainda não tem músicas disponíveis.' }),
     });
@@ -391,7 +405,7 @@ export async function generoTela({ tela, sinal, arg }) {
     const faixas = await audius.emAlta({ genero: g, limite: 50, periodo }, sinal);
     if (sinal.aborted) return;
     paginaColecao({
-      tela, etiqueta: g ? 'Gênero' : 'Todos os gêneros', titulo: nome, sub: `${resumo(faixas)} · mais tocadas`, capa: capaHtml('', bruto, 'colecao-capa'), faixas,
+      tela, etiqueta: g ? 'Gênero' : 'Todos os gêneros', titulo: nome, sub: `${resumo(faixas)} · mais tocadas`, capa: capaHtml('', bruto, 'colecao-capa'), faixas, baixar: true,
       filtros: `<div class="chips" role="group" aria-label="Período">${PERIODOS.map(([v, n]) =>
         `<a class="chip" href="#/genero/${enc(bruto)}/${v}" ${v === periodo ? 'aria-current="true"' : ''}>${n}</a>`).join('')}</div>`,
       vazioMsg: vazio({ icone: 'nota', titulo: 'Nada em alta por aqui', texto: 'Tente outro período.' }),
@@ -401,8 +415,101 @@ export async function generoTela({ tela, sinal, arg }) {
   }
 }
 
+// ---------- garimpo: músicas boas de artistas que quase ninguém ouviu ----------
+export async function garimpoTela({ tela, sinal, arg }) {
+  const g = arg[1] || '';
+  tela.innerHTML = esqueletoPagina();
+  try {
+    const faixas = await audius.emAltaSubterranea({ genero: g, limite: 50 }, sinal);
+    if (sinal.aborted) return;
+    const abas = [['', 'Tudo'], ...GENEROS.slice(0, 8)];
+    paginaColecao({
+      tela, etiqueta: 'Descoberta', titulo: g ? `Garimpo · ${nomeGenero(g)}` : 'Garimpo',
+      sub: 'Músicas boas de artistas que quase ninguém ouviu ainda',
+      capa: capaEspecial('garimpo', 'garimpo'), faixas, plays: true, baixar: true,
+      filtros: `<div class="chips" role="group" aria-label="Gênero">${abas.map(([v, n]) =>
+        `<a class="chip" href="#/garimpo${v ? `/${enc(v)}` : ''}" ${v === g ? 'aria-current="true"' : ''}>${esc(n)}</a>`).join('')}</div>`,
+      vazioMsg: vazio({ icone: 'garimpo', titulo: 'Nada garimpado por aqui', texto: 'Tente outro gênero.' }),
+    });
+  } catch {
+    if (!sinal.aborted) tela.innerHTML = erroPagina();
+  }
+}
+
+// ---------- baixadas: as músicas guardadas no aparelho ----------
+export function baixadasTela({ tela }) {
+  const faixas = store.baixadas();
+  const mb = store.bytesBaixados() / (1024 * 1024);
+  paginaColecao({
+    tela, etiqueta: 'Sem internet', titulo: 'Baixadas',
+    sub: faixas.length ? `${resumo(faixas)} · ${mb.toFixed(mb < 10 ? 1 : 0).replace('.', ',')} MB` : 'Nada baixado ainda',
+    capa: capaEspecial('baixadas', 'baixada'), faixas,
+    botoes: faixas.length ? '<span class="espaco"></span><button class="botao perigo" data-acao="apagar-baixadas">Apagar todas</button>' : '',
+    vazioMsg: vazio({
+      icone: 'baixada', titulo: 'Nada baixado ainda',
+      texto: 'Use o botão de baixar numa playlist, ou os três pontinhos de uma música, pra ouvir sem internet.',
+    }),
+  });
+  navigator.storage?.estimate?.().then(({ usage, quota }) => {
+    const alvo = tela.querySelector('.colecao-info');
+    if (!alvo || !quota) return;
+    const p = document.createElement('p');
+    p.className = 'sub';
+    p.textContent = `Espaço do app neste aparelho: ${Math.round(usage / 1048576)} MB usados de ${(quota / 1073741824).toFixed(1).replace('.', ',')} GB`;
+    alvo.append(p);
+  }).catch(() => {});
+}
+
+// ---------- playlist recebida por link ----------
+let importada = null;
+
+export async function importarTela({ tela, sinal, arg }) {
+  const dados = deLink(arg[1] || '');
+  if (!dados) return naoEncontrada({ tela }, 'Esse link não parece ser de uma playlist');
+  tela.innerHTML = esqueletoPagina();
+  try {
+    const faixas = await audius.faixasPorIds(dados.refs, sinal);
+    if (sinal.aborted) return;
+    if (!faixas.length) return naoEncontrada({ tela }, 'Essas músicas não estão mais disponíveis');
+    importada = { nome: dados.nome, faixas };
+    const faltam = dados.refs.length - faixas.length;
+    paginaColecao({
+      tela, etiqueta: 'Playlist de um amigo', titulo: dados.nome,
+      sub: `${resumo(faixas)}${faltam ? ` · ${plural(faltam, 'música saiu do ar', 'músicas saíram do ar')}` : ''}`,
+      capa: capaDaColecao(faixas, dados.nome), faixas, baixar: true,
+      botoes: '<span class="espaco"></span><button class="botao primario" data-acao="salvar-importada">Salvar na minha coleção</button>',
+    });
+  } catch {
+    if (!sinal.aborted) tela.innerHTML = erroPagina();
+  }
+}
+
 // ---------- botões das telas ----------
 export const acoesTelas = {
+  'baixar-tudo': async (el) => {
+    const faixas = lista(el.dataset.lista).filter((f) => f.src === 'audius');
+    if (el.getAttribute('aria-pressed') === 'true') {
+      const ok = await perguntar({ titulo: 'Remover os downloads?', texto: 'As músicas desta lista saem do aparelho (continuam no Audius).', ok: 'Remover', perigo: true });
+      if (!ok) return;
+      for (const f of faixas) await removerDownload(f);
+      avisar('Downloads removidos');
+    } else {
+      baixarLista(faixas);
+    }
+  },
+  'apagar-baixadas': async () => {
+    const ok = await perguntar({ titulo: 'Apagar todas as baixadas?', texto: 'As músicas saem do aparelho. Elas continuam no Audius e dá pra baixar de novo.', ok: 'Apagar', perigo: true });
+    if (!ok) return;
+    await removerTodos();
+    avisar('Downloads apagados');
+  },
+  'compartilhar-lista': (el) => compartilharLink(el.dataset.nome, lista(el.dataset.lista)),
+  'salvar-importada': () => {
+    if (!importada) return;
+    const p = store.criarPlaylist(importada.nome, importada.faixas);
+    avisar(`Playlist “${p.nome}” salva na sua coleção`);
+    location.hash = `#/playlist/${p.id}`;
+  },
   'tocar-tudo': (el) => player.tocarLista(lista(el.dataset.lista), 0),
   'misturar-tudo': (el) => player.tocarLista(lista(el.dataset.lista), 0, { misturar: true }),
   'add-arquivos': () => document.getElementById('arquivos').click(),

@@ -1,5 +1,5 @@
 // Peças de tela que várias telas usam: ícone, capa, linha de música, cartão, aviso, menu de baixo, diálogo.
-import { esc, gradientePorId, fmtTempo, urlSegura } from './util.js';
+import { esc, gradientePorId, fmtTempo, fmtNumero, urlSegura } from './util.js';
 import { capaDe } from './db.js';
 
 export const icone = (nome, cls = '') => `<svg class="i ${cls}" aria-hidden="true"><use href="#i-${nome}"/></svg>`;
@@ -34,22 +34,24 @@ export function discoHtml(url, semente = '', alt = []) {
   return `<span class="disco" style="--g:${gradientePorId(semente || url || 'x')}">${icone('nota')}${img}<i class="furo"></i></span>`;
 }
 
-export function linhaFaixa(f, chave, i, { duracao = false } = {}) {
+// `plays` = mostra quantas vezes a música foi tocada (Garimpo) no lugar da duração
+export function linhaFaixa(f, chave, i, { duracao = false, plays = false } = {}) {
   const t = esc(f.titulo);
+  const extra = plays ? ` · ${fmtNumero(f.plays)} plays` : duracao && f.duracao ? ` · ${fmtTempo(f.duracao)}` : '';
   return `<div class="faixa" data-id="${esc(f.id)}">
     <button class="faixa-tocar" data-acao="tocar" data-lista="${chave}" data-i="${i}" aria-label="Tocar ${t}, de ${esc(f.artista)}">
       ${capaHtml(capaPeq(f), f.id, '', f.espelhos || [])}
-      <span class="faixa-txt"><b>${t}</b><span>${esc(f.artista)}${duracao && f.duracao ? ` · ${fmtTempo(f.duracao)}` : ''}</span></span>
+      <span class="faixa-txt"><b>${t}</b><span>${esc(f.artista)}${extra}</span></span>
     </button>
     <button class="mais" data-acao="menu" data-lista="${chave}" data-i="${i}" aria-label="Mais opções para ${t}">${icone('mais')}</button>
   </div>`;
 }
 
 // `rank` = mostra o número da posição no canto da capa (paradas)
-export function cartaoFaixa(f, chave, i, { rank = false } = {}) {
+export function cartaoFaixa(f, chave, i, { rank = false, plays = false } = {}) {
   return `<button class="cartao" data-id="${esc(f.id)}" data-acao="tocar" data-lista="${chave}" data-i="${i}" aria-label="${rank ? `${i + 1}º lugar: ` : ''}Tocar ${esc(f.titulo)}, de ${esc(f.artista)}">
     ${capaHtml(capaDe(f), f.id, '', f.espelhos || [], rank ? `<b class="rank" aria-hidden="true">${i + 1}</b>` : '')}
-    <span class="cartao-t">${esc(f.titulo)}</span><span class="cartao-s">${esc(f.artista)}</span>
+    <span class="cartao-t">${esc(f.titulo)}</span><span class="cartao-s">${esc(f.artista)}${plays ? ` · ${fmtNumero(f.plays)} plays` : ''}</span>
   </button>`;
 }
 
@@ -86,8 +88,29 @@ export function avisar(texto, acao = null) {
     el.append(b);
   }
   caixa.append(el);
-  while (caixa.children.length > 2) caixa.firstChild.remove();
+  // no máximo 2 avisos comuns na tela (o aviso fixo de download não conta)
+  const comuns = [...caixa.children].filter((c) => !c.dataset.fixo);
+  while (comuns.length > 2) comuns.shift().remove();
   setTimeout(() => el.remove(), acao ? 5500 : 3000);
+}
+
+// aviso que fica até alguém fechar (ex.: "Baixando 3 de 12…"); devolve como trocar o texto e como fechar
+export function avisarFixo(texto, acao = null) {
+  const caixa = document.getElementById('avisos');
+  const el = document.createElement('div');
+  el.className = 'aviso';
+  el.dataset.fixo = '1';
+  const span = document.createElement('span');
+  span.textContent = texto;
+  el.append(span);
+  if (acao) {
+    const b = document.createElement('button');
+    b.textContent = acao.rotulo;
+    b.onclick = acao.fn;
+    el.append(b);
+  }
+  caixa.append(el);
+  return { texto: (t) => { span.textContent = t; }, fechar: () => el.remove() };
 }
 
 // ---- menu que sobe de baixo ----

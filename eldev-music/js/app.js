@@ -5,8 +5,10 @@ import { carregarCapas, apagarTudoLocal } from './db.js';
 import { icone, avisar, fecharFolha, folhaAberta, limparListas, lista, perguntar, fecharDialogo } from './ui.js';
 import {
   inicio, buscar, biblioteca, curtidasTela, meusTela, playlistTela, playlistAudius, artistaTela, generoTela,
-  naoEncontrada, escolherChip, acoesTelas,
+  garimpoTela, baixadasTela, importarTela, naoEncontrada, escolherChip, acoesTelas,
 } from './telas.js';
+import { sugerir } from './radio.js';
+import { instalado, noIphone, pedirInstalacao } from './instalar.js';
 import { montarPlayer, acoesPlayer } from './player-ui.js';
 import { menuFaixa, acoesMenu } from './menus.js';
 import { camadaAberta, fecharCamada } from './nav.js';
@@ -35,6 +37,9 @@ function achar([a, b]) {
   if (a === 'audius' && b === 'playlist') return { f: playlistAudius, aba: 'inicio', deps: ['salvas'] };
   if (a === 'artista') return { f: artistaTela, aba: 'buscar' };
   if (a === 'genero') return { f: generoTela, aba: 'buscar' };
+  if (a === 'garimpo') return { f: garimpoTela, aba: 'buscar' };
+  if (a === 'baixadas') return { f: baixadasTela, aba: 'biblioteca', deps: ['baixadas'] };
+  if (a === 'importar') return { f: importarTela, aba: 'biblioteca' };
   return { f: naoEncontrada, aba: 'inicio' };
 }
 
@@ -69,11 +74,9 @@ store.ouvir((t) => {
 });
 
 // ---- instalar como app ----
-let instalador = null;
-addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); instalador = e; });
-addEventListener('appinstalled', () => { instalador = null; avisar('Eldev Music instalado!'); });
-const instalado = () => matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
-const noIphone = () => /iphone|ipad|ipod/i.test(navigator.userAgent);
+addEventListener('appinstalled', () => avisar('Eldev Music instalado!'));
+// quando o navegador libera a instalação, o atalho "Instalar o app" aparece na tela inicial
+document.addEventListener('instalar:mudou', () => { if (rotaAtual?.aba === 'inicio' && !location.hash.slice(2)) rotear({ manter: true }); });
 
 async function abrirConfig() {
   const extra = `<hr>
@@ -107,13 +110,8 @@ const acoes = {
   },
   config: abrirConfig,
   instalar: async () => {
-    if (!instalador) {
-      avisar(noIphone() ? 'Toque em Compartilhar e em “Adicionar à Tela de Início”' : 'No menu do navegador, escolha “Instalar app”');
-      return;
-    }
-    instalador.prompt();
-    await instalador.userChoice.catch(() => {});
-    instalador = null;
+    if (await pedirInstalacao()) return;
+    avisar(noIphone() ? 'Toque em Compartilhar e em “Adicionar à Tela de Início”' : 'No menu do navegador, escolha “Instalar app”');
   },
   'apagar-dados': async () => {
     await fecharDialogo();
@@ -173,13 +171,14 @@ document.addEventListener('error', (e) => {
 
 addEventListener('hashchange', () => rotear());
 
-addEventListener('offline', () => avisar('Sem internet. Suas músicas do aparelho continuam tocando.'));
+addEventListener('offline', () => avisar('Sem internet. As músicas baixadas e as do aparelho continuam tocando.'));
 addEventListener('online', () => {
   avisar('A internet voltou');
   if (document.querySelector('[data-acao="recarregar"]')) rotear({ manter: true }); // tela que estava com erro tenta de novo
 });
 
 // ---- começo ----
+player.definirRadio(sugerir); // a rádio infinita escolhe as próximas músicas com radio.js
 montarPlayer();
 await Promise.race([carregarCapas(), new Promise((ok) => setTimeout(ok, 800))]);
 player.restaurar();

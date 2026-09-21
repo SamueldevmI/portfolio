@@ -92,6 +92,18 @@ function Clicar([string]$sel) {
   Cmd 'Input.dispatchMouseEvent' @{ type = 'mouseReleased'; x = $p.x; y = $p.y; button = 'left'; clickCount = 1 } | Out-Null
 }
 
+# arrastar com o mouse: Pressionar, vários Mover e Soltar (o botão fica apertado durante o arrasto)
+function Pressionar([double]$x, [double]$y) {
+  Cmd 'Input.dispatchMouseEvent' @{ type = 'mouseMoved'; x = $x; y = $y } | Out-Null
+  Cmd 'Input.dispatchMouseEvent' @{ type = 'mousePressed'; x = $x; y = $y; button = 'left'; buttons = 1; clickCount = 1 } | Out-Null
+}
+function Mover([double]$x, [double]$y) {
+  Cmd 'Input.dispatchMouseEvent' @{ type = 'mouseMoved'; x = $x; y = $y; buttons = 1 } | Out-Null
+}
+function Soltar([double]$x, [double]$y) {
+  Cmd 'Input.dispatchMouseEvent' @{ type = 'mouseReleased'; x = $x; y = $y; button = 'left'; buttons = 0; clickCount = 1 } | Out-Null
+}
+
 function Digitar([string]$texto) {
   Cmd 'Input.insertText' @{ text = $texto } | Out-Null
 }

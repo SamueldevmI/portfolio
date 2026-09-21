@@ -65,5 +65,5 @@ export async function carregarCapas() {
   }
 }
 
-// endereço da capa de qualquer faixa, do Audius ou do aparelho
-export const capaDe = (f) => (f.src === 'local' ? urlsCapa.get(f.ref) || '' : urlSegura(f.capa));
+// endereço da capa de qualquer faixa: do aparelho, de uma música baixada (funciona sem internet) ou do Audius
+export const capaDe = (f) => (f.src === 'local' ? urlsCapa.get(f.ref) || '' : urlsCapa.get(f.id) || urlSegura(f.capa));
