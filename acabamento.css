@@ -294,3 +294,20 @@ body.dark-mode .jornada .lista-jornada article { background: rgba(255, 255, 255,
     border-color: rgba(255, 255, 255, .72);
     box-shadow: 0 0 0 1px rgba(91, 70, 214, .12), inset 0 1px 0 rgba(255, 255, 255, .85), 0 24px 50px -30px rgba(82, 52, 239, .32);
 }
+
+/* ---------- Legibilidade: quase nada abaixo de 12 px ----------
+   Rotulos em mono passam de ~11 px para 12,5 px; links de acao dos cartoes e notas ficam em 13-14 px
+   e com area de toque de pelo menos 36 px de altura. A arte desenhada dos cartoes (Eldev, loja,
+   terminal do treino) nao muda. */
+.tag, .eyebrow, .eyebrow-mini, .eyebrow-cidade, .tempo-leitura, .orc-etapa, .gh-total, .linha-tempo .lt-data { font-size: .78rem; }
+.tooltip { font-size: .76rem; }
+.habilidades li { font-size: .8rem; }
+footer, .link-rodape, .chip-filtro, .botao-surpresa { font-size: .8rem; }
+.hero-numeros span { font-size: .82rem; }
+.nav-cta { font-size: .84rem; }
+.orcamento-privacidade { font-size: .84rem; }
+.terminal-cursor, .terminal-titulo { font-size: .78rem; }
+.lista-projetos .card-projeto .links-projeto .link-projeto { font-size: .86rem; }
+.lista-projetos .card-projeto .links-projeto :is(.link-acao, .link-codigo) { display: inline-flex; align-items: center; min-height: 38px; font-size: .86rem; }
+.lista-projetos .card-projeto .card-orcamento { min-height: 44px; font-size: .88rem; }
+.lista-servicos .link-servico { font-size: .84rem; }
