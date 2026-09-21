@@ -25,8 +25,8 @@ Abra http://localhost:8127. O servidor não guarda cache, então o que você mud
 - **Garimpo:** músicas boas de artistas que quase ninguém ouviu ainda
 - **Baixar pra ouvir sem internet:** numa música, numa playlist ou nas favoritas. Fica em "Baixadas" e toca com o app sem internet
 - **Playlist em link:** manda uma playlist por link; quem abre vê a lista e salva na própria coleção (sem conta e sem servidor: as músicas vão dentro do link)
-- **Luzes lá atrás:** manchas de luz macias passeiam no fundo e dão profundidade (as grandes ficam longe, lentas; as pequenas perto, rápidas). Tomam as cores da capa que está tocando, "respiram" no BPM da música e só mexem enquanto toca. No computador acompanham o mouse; no Android, a inclinação do celular. O menu, o mini player e as janelas são de vidro fosco e desfocam essa luz. No player cheio tem um facho de palco varrendo o disco, reflexo que anda e sombras que seguem a luz
-- **Efeitos:** em Configurações dá pra escolher Completo, Suave (só 3 luzes lentas) ou Desligado. O aparelho com "reduzir movimento" ligado deixa tudo parado sozinho
+- **Luzes lá atrás:** manchas de luz passeiam em curvas pelo fundo e dão profundidade (as grandes ficam longe, lentas; as pequenas perto, rápidas). Tomam as cores da capa que está tocando e só mexem enquanto toca. O brilho nunca pisca: a batida só controla a velocidade (música rápida deixa as luzes mais ligeiras). Cada camada anda uma quantidade diferente quando você mexe o mouse (computador), inclina o celular (Android), rola a lista ou troca de tela e de música. O menu, o mini player e as janelas são de vidro fosco e desfocam essa luz. No player cheio tem um facho de palco varrendo o disco, reflexo que anda e sombras que seguem a luz
+- **Efeitos:** em Configurações dá pra escolher Completo, Suave (só 3 luzes lentas, sem parallax) ou Desligado, e ligar "Piscar na batida" (o fundo acende e apaga no ritmo; vem desligado). O aparelho com "reduzir movimento" ligado deixa tudo parado sozinho
 - **No aparelho:** arquivos seus (mp3, m4a, flac, ogg, wav). O mp3 traz título, artista e capa da própria etiqueta
 - Instala como app e abre sem internet (o catálogo do Audius precisa de internet; suas músicas baixadas e as do aparelho não)
 - Favoritas, playlists e histórico ficam só no aparelho, sem login
@@ -40,7 +40,7 @@ Abra http://localhost:8127. O servidor não guarda cache, então o que você mud
 | `sw.js`, `manifest.webmanifest` | fazem virar app e abrir sem internet |
 | `icons/`, `gerar-icones.py` | ícones do app (para mudar o logo, mude o desenho no script e rode `python gerar-icones.py`) |
 | `screenshots/` | imagens que o Android mostra na tela de instalação (sem capas de artistas) |
-| `testes/` | testes automáticos com o servidor ligado: `powershell -File testes\roteiro.ps1` (o app todo), `testes\roteiro-novidades.ps1` (disco, timer, rádio, downloads, garimpo, link) e `testes\roteiro-luzes.ps1` (luzes, cores da capa, batida, parallax, vidro fosco, efeitos) |
+| `testes/` | testes automáticos com o servidor ligado: `powershell -File testes\roteiro.ps1` (o app todo), `testes\roteiro-novidades.ps1` (disco, timer, rádio, downloads, garimpo, link) e `testes\roteiro-luzes.ps1` (luzes, cores da capa, velocidade pelo BPM, parallax, vidro fosco, efeitos) |
 
 **Ao mudar qualquer arquivo do app**, aumente o número em `VERSAO` no `sw.js`, senão quem já instalou continua com a versão antiga guardada.
 

@@ -667,41 +667,55 @@ body.som .braco { transform: rotate(var(--braco-ang, calc(-18deg + 36deg * var(-
 .luzes::after { content: ''; position: absolute; inset: 0; background: radial-gradient(120% 90% at 50% 38%, transparent 35%, rgb(18 16 14 / .6) 100%); }
 body.tela-cheia #luzes { visibility: hidden; } /* o player em tela cheia tem as luzes dele */
 
-/* a camada inteira "bate" no tempo da música (a duração vem do BPM, via --batida) */
-.luz-pulso { position: absolute; inset: 0; animation: bater var(--batida, 3.2s) cubic-bezier(.2, .7, .3, 1) infinite; }
+/* o brilho fixo antigo do topo só fica com os efeitos desligados (com luzes, elas fazem esse papel e andam) */
+body:not([data-efeitos='desligado'])::before { display: none; }
+
+/* "Piscar na batida" (desligado por padrão): a camada inteira acende e apaga no tempo da música (a duração vem do BPM, via --batida) */
+.luz-pulso { position: absolute; inset: 0; }
+body[data-piscar='sim'] .luz-pulso { animation: bater var(--batida, 3.2s) cubic-bezier(.2, .7, .3, 1) infinite; }
 @keyframes bater { 0% { opacity: 1; scale: 1.035; } 100% { opacity: .78; scale: 1; } }
 
-/* cada luz: as grandes (prof baixa) ficam longe e mexem pouco; as pequenas (prof alta) ficam perto e mexem mais */
+/* cada luz: as grandes (prof baixa) ficam longe e mexem pouco; as pequenas (prof alta) ficam perto e mexem mais.
+   Camadas: .luz (parallax: mouse, inclinação, rolagem, troca de tela e de música) > .lx (vai e volta na horizontal)
+   > .ly (vai e volta na vertical, com escala). Os dois vai-e-volta têm tempos diferentes, então o trajeto é uma curva
+   que quase nunca se repete. --ox/--oy = centro do passeio, --tx/--ty = tempo de uma ida, --ax/--ay = tamanho do passeio. */
 .luz {
-  position: absolute; left: var(--x); top: var(--y); width: var(--t); aspect-ratio: 1; border-radius: 50%;
-  opacity: var(--op); will-change: transform;
-  background: radial-gradient(circle, color-mix(in srgb, var(--cor) 85%, transparent) 0, color-mix(in srgb, var(--cor) 32%, transparent) 38%, transparent 68%);
-  translate: calc(var(--px, 0) * var(--prof) * 46px) calc(var(--py, 0) * var(--prof) * 46px);
-  transition: translate .35s ease-out;
-  animation: vagar var(--dur) ease-in-out infinite alternate;
+  position: absolute; left: calc(50% - var(--t) / 2 + var(--ox)); top: calc(50% - var(--t) / 2 + var(--oy));
+  width: var(--t); aspect-ratio: 1; opacity: var(--op);
+  translate:
+    calc(var(--px, 0) * var(--prof) * 46px + var(--rota, 0) * var(--prof) * -14vw + var(--vai, 0) * var(--prof) * 9vw)
+    calc(var(--py, 0) * var(--prof) * 46px + var(--sy, 0) * var(--prof) * -60vh);
+  transition: translate .7s cubic-bezier(.2, .7, .25, 1);
 }
-@keyframes vagar { from { transform: translate3d(0, 0, 0) scale(1); } to { transform: translate3d(var(--dx), var(--dy), 0) scale(var(--esc)); } }
-.luz:nth-child(1) { --cor: var(--luz-a); --x: -22%; --y: -14%; --t: 92vmax; --op: .46; --prof: .12; --dur: 46s; --dx: 18vw; --dy: 12vh; --esc: 1.1; }
-.luz:nth-child(2) { --cor: var(--luz-b); --x: 52%; --y: 6%; --t: 72vmax; --op: .38; --prof: .3; --dur: 61s; --dx: -22vw; --dy: 18vh; --esc: .92; }
-.luz:nth-child(3) { --cor: var(--luz-c); --x: 12%; --y: 58%; --t: 58vmax; --op: .36; --prof: .55; --dur: 38s; --dx: 24vw; --dy: -16vh; --esc: 1.15; }
-.luz:nth-child(4) { --cor: var(--luz-a); --x: 66%; --y: 66%; --t: 34vmax; --op: .4; --prof: .8; --dur: 29s; --dx: -18vw; --dy: -20vh; --esc: .85; }
-.luz:nth-child(5) { --cor: var(--luz-b); --x: 4%; --y: 36%; --t: 24vmax; --op: .44; --prof: 1; --dur: 23s; --dx: 30vw; --dy: 10vh; --esc: 1.25; }
+.luz b { display: block; width: 100%; height: 100%; }
+.lx { animation: vagar-x var(--tx) ease-in-out infinite alternate; animation-delay: var(--ix, 0s); }
+.ly {
+  border-radius: 50%; will-change: transform;
+  background: radial-gradient(circle, color-mix(in srgb, var(--cor) 85%, transparent) 0, color-mix(in srgb, var(--cor) 32%, transparent) 38%, transparent 68%);
+  animation: vagar-y var(--ty) ease-in-out infinite alternate; animation-delay: var(--iy, 0s);
+}
+@keyframes vagar-x { from { transform: translate3d(calc(var(--ax) * -.5), 0, 0); } to { transform: translate3d(calc(var(--ax) * .5), 0, 0); } }
+@keyframes vagar-y { from { transform: translate3d(0, calc(var(--ay) * -.5), 0) scale(var(--e0)); } to { transform: translate3d(0, calc(var(--ay) * .5), 0) scale(var(--e1)); } }
+.luz:nth-child(1) { --cor: var(--luz-a); --ox: -20vw; --oy: -24vh; --t: 92vmax; --op: .46; --prof: .12; --tx: 70s; --ty: 90s; --ax: 26vw; --ay: 18vh; --e0: .95; --e1: 1.12; }
+.luz:nth-child(2) { --cor: var(--luz-b); --ox: 18vw; --oy: -10vh; --t: 72vmax; --op: .38; --prof: .3; --tx: 52s; --ty: 66s; --ax: 40vw; --ay: 24vh; --e0: 1.1; --e1: .9; }
+.luz:nth-child(3) { --cor: var(--luz-c); --ox: -12vw; --oy: 12vh; --t: 58vmax; --op: .36; --prof: .55; --tx: 38s; --ty: 47s; --ax: 55vw; --ay: 30vh; --e0: .9; --e1: 1.15; }
+.luz:nth-child(4) { --cor: var(--luz-a); --ox: 12vw; --oy: 22vh; --t: 34vmax; --op: .4; --prof: .8; --tx: 26s; --ty: 33s; --ax: 70vw; --ay: 34vh; --e0: 1.1; --e1: .85; }
+.luz:nth-child(5) { --cor: var(--luz-b); --ox: 0vw; --oy: 0vh; --t: 24vmax; --op: .44; --prof: 1; --tx: 19s; --ty: 24s; --ax: 85vw; --ay: 40vh; --e0: .85; --e1: 1.25; }
 
 /* só mexe enquanto toca; pausado, tudo fica parado onde estava */
-body:not(.som) .luz, body:not(.som) .luz-pulso, body:not(.som) .facho, body:not(.som) .palco .disco::after { animation-play-state: paused; }
+body:not(.som) .lx, body:not(.som) .ly, body:not(.som) .luz-pulso, body:not(.som) .facho, body:not(.som) .palco .disco::after { animation-play-state: paused; }
 
 /* com o player em tela cheia as luzes de trás não aparecem: param no lugar (sem gastar bateria) e continuam de onde estavam.
    O contrário também: com o player cheio fechado, as luzes e o facho dele ficam parados escondidos */
-body.tela-cheia #luzes .luz, body.tela-cheia #luzes .luz-pulso { animation-play-state: paused; }
-.cheio:not(.aberto) .luz, .cheio:not(.aberto) .luz-pulso, .cheio:not(.aberto) .facho, .cheio:not(.aberto) .palco .disco::after { animation-play-state: paused; }
+body.tela-cheia #luzes .lx, body.tela-cheia #luzes .ly, body.tela-cheia #luzes .luz-pulso { animation-play-state: paused; }
+.cheio:not(.aberto) .lx, .cheio:not(.aberto) .ly, .cheio:not(.aberto) .luz-pulso, .cheio:not(.aberto) .facho, .cheio:not(.aberto) .palco .disco::after { animation-play-state: paused; }
 
-/* níveis do botão "Efeitos": suave = só as 3 luzes grandes, sem batida nem facho; desligado = nada */
+/* níveis do botão "Efeitos": suave = só as 3 luzes grandes, sem facho nem parallax; desligado = nada */
 body[data-efeitos='suave'] .luz.extra, body[data-efeitos='suave'] .facho { display: none; }
-body[data-efeitos='suave'] .luz-pulso { animation: none; }
 body[data-efeitos='desligado'] .luzes, body[data-efeitos='desligado'] .facho { display: none; }
 body[data-efeitos='suave'] .palco .disco::after, body[data-efeitos='desligado'] .palco .disco::after { animation: none; rotate: none; }
 @media (prefers-reduced-motion: reduce) {
-  .luz, .luz-pulso, .facho, .palco .disco::after { animation: none !important; }
+  .lx, .ly, .luz-pulso, .facho, .palco .disco::after { animation: none !important; }
   .luz { transition: none; translate: none; }
 }
 
@@ -728,6 +742,8 @@ body[data-efeitos='suave'] .palco .disco::after, body[data-efeitos='desligado'] 
 .efeitos label:has(input:checked) { outline: 2px solid var(--ac); }
 .efeitos input { accent-color: var(--ac); width: 18px; height: 18px; flex: none; }
 .efeitos small { display: block; font-weight: 500; color: var(--tx3); font-size: 12px; }
+.efeitos .piscar { margin-top: 6px; }
+.efeitos label:has(input:disabled) { opacity: .5; cursor: default; }
 
 /* ===== computador: barra no topo + player flutuante embaixo ===== */
 @media (min-width: 900px) {

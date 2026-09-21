@@ -13,7 +13,7 @@ import { montarPlayer, acoesPlayer } from './player-ui.js';
 import { menuFaixa, acoesMenu } from './menus.js';
 import { camadaAberta, fecharCamada } from './nav.js';
 import { importar } from './importar.js';
-import { iniciarLuzes, nivel, aplicarNivel } from './luzes.js';
+import { iniciarLuzes, nivel, piscar, aplicarNivel, definirAba } from './luzes.js';
 
 const tela = document.getElementById('tela');
 history.scrollRestoration = 'manual';
@@ -53,6 +53,7 @@ export async function rotear({ manter = false } = {}) {
   const p = partes();
   const r = achar(p);
   rotaAtual = r;
+  definirAba(r.aba); // cada aba empurra as luzes de fundo um pouco pro lado
   document.querySelectorAll('.aba').forEach((a) => {
     if (a.dataset.rota === r.aba) a.setAttribute('aria-current', 'page');
     else a.removeAttribute('aria-current');
@@ -80,16 +81,18 @@ addEventListener('appinstalled', () => avisar('Eldev Music instalado!'));
 document.addEventListener('instalar:mudou', () => { if (rotaAtual?.aba === 'inicio' && !location.hash.slice(2)) rotear({ manter: true }); });
 
 const EFEITOS = [
-  ['completo', 'Completo', 'Luzes lá atrás no ritmo da música, brilho no disco e movimento ao mexer o mouse ou inclinar o celular'],
+  ['completo', 'Completo', 'Luzes passeando lá atrás (a música rápida deixa elas mais ligeiras), brilho no disco e movimento ao mexer o mouse, inclinar o celular, rolar a lista ou trocar de tela'],
   ['suave', 'Suave', 'Só três luzes lentas no fundo. Gasta menos bateria'],
   ['desligado', 'Desligado', 'Sem luzes e sem movimento. É o mais leve'],
 ];
 
 async function abrirConfig() {
   const atual = nivel();
+  const piscando0 = piscar();
   const parado = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const efeitos = `<fieldset class="efeitos"><legend>Efeitos de luz</legend>${EFEITOS.map(([v, nome, dica]) =>
-    `<label><input type="radio" name="efeitos" value="${v}"${v === atual ? ' checked' : ''}><span>${nome}<small>${dica}</small></span></label>`).join('')}${
+    `<label><input type="radio" name="efeitos" value="${v}"${v === atual ? ' checked' : ''}><span>${nome}<small>${dica}</small></span></label>`).join('')}
+    <label class="piscar"><input type="checkbox" name="piscar"${piscando0 ? ' checked' : ''}${atual === 'completo' ? '' : ' disabled'}><span>Piscar na batida<small>O fundo acende e apaga no ritmo da música. Só no Completo.</small></span></label>${
     parado ? '<small>Seu aparelho pede menos movimento, então as luzes ficam paradas.</small>' : ''}</fieldset>`;
   const extra = `${efeitos}<hr>
     ${instalado()
@@ -100,13 +103,18 @@ async function abrirConfig() {
     <small>Músicas grátis do Audius. Favoritas, playlists e arquivos ficam só neste aparelho.</small>
     <button type="button" class="botao perigo" data-acao="apagar-dados">Apagar meus dados</button>`;
   let escolhido = atual;
+  let piscando = piscando0;
   const nome = await perguntar({
     titulo: 'Configurações', ok: 'Salvar', extra,
     campo: { rotulo: 'Seu nome', valor: store.config().nome, opcional: true, max: 30 },
-    aoMudar: (form) => aplicarNivel(form.elements.efeitos.value), // mostra o efeito na hora
-    aoSalvar: (form) => { escolhido = form.elements.efeitos.value; },
+    aoMudar: (form) => { // mostra o efeito na hora
+      const n = form.elements.efeitos.value;
+      form.elements.piscar.disabled = n !== 'completo';
+      aplicarNivel(n, form.elements.piscar.checked);
+    },
+    aoSalvar: (form) => { escolhido = form.elements.efeitos.value; piscando = form.elements.piscar.checked; },
   });
-  if (nome !== null) store.definirConfig({ nome, efeitos: escolhido });
+  if (nome !== null) store.definirConfig({ nome, efeitos: escolhido, piscar: piscando });
   else aplicarNivel(); // cancelou: volta ao que estava salvo
 }
 
