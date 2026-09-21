@@ -12,13 +12,13 @@ main .eyebrow::before { content: counter(secao, decimal-leading-zero) " / "; col
 .hero-foto { position: absolute; z-index: 1; right: calc(4% + 14px + var(--parallax-x, 0px)); top: calc(114px + var(--parallax, 0px)); width: 232px; height: 232px; margin: 0; overflow: hidden; border-radius: 50%; background: #140a34; box-shadow: 0 0 0 1px rgba(var(--cyan-rgb), .4), 0 26px 60px -18px rgba(0,0,0,.75); }
 .hero-foto img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 62% 30%; transform: scale(1.5); transform-origin: 62% 30%; filter: grayscale(1) contrast(1.08) brightness(.96); }
 .hero-foto::after { content: ""; position: absolute; inset: 0; border-radius: 50%; pointer-events: none; background: linear-gradient(155deg, rgba(var(--cyan-rgb), .34), transparent 58%), radial-gradient(circle at 78% 92%, rgba(120,90,255,.28), transparent 62%); mix-blend-mode: soft-light; }
-body.dark-mode .hero-foto { background: #3a1220; box-shadow: 0 0 0 3px rgba(255,244,226,.7), 0 26px 60px -18px rgba(120,40,20,.55); }
-body.dark-mode .hero-foto img { filter: grayscale(1) sepia(.6) saturate(1.5) contrast(1.05); }
-body.dark-mode .hero-foto::after { background: linear-gradient(155deg, rgba(255,140,20,.4), transparent 60%); mix-blend-mode: soft-light; }
+body.dark-mode .hero-foto { background: #241a5c; box-shadow: 0 0 0 3px rgba(244,249,255,.7), 0 26px 60px -18px rgba(47,35,144,.55); }
+body.dark-mode .hero-foto img { filter: grayscale(1) contrast(1.05); }
+body.dark-mode .hero-foto::after { background: linear-gradient(155deg, rgba(109,74,255,.4), transparent 60%); mix-blend-mode: soft-light; }
 /* em telas estreitas a foto não cabe ao lado do texto: vira um avatar em linha e o anel vazio some */
 @media (max-width: 999px) {
     .hero-foto { position: relative; right: auto; top: auto; width: 92px; height: 92px; margin: 0 0 20px; box-shadow: 0 0 0 1px rgba(var(--cyan-rgb), .5), 0 0 34px rgba(var(--cyan-rgb), .38); }
-    body.dark-mode .hero-foto { box-shadow: 0 0 0 3px rgba(255,244,226,.75), 0 0 34px rgba(255,140,20,.6); }
+    body.dark-mode .hero-foto { box-shadow: 0 0 0 3px rgba(244,249,255,.75), 0 0 34px rgba(109,74,255,.6); }
     .hero-conteudo::after { display: none; }
 }
 
@@ -28,7 +28,7 @@ body.dark-mode .hero-foto::after { background: linear-gradient(155deg, rgba(255,
 .foto-wrapper { position: relative; isolation: isolate; }
 .foto-wrapper::before { content: ""; position: absolute; z-index: -1; inset: -12px 12px 12px -12px; border: 1px solid rgba(var(--cyan-rgb), .55); border-radius: 22px; background: linear-gradient(160deg, rgba(var(--cyan-rgb), .12), transparent 60%); }
 #minhafoto { display: block; width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; object-position: 58% 22%; border-radius: 18px; box-shadow: 0 30px 60px -28px rgba(0,0,0,.8); filter: grayscale(1) contrast(1.06); }
-body.dark-mode #minhafoto { filter: grayscale(1) sepia(.55) saturate(1.4); box-shadow: 0 30px 60px -28px rgba(120,40,20,.5); }
+body.dark-mode #minhafoto { filter: grayscale(1) contrast(1.05); box-shadow: 0 30px 60px -28px rgba(47,35,144,.5); }
 .sobre-conteudo > div:nth-child(2) p:first-child { font-size: 1.08rem; color: var(--text); }
 @media (max-width: 720px) {
     .sobre { gap: 26px; }
@@ -59,7 +59,7 @@ body.dark-mode .habilidades li[data-tecnologia="javascript"] svg { color: #b5890
 
 /* ---------- 5. Atividade do GitHub desenhada com as cores do site ---------- */
 .github-atividade { --gh0: rgba(255,255,255,.06); --gh1: #2a1466; --gh2: #5b3ddb; --gh3: #8a63ff; --gh4: #b18cff; --gh-cel: 12px; }
-body.dark-mode .github-atividade { --gh0: rgba(58,18,32,.08); --gh1: #ffd6a5; --gh2: #ffb066; --gh3: #ff8c14; --gh4: #a83a0c; }
+body.dark-mode .github-atividade { --gh0: rgba(36,26,92,.08); --gh1: #e6e0ff; --gh2: #b9a6ff; --gh3: #7a58ff; --gh4: #3a1fb0; }
 .github-atividade > img[hidden] { display: none; }
 .gh-cab { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 16px; margin-bottom: 14px; }
 .gh-cab .eyebrow-mini { margin: 0; }
@@ -84,7 +84,7 @@ body.dark-mode .github-atividade { --gh0: rgba(58,18,32,.08); --gh1: #ffd6a5; --
 
 /* ---------- 1. Prévia real dos projetos, em moldura de navegador ---------- */
 .projeto-visual.visual-print { --acento: #b18cff; display: flex; align-items: flex-end; justify-content: center; padding: 22px 22px 0; background: radial-gradient(120% 90% at 50% 0%, color-mix(in srgb, var(--acento) 42%, transparent), transparent 62%), linear-gradient(160deg, #140a34 0%, #1e0f4a 100%); }
-body.dark-mode .projeto-visual.visual-print { background: radial-gradient(120% 90% at 50% 0%, color-mix(in srgb, var(--acento) 38%, #ffd9a0), transparent 66%), linear-gradient(160deg, #ffcf99 0%, #ff9db8 100%); }
+body.dark-mode .projeto-visual.visual-print { background: radial-gradient(120% 90% at 50% 0%, color-mix(in srgb, var(--acento) 38%, #dff0ff), transparent 66%), linear-gradient(160deg, #cfe0ff 0%, #c8a4ff 100%); }
 .print-janela { position: relative; width: 100%; max-width: 640px; height: 100%; overflow: hidden; border: 1px solid rgba(255,255,255,.16); border-bottom: 0; border-radius: 11px 11px 0 0; background: #120a2c; box-shadow: 0 -10px 46px -12px color-mix(in srgb, var(--acento) 55%, transparent), 0 34px 60px -24px rgba(0,0,0,.7); transform: translateY(12px); transition: transform .5s cubic-bezier(.2, .8, .2, 1); }
 .card-projeto:hover .print-janela, .card-projeto:focus-within .print-janela { transform: translateY(0); }
 .print-barra { display: flex; align-items: center; gap: 6px; height: 26px; padding: 0 12px; background: linear-gradient(#221547, #1a1038); border-bottom: 1px solid rgba(255,255,255,.08); }
@@ -107,7 +107,7 @@ body.dark-mode .projeto-visual.visual-print { background: radial-gradient(120% 9
 .lista-projetos .card-projeto .links-projeto .link-projeto span { color: inherit; font-size: .95rem; transition: transform .2s ease; }
 .lista-projetos .card-projeto .links-projeto .link-projeto:hover span { transform: translate(2px, -2px); }
 body.dark-mode .lista-projetos .card-projeto .links-projeto .link-projeto,
-body.dark-mode .lista-projetos .card-projeto .links-projeto .link-projeto:hover { background: #ff8c14; color: #2b1200; }
+body.dark-mode .lista-projetos .card-projeto .links-projeto .link-projeto:hover { background: #6d4aff; color: #ffffff; }
 .lista-projetos .card-projeto .links-projeto :is(.link-acao, .link-codigo) { position: relative; padding: 6px 0; border: 0; background: none; color: var(--muted); font: 600 .76rem "Space Grotesk", sans-serif; text-decoration: none; white-space: nowrap; }
 .lista-projetos .card-projeto .links-projeto :is(.link-acao, .link-codigo)::after { content: ""; position: absolute; right: 0; bottom: 1px; left: 0; height: 1px; background: currentColor; transform: scaleX(0); transform-origin: left; transition: transform .25s ease; }
 .lista-projetos .card-projeto .links-projeto :is(.link-acao, .link-codigo):hover { color: var(--text); }
@@ -132,8 +132,8 @@ body.dark-mode .lista-projetos .card-projeto .links-projeto .link-projeto:hover 
 .linha-tempo .trabalhando-agora { margin: 0 0 8px; color: var(--text); }
 .linha-tempo .lt-tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 0; padding: 0; list-style: none; }
 .linha-tempo .lt-tags li { padding: 3px 9px; border: 1px solid var(--line); border-radius: 999px; color: var(--cyan); font: .64rem "DM Mono", monospace; letter-spacing: .04em; }
-body.dark-mode .lista-jornada.linha-tempo article::before { background: #ffe1bd; border-color: #a83a0c; box-shadow: 0 0 0 4px rgba(168,58,12,.14), 0 0 14px rgba(255,140,20,.6); }
-body.dark-mode .lista-jornada.linha-tempo article.lt-agora::before { background: #ff8c14; }
+body.dark-mode .lista-jornada.linha-tempo article::before { background: #eef4ff; border-color: #5c3ff0; box-shadow: 0 0 0 4px rgba(92,63,240,.14), 0 0 14px rgba(109,74,255,.6); }
+body.dark-mode .lista-jornada.linha-tempo article.lt-agora::before { background: #6d4aff; }
 @keyframes lt-pulso { 50% { box-shadow: 0 0 0 9px rgba(var(--cyan-rgb), 0), 0 0 22px rgba(var(--cyan-rgb), .9); } }
 @media (max-width: 720px) {
     .lista-jornada.linha-tempo { padding-left: 28px; }
@@ -148,8 +148,8 @@ body.dark-mode .lista-jornada.linha-tempo article.lt-agora::before { background:
 .selo-brilho::before { content: ""; position: absolute; z-index: 2; top: -40%; bottom: -40%; left: -60%; width: 38%; background: linear-gradient(100deg, transparent, rgba(255,255,255,.8), transparent); transform: skewX(-20deg); animation: selo-passa 3.8s ease-in-out infinite; pointer-events: none; }
 .selo-brilho .selo-ponto { width: 8px; height: 8px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 0 0 rgba(var(--cyan-rgb), .7); animation: selo-pulso 2s ease-out infinite; }
 .selo-brilho img.selo-visitas { display: block; height: 20px; width: auto; margin: 0; opacity: 1; filter: hue-rotate(60deg) saturate(1.2) brightness(1.15) drop-shadow(0 0 6px rgba(var(--cyan-rgb), .55)); }
-body.dark-mode .selo-brilho { background: linear-gradient(135deg, rgba(255,255,255,.7), rgba(255,226,190,.5)); box-shadow: 0 0 22px rgba(255,140,20,.4), inset 0 1px 0 #fff, inset 0 -10px 18px rgba(255,140,20,.15); }
-body.dark-mode .selo-brilho img.selo-visitas { filter: hue-rotate(150deg) saturate(1.6) brightness(1.05) drop-shadow(0 0 6px rgba(255,140,20,.5)); }
+body.dark-mode .selo-brilho { background: linear-gradient(135deg, rgba(255,255,255,.7), rgba(238,244,255,.5)); box-shadow: 0 0 22px rgba(109,74,255,.4), inset 0 1px 0 #fff, inset 0 -10px 18px rgba(109,74,255,.15); }
+body.dark-mode .selo-brilho img.selo-visitas { filter: hue-rotate(58deg) saturate(1.25) brightness(1.08) drop-shadow(0 0 6px rgba(109,74,255,.5)); }
 @keyframes selo-passa { 0%, 55% { left: -60%; } 100% { left: 130%; } }
 @keyframes selo-pulso { 0% { box-shadow: 0 0 0 0 rgba(var(--cyan-rgb), .7); } 80%, 100% { box-shadow: 0 0 0 9px rgba(var(--cyan-rgb), 0); } }
 @keyframes selo-flutua { 50% { transform: translateY(-3px); } }
