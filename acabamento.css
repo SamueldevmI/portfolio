@@ -135,7 +135,11 @@ body.dark-mode .lista-projetos .card-projeto .links-projeto .link-projeto:hover 
 .lista-jornada.linha-tempo article { position: relative; display: grid; grid-template-columns: 112px 1fr; gap: 6px 24px; min-height: 0; margin: 0 0 18px; padding: 22px 26px; border-radius: 14px; transition: border-color .3s ease, transform .3s ease; }
 .lista-jornada.linha-tempo article:hover { transform: translateX(4px); border-color: rgba(var(--cyan-rgb), .55); }
 .lista-jornada.linha-tempo article::before { content: ""; position: absolute; top: 27px; left: -34px; width: 14px; height: 14px; border: 2px solid var(--cyan); border-radius: 50%; background: var(--bg); box-shadow: 0 0 0 4px rgba(var(--cyan-rgb), .12), 0 0 14px rgba(var(--cyan-rgb), .55); }
-.lista-jornada.linha-tempo article.lt-agora::before { background: var(--cyan); animation: lt-pulso 2s ease-in-out infinite; }
+.lista-jornada.linha-tempo article.lt-agora::before { background: var(--cyan); }
+/* o pulso e um anel que cresce e some (so transform e opacity: a placa de video cuida, o processador fica livre);
+   antes era uma sombra animada, que mantinha o celular trabalhando o tempo todo */
+.lista-jornada.linha-tempo article.lt-agora::after { content: ""; position: absolute; top: 27px; left: -34px; width: 14px; height: 14px; border: 2px solid var(--cyan); border-radius: 50%; pointer-events: none; animation: lt-anel 2s ease-out infinite; }
+@keyframes lt-anel { 0% { transform: scale(1); opacity: .7; } 70%, 100% { transform: scale(2.6); opacity: 0; } }
 .linha-tempo .lt-data { padding-top: 3px; color: var(--cyan); font: 500 .74rem/1.5 "DM Mono", monospace; letter-spacing: .06em; text-transform: uppercase; }
 .linha-tempo .lt-data b { display: block; font-size: .92rem; font-weight: 500; }
 .linha-tempo h3 { margin: 0 0 6px; font-size: 1.18rem; }
@@ -145,12 +149,12 @@ body.dark-mode .lista-projetos .card-projeto .links-projeto .link-projeto:hover 
 .linha-tempo .lt-tags li { padding: 3px 9px; border: 1px solid var(--line); border-radius: 999px; color: var(--cyan); font: .64rem "DM Mono", monospace; letter-spacing: .04em; }
 body.dark-mode .lista-jornada.linha-tempo article::before { background: #f2effe; border-color: #5234ef; box-shadow: 0 0 0 4px rgba(92,63,240,.14), 0 0 14px rgba(109,74,255,.6); }
 body.dark-mode .lista-jornada.linha-tempo article.lt-agora::before { background: #6d4aff; }
-@keyframes lt-pulso { 50% { box-shadow: 0 0 0 9px rgba(var(--cyan-rgb), 0), 0 0 22px rgba(var(--cyan-rgb), .9); } }
+body.dark-mode .lista-jornada.linha-tempo article.lt-agora::after { border-color: #6d4aff; }
 @media (max-width: 720px) {
     .lista-jornada.linha-tempo { padding-left: 28px; }
     .linha-tempo::before { left: 6px; }
     .lista-jornada.linha-tempo article { grid-template-columns: 1fr; padding: 18px 18px; }
-    .lista-jornada.linha-tempo article::before { left: -28px; top: 22px; }
+    .lista-jornada.linha-tempo article::before, .lista-jornada.linha-tempo article.lt-agora::after { left: -28px; top: 22px; }
     .linha-tempo .lt-data b { display: inline; margin-right: 8px; }
 }
 
@@ -179,7 +183,7 @@ body.dark-mode .selo-brilho img.selo-visitas { filter: hue-rotate(58deg) saturat
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .selo-brilho, .selo-brilho::before, .selo-brilho .selo-ponto, .lista-jornada.linha-tempo article.lt-agora::before { animation: none; }
+    .selo-brilho, .selo-brilho::before, .selo-brilho .selo-ponto, .lista-jornada.linha-tempo article.lt-agora::after { animation: none; }
     .print-janela, .print-celular, .lista-jornada.linha-tempo article { transition: none; }
 }
 .modo-leve .selo-brilho, .modo-leve .selo-brilho::before, .modo-leve .selo-brilho .selo-ponto { animation: none; }
