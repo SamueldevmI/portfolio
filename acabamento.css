@@ -311,3 +311,25 @@ footer, .link-rodape, .chip-filtro, .botao-surpresa { font-size: .8rem; }
 .lista-projetos .card-projeto .links-projeto :is(.link-acao, .link-codigo) { display: inline-flex; align-items: center; min-height: 38px; font-size: .86rem; }
 .lista-projetos .card-projeto .card-orcamento { min-height: 44px; font-size: .88rem; }
 .lista-servicos .link-servico { font-size: .84rem; }
+
+/* ---------- Grafico do GitHub compacto ----------
+   Em vez de um ano quase vazio: numeros grandes de um lado e, do outro, so as ultimas semanas com
+   celulas maiores (a janela comeca duas semanas antes da primeira atividade, entre 12 e 16 semanas). */
+.gh-corpo { display: flex; flex-wrap: wrap; align-items: center; gap: 22px 44px; }
+.gh-numeros { display: flex; flex-wrap: wrap; gap: 18px 44px; flex: 0 0 auto; }
+.gh-numeros div { display: flex; flex-direction: column; gap: 4px; min-width: 96px; max-width: 150px; }
+.gh-numeros b { color: var(--text); font: 600 clamp(1.8rem, 3.4vw, 2.5rem)/1 "Space Grotesk", sans-serif; letter-spacing: -.02em; }
+.gh-numeros div:first-child b { color: var(--cyan); }
+.gh-numeros span { color: var(--muted); font: .8rem/1.35 "DM Mono", monospace; }
+.gh-mapa { flex: 1 1 300px; min-width: 0; }
+.gh-mapa .gh-rolagem { display: flex; }
+.gh-mapa .gh-rolagem > div { margin-left: auto; }
+.gh-dia { border-radius: calc(var(--gh-cel) * .24); }
+.gh-meses { font-size: .7rem; height: 18px; }
+.gh-legenda { font-size: .72rem; }
+@media (max-width: 720px) {
+    .gh-numeros { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; flex: 1 1 100%; width: 100%; }
+    .gh-numeros div { min-width: 0; max-width: none; }
+    .gh-numeros b { font-size: 1.9rem; }
+    .gh-numeros span { font-size: .76rem; }
+}

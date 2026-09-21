@@ -17,11 +17,39 @@
 
         function ajustar() {
             if (!rolagem || !colunas) return;
-            const cel = Math.max(11, Math.min(18, Math.floor((rolagem.clientWidth - 6 - (colunas - 1) * FOLGA) / colunas)));
+            const cel = Math.max(12, Math.min(30, Math.floor((rolagem.clientWidth - 6 - (colunas - 1) * FOLGA) / colunas)));
             desenho.style.setProperty("--gh-cel", cel + "px");
         }
 
-        function desenhar(dias, soma) {
+        function janelaRecente(todos) {
+            // Comeca 2 semanas antes da primeira atividade, mas mostra sempre de 12 a 16 semanas.
+            const primeiroAtivo = todos.findIndex(function (d) { return d.count > 0; });
+            let inicio = primeiroAtivo < 0 ? todos.length - 84 : primeiroAtivo - 14;
+            inicio = Math.min(inicio, todos.length - 84);
+            inicio = Math.max(inicio, todos.length - 112, 0);
+            return todos.slice(inicio);
+        }
+
+        function numeros(janela) {
+            let soma = 0, ativos = 0, seq = 0, recorde = 0;
+            janela.forEach(function (d) {
+                soma += d.count;
+                if (d.count > 0) { ativos++; seq++; recorde = Math.max(recorde, seq); } else { seq = 0; }
+            });
+            // sequencia atual: dias seguidos ate hoje (hoje ainda sem commit nao zera a sequencia)
+            let atual = 0;
+            for (let i = janela.length - 1; i >= 0; i--) {
+                if (janela[i].count > 0) atual++;
+                else if (i === janela.length - 1) continue;
+                else break;
+            }
+            return { soma: soma, ativos: ativos, atual: atual, recorde: recorde };
+        }
+
+        function desenhar(todos, somaAno) {
+            const dias = janelaRecente(todos);
+            const n = numeros(dias);
+            const semanas = Math.round(dias.length / 7);
             const primeiro = new Date(dias[0].date + "T12:00:00").getDay(); // 0 = domingo, como no GitHub
             colunas = Math.ceil((dias.length + primeiro) / 7);
 
@@ -69,15 +97,29 @@
             legenda.setAttribute("aria-hidden", "true");
             legenda.innerHTML = "menos <i data-n='0'></i><i data-n='1'></i><i data-n='2'></i><i data-n='3'></i><i data-n='4'></i> mais";
 
+            const painel = document.createElement("div");
+            painel.className = "gh-numeros";
+            painel.innerHTML =
+                "<div><b>" + n.soma + "</b><span>contribuições em " + semanas + " semanas</span></div>" +
+                "<div><b>" + n.ativos + "</b><span>dias com atividade</span></div>" +
+                "<div><b>" + n.atual + "</b><span>" + (n.atual === 1 ? "dia seguido" : "dias seguidos") + " (recorde " + n.recorde + ")</span></div>";
+            const mapa = document.createElement("div");
+            mapa.className = "gh-mapa";
+            mapa.appendChild(rolagem);
+            mapa.appendChild(legenda);
+            const corpo = document.createElement("div");
+            corpo.className = "gh-corpo";
+            corpo.appendChild(painel);
+            corpo.appendChild(mapa);
+
             desenho.textContent = "";
             desenho.setAttribute("role", "img");
-            desenho.setAttribute("aria-label", "Contribuições no GitHub de " + USUARIO + " nos últimos 12 meses: " + soma);
-            desenho.appendChild(rolagem);
-            desenho.appendChild(legenda);
+            desenho.setAttribute("aria-label", "Contribuições no GitHub de " + USUARIO + " nas últimas " + semanas + " semanas: " + n.soma + " em " + n.ativos + " dias com atividade");
+            desenho.appendChild(corpo);
             desenho.hidden = false;
             if (imagemAntiga) imagemAntiga.hidden = true;
             if (total) {
-                total.innerHTML = "<b>" + soma + "</b> contribuições no último ano";
+                total.innerHTML = "<b>" + somaAno + "</b> contribuições no último ano";
                 total.hidden = false;
             }
             ajustar();
