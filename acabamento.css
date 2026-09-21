@@ -350,3 +350,9 @@ footer, .link-rodape, .chip-filtro, .botao-surpresa { font-size: .8rem; }
 .botao-busca::after { content: ""; position: absolute; inset: -8px -3px; }
 .logo::after { content: ""; position: absolute; inset: -9px -6px; }
 .chip-filtro::after, .botao-surpresa::after, .link-rodape::after { content: ""; position: absolute; inset: -3px 0; }
+
+/* ---------- Celular: campos de texto com 16 px ----------
+   Abaixo disso o Safari do iPhone da zoom sozinho ao tocar no campo. */
+@media (pointer: coarse) {
+    input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="button"]):not([type="submit"]), select, textarea { font-size: 16px; }
+}
