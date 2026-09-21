@@ -132,7 +132,7 @@ body.dark-mode .lista-projetos .card-projeto .links-projeto .link-projeto:hover 
 .linha-tempo .trabalhando-agora { margin: 0 0 8px; color: var(--text); }
 .linha-tempo .lt-tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 0; padding: 0; list-style: none; }
 .linha-tempo .lt-tags li { padding: 3px 9px; border: 1px solid var(--line); border-radius: 999px; color: var(--cyan); font: .64rem "DM Mono", monospace; letter-spacing: .04em; }
-body.dark-mode .lista-jornada.linha-tempo article::before { background: #f2effe; border-color: #5c3ff0; box-shadow: 0 0 0 4px rgba(92,63,240,.14), 0 0 14px rgba(109,74,255,.6); }
+body.dark-mode .lista-jornada.linha-tempo article::before { background: #f2effe; border-color: #5234ef; box-shadow: 0 0 0 4px rgba(92,63,240,.14), 0 0 14px rgba(109,74,255,.6); }
 body.dark-mode .lista-jornada.linha-tempo article.lt-agora::before { background: #6d4aff; }
 @keyframes lt-pulso { 50% { box-shadow: 0 0 0 9px rgba(var(--cyan-rgb), 0), 0 0 22px rgba(var(--cyan-rgb), .9); } }
 @media (max-width: 720px) {
@@ -173,3 +173,48 @@ body.dark-mode .selo-brilho img.selo-visitas { filter: hue-rotate(58deg) saturat
 }
 .modo-leve .selo-brilho, .modo-leve .selo-brilho::before, .modo-leve .selo-brilho .selo-ponto { animation: none; }
 @media print { .selo-brilho, .hero-foto, .carrossel-pontos { display: none !important; } }
+
+/* ---------- Tema claro: fundo fluido (Alvorecer) ----------
+   No tema claro o body fica transparente e duas camadas fixas (::before lilas, ::after celeste)
+   derivam devagar por tras do conteudo. So transform: a placa de video move uma textura pronta,
+   sem repintar a cada quadro, entao vale ate no celular (o modo leve nao desliga este efeito).
+   Sem movimento (preferencia do sistema) fica o mesmo degrade, parado. */
+html.dark-mode { background: #e0e4ff; scrollbar-color: #b9a6f0 #e6e1fd; }
+html.dark-mode body.dark-mode { background: transparent; }
+html.dark-mode body.dark-mode::before,
+html.dark-mode body.dark-mode::after { content: ""; position: fixed; inset: -22%; pointer-events: none; opacity: 1; filter: none; mask-image: none; will-change: transform; }
+html.dark-mode body.dark-mode::before {
+    z-index: -2;
+    background:
+        radial-gradient(circle at 28% 30%, rgba(178, 132, 255, .26) 0, transparent 36%),
+        radial-gradient(circle at 76% 66%, rgba(206, 164, 255, .22) 0, transparent 32%),
+        linear-gradient(172deg, #f6ecff 0%, #eaeeff 46%, #d4efff 100%);
+    animation: alvorecer-a 26s ease-in-out infinite alternate;
+}
+html.dark-mode body.dark-mode::after {
+    z-index: -1;
+    background:
+        radial-gradient(circle at 72% 28%, rgba(96, 190, 255, .26) 0, transparent 34%),
+        radial-gradient(circle at 24% 74%, rgba(120, 205, 255, .28) 0, transparent 36%),
+        radial-gradient(circle at 52% 50%, rgba(255, 255, 255, .4) 0, transparent 28%);
+    animation: alvorecer-b 34s ease-in-out infinite alternate;
+}
+/* etiquetas de tecnologia: texto de 11 px, precisa de um roxo um pouco mais fundo sobre o fundo em movimento */
+html.dark-mode body.dark-mode .habilidades li { color: #4a2ddb; }
+@keyframes alvorecer-a {
+    0%   { transform: translate3d(-5%, -4%, 0) rotate(-3deg) scale(1); }
+    50%  { transform: translate3d(4%, 3%, 0) rotate(3deg) scale(1.08); }
+    100% { transform: translate3d(-2%, 6%, 0) rotate(-1deg) scale(1.03); }
+}
+@keyframes alvorecer-b {
+    0%   { transform: translate3d(5%, 3%, 0) rotate(3deg) scale(1.06); }
+    50%  { transform: translate3d(-4%, -3%, 0) rotate(-4deg) scale(1); }
+    100% { transform: translate3d(3%, -6%, 0) rotate(2deg) scale(1.1); }
+}
+@media (prefers-reduced-motion: reduce) {
+    html.dark-mode body.dark-mode::before, html.dark-mode body.dark-mode::after { animation: none; }
+}
+@media print {
+    html.dark-mode { background: #fff; }
+    html.dark-mode body.dark-mode::before, html.dark-mode body.dark-mode::after { display: none; }
+}
