@@ -13,6 +13,7 @@ import { montarPlayer, acoesPlayer } from './player-ui.js';
 import { menuFaixa, acoesMenu } from './menus.js';
 import { camadaAberta, fecharCamada } from './nav.js';
 import { importar } from './importar.js';
+import { iniciarLuzes, nivel, aplicarNivel } from './luzes.js';
 
 const tela = document.getElementById('tela');
 history.scrollRestoration = 'manual';
@@ -78,8 +79,19 @@ addEventListener('appinstalled', () => avisar('Eldev Music instalado!'));
 // quando o navegador libera a instalação, o atalho "Instalar o app" aparece na tela inicial
 document.addEventListener('instalar:mudou', () => { if (rotaAtual?.aba === 'inicio' && !location.hash.slice(2)) rotear({ manter: true }); });
 
+const EFEITOS = [
+  ['completo', 'Completo', 'Luzes lá atrás no ritmo da música, brilho no disco e movimento ao mexer o mouse ou inclinar o celular'],
+  ['suave', 'Suave', 'Só três luzes lentas no fundo. Gasta menos bateria'],
+  ['desligado', 'Desligado', 'Sem luzes e sem movimento. É o mais leve'],
+];
+
 async function abrirConfig() {
-  const extra = `<hr>
+  const atual = nivel();
+  const parado = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const efeitos = `<fieldset class="efeitos"><legend>Efeitos de luz</legend>${EFEITOS.map(([v, nome, dica]) =>
+    `<label><input type="radio" name="efeitos" value="${v}"${v === atual ? ' checked' : ''}><span>${nome}<small>${dica}</small></span></label>`).join('')}${
+    parado ? '<small>Seu aparelho pede menos movimento, então as luzes ficam paradas.</small>' : ''}</fieldset>`;
+  const extra = `${efeitos}<hr>
     ${instalado()
       ? '<small>Você está usando o Eldev Music instalado no aparelho.</small>'
       : `<button type="button" class="botao" data-acao="instalar">${icone('baixar')}Instalar o Eldev Music</button>${
@@ -87,11 +99,15 @@ async function abrirConfig() {
     <hr>
     <small>Músicas grátis do Audius. Favoritas, playlists e arquivos ficam só neste aparelho.</small>
     <button type="button" class="botao perigo" data-acao="apagar-dados">Apagar meus dados</button>`;
+  let escolhido = atual;
   const nome = await perguntar({
     titulo: 'Configurações', ok: 'Salvar', extra,
     campo: { rotulo: 'Seu nome', valor: store.config().nome, opcional: true, max: 30 },
+    aoMudar: (form) => aplicarNivel(form.elements.efeitos.value), // mostra o efeito na hora
+    aoSalvar: (form) => { escolhido = form.elements.efeitos.value; },
   });
-  if (nome !== null) store.definirConfig({ nome });
+  if (nome !== null) store.definirConfig({ nome, efeitos: escolhido });
+  else aplicarNivel(); // cancelou: volta ao que estava salvo
 }
 
 // ---- cliques: cada botão traz data-acao="nome" e cai aqui ----
@@ -179,6 +195,7 @@ addEventListener('online', () => {
 
 // ---- começo ----
 player.definirRadio(sugerir); // a rádio infinita escolhe as próximas músicas com radio.js
+iniciarLuzes(); // as luzes lá atrás (antes do player, pra ficarem por baixo de tudo)
 montarPlayer();
 await Promise.race([carregarCapas(), new Promise((ok) => setTimeout(ok, 800))]);
 player.restaurar();

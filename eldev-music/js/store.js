@@ -5,7 +5,7 @@ import { uid } from './util.js';
 const CHAVE = 'eldev-music:v1';
 const padrao = () => ({
   curtidas: [], playlists: [], salvas: [], meus: [], baixadas: [], recentes: [], buscas: [],
-  fila: null, config: { nome: '', volume: 1, radio: true, dicaDisco: true },
+  fila: null, config: { nome: '', volume: 1, radio: true, dicaDisco: true, efeitos: 'completo' },
 });
 
 function ler() {

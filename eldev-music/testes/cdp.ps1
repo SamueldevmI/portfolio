@@ -104,6 +104,11 @@ function Soltar([double]$x, [double]$y) {
   Cmd 'Input.dispatchMouseEvent' @{ type = 'mouseReleased'; x = $x; y = $y; button = 'left'; buttons = 0; clickCount = 1 } | Out-Null
 }
 
+# só passar o mouse por cima (sem apertar nenhum botão)
+function Passar([double]$x, [double]$y) {
+  Cmd 'Input.dispatchMouseEvent' @{ type = 'mouseMoved'; x = $x; y = $y; buttons = 0 } | Out-Null
+}
+
 function Digitar([string]$texto) {
   Cmd 'Input.insertText' @{ text = $texto } | Out-Null
 }

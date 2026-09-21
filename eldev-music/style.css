@@ -90,10 +90,10 @@ body.sem-mini #tela { padding-bottom: calc(var(--nav) + 36px + var(--seguro)); }
   gap: 2px;
   padding: 6px;
   border-radius: 999px;
-  background: rgb(35 31 27 / .9);
-  backdrop-filter: blur(20px) saturate(1.4);
+  background: rgb(35 31 27 / .56);
+  backdrop-filter: blur(22px) saturate(1.6);
   border: 1px solid var(--linha);
-  box-shadow: 0 14px 36px rgb(0 0 0 / .55);
+  box-shadow: 0 14px 36px rgb(0 0 0 / .45), inset 0 1px 0 rgb(255 255 255 / .1);
 }
 .abas .logo, .abas .nav-config { display: none; }
 .aba {
@@ -235,7 +235,7 @@ body:not(.som) .eq b { animation-play-state: paused; }
 .figurinha {
   flex: none; display: flex; align-items: center; gap: 11px;
   padding: 9px 18px 9px 9px; border-radius: 20px;
-  background: var(--sup2); border: 1px solid var(--linha); text-align: left;
+  background: rgb(35 31 27 / .5); border: 1px solid var(--linha); text-align: left;
 }
 .figurinha:hover { background: var(--sup3); }
 .fig-ic { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 14px; background: var(--grad); color: var(--tinta); }
@@ -382,7 +382,7 @@ body:not(.som) .eq b { animation-play-state: paused; }
 .campo-busca {
   display: flex; align-items: center; gap: 8px;
   height: 52px; padding: 0 6px 0 16px; border-radius: 20px;
-  background: var(--sup2); border: 1px solid var(--linha);
+  background: rgb(35 31 27 / .55); backdrop-filter: blur(12px); border: 1px solid var(--linha);
 }
 .campo-busca .i { color: var(--tx2); }
 .campo-busca input { flex: 1; min-width: 0; height: 100%; background: none; border: 0; outline: 0; font-weight: 600; }
@@ -415,9 +415,9 @@ body:not(.som) .eq b { animation-play-state: paused; }
   display: grid; grid-template-columns: 1fr auto auto; align-items: center; gap: 2px;
   padding: 0 10px 0 10px;
   border-radius: 26px;
-  background: rgb(44 38 33 / .94); backdrop-filter: blur(18px);
+  background: rgb(44 38 33 / .55); backdrop-filter: blur(22px) saturate(1.6);
   border: 1px solid var(--linha);
-  box-shadow: 0 12px 30px rgb(0 0 0 / .5);
+  box-shadow: 0 12px 30px rgb(0 0 0 / .45), inset 0 1px 0 rgb(255 255 255 / .1);
 }
 .mini-info { display: flex; align-items: center; gap: 13px; min-width: 0; height: 100%; text-align: left; }
 .mini-disco { position: relative; flex: none; width: 46px; height: 46px; }
@@ -562,7 +562,7 @@ body.som .braco { transform: rotate(3deg); }
 .folha-painel {
   position: relative; width: min(100%, 560px); max-height: 84dvh; overflow: auto; outline: 0;
   padding: 8px 8px calc(16px + var(--seguro));
-  border-radius: 28px 28px 0 0; background: var(--sup2); border: 1px solid var(--linha); border-bottom: 0;
+  border-radius: 28px 28px 0 0; background: rgb(35 31 27 / .82); backdrop-filter: blur(26px) saturate(1.5); border: 1px solid var(--linha); border-bottom: 0;
   animation: subir .26s cubic-bezier(.2, .8, .2, 1);
 }
 .folha-cabeca { display: flex; align-items: center; gap: 12px; padding: 12px 12px 14px; border-bottom: 1px solid var(--linha); margin-bottom: 6px; }
@@ -584,7 +584,7 @@ body.som .braco { transform: rotate(3deg); }
 @keyframes subir { from { transform: translateY(40px); opacity: 0; } }
 
 dialog {
-  border: 1px solid var(--linha); border-radius: 26px; background: var(--sup2); color: var(--tx);
+  border: 1px solid var(--linha); border-radius: 26px; background: rgb(35 31 27 / .88); backdrop-filter: blur(18px); color: var(--tx);
   padding: 24px; width: min(92vw, 420px); margin: auto;
 }
 dialog::backdrop { background: rgb(8 6 4 / .7); }
@@ -652,6 +652,83 @@ body.som .braco { transform: rotate(var(--braco-ang, calc(-18deg + 36deg * var(-
   white-space: nowrap; pointer-events: none; font-variant-numeric: tabular-nums;
 }
 
+/* ===== luzes lá atrás (profundidade), facho de palco e sombras que acompanham a luz ===== */
+/* as 3 cores são "registradas" pra poder mudar de uma música pra outra com transição suave */
+@property --luz-a { syntax: '<color>'; inherits: true; initial-value: #ff8a1f; }
+@property --luz-b { syntax: '<color>'; inherits: true; initial-value: #ff4d6d; }
+@property --luz-c { syntax: '<color>'; inherits: true; initial-value: #ffb52e; }
+
+.luzes {
+  position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none;
+  transition: --luz-a 1.8s ease, --luz-b 1.8s ease, --luz-c 1.8s ease;
+}
+.luzes-cheio { position: absolute; z-index: 0; }
+/* vinheta: escurece as bordas e o fundo por trás dos textos */
+.luzes::after { content: ''; position: absolute; inset: 0; background: radial-gradient(120% 90% at 50% 38%, transparent 35%, rgb(18 16 14 / .6) 100%); }
+body.tela-cheia #luzes { visibility: hidden; } /* o player em tela cheia tem as luzes dele */
+
+/* a camada inteira "bate" no tempo da música (a duração vem do BPM, via --batida) */
+.luz-pulso { position: absolute; inset: 0; animation: bater var(--batida, 3.2s) cubic-bezier(.2, .7, .3, 1) infinite; }
+@keyframes bater { 0% { opacity: 1; scale: 1.035; } 100% { opacity: .78; scale: 1; } }
+
+/* cada luz: as grandes (prof baixa) ficam longe e mexem pouco; as pequenas (prof alta) ficam perto e mexem mais */
+.luz {
+  position: absolute; left: var(--x); top: var(--y); width: var(--t); aspect-ratio: 1; border-radius: 50%;
+  opacity: var(--op); will-change: transform;
+  background: radial-gradient(circle, color-mix(in srgb, var(--cor) 85%, transparent) 0, color-mix(in srgb, var(--cor) 32%, transparent) 38%, transparent 68%);
+  translate: calc(var(--px, 0) * var(--prof) * 46px) calc(var(--py, 0) * var(--prof) * 46px);
+  transition: translate .35s ease-out;
+  animation: vagar var(--dur) ease-in-out infinite alternate;
+}
+@keyframes vagar { from { transform: translate3d(0, 0, 0) scale(1); } to { transform: translate3d(var(--dx), var(--dy), 0) scale(var(--esc)); } }
+.luz:nth-child(1) { --cor: var(--luz-a); --x: -22%; --y: -14%; --t: 92vmax; --op: .46; --prof: .12; --dur: 46s; --dx: 18vw; --dy: 12vh; --esc: 1.1; }
+.luz:nth-child(2) { --cor: var(--luz-b); --x: 52%; --y: 6%; --t: 72vmax; --op: .38; --prof: .3; --dur: 61s; --dx: -22vw; --dy: 18vh; --esc: .92; }
+.luz:nth-child(3) { --cor: var(--luz-c); --x: 12%; --y: 58%; --t: 58vmax; --op: .36; --prof: .55; --dur: 38s; --dx: 24vw; --dy: -16vh; --esc: 1.15; }
+.luz:nth-child(4) { --cor: var(--luz-a); --x: 66%; --y: 66%; --t: 34vmax; --op: .4; --prof: .8; --dur: 29s; --dx: -18vw; --dy: -20vh; --esc: .85; }
+.luz:nth-child(5) { --cor: var(--luz-b); --x: 4%; --y: 36%; --t: 24vmax; --op: .44; --prof: 1; --dur: 23s; --dx: 30vw; --dy: 10vh; --esc: 1.25; }
+
+/* só mexe enquanto toca; pausado, tudo fica parado onde estava */
+body:not(.som) .luz, body:not(.som) .luz-pulso, body:not(.som) .facho, body:not(.som) .palco .disco::after { animation-play-state: paused; }
+
+/* com o player em tela cheia as luzes de trás não aparecem: param no lugar (sem gastar bateria) e continuam de onde estavam.
+   O contrário também: com o player cheio fechado, as luzes e o facho dele ficam parados escondidos */
+body.tela-cheia #luzes .luz, body.tela-cheia #luzes .luz-pulso { animation-play-state: paused; }
+.cheio:not(.aberto) .luz, .cheio:not(.aberto) .luz-pulso, .cheio:not(.aberto) .facho, .cheio:not(.aberto) .palco .disco::after { animation-play-state: paused; }
+
+/* níveis do botão "Efeitos": suave = só as 3 luzes grandes, sem batida nem facho; desligado = nada */
+body[data-efeitos='suave'] .luz.extra, body[data-efeitos='suave'] .facho { display: none; }
+body[data-efeitos='suave'] .luz-pulso { animation: none; }
+body[data-efeitos='desligado'] .luzes, body[data-efeitos='desligado'] .facho { display: none; }
+body[data-efeitos='suave'] .palco .disco::after, body[data-efeitos='desligado'] .palco .disco::after { animation: none; rotate: none; }
+@media (prefers-reduced-motion: reduce) {
+  .luz, .luz-pulso, .facho, .palco .disco::after { animation: none !important; }
+  .luz { transition: none; translate: none; }
+}
+
+/* facho de palco no player em tela cheia: um cone de luz que varre devagar por cima do disco */
+.facho {
+  position: absolute; z-index: 1; left: 50%; top: -6%; width: 150%; height: 80%; translate: -50% 0; pointer-events: none;
+  transform-origin: 50% 0; will-change: transform;
+  background: conic-gradient(from 162deg at 50% 0, transparent 0deg, rgb(255 205 130 / .1) 10deg, rgb(255 232 196 / .22) 18deg, rgb(255 205 130 / .1) 26deg, transparent 36deg 360deg);
+  -webkit-mask: linear-gradient(to bottom, #000 0, #000 40%, transparent 100%); mask: linear-gradient(to bottom, #000 0, #000 40%, transparent 100%);
+  animation: varrer 16s ease-in-out infinite alternate;
+}
+@keyframes varrer { from { rotate: -9deg; } to { rotate: 9deg; } }
+/* o brilho do disco anda junto com o facho (mesma duração) e com o mouse/inclinação */
+.palco .disco::after { animation: brilhar 16s ease-in-out infinite alternate; rotate: calc(var(--px, 0) * 35deg); transition: rotate .35s ease-out; }
+@keyframes brilhar { from { transform: rotate(-32deg); } to { transform: rotate(32deg); } }
+/* as sombras do disco e do braço se afastam da luz quando ela "se move" */
+.braco { filter: drop-shadow(calc(var(--px, 0) * -10px) calc(6px + var(--py, 0) * -4px) 8px rgb(0 0 0 / .5)); }
+.palco .disco { box-shadow: calc(var(--px, 0) * -14px) calc(24px + var(--py, 0) * -8px) 60px rgb(0 0 0 / .6), 0 0 0 8px rgb(255 236 214 / .05); }
+
+/* escolha do nível de efeitos, na janela de configurações */
+.efeitos { border: 0; padding: 0; display: grid; gap: 8px; }
+.efeitos legend { font-size: 13px; font-weight: 600; color: var(--tx2); margin-bottom: 6px; }
+.efeitos label { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 14px; background: var(--sup3); font-weight: 600; cursor: pointer; }
+.efeitos label:has(input:checked) { outline: 2px solid var(--ac); }
+.efeitos input { accent-color: var(--ac); width: 18px; height: 18px; flex: none; }
+.efeitos small { display: block; font-weight: 500; color: var(--tx3); font-size: 12px; }
+
 /* ===== computador: barra no topo + player flutuante embaixo ===== */
 @media (min-width: 900px) {
   :root { --mini: 80px; }
@@ -659,7 +736,7 @@ body.som .braco { transform: rotate(var(--braco-ang, calc(-18deg + 36deg * var(-
   .abas {
     position: sticky; top: 0; left: auto; bottom: auto; translate: none;
     width: auto; height: 72px; padding: 0 40px; gap: 6px; border-radius: 0;
-    background: rgb(18 16 14 / .84); backdrop-filter: blur(18px);
+    background: rgb(18 16 14 / .55); backdrop-filter: blur(22px) saturate(1.6);
     border: 0; border-bottom: 1px solid var(--linha); box-shadow: none; z-index: 30;
   }
   .abas .logo { display: flex; align-items: center; gap: 10px; margin-right: auto; font: 600 20px var(--f-titulo); letter-spacing: -.02em; }

@@ -25,6 +25,8 @@ Abra http://localhost:8127. O servidor não guarda cache, então o que você mud
 - **Garimpo:** músicas boas de artistas que quase ninguém ouviu ainda
 - **Baixar pra ouvir sem internet:** numa música, numa playlist ou nas favoritas. Fica em "Baixadas" e toca com o app sem internet
 - **Playlist em link:** manda uma playlist por link; quem abre vê a lista e salva na própria coleção (sem conta e sem servidor: as músicas vão dentro do link)
+- **Luzes lá atrás:** manchas de luz macias passeiam no fundo e dão profundidade (as grandes ficam longe, lentas; as pequenas perto, rápidas). Tomam as cores da capa que está tocando, "respiram" no BPM da música e só mexem enquanto toca. No computador acompanham o mouse; no Android, a inclinação do celular. O menu, o mini player e as janelas são de vidro fosco e desfocam essa luz. No player cheio tem um facho de palco varrendo o disco, reflexo que anda e sombras que seguem a luz
+- **Efeitos:** em Configurações dá pra escolher Completo, Suave (só 3 luzes lentas) ou Desligado. O aparelho com "reduzir movimento" ligado deixa tudo parado sozinho
 - **No aparelho:** arquivos seus (mp3, m4a, flac, ogg, wav). O mp3 traz título, artista e capa da própria etiqueta
 - Instala como app e abre sem internet (o catálogo do Audius precisa de internet; suas músicas baixadas e as do aparelho não)
 - Favoritas, playlists e histórico ficam só no aparelho, sem login
@@ -38,7 +40,7 @@ Abra http://localhost:8127. O servidor não guarda cache, então o que você mud
 | `sw.js`, `manifest.webmanifest` | fazem virar app e abrir sem internet |
 | `icons/`, `gerar-icones.py` | ícones do app (para mudar o logo, mude o desenho no script e rode `python gerar-icones.py`) |
 | `screenshots/` | imagens que o Android mostra na tela de instalação (sem capas de artistas) |
-| `testes/` | testes automáticos com o servidor ligado: `powershell -File testes\roteiro.ps1` (o app todo) e `testes\roteiro-novidades.ps1` (disco, timer, rádio, downloads, garimpo, link) |
+| `testes/` | testes automáticos com o servidor ligado: `powershell -File testes\roteiro.ps1` (o app todo), `testes\roteiro-novidades.ps1` (disco, timer, rádio, downloads, garimpo, link) e `testes\roteiro-luzes.ps1` (luzes, cores da capa, batida, parallax, vidro fosco, efeitos) |
 
 **Ao mudar qualquer arquivo do app**, aumente o número em `VERSAO` no `sw.js`, senão quem já instalou continua com a versão antiga guardada.
 
@@ -66,6 +68,7 @@ Para colocar na Play Store precisa de conta de desenvolvedor do Google (pagament
 3. Baixar uma música, ligar o modo avião e tocar ela em "Baixadas".
 4. No player em tela cheia, girar o disco com o dedo e arrastar o braço da vitrola.
 5. Timer de sono de 15 min: conferir a lua com o tempo que falta e a música pausando.
+6. Luzes: tocar uma música com a tela em movimento por alguns minutos e ver se a rolagem continua fluida e se a bateria cai muito mais que sem o app. Se pesar, Configurações → Efeitos → Suave ou Desligado. No Android, inclinar o celular deve mexer as luzes; no iPhone elas só passeiam sozinhas (o Safari exige um pedido de permissão pro sensor, que o app não faz).
 
 ## Observações
 

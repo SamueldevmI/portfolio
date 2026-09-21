@@ -162,7 +162,8 @@ export function fecharDialogo() {
 }
 
 // ---- diálogo (no lugar de prompt/confirm, que ficam feios e bloqueados no app instalado) ----
-export function perguntar({ titulo, texto = '', campo = null, ok = 'Salvar', perigo = false, extra = '' }) {
+// aoMudar(form): a cada mexida nos campos (pra mostrar o efeito na hora); aoSalvar(form): só quando a pessoa confirma
+export function perguntar({ titulo, texto = '', campo = null, ok = 'Salvar', perigo = false, extra = '', aoMudar = null, aoSalvar = null }) {
   const d = document.getElementById('dialogo');
   d.innerHTML = `<form method="dialog" class="dialogo-form">
     <h2>${esc(titulo)}</h2>
@@ -175,11 +176,13 @@ export function perguntar({ titulo, texto = '', campo = null, ok = 'Salvar', per
     </div>
   </form>`;
   const form = d.querySelector('form');
+  if (aoMudar) form.addEventListener('input', () => aoMudar(form));
   return new Promise((res) => {
     d.querySelector('[data-fechar]').onclick = () => d.close('cancel');
     d.onclose = () => {
       const okay = d.returnValue === 'ok';
       d.returnValue = '';
+      if (okay) aoSalvar?.(form);
       res(okay ? (campo ? form.elements.v.value.trim() : true) : campo ? null : false);
     };
     d.showModal();

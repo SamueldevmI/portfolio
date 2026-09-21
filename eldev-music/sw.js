@@ -1,13 +1,13 @@
 // Service worker: guarda o app no aparelho (abre sem internet) e lembra as últimas respostas do catálogo.
 // Ao mudar qualquer arquivo do app, aumente o número em VERSAO pra todo mundo receber a versão nova.
-const VERSAO = 'eldev-music-v4';
+const VERSAO = 'eldev-music-v5';
 const CACHE_APP = `${VERSAO}-app`;
 const CACHE_API = `${VERSAO}-api`;
 
 const ARQUIVOS = [
   './', 'index.html', 'style.css', 'manifest.webmanifest',
-  'js/app.js', 'js/audius.js', 'js/baixar.js', 'js/compartilhar.js', 'js/db.js', 'js/id3.js', 'js/importar.js',
-  'js/instalar.js', 'js/menus.js', 'js/nav.js', 'js/player-ui.js', 'js/player.js', 'js/radio.js', 'js/store.js',
+  'js/app.js', 'js/audius.js', 'js/baixar.js', 'js/compartilhar.js', 'js/cores.js', 'js/db.js', 'js/id3.js', 'js/importar.js',
+  'js/instalar.js', 'js/luzes.js', 'js/menus.js', 'js/nav.js', 'js/player-ui.js', 'js/player.js', 'js/radio.js', 'js/store.js',
   'js/telas.js', 'js/ui.js', 'js/util.js', 'js/vitrola.js',
   'fonts/bricolage-latin.woff2', 'fonts/dmsans-latin.woff2',
   'icons/icon-192.png', 'icons/icon-512.png', 'icons/icon-maskable-512.png', 'icons/apple-touch-icon.png', 'icons/favicon.svg',

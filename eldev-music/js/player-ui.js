@@ -8,6 +8,7 @@ import { abrirCamada, fecharCamada, navegar } from './nav.js';
 import { menuFaixa, escolherPlaylist, abrirFila, abrirTimer, compartilhar } from './menus.js';
 import { montarVitrola, girando } from './vitrola.js';
 import { atualizarBotoes } from './baixar.js';
+import { luzesDoPlayer } from './luzes.js';
 
 const enc = encodeURIComponent;
 
@@ -72,6 +73,7 @@ export function montarPlayer() {
 
   $('#cheio').innerHTML = `
     <img class="cheio-fundo js-fundo" alt="" hidden>
+    ${luzesDoPlayer()}
     <div class="cheio-conteudo">
       <div class="cheio-topo">
         <button class="icone" data-acao="fechar-cheio" aria-label="Fechar o player">${icone('baixo')}</button>
