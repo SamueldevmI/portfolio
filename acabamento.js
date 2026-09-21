@@ -143,6 +143,58 @@
         });
     })();
 
+    /* ---------- Botão Voltar do celular fecha a janela aberta em vez de sair do site ----------
+       A demonstração, a paleta de comandos e o tour abrem por cima da página sem criar entrada no histórico,
+       então o Voltar do Android levava a pessoa embora do portfólio. Aqui, ao abrir uma janela criamos UMA
+       entrada; o Voltar consome essa entrada e fecha a janela pelo botão dela (com a limpeza de sempre).
+       Se a janela fecha por outro caminho (X, Esc, clique no fundo), devolvemos a entrada com history.back(). */
+    (function voltar() {
+        if (!window.history || !history.pushState) return;
+        const janelas = [
+            { el: document.getElementById("modalOverlay"), fechar: function () { const b = document.getElementById("modalFechar"); if (b) b.click(); } },
+            { el: document.getElementById("paletaOverlay"), fechar: function () { document.getElementById("paletaOverlay").click(); } },
+            { el: document.getElementById("tourOverlay"), fechar: function () { const b = document.getElementById("tourPular"); if (b) b.click(); } }
+        ].filter(function (j) { return j.el; });
+        if (!janelas.length) return;
+
+        let entrada = false;   // já criamos a entrada de histórico para "há janela aberta"?
+        let ignorar = 0;       // popstates provocados por nós mesmos (history.back())
+        let agendado = false;
+
+        function abertas() { return janelas.filter(function (j) { return !j.el.hidden; }); }
+
+        function conciliar() {
+            agendado = false;
+            const algumaAberta = abertas().length > 0;
+            if (algumaAberta && !entrada) {
+                history.pushState({ sobreposicao: true }, "");
+                entrada = true;
+            } else if (!algumaAberta && entrada) {
+                entrada = false;
+                ignorar++;
+                history.back();
+            }
+        }
+
+        // Concilia depois que todas as mudanças da mesma vez terminaram (ex.: a paleta fecha e o tour abre juntos).
+        function agendar() {
+            if (agendado) return;
+            agendado = true;
+            Promise.resolve().then(conciliar);
+        }
+
+        janelas.forEach(function (j) {
+            new MutationObserver(agendar).observe(j.el, { attributes: true, attributeFilter: ["hidden"] });
+        });
+
+        window.addEventListener("popstate", function () {
+            if (ignorar > 0) { ignorar--; return; }
+            if (!entrada) return;
+            entrada = false;   // o navegador já consumiu a nossa entrada
+            abertas().forEach(function (j) { j.fechar(); });
+        });
+    })();
+
     /* ---------- Pontinhos do carrossel de projetos (só no celular) ---------- */
     (function carrossel() {
         const lista = document.getElementById("lista-projetos");
