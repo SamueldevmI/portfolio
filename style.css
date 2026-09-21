@@ -149,7 +149,7 @@ body.dark-mode .changelog { background:rgba(247,245,254,.72); }
 .tour-realce { position:fixed; border-radius:8px; box-shadow:0 0 0 9999px rgba(8,4,16,.8); transition:top .35s ease,left .35s ease,width .35s ease,height .35s ease; pointer-events:none; }
 .tour-caixa { position:fixed; z-index:86; width:min(340px,calc(100% - 32px)); padding:20px 22px; border:1px solid var(--cyan); border-radius:8px; background:var(--surface); box-shadow:var(--shadow); transition:top .35s ease,left .35s ease; }
 .tour-passo { margin:0 0 6px; color:var(--cyan); font:500 .68rem "DM Mono",monospace; letter-spacing:.1em; }
-.tour-caixa h4 { margin:0 0 8px; font-size:1.1rem; }
+.tour-caixa h4,.tour-caixa h2 { margin:0 0 8px; font-size:1.1rem; }
 .tour-caixa p:not(.tour-passo) { margin:0; color:var(--muted); font-size:.88rem; line-height:1.5; }
 .tour-navegacao { display:flex; align-items:center; justify-content:space-between; gap:14px; margin-top:18px; }
 .tour-navegacao #tourPular { border:0; background:none; padding:0; color:var(--muted); font-size:.78rem; text-decoration:underline; cursor:pointer; }

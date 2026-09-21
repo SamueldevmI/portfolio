@@ -389,9 +389,11 @@ async function carregarStatsGithub() {
 }
 carregarStatsGithub();
 
-/* Cross-highlight: passar o mouse numa competência destaca os projetos relacionados */
+/* Cross-highlight: passar o mouse (ou focar com Tab) numa competência destaca os projetos relacionados.
+   Clicar ou tocar FIXA o destaque (no celular não existe "passar o mouse"); clicar de novo tira. */
 const habilidadesItens = document.querySelectorAll(".habilidades li[data-tecnologia]");
 const listaProjetosEl = document.getElementById("lista-projetos");
+let tecnologiaFixa = null;
 
 function destacarProjetosPorTecnologia(tecnologia) {
     if (!listaProjetosEl) return;
@@ -403,16 +405,27 @@ function destacarProjetosPorTecnologia(tecnologia) {
 }
 
 function limparDestaqueProjetos() {
+    if (tecnologiaFixa) { destacarProjetosPorTecnologia(tecnologiaFixa); return; }
     if (!listaProjetosEl) return;
     listaProjetosEl.classList.remove("tem-destaque");
     cardsProjeto.forEach((card) => card.classList.remove("card-destacado"));
 }
 
 habilidadesItens.forEach((item) => {
-    item.addEventListener("mouseenter", () => destacarProjetosPorTecnologia(item.dataset.tecnologia));
+    const tecnologia = item.dataset.tecnologia;
+    item.addEventListener("mouseenter", () => destacarProjetosPorTecnologia(tecnologia));
     item.addEventListener("mouseleave", limparDestaqueProjetos);
-    item.addEventListener("focus", () => destacarProjetosPorTecnologia(item.dataset.tecnologia));
-    item.addEventListener("blur", limparDestaqueProjetos);
+    item.addEventListener("focusin", () => destacarProjetosPorTecnologia(tecnologia));
+    item.addEventListener("focusout", limparDestaqueProjetos);
+    item.querySelector("button")?.addEventListener("click", () => {
+        tecnologiaFixa = tecnologiaFixa === tecnologia ? null : tecnologia;
+        habilidadesItens.forEach((outro) => {
+            const fixa = outro.dataset.tecnologia === tecnologiaFixa;
+            outro.classList.toggle("habilidade-ativa", fixa);
+            outro.querySelector("button")?.setAttribute("aria-pressed", String(fixa));
+        });
+        destacarProjetosPorTecnologia(tecnologiaFixa ?? tecnologia);
+    });
 });
 
 /* Flip nos cards de projeto: mostra a stack completa no verso */

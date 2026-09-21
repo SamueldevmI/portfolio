@@ -362,3 +362,20 @@ footer, .link-rodape, .chip-filtro, .botao-surpresa { font-size: .8rem; }
    por conta propria o tema claro quando o celular esta em modo escuro). */
 html { color-scheme: dark; }
 html.dark-mode { color-scheme: light; }
+
+/* ---------- HTML mais correto, visual igual ---------- */
+/* pílulas de tecnologia: cada uma agora é um <button> dentro do <li> (focável e com aria-pressed); o <li> continua sendo a pílula */
+.habilidades li { padding: 0; }
+.habilidades li button { display: inline-flex; align-items: center; gap: 8px; padding: 7px 13px 7px 10px; border: 0; border-radius: inherit; background: none; color: inherit; font: inherit; letter-spacing: inherit; text-transform: inherit; text-align: inherit; cursor: inherit; }
+.habilidades li button:focus-visible { outline: none; animation: none; }
+.habilidades li:has(button:focus-visible) { border-color: var(--cyan); background: rgba(var(--cyan-rgb), .1); }
+.habilidades li:has(button:focus-visible) svg { transform: scale(1.25) rotate(-6deg); }
+/* linha do tempo: agora é uma lista ordenada (<ol>) com uma <li> por acontecimento e a data em <time> */
+.lista-jornada.linha-tempo, .lista-jornada.linha-tempo > li { list-style: none; }
+.lista-jornada.linha-tempo > li { margin: 0; padding: 0; }
+.lista-jornada.linha-tempo > li:nth-child(2) > article.reveal { transition-delay: .08s; }
+.lista-jornada.linha-tempo > li:nth-child(3) > article.reveal { transition-delay: .16s; }
+.linha-tempo .lt-data time { display: contents; }
+/* area de toque das pilulas: agora sao botoes, entao entram na regra de 44 px (so na vertical, sem invadir a pilula vizinha) */
+.habilidades li button { position: relative; }
+.habilidades li button::after { content: ""; position: absolute; inset: -4px 0; }
