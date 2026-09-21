@@ -183,8 +183,3 @@ montarPlayer();
 await Promise.race([carregarCapas(), new Promise((ok) => setTimeout(ok, 800))]);
 player.restaurar();
 rotear();
-
-// app que abre sem internet (só em https ou localhost)
-if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
-  navigator.serviceWorker.register('sw.js').catch(() => {});
-}
