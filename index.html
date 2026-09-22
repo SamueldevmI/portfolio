@@ -35,6 +35,7 @@
     </script>
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="imagem/apple-touch-icon.png">
+    <link rel="manifest" href="manifest.json">
     <link rel="preload" as="image" href="imagem/samuel-rosto.jpg" fetchpriority="high">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -55,6 +56,23 @@
         "sameAs": [
             "https://github.com/SamueldevmI",
             "https://www.linkedin.com/in/samuelrondon-dev/"
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "item": { "@type": "SoftwareApplication", "name": "Eldev Music", "description": "App de música que instala no celular como aplicativo, com player, rádio e playlists.", "url": "https://samueldevmi.github.io/portfolio/eldev-music/index.html", "applicationCategory": "MultimediaApplication", "operatingSystem": "Web, Android, iOS" } },
+            { "@type": "ListItem", "position": 2, "item": { "@type": "SoftwareApplication", "name": "Glitch District", "description": "Loja de roupas cyberpunk de demonstração com catálogo, carrinho e pedido pronto pra enviar no WhatsApp.", "url": "https://samueldevmi.github.io/portfolio/loja-cyberpunk/index.html", "applicationCategory": "BusinessApplication", "operatingSystem": "Web" } },
+            { "@type": "ListItem", "position": 3, "item": { "@type": "SoftwareApplication", "name": "Meu primeiro site", "description": "Landing page responsiva criada para apresentar uma marca com impacto visual, hierarquia e navegação clara.", "url": "https://samueldevmi.github.io/portfolio/primeiro-projeto/index.html", "applicationCategory": "WebApplication", "operatingSystem": "Web" } },
+            { "@type": "ListItem", "position": 4, "item": { "@type": "SoftwareApplication", "name": "Controle de gastos", "description": "Aplicação interativa para acompanhar gastos, com resumo financeiro, filtros e dados salvos numa API REST de verdade.", "url": "https://samueldevmi.github.io/portfolio/controle-gastos/index.html", "applicationCategory": "FinanceApplication", "operatingSystem": "Web, Android, iOS" } },
+            { "@type": "ListItem", "position": 5, "item": { "@type": "SoftwareApplication", "name": "TaskFlow", "description": "Organizador de tarefas para priorizar o dia, acompanhar entregas e manter tudo em ordem.", "url": "https://samueldevmi.github.io/portfolio/taskflow/index.html", "applicationCategory": "BusinessApplication", "operatingSystem": "Web" } },
+            { "@type": "ListItem", "position": 6, "item": { "@type": "SoftwareApplication", "name": "FocusFlow", "description": "Timer Pomodoro para sessões de foco, pausas equilibradas e registro de ciclos concluídos.", "url": "https://samueldevmi.github.io/portfolio/focusflow/index.html", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Web" } },
+            { "@type": "ListItem", "position": 7, "item": { "@type": "SoftwareApplication", "name": "FlowBoard", "description": "Quadro Kanban completo para organizar projetos em colunas, mover tarefas e acompanhar prioridades.", "url": "https://samueldevmi.github.io/portfolio/flowboard/index.html", "applicationCategory": "BusinessApplication", "operatingSystem": "Web" } },
+            { "@type": "ListItem", "position": 8, "item": { "@type": "SoftwareApplication", "name": "Planejador de Treino", "description": "Aplicação de terminal para montar a rotina semanal de treinos, com interface colorida, dados em JSON e testes automatizados.", "url": "https://github.com/SamueldevmI/portfolio/tree/main/treino-planner", "applicationCategory": "HealthApplication", "operatingSystem": "CLI / Python" } },
+            { "@type": "ListItem", "position": 9, "item": { "@type": "SoftwareApplication", "name": "Controle de Gastos — API", "description": "Versão backend do controle de gastos: API REST com banco de dados, validação de entrada e testes automatizados.", "url": "https://samueldevmi.github.io/portfolio/gastos-api-demo/index.html", "applicationCategory": "DeveloperApplication", "operatingSystem": "Web" } }
         ]
     }
     </script>
@@ -214,10 +232,11 @@
                     <div class="projeto-visual visual-print" style="--acento:#8b5cf6" role="img" aria-label="Captura de tela do site Nexus Studio" data-stack="HTML · CSS · JavaScript">
                         <button type="button" class="botao-flip" aria-label="Ver tecnologias usadas" aria-pressed="false">⇄</button>
                         <button type="button" class="botao-compartilhar" data-compartilhar="./primeiro-projeto/index.html" data-compartilhar-titulo="Meu primeiro site" aria-label="Compartilhar projeto Meu primeiro site">⤴</button>
-                        <div class="print-janela">
+                        <figure class="print-janela">
                             <div class="print-barra"><i></i><i></i><i></i><span>Nexus Studio</span></div>
                             <img src="imagem/projetos/nexus.webp" alt="" width="1100" height="688" loading="lazy" decoding="async">
-                        </div>
+                            <figcaption class="v-oculto">Captura de tela: Nexus Studio</figcaption>
+                        </figure>
                     </div>
                     <div class="card-conteudo">
                         <p class="tag">HTML · CSS · JavaScript</p>
@@ -231,10 +250,11 @@
                     <div class="projeto-visual visual-print" style="--acento:#6d5ce8" role="img" aria-label="Captura de tela do app TaskFlow, com a lista de tarefas e o progresso do dia" data-stack="JavaScript · LocalStorage">
                         <button type="button" class="botao-flip" aria-label="Ver tecnologias usadas" aria-pressed="false">⇄</button>
                         <button type="button" class="botao-compartilhar" data-compartilhar="./taskflow/index.html" data-compartilhar-titulo="TaskFlow" aria-label="Compartilhar projeto TaskFlow">⤴</button>
-                        <div class="print-janela">
+                        <figure class="print-janela">
                             <div class="print-barra"><i></i><i></i><i></i><span>TaskFlow</span></div>
                             <img src="imagem/projetos/taskflow.webp" alt="" width="1100" height="688" loading="lazy" decoding="async">
-                        </div>
+                            <figcaption class="v-oculto">Captura de tela: TaskFlow</figcaption>
+                        </figure>
                     </div>
                     <div class="card-conteudo">
                         <p class="tag">JavaScript · LocalStorage</p>
@@ -248,10 +268,11 @@
                     <div class="projeto-visual visual-print" style="--acento:#e5604a" role="img" aria-label="Captura de tela do app FocusFlow, com o cronômetro Pomodoro rodando" data-stack="JavaScript · Timer">
                         <button type="button" class="botao-flip" aria-label="Ver tecnologias usadas" aria-pressed="false">⇄</button>
                         <button type="button" class="botao-compartilhar" data-compartilhar="./focusflow/index.html" data-compartilhar-titulo="FocusFlow" aria-label="Compartilhar projeto FocusFlow">⤴</button>
-                        <div class="print-janela">
+                        <figure class="print-janela">
                             <div class="print-barra"><i></i><i></i><i></i><span>FocusFlow</span></div>
                             <img src="imagem/projetos/focusflow.webp" alt="" width="1100" height="688" loading="lazy" decoding="async">
-                        </div>
+                            <figcaption class="v-oculto">Captura de tela: FocusFlow</figcaption>
+                        </figure>
                     </div>
                     <div class="card-conteudo">
                         <p class="tag">JavaScript · Timer</p>
@@ -265,10 +286,11 @@
                     <div class="projeto-visual visual-print" style="--acento:#b18cff" role="img" aria-label="Captura de tela do app FlowBoard, com o quadro Kanban em três colunas" data-stack="JavaScript · Drag and Drop">
                         <button type="button" class="botao-flip" aria-label="Ver tecnologias usadas" aria-pressed="false">⇄</button>
                         <button type="button" class="botao-compartilhar" data-compartilhar="./flowboard/index.html" data-compartilhar-titulo="FlowBoard" aria-label="Compartilhar projeto FlowBoard">⤴</button>
-                        <div class="print-janela">
+                        <figure class="print-janela">
                             <div class="print-barra"><i></i><i></i><i></i><span>FlowBoard</span></div>
                             <img src="imagem/projetos/flowboard.webp" alt="" width="1100" height="688" loading="lazy" decoding="async">
-                        </div>
+                            <figcaption class="v-oculto">Captura de tela: FlowBoard</figcaption>
+                        </figure>
                     </div>
                     <div class="card-conteudo">
                         <p class="tag">JavaScript · Drag and Drop</p>
@@ -361,29 +383,29 @@
                 <h3 class="faq-titulo">Perguntas frequentes</h3>
                 <div class="faq-colunas">
                 <div class="faq-coluna">
-                <details class="faq-item" name="faq">
+                <details class="faq-item" name="faq" id="faq-preco">
                     <summary>Quanto custa um projeto?</summary>
                     <p>Depende do tamanho e do que ele precisa ter. Depois que eu entender a sua ideia, envio uma proposta com o valor.</p>
                 </details>
-                <details class="faq-item" name="faq">
+                <details class="faq-item" name="faq" id="faq-prazo">
                     <summary>Quanto tempo leva?</summary>
                     <p>Depende do projeto: uma página simples é mais rápida que um sistema completo. Junto com a proposta, já passo o prazo.</p>
                 </details>
-                <details class="faq-item" name="faq">
+                <details class="faq-item" name="faq" id="faq-conteudo">
                     <summary>Preciso ter logo, textos e fotos antes de começar?</summary>
                     <p>Ajuda bastante, mas não é obrigatório. Se faltar alguma coisa, a gente combina como resolver.</p>
                 </details>
                 </div>
                 <div class="faq-coluna">
-                <details class="faq-item" name="faq">
+                <details class="faq-item" name="faq" id="faq-dominio">
                     <summary>E o endereço na internet (domínio) e a hospedagem?</summary>
                     <p>Explico as opções e ajudo você a escolher. Se você já tem um domínio, dá para aproveitar.</p>
                 </details>
-                <details class="faq-item" name="faq">
+                <details class="faq-item" name="faq" id="faq-suporte">
                     <summary>Tem suporte depois da entrega?</summary>
                     <p>Depois da entrega continuo por perto para tirar dúvidas. Ajustes maiores a gente combina caso a caso.</p>
                 </details>
-                <details class="faq-item" name="faq">
+                <details class="faq-item" name="faq" id="faq-pagamento">
                     <summary>Como funciona o pagamento?</summary>
                     <p>A forma de pagamento é combinada na proposta, antes de começar.</p>
                 </details>
@@ -399,9 +421,9 @@
             </div>
             <ol class="lista-jornada linha-tempo">
                 <li><article><span class="lt-data"><time datetime="2026-08-05"><b>05 Ago</b> 2026</time></span><div><h3>Portfólio no ar</h3><p>Publiquei o portfólio com os primeiros projetos: landing page, TaskFlow, FocusFlow, FlowBoard e Controle de gastos.</p><ul class="lt-tags"><li>HTML</li><li>CSS</li><li>JavaScript</li></ul></div></article></li>
-                <li><article><span class="lt-data"><time datetime="2026-08-06"><b>06 Ago</b> 2026</time></span><div><h3>Primeiros passos no back-end</h3><p>Planejador de treino em Python, com testes, e a API REST do controle de gastos (Flask + SQLAlchemy) no ar, com testes automáticos no GitHub Actions.</p><ul class="lt-tags"><li>Python</li><li>Flask</li><li>SQL</li><li>CI</li></ul></div></article></li>
+                <li><article><span class="lt-data"><time datetime="2026-08-06"><b>06 Ago</b> 2026</time></span><div><h3>Primeiros passos no back-end</h3><p>Planejador de treino em Python, com testes, e a <abbr title="Interface de Programação de Aplicações: a porta por onde outros programas conversam com um sistema">API</abbr> do controle de gastos (Flask + SQLAlchemy) no ar, com testes automáticos no GitHub Actions.</p><ul class="lt-tags"><li>Python</li><li>Flask</li><li>SQL</li><li>CI</li></ul></div></article></li>
                 <li><article><span class="lt-data"><time datetime="2026-08-14"><b>14 Ago</b> 2026</time></span><div><h3>Portfólio interativo</h3><p>Terminal no topo, filtro de projetos, demos embutidas, paleta de comandos (Ctrl+K), tour guiado e atividade ao vivo do GitHub.</p><ul class="lt-tags"><li>JavaScript</li><li>UX</li></ul></div></article></li>
-                <li><article><span class="lt-data"><time datetime="2026-08-27"><b>27 Ago</b> 2026</time></span><div><h3>App que instala no celular</h3><p>O controle de gastos virou PWA: instala como aplicativo e funciona sem internet. Em 5 de setembro ganhou edição de lançamentos.</p><ul class="lt-tags"><li>PWA</li><li>API</li></ul></div></article></li>
+                <li><article><span class="lt-data"><time datetime="2026-08-27"><b>27 Ago</b> 2026</time></span><div><h3>App que instala no celular</h3><p>O controle de gastos virou <abbr title="Progressive Web App: um site que dá pra instalar como aplicativo">PWA</abbr>: instala como aplicativo e funciona sem internet. Em 5 de setembro ganhou edição de lançamentos.</p><ul class="lt-tags"><li>PWA</li><li>API</li></ul></div></article></li>
                 <li><article><span class="lt-data"><time datetime="2026-09-19"><b>19 Set</b> 2026</time></span><div><h3>Foco em clientes</h3><p>Orçamento em passos, botão de WhatsApp e o &ldquo;Quero um assim&rdquo; em cada projeto: o portfólio passou a atender quem quer contratar.</p><ul class="lt-tags"><li>UX</li><li>WhatsApp</li></ul></div></article></li>
                 <li><article><span class="lt-data"><time datetime="2026-09-20"><b>20 Set</b> 2026</time></span><div><h3>Loja online e app de música</h3><p>Loja cyberpunk de demonstração com carrinho que fecha o pedido no WhatsApp, e o Eldev Music, app de música instalável com fila e playlists.</p><ul class="lt-tags"><li>PWA</li><li>E-commerce</li></ul></div></article></li>
                 <li><article class="lt-agora"><span class="lt-data"><b>Agora</b> em construção</span><div><h3>O que vem por aí</h3><p id="trabalhandoAgora" class="trabalhando-agora" hidden></p><p>Próximo passo: aplicações cada vez mais completas, com banco de dados e login.</p></div></article></li>
@@ -414,15 +436,15 @@
             <p>Prefere conversar direto? Me chame no WhatsApp. Também estou no LinkedIn e no GitHub.</p>
             <div class="contato-acoes">
                 <a class="botao botao-principal" href="https://wa.me/5567996034205?text=Oi%2C%20Samuel%21%20Vi%20seu%20portf%C3%B3lio%20e%20queria%20pedir%20um%20or%C3%A7amento.%20Meu%20projeto%20%C3%A9%3A%20" target="_blank" rel="noopener noreferrer">Falar direto no WhatsApp</a>
-                <a class="botao botao-secundario" href="https://www.linkedin.com/in/samuelrondon-dev/?utm_source=portfolio&utm_medium=contato&utm_campaign=site" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
-                <a class="botao botao-secundario" href="https://github.com/SamueldevmI" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+                <a class="botao botao-secundario" href="https://www.linkedin.com/in/samuelrondon-dev/?utm_source=portfolio&utm_medium=contato&utm_campaign=site" target="_blank" rel="me noopener noreferrer">LinkedIn ↗</a>
+                <a class="botao botao-secundario" href="https://github.com/SamueldevmI" target="_blank" rel="me noopener noreferrer">GitHub ↗</a>
                 <a class="botao botao-secundario" href="curriculo-samuel-mickael.pdf" download="Curriculo_Samuel_Mickael.pdf">Baixar currículo (PDF)</a>
                 <button type="button" class="botao botao-secundario" id="botaoCopiarLink">Copiar link do LinkedIn</button>
             </div>
         </section>
     </main>
 
-    <footer>© <span id="ano"></span> Samuel Mickael. Feito com dedicação. · <a href="https://github.com/SamueldevmI" target="_blank" rel="noopener noreferrer">GitHub</a> · <a class="link-linkedin" href="https://www.linkedin.com/in/samuelrondon-dev/?utm_source=portfolio&utm_medium=footer&utm_campaign=site" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn de Samuel Mickael"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>LinkedIn</a> · <button type="button" id="botaoTour" class="link-rodape">Tour rápido</button>
+    <footer>© <span id="ano"></span> Samuel Mickael. Feito com dedicação. · <a href="https://github.com/SamueldevmI" target="_blank" rel="me noopener noreferrer">GitHub</a> · <a class="link-linkedin" href="https://www.linkedin.com/in/samuelrondon-dev/?utm_source=portfolio&utm_medium=footer&utm_campaign=site" target="_blank" rel="me noopener noreferrer" aria-label="LinkedIn de Samuel Mickael"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>LinkedIn</a> · <button type="button" id="botaoTour" class="link-rodape">Tour rápido</button>
         <div class="selo-brilho"><span class="selo-ponto" aria-hidden="true"></span><img class="selo-visitas" src="https://visitor-badge.laobi.icu/badge?page_id=samueldevmi.github.io.portfolio&color=5df4d0&text_color=061018" alt="Contador de visitas do portfólio" loading="lazy" width="94" height="20"></div>
     </footer>
     <a class="orcamento-fixo" href="#orcamento">Pedir orçamento</a>

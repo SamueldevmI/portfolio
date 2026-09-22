@@ -1,0 +1,16 @@
+{
+    "name": "Samuel Mickael | Desenvolvedor Web & Mobile",
+    "short_name": "Samuel Mickael",
+    "description": "Sites, sistemas e aplicativos sob medida. Veja os projetos e peça um orçamento.",
+    "start_url": "./?instalado=1",
+    "scope": "./",
+    "display": "standalone",
+    "orientation": "portrait-primary",
+    "background_color": "#0e0524",
+    "theme_color": "#0e0524",
+    "lang": "pt-BR",
+    "icons": [
+        { "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+        { "src": "imagem/apple-touch-icon.png", "sizes": "180x180", "type": "image/png", "purpose": "any" }
+    ]
+}
