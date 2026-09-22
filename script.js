@@ -823,20 +823,62 @@ if (linksSecao.length) {
     });
 }
 
-/* Botão "Me surpreenda" */
+/* Botão "Qual é a sua cara?": mostra o tipo de projeto e pula pro que combina.
+   O atalho da paleta de comandos (Ctrl+K) continua chamando surpreenderProjeto()
+   direto, pulando pra qualquer um visível — sem abrir os chips. */
 const botaoSurpresa = document.getElementById("botaoSurpresa");
+const opcoesSurpresa = document.getElementById("surpresaOpcoes");
 
-function surpreenderProjeto() {
-    const visiveis = Array.from(cardsProjeto).filter((card) => !card.classList.contains("card-oculto"));
-    if (!visiveis.length) return;
-    const escolhido = visiveis[Math.floor(Math.random() * visiveis.length)];
-    escolhido.scrollIntoView({ behavior: prefereMenosMovimento ? "instant" : "smooth", block: "center" });
-    cardsProjeto.forEach((card) => card.classList.remove("card-em-foco"));
-    escolhido.classList.add("card-em-foco");
-    setTimeout(() => escolhido.classList.remove("card-em-foco"), 2200);
+function visiveisAgora() {
+    return Array.from(cardsProjeto).filter((card) => !card.classList.contains("card-oculto"));
 }
 
-botaoSurpresa?.addEventListener("click", surpreenderProjeto);
+function destacarProjeto(escolhido) {
+    if (!escolhido) return;
+    escolhido.scrollIntoView({ behavior: prefereMenosMovimento ? "instant" : "smooth", block: "center" });
+    cardsProjeto.forEach((card) => { card.classList.remove("card-em-foco"); card.querySelector(".combina-selo")?.remove(); });
+    escolhido.classList.add("card-em-foco");
+    const selo = document.createElement("span");
+    selo.className = "combina-selo";
+    selo.textContent = "✨ É essa!";
+    escolhido.appendChild(selo);
+    requestAnimationFrame(() => selo.classList.add("mostrar"));
+    setTimeout(() => {
+        escolhido.classList.remove("card-em-foco");
+        selo.remove();
+    }, 2400);
+}
+
+function surpreenderProjeto() {
+    const visiveis = visiveisAgora();
+    if (!visiveis.length) return;
+    destacarProjeto(visiveis[Math.floor(Math.random() * visiveis.length)]);
+}
+
+function escolherPorTipo(tipo) {
+    const visiveis = visiveisAgora();
+    const combinam = tipo === "qualquer" ? visiveis : visiveis.filter((card) => card.querySelector(".card-orcamento")?.dataset.orcamentoTipo === tipo);
+    const lista = combinam.length ? combinam : visiveis;
+    if (!lista.length) return;
+    destacarProjeto(lista[Math.floor(Math.random() * lista.length)]);
+}
+
+if (botaoSurpresa && opcoesSurpresa) {
+    botaoSurpresa.addEventListener("click", () => {
+        const abrir = opcoesSurpresa.hidden;
+        opcoesSurpresa.hidden = !abrir;
+        botaoSurpresa.setAttribute("aria-expanded", String(abrir));
+        botaoSurpresa.classList.toggle("is-ativo", abrir);
+    });
+    opcoesSurpresa.querySelectorAll("[data-tipo]").forEach((chip) => {
+        chip.addEventListener("click", () => {
+            escolherPorTipo(chip.dataset.tipo);
+            opcoesSurpresa.hidden = true;
+            botaoSurpresa.setAttribute("aria-expanded", "false");
+            botaoSurpresa.classList.remove("is-ativo");
+        });
+    });
+}
 
 /* Recompensa por tempo de permanência */
 setTimeout(() => {

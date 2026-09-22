@@ -184,7 +184,14 @@
             <div class="filtros-projetos" role="group" aria-label="Filtrar projetos por tecnologia">
                 <button type="button" class="chip-filtro is-ativo" data-filtro="todos">Todos</button>
                 <button type="button" class="chip-filtro" data-filtro="javascript">JavaScript</button>
-                <button type="button" class="botao-surpresa" id="botaoSurpresa">🎲 Me surpreenda</button>
+                <button type="button" class="botao-surpresa" id="botaoSurpresa" aria-expanded="false" aria-controls="surpresaOpcoes">🎯 Qual é a sua cara?</button>
+                <span class="surpresa-opcoes" id="surpresaOpcoes" role="group" aria-label="Escolha o tipo de projeto" hidden>
+                    <span class="surpresa-pergunta">O que você quer criar?</span>
+                    <button type="button" class="chip-surpresa" data-tipo="site">Site</button>
+                    <button type="button" class="chip-surpresa" data-tipo="sistema">Sistema</button>
+                    <button type="button" class="chip-surpresa" data-tipo="app">App</button>
+                    <button type="button" class="chip-surpresa" data-tipo="qualquer">Surpreenda</button>
+                </span>
             </div>
             <div id="lista-projetos" class="lista-projetos">
                 <article class="card-projeto" data-tecnologias="javascript html css api pwa git" data-destaque data-largo>

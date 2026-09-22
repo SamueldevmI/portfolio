@@ -586,3 +586,29 @@ footer a:focus-visible::after, footer .link-rodape:focus-visible::after { transf
 /* Confete simples ao terminar o orçamento (sem canvas nem biblioteca) */
 .confete { position: fixed; top: -12px; z-index: 90; width: 8px; height: 14px; pointer-events: none; border-radius: 1px; }
 @keyframes cair-confete { to { transform: translateY(105vh) rotate(540deg); opacity: 0; } }
+
+/* ---------- "Qual é a sua cara?": chips que aparecem e o selo no card escolhido ---------- */
+.botao-surpresa.is-ativo { background: var(--pink); color: #12062e; }
+.surpresa-opcoes { display: contents; }
+.surpresa-opcoes[hidden] { display: none; }
+.surpresa-pergunta { align-self: center; color: var(--muted); font: .72rem "DM Mono", monospace; white-space: nowrap; }
+.chip-surpresa { padding: 8px 16px; border: 1px solid var(--pink); border-radius: 999px; min-height: 40px; background: transparent; color: var(--pink); font: .72rem "DM Mono", monospace; cursor: pointer; transition: .25s ease; }
+@media (hover: hover) { .chip-surpresa:hover { background: var(--pink); color: #12062e; } }
+.chip-surpresa:active { transform: scale(.94); }
+.surpresa-opcoes:not([hidden]) .surpresa-pergunta,
+.surpresa-opcoes:not([hidden]) .chip-surpresa { animation: surpresa-entra .35s cubic-bezier(.2,.8,.2,1) backwards; }
+.surpresa-opcoes:not([hidden]) .chip-surpresa:nth-of-type(1) { animation-delay: .03s; }
+.surpresa-opcoes:not([hidden]) .chip-surpresa:nth-of-type(2) { animation-delay: .09s; }
+.surpresa-opcoes:not([hidden]) .chip-surpresa:nth-of-type(3) { animation-delay: .15s; }
+.surpresa-opcoes:not([hidden]) .chip-surpresa:nth-of-type(4) { animation-delay: .21s; }
+@keyframes surpresa-entra { from { opacity: 0; transform: translateY(-4px) scale(.92); } }
+
+.combina-selo { position: absolute; top: 12px; left: 50%; z-index: 5; padding: 5px 12px; border-radius: 999px; background: var(--pink); color: #12062e; font: 600 .68rem "DM Mono", monospace; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; opacity: 0; transform: translate(-50%, -6px) scale(.9); transition: opacity .3s ease, transform .3s ease; pointer-events: none; box-shadow: 0 8px 20px -6px color-mix(in srgb, var(--pink) 60%, transparent); }
+.combina-selo.mostrar { opacity: 1; transform: translate(-50%, 0) scale(1); }
+@keyframes foco-pulso { 0%, 100% { box-shadow: 0 0 0 1px var(--pink), 0 22px 48px -18px color-mix(in srgb, var(--pink) 45%, transparent); } 45% { box-shadow: 0 0 0 2px var(--pink), 0 0 55px -8px color-mix(in srgb, var(--pink) 70%, transparent); } }
+.card-em-foco { animation: foco-pulso 1.1s ease; }
+@media (prefers-reduced-motion: reduce) {
+    .surpresa-opcoes .chip-surpresa, .surpresa-opcoes .surpresa-pergunta { animation: none; }
+    .combina-selo { transition: none; }
+    .card-em-foco { animation: none; }
+}
