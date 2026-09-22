@@ -653,4 +653,213 @@
             }
         });
     })();
+
+    /* ---------- Braimstorm de CSS/JS (2026-09-22, parte 2) ---------- */
+
+    /* Indicador deslizante atrás do chip de filtro ativo. */
+    (function indicadorFiltro() {
+        if (typeof chipsFiltro === "undefined" || chipsFiltro.length < 2) return;
+        const grupo = document.querySelector(".filtros-projetos");
+        if (!grupo) return;
+        const indicador = document.createElement("span");
+        indicador.className = "chip-indicador";
+        indicador.setAttribute("aria-hidden", "true");
+        grupo.prepend(indicador);
+        function mover() {
+            const ativo = grupo.querySelector(".chip-filtro.is-ativo");
+            if (!ativo) { indicador.style.opacity = "0"; return; }
+            indicador.style.opacity = "1";
+            indicador.style.width = ativo.offsetWidth + "px";
+            indicador.style.height = ativo.offsetHeight + "px";
+            indicador.style.transform = `translate(${ativo.offsetLeft}px, ${ativo.offsetTop}px)`;
+        }
+        chipsFiltro.forEach((chip) => chip.addEventListener("click", () => requestAnimationFrame(mover)));
+        window.addEventListener("resize", () => requestAnimationFrame(mover));
+        mover();
+    })();
+
+    /* Sombra nas bordas do carrossel de projetos no celular, avisando que dá pra arrastar mais. */
+    (function sombraCarrossel() {
+        const lista = document.getElementById("lista-projetos");
+        if (!lista) return;
+        let quadro = 0;
+        function atualizar() {
+            lista.classList.toggle("sombra-esq", lista.scrollLeft > 4);
+            lista.classList.toggle("sombra-dir", lista.scrollLeft < lista.scrollWidth - lista.clientWidth - 4);
+        }
+        lista.addEventListener("scroll", () => { cancelAnimationFrame(quadro); quadro = requestAnimationFrame(atualizar); }, { passive: true });
+        new MutationObserver(() => requestAnimationFrame(atualizar)).observe(lista, { subtree: true, attributes: true, attributeFilter: ["class"] });
+        window.addEventListener("resize", () => requestAnimationFrame(atualizar));
+        atualizar();
+    })();
+
+    /* Anel de progresso de leitura ao redor do botão "voltar ao topo". */
+    (function anelTopo() {
+        const botao = document.querySelector(".voltar-topo");
+        if (!botao) return;
+        const svgNS = "http://www.w3.org/2000/svg";
+        const raio = 20;
+        const circunferencia = 2 * Math.PI * raio;
+        const svg = document.createElementNS(svgNS, "svg");
+        svg.setAttribute("class", "anel-topo-progresso");
+        svg.setAttribute("viewBox", "0 0 44 44");
+        svg.setAttribute("aria-hidden", "true");
+        const trilho = document.createElementNS(svgNS, "circle");
+        trilho.setAttribute("cx", "22");
+        trilho.setAttribute("cy", "22");
+        trilho.setAttribute("r", String(raio));
+        trilho.setAttribute("class", "anel-trilho");
+        const barra = document.createElementNS(svgNS, "circle");
+        barra.setAttribute("cx", "22");
+        barra.setAttribute("cy", "22");
+        barra.setAttribute("r", String(raio));
+        barra.setAttribute("class", "anel-barra");
+        barra.style.strokeDasharray = String(circunferencia);
+        barra.style.strokeDashoffset = String(circunferencia);
+        svg.append(trilho, barra);
+        botao.prepend(svg);
+
+        let quadro = 0;
+        function atualizar() {
+            const alturaTotal = document.documentElement.scrollHeight - window.innerHeight;
+            const progresso = alturaTotal > 0 ? Math.min(1, Math.max(0, window.scrollY / alturaTotal)) : 0;
+            barra.style.strokeDashoffset = String(circunferencia * (1 - progresso));
+        }
+        window.addEventListener("scroll", () => { cancelAnimationFrame(quadro); quadro = requestAnimationFrame(atualizar); }, { passive: true });
+        window.addEventListener("resize", () => requestAnimationFrame(atualizar));
+        atualizar();
+    })();
+
+    /* Estrelas e forks somados dos repositórios, perto do total de contribuições. O número vem de
+       script.js (reaproveita a mesma busca do "trabalhando agora em", sem gastar outra chamada). */
+    (function estrelasGithub() {
+        const alvo = document.querySelector(".gh-cab");
+        if (!alvo) return;
+        function mostrar(estrelas, forks) {
+            let el = document.getElementById("ghEstrelas");
+            if (!el) {
+                el = document.createElement("span");
+                el.id = "ghEstrelas";
+                el.className = "gh-estrelas";
+                alvo.append(el);
+            }
+            el.textContent = `⭐ ${estrelas} · 🍴 ${forks}`;
+        }
+        window.mostrarEstrelasGithub = mostrar;
+        try {
+            const salvo = JSON.parse(localStorage.getItem("gh-estrelas-v1") || "null");
+            if (salvo && typeof salvo.estrelas === "number") mostrar(salvo.estrelas, salvo.forks || 0);
+        } catch { /* sem armazenamento */ }
+    })();
+
+    /* Navegar os cards de projeto com as setas do teclado, quando um link do card está focado. */
+    (function navegarCartoesTeclado() {
+        const lista = document.getElementById("lista-projetos");
+        if (!lista) return;
+        function cartoesVisiveis() {
+            return Array.from(lista.querySelectorAll(".card-projeto")).filter((c) => !c.classList.contains("card-oculto"));
+        }
+        lista.addEventListener("keydown", (evento) => {
+            if (!["ArrowRight", "ArrowLeft", "Home", "End"].includes(evento.key)) return;
+            const cartao = evento.target.closest(".card-projeto");
+            if (!cartao) return;
+            const cartoes = cartoesVisiveis();
+            const indice = cartoes.indexOf(cartao);
+            if (indice === -1) return;
+            let alvo = null;
+            if (evento.key === "ArrowRight") alvo = cartoes[indice + 1];
+            else if (evento.key === "ArrowLeft") alvo = cartoes[indice - 1];
+            else if (evento.key === "Home") alvo = cartoes[0];
+            else if (evento.key === "End") alvo = cartoes[cartoes.length - 1];
+            if (!alvo) return;
+            evento.preventDefault();
+            const focavel = alvo.querySelector(".link-projeto") || alvo.querySelector("a, button");
+            focavel?.focus();
+            alvo.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth", block: "nearest", inline: "center" });
+        });
+    })();
+
+    /* Botão próprio de instalar o site como app: aparece no rodapé só quando o navegador oferece. */
+    (function instalarApp() {
+        let evento = null;
+        let botao = null;
+        window.addEventListener("beforeinstallprompt", (e) => {
+            e.preventDefault();
+            evento = e;
+            if (botao) { botao.hidden = false; return; }
+            const footer = document.querySelector("footer");
+            if (!footer) return;
+            botao = document.createElement("button");
+            botao.type = "button";
+            botao.className = "link-rodape link-instalar";
+            botao.textContent = "📲 Instalar no celular";
+            botao.addEventListener("click", async () => {
+                if (!evento) return;
+                evento.prompt();
+                await evento.userChoice;
+                botao.hidden = true;
+                evento = null;
+            });
+            footer.append(" · ", botao);
+        });
+        window.addEventListener("appinstalled", () => { if (botao) botao.hidden = true; });
+    })();
+
+    /* Baixar o portfólio inteiro em PDF (todos os projetos), pela caixa de impressão do navegador. */
+    (function baixarPortfolioPdf() {
+        const botoes = document.querySelectorAll("[data-baixar-portfolio]");
+        if (!botoes.length) return;
+        const impresso = document.createElement("div");
+        impresso.className = "portfolio-impresso";
+        impresso.setAttribute("aria-hidden", "true");
+        document.body.append(impresso);
+
+        function montar() {
+            const partes = [
+                "<h1>Portfólio — Samuel Mickael</h1>",
+                `<p>${location.origin}${location.pathname}</p>`,
+                "<ol>"
+            ];
+            document.querySelectorAll(".card-projeto").forEach((card) => {
+                const nome = card.querySelector("h3")?.textContent.trim() || "";
+                const desc = card.querySelector(".card-conteudo p:not(.tag)")?.textContent.trim() || "";
+                const link = card.querySelector(".link-projeto")?.href || "";
+                partes.push(`<li><strong>${nome}</strong><br>${desc}${link ? `<br><small>${link}</small>` : ""}</li>`);
+            });
+            document.querySelectorAll(".mini-projeto").forEach((a) => {
+                const nome = a.querySelector(".mini-projeto-nome")?.textContent.trim() || "";
+                const tag = a.querySelector(".mini-projeto-tag")?.textContent.trim() || "";
+                partes.push(`<li><strong>${nome}</strong><br>${tag}<br><small>${a.href}</small></li>`);
+            });
+            partes.push("</ol>");
+            impresso.innerHTML = partes.join("");
+        }
+
+        botoes.forEach((botao) => botao.addEventListener("click", () => {
+            montar();
+            document.body.classList.add("imprimindo-portfolio");
+            window.print();
+        }));
+        window.addEventListener("afterprint", () => document.body.classList.remove("imprimindo-portfolio"));
+    })();
+
+    /* Desligar animações manualmente, direto no painel de atalhos (tecla "?"). */
+    (function opcaoSemAnimacoes() {
+        const overlay = document.getElementById("atalhosOverlay");
+        const fechar = overlay?.querySelector(".atalhos-fechar");
+        if (!overlay || !fechar) return;
+        const rotulo = document.createElement("label");
+        rotulo.className = "atalhos-opcao";
+        const caixa = document.createElement("input");
+        caixa.type = "checkbox";
+        caixa.id = "semAnimacoesCaixa";
+        rotulo.append(caixa, " Desligar animações do site");
+        fechar.before(rotulo);
+        try { caixa.checked = localStorage.getItem("sem-animacoes") === "1"; } catch { /* sem armazenamento */ }
+        document.documentElement.classList.toggle("sem-animacoes", caixa.checked);
+        caixa.addEventListener("change", () => {
+            document.documentElement.classList.toggle("sem-animacoes", caixa.checked);
+            try { localStorage.setItem("sem-animacoes", caixa.checked ? "1" : "0"); } catch { /* sem armazenamento: vale só nesta visita */ }
+        });
+    })();
 })();

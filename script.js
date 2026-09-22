@@ -153,6 +153,23 @@ function imprimirNoTerminal(texto, classe) {
     terminalSaida.scrollTop = terminalSaida.scrollHeight;
 }
 
+/* Igual a imprimirNoTerminal, mas letra por letra (máquina de escrever de verdade). */
+function digitarNoTerminal(texto, classe) {
+    return new Promise((resolver) => {
+        const p = document.createElement("p");
+        if (classe) p.className = classe;
+        terminalSaida.appendChild(p);
+        let indice = 0;
+        (function letra() {
+            p.textContent = texto.slice(0, indice);
+            terminalSaida.scrollTop = terminalSaida.scrollHeight;
+            indice++;
+            if (indice <= texto.length) setTimeout(letra, 16 + Math.random() * 20);
+            else resolver();
+        })();
+    });
+}
+
 /* Boot sequence no terminal, antes de liberar o prompt */
 if (terminalSaida) {
     const linhasBoot = ["Iniciando sessão...", "Carregando módulos: html, css, javascript...", "Pronto."];
@@ -160,14 +177,15 @@ if (terminalSaida) {
         terminalSaida.innerHTML = '<p>Digite <span class="terminal-prompt">help</span> para conhecer os comandos disponíveis.</p>';
     } else {
         terminalSaida.innerHTML = "";
-        linhasBoot.forEach((linha, indice) => {
-            setTimeout(() => imprimirNoTerminal(linha, "terminal-echo"), indice * 320);
-        });
-        setTimeout(() => {
+        (async () => {
+            for (const linha of linhasBoot) {
+                await digitarNoTerminal(linha, "terminal-echo");
+                await new Promise((r) => setTimeout(r, 160));
+            }
             const p = document.createElement("p");
             p.innerHTML = 'Digite <span class="terminal-prompt">help</span> para conhecer os comandos disponíveis.';
             terminalSaida.appendChild(p);
-        }, linhasBoot.length * 320);
+        })();
     }
 }
 
@@ -432,11 +450,20 @@ async function carregarStatsGithub() {
         const repos = await resposta.json();
         if (!Array.isArray(repos)) return;
 
-        const maisRecente = repos.filter((r) => !r.fork).sort((a, b) => new Date(b.pushed_at) - new Date(a.pushed_at))[0];
+        const proprios = repos.filter((r) => !r.fork);
+        const maisRecente = proprios.sort((a, b) => new Date(b.pushed_at) - new Date(a.pushed_at))[0];
         if (maisRecente) {
             guardarTrabalhando({ em: Date.now(), nome: maisRecente.name });
             mostrarTrabalhando(maisRecente.name);
         }
+
+        // Estrelas e forks somados: aproveita esta mesma busca (a paginação já pediu 100 repositórios),
+        // sem gastar mais uma chamada contra o limite da API. Guardado à parte pra aparecer na hora,
+        // mesmo nas visitas em que o "trabalhando agora em" está em cache e nem chega até aqui.
+        const estrelas = proprios.reduce((soma, r) => soma + (r.stargazers_count || 0), 0);
+        const forks = proprios.reduce((soma, r) => soma + (r.forks_count || 0), 0);
+        try { localStorage.setItem("gh-estrelas-v1", JSON.stringify({ estrelas, forks })); } catch { /* sem armazenamento */ }
+        window.mostrarEstrelasGithub?.(estrelas, forks);
     } catch {
         /* sem rede ou API fora do ar: fica o nome guardado, se houver */
     }
