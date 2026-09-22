@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+<title>Jogger Slit Tech</title>
+<defs>
+<linearGradient id="t" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#26234a"/><stop offset="1" stop-color="#0d0c1b"/></linearGradient>
+<filter id="n" x="-50%" y="-50%" width="200%" height="200%" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<g stroke-linejoin="round" stroke-linecap="round" fill="none">
+<path d="M136 44H264L272 196L262 330H224L216 210H184L176 330H138L128 196Z" fill="url(#t)" stroke="#5a5696" stroke-width="2"/>
+<path d="M136 44H264V70H136Z" fill="#151330" stroke="#5a5696" stroke-width="2"/>
+<path d="M150 44V70M176 44V70M224 44V70M250 44V70" stroke="#0a0914" stroke-width="2"/>
+<path d="M180 58H220" stroke="#ff2bd6" stroke-width="3" filter="url(#n)"/>
+<circle cx="180" cy="58" r="4" fill="#ff2bd6" stroke="none"/>
+<circle cx="220" cy="58" r="4" fill="#ff2bd6" stroke="none"/>
+<path d="M200 70V196" stroke="#5a5696" stroke-width="2"/>
+<path d="M220 210V320M180 210V320" stroke="#3a3768" stroke-width="1.6" stroke-opacity=".5"/>
+<path d="M232 130L262 176" stroke="#00f0ff" stroke-width="3" filter="url(#n)"/>
+<rect x="226" y="124" width="12" height="16" rx="2" fill="#0d0c1b" stroke="#00f0ff" stroke-width="2.5"/>
+<path d="M262 300L276 330" stroke="#5a5696" stroke-width="2"/>
+<path d="M262 300L276 330" stroke="#fcee0a" stroke-width="1.5" stroke-dasharray="4 5"/>
+<rect x="222" y="328" width="42" height="22" rx="9" fill="#151330" stroke="#5a5696" stroke-width="2"/>
+<rect x="136" y="328" width="42" height="22" rx="9" fill="#151330" stroke="#5a5696" stroke-width="2"/>
+<path d="M226 334H260M226 340H260M226 346H260" stroke="#0a0914" stroke-width="2"/>
+<path d="M140 334H174M140 340H174M140 346H174" stroke="#0a0914" stroke-width="2"/>
+</g>
+</svg>

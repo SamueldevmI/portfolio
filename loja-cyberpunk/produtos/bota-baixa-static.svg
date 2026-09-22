@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+<title>Bota Baixa Static</title>
+<defs>
+<linearGradient id="t" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#26234a"/><stop offset="1" stop-color="#0d0c1b"/></linearGradient>
+<filter id="n" x="-50%" y="-50%" width="200%" height="200%" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<g stroke-linejoin="round" stroke-linecap="round" fill="none">
+<path d="M150 70H250L256 190C288 196 316 212 320 240V254H144L142 202Z" fill="url(#t)" stroke="#5a5696" stroke-width="2"/>
+<path d="M150 70H250L246 78Q200 88 154 78Z" fill="#0a0914" stroke="none"/>
+<path d="M124 250H344V278Q344 288 334 288H134Q124 288 124 278Z" fill="#151330" stroke="#5a5696" stroke-width="2"/>
+<path d="M138 296H330" stroke="#ff2bd6" stroke-width="4" filter="url(#n)"/>
+<path d="M136 264V276M154 264V276M172 264V276M190 264V276M208 264V276M226 264V276M244 264V276M262 264V276M280 264V276M298 264V276M316 264V276" stroke="#0a0914" stroke-width="2.5"/>
+<path d="M256 92V220" stroke="#00f0ff" stroke-width="3" filter="url(#n)"/>
+<rect x="250" y="88" width="12" height="14" rx="2" fill="#0d0c1b" stroke="#00f0ff" stroke-width="2.5"/>
+<path d="M144 200H256" stroke="#5a5696" stroke-width="9"/>
+<path d="M144 200H256" stroke="#1a1836" stroke-width="5"/>
+<rect x="184" y="192" width="32" height="17" rx="3" fill="#0d0c1b" stroke="#fcee0a" stroke-width="2.5"/>
+</g>
+</svg>

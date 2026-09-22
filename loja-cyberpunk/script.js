@@ -10,7 +10,7 @@ const LOJA = {
 /* ===== Catálogo (preço em centavos). Para usar foto real, troque o "img" ===== */
 const ROUPA = ["P", "M", "G", "GG"];
 const CALCADO = ["38", "39", "40", "41", "42", "43", "44"];
-const CATEGORIAS = ["Casacos", "Camisetas", "Calças", "Calçados", "Acessórios"];
+const CATEGORIAS = ["Casacos", "Camisetas", "Camadas", "Calças", "Calçados", "Acessórios"];
 
 const PRODUTOS = [
     {
@@ -46,6 +46,14 @@ const PRODUTOS = [
         busca: "colete tatico bolsos utilitario vest",
     },
     {
+        id: "blackout", nome: "Trench Blackout", cat: "Casacos", preco: 39990, tam: ROUPA, img: "trench-blackout.svg", novo: true,
+        alt: "Trench coat preto comprido, aberto na frente, com cinto e forro magenta",
+        resumo: "Comprido, aberto e com cinto",
+        desc: "A peça mais recente da coleção: trench comprido até quase o tornozelo, aberto na frente com cinto e um forro que acende em magenta. Pra quem quer entrar numa sala e ser notado.",
+        itens: ["Comprimento longo", "Cinto com fivela", "Forro interno magenta", "Ombros estruturados"],
+        busca: "trench sobretudo casaco longo coat capa",
+    },
+    {
         id: "olho", nome: "Camiseta Olho Digital", cat: "Camisetas", preco: 8990, tam: ROUPA, img: "camiseta-olho.svg",
         alt: "Camiseta preta oversized com um olho neon estampado",
         resumo: "Oversized · estampa neon",
@@ -62,6 +70,22 @@ const PRODUTOS = [
         busca: "camiseta camisa tshirt sol synthwave retro",
     },
     {
+        id: "nyx", nome: "Blusa Gola Alta Nyx", cat: "Camadas", preco: 13990, tam: ROUPA, img: "blusa-gola-alta-nyx.svg",
+        alt: "Blusa preta justa de gola alta e manga longa com costura em ciano no peito",
+        resumo: "Justa · gola alta · manga longa",
+        desc: "Blusa básica de gola alta e manga longa pra usar sozinha ou por baixo do casaco. Corte justo, tecido canelado na gola e nos punhos.",
+        itens: ["Gola alta canelada", "Manga longa com punho ajustado", "Corte justo", "Costura reforçada no peito"],
+        busca: "blusa camisa gola alta manga longa termica base",
+    },
+    {
+        id: "circuit", nome: "Camiseta Manga Longa Circuit", cat: "Camadas", preco: 10990, tam: ROUPA, img: "camiseta-manga-longa-circuit.svg",
+        alt: "Camiseta preta de manga longa com estampa de circuito ciano, magenta e amarelo no peito",
+        resumo: "Manga longa · estampa de circuito",
+        desc: "Camiseta de manga longa com uma estampa de circuito eletrônico no peito, em três cores neon. Boa pra usar sozinha ou de camada por baixo de um colete.",
+        itens: ["Manga longa", "Algodão", "Estampa de circuito no peito", "Punhos canelados"],
+        busca: "camiseta manga longa camisa base segunda pele",
+    },
+    {
         id: "onyx", nome: "Calça Cargo Onyx", cat: "Calças", preco: 21990, tam: ROUPA, img: "calca-cargo-onyx.svg",
         alt: "Calça cargo preta com tiras amarelas nos joelhos",
         resumo: "Cargo com tiras nos joelhos",
@@ -70,12 +94,44 @@ const PRODUTOS = [
         busca: "calca cargo tatica bolsos pants",
     },
     {
+        id: "jogger", nome: "Jogger Slit Tech", cat: "Calças", preco: 18990, tam: ROUPA, img: "calca-jogger-slit.svg",
+        alt: "Calça jogger preta afunilada com zíper diagonal na coxa e punho elástico no tornozelo",
+        resumo: "Afunilada · zíper na coxa",
+        desc: "Jogger de corte afunilado com zíper diagonal na coxa e punho elástico no tornozelo. Mais justa que a cargo, boa pra andar de bicicleta ou skate sem a barra sobrando.",
+        itens: ["Corte afunilado", "Zíper diagonal na coxa", "Punho elástico no tornozelo", "Cordão de ajuste na cintura"],
+        busca: "calca jogger afunilada moletom sweatpants pants",
+    },
+    {
+        id: "reflect", nome: "Calça Reflect Wide", cat: "Calças", preco: 23990, tam: ROUPA, img: "calca-reflect-wide.svg",
+        alt: "Calça preta larga que alarga nas pernas com uma faixa refletiva ciano na lateral",
+        resumo: "Larga · faixa refletiva",
+        desc: "Calça de perna larga que alarga em direção à barra, com uma faixa refletiva na lateral que brilha na luz do flash ou do farol. Cordão de ajuste na cintura.",
+        itens: ["Perna larga, alarga na barra", "Faixa refletiva lateral", "Cordão de ajuste na cintura", "Caimento fluido"],
+        busca: "calca larga pantalona flare wide leg refletiva pants",
+    },
+    {
         id: "nightwalker", nome: "Bota Nightwalker", cat: "Calçados", preco: 34990, tam: CALCADO, img: "bota-nightwalker.svg",
         alt: "Bota tática preta com fivela amarela e cadarço neon magenta",
         resumo: "Cano alto, fivela e sola grossa",
         desc: "Bota de cano alto com cadarço neon, fivela na altura do tornozelo e sola grossa com luz de fundo em ciano.",
         itens: ["Cano alto", "Cadarço neon", "Fivela de ajuste", "Sola grossa antiderrapante"],
         busca: "bota coturno calcado sapato tenis boot",
+    },
+    {
+        id: "volt", nome: "Tênis Chunky Volt", cat: "Calçados", preco: 26990, tam: CALCADO, img: "tenis-chunky-volt.svg",
+        alt: "Tênis preto de sola grossa dupla com detalhe ciano e cadarço magenta",
+        resumo: "Sola grossa dupla · detalhe ciano",
+        desc: "Tênis de sola grossa em duas camadas, com uma faixa ciano entre elas e cadarço magenta. O mais confortável pra andar o dia inteiro.",
+        itens: ["Sola dupla grossa", "Faixa ciano entre as camadas", "Cadarço magenta", "Entressola macia"],
+        busca: "tenis sapatilha chunky sneaker calcado shoe",
+    },
+    {
+        id: "static", nome: "Bota Baixa Static", cat: "Calçados", preco: 27990, tam: CALCADO, img: "bota-baixa-static.svg",
+        alt: "Bota preta baixa até o tornozelo com zíper lateral ciano e fivela amarela",
+        resumo: "Cano curto · zíper lateral",
+        desc: "Bota de cano curto, até o tornozelo, com zíper lateral pra calçar rápido e fivela de ajuste na frente. Mais leve que a Nightwalker, pra quem não precisa do cano alto.",
+        itens: ["Cano curto (tornozelo)", "Zíper lateral", "Fivela de ajuste frontal", "Sola com luz de fundo magenta"],
+        busca: "bota curta ankle boot calcado sapato tatica",
     },
     {
         id: "filterx", nome: "Máscara Filter-X", cat: "Acessórios", preco: 7990, tam: null, img: "mascara-filter-x.svg",
@@ -108,6 +164,25 @@ const PRODUTOS = [
         desc: "Bolsa transversal compacta com zíper magenta, bolso frontal e fivela de encaixe. Leva celular, carteira e fone.",
         itens: ["Alça transversal ajustável", "Bolso frontal", "Zíper neon", "Tamanho único"],
         busca: "bolsa mochila transversal shoulder bag sling acessorio",
+    },
+];
+
+/* ===== Looks prontos: combos de peças que já combinam entre si, um clique adiciona tudo ===== */
+const LOOKS = [
+    {
+        id: "nightwalker-set", nome: "Look Nightwalker",
+        desc: "Bota, calça e colete pra sair sem pensar duas vezes.",
+        itens: [{ id: "nightwalker", tam: "41" }, { id: "onyx", tam: "M" }, { id: "rig3", tam: "M" }],
+    },
+    {
+        id: "ghost-run-set", nome: "Look Ghost Run",
+        desc: "Moletom, viseira e bolsa sling pra andar leve.",
+        itens: [{ id: "ghost", tam: "M" }, { id: "pulse", tam: "" }, { id: "sling", tam: "" }],
+    },
+    {
+        id: "blackout-set", nome: "Look Blackout",
+        desc: "O trench novo com o tênis chunky e a máscara.",
+        itens: [{ id: "blackout", tam: "M" }, { id: "volt", tam: "40" }, { id: "filterx", tam: "" }],
     },
 ];
 
@@ -148,6 +223,7 @@ carrinho = Array.isArray(carrinho) ? carrinho.filter(itemValido) : [];
 const filtro = { cat: "todos", q: "", ordem: "padrao" };
 
 /* ===== Elementos ===== */
+const looksEl = $("#looks");
 const grade = $("#grade");
 const chipsEl = $("#chips");
 const contagemEl = $("#contagem");
@@ -181,9 +257,10 @@ function tamanhosHtml(p, prefixo) {
 }
 
 function cardHtml(p, indice) {
-    return `<li class="card" data-id="${p.id}" style="--i:${indice}">
-        <button class="card-imagem" type="button" data-abrir="${p.id}" aria-label="Ver detalhes de ${esc(p.nome)}">
+    return `<li class="card" data-id="${p.id}" data-cat="${esc(p.cat)}" style="--i:${indice}">
+        <button class="card-imagem" type="button" data-abrir="${p.id}" aria-label="Ver detalhes de ${esc(p.nome)}${p.novo ? ", peça nova" : ""}">
             <img src="produtos/${p.img}" alt="" width="400" height="400" loading="lazy">
+            ${p.novo ? '<span class="selo-novo">Novo</span>' : ""}
             <span class="cod">${codigo(p.id)}</span>
         </button>
         <div class="card-corpo">
@@ -224,6 +301,49 @@ function renderGrade() {
     grade.hidden = lista.length === 0;
     vazioEl.hidden = lista.length !== 0;
     contagemEl.textContent = lista.length === 1 ? "1 produto" : lista.length + " produtos";
+}
+
+/* ===== Looks prontos na tela ===== */
+const lookPrecoTotal = (look) => look.itens.reduce((soma, i) => soma + produto(i.id).preco, 0);
+
+function lookHtml(look) {
+    const imagens = look.itens.map((i) => `<img src="produtos/${produto(i.id).img}" alt="${esc(produto(i.id).nome)}" width="90" height="90" loading="lazy">`).join("");
+    const nomes = look.itens.map((i) => produto(i.id).nome).join(" + ");
+    return `<li class="look-card">
+        <div class="look-imagens">${imagens}</div>
+        <div class="look-corpo">
+            <h3>${esc(look.nome)}</h3>
+            <p class="look-desc">${esc(look.desc)}</p>
+            <p class="look-pecas">${esc(nomes)}</p>
+            <p class="card-preco">${brl(lookPrecoTotal(look))}</p>
+            <button class="botao botao-neon botao-cheio" type="button" data-look-add="${look.id}">Adicionar look completo</button>
+        </div>
+    </li>`;
+}
+
+function renderLooks() {
+    if (!looksEl) return;
+    looksEl.innerHTML = LOOKS.map(lookHtml).join("");
+}
+
+function adicionarLook(lookId) {
+    const look = LOOKS.find((l) => l.id === lookId);
+    if (!look) return;
+    let algumNoMaximo = false;
+    look.itens.forEach((i) => {
+        const existente = carrinho.find((x) => x.id === i.id && x.tam === i.tam);
+        if (existente) {
+            if (existente.qtd < MAX_POR_ITEM) existente.qtd += 1; else algumNoMaximo = true;
+        } else {
+            carrinho.push({ id: i.id, tam: i.tam, qtd: 1 });
+        }
+    });
+    renderCarrinho();
+    botaoCarrinho.classList.remove("bump");
+    void botaoCarrinho.offsetWidth;
+    botaoCarrinho.classList.add("bump");
+    const rotulo = `Look adicionado: ${look.itens.length} peças${algumNoMaximo ? " (uma já estava no máximo por peça)" : ""}`;
+    avisar(rotulo, { rotulo: "Ver carrinho", fazer: () => dlgCarrinho.showModal() });
 }
 
 /* ===== Produto em detalhe ===== */
@@ -383,6 +503,9 @@ document.addEventListener("click", (e) => {
     const abrir = e.target.closest("[data-abrir]");
     if (abrir) { abrirProduto(abrir.dataset.abrir); return; }
 
+    const addLook = e.target.closest("[data-look-add]");
+    if (addLook) { adicionarLook(addLook.dataset.lookAdd); return; }
+
     const add = e.target.closest("[data-add]");
     if (add) {
         const escopo = add.closest("[data-escopo], .card");
@@ -462,3 +585,4 @@ enviarEl.addEventListener("click", () => {
 renderChips();
 renderGrade();
 renderCarrinho();
+renderLooks();

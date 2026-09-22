@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+<title>Calça Reflect Wide</title>
+<defs>
+<linearGradient id="t" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#26234a"/><stop offset="1" stop-color="#0d0c1b"/></linearGradient>
+<filter id="n" x="-50%" y="-50%" width="200%" height="200%" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<g stroke-linejoin="round" stroke-linecap="round" fill="none">
+<path d="M140 44H260L268 190L288 350H236L220 210H180L164 350H112L132 190Z" fill="url(#t)" stroke="#5a5696" stroke-width="2"/>
+<path d="M140 44H260V70H140Z" fill="#151330" stroke="#5a5696" stroke-width="2"/>
+<path d="M156 44V70M180 44V70M220 44V70M244 44V70" stroke="#0a0914" stroke-width="2"/>
+<path d="M176 58H224" stroke="#ff2bd6" stroke-width="3" filter="url(#n)"/>
+<circle cx="176" cy="58" r="4" fill="#ff2bd6" stroke="none"/>
+<circle cx="224" cy="58" r="4" fill="#ff2bd6" stroke="none"/>
+<path d="M200 70V190" stroke="#5a5696" stroke-width="2"/>
+<path d="M240 230Q250 280 270 320M160 230Q150 280 130 320" stroke="#3a3768" stroke-width="1.8" stroke-opacity=".45"/>
+<path d="M264 194L282 346" stroke="#00f0ff" stroke-width="5" filter="url(#n)"/>
+<path d="M264 194L282 346" stroke="#ffffff" stroke-width="1.5" stroke-opacity=".8"/>
+<path d="M236 350H288L282 358H242Z" fill="#0a0914" stroke="none"/>
+<path d="M112 350H164L158 358H118Z" fill="#0a0914" stroke="none"/>
+</g>
+</svg>

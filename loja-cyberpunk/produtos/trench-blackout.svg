@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+<title>Trench Blackout</title>
+<defs>
+<linearGradient id="t" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#26234a"/><stop offset="1" stop-color="#0d0c1b"/></linearGradient>
+<filter id="n" x="-50%" y="-50%" width="200%" height="200%" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<g stroke-linejoin="round" stroke-linecap="round" fill="none">
+<path d="M170 92L130 112L70 300L104 326L138 200L138 388Q200 378 262 372L262 200L296 326L330 300L270 112L230 92Q200 118 170 92Z" fill="url(#t)" stroke="#5a5696" stroke-width="2"/>
+<path d="M148 66L108 96L96 128L142 148L150 108L170 92Z M252 66L292 96L304 128L258 148L250 108L230 92Z" fill="#151330" stroke="#5a5696" stroke-width="2"/>
+<path d="M186 130V378M214 130V378" stroke="#5a5696" stroke-width="2"/>
+<path d="M186 130L200 150L214 130" stroke="#5a5696" stroke-width="2"/>
+<path d="M200 150V376" stroke="#ff2bd6" stroke-width="3" stroke-opacity=".8" filter="url(#n)"/>
+<rect x="122" y="238" width="156" height="18" rx="2" fill="#151330" stroke="#5a5696" stroke-width="2"/>
+<rect x="176" y="234" width="48" height="26" rx="3" fill="#0d0c1b" stroke="#fcee0a" stroke-width="2.5"/>
+<rect x="66" y="296" width="40" height="22" rx="4" fill="#151330" stroke="#5a5696" stroke-width="2"/>
+<rect x="294" y="296" width="40" height="22" rx="4" fill="#151330" stroke="#5a5696" stroke-width="2"/>
+<path d="M138 260Q160 300 148 340M262 260Q240 300 252 340" stroke="#3a3768" stroke-width="2" stroke-opacity=".55"/>
+<path d="M150 360Q200 374 250 360" stroke="#3a3768" stroke-width="1.8" stroke-opacity=".4"/>
+</g>
+</svg>

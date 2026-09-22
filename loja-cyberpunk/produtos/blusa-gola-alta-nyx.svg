@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+<title>Blusa Gola Alta Nyx</title>
+<defs>
+<linearGradient id="t" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#26234a"/><stop offset="1" stop-color="#0d0c1b"/></linearGradient>
+<filter id="n" x="-50%" y="-50%" width="200%" height="200%" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<g stroke-linejoin="round" stroke-linecap="round" fill="none">
+<path d="M172 88L120 100L84 300L112 312L134 180V352H266V180L288 312L316 300L280 100L228 88Q200 108 172 88Z" fill="url(#t)" stroke="#5a5696" stroke-width="2"/>
+<path d="M170 50Q200 34 230 50L228 90Q200 78 172 90Z" fill="#151330" stroke="#5a5696" stroke-width="2"/>
+<path d="M176 58V86M188 54V88M200 52V90M212 54V88M224 58V86" stroke="#0a0914" stroke-width="2"/>
+<rect x="80" y="296" width="36" height="20" rx="4" fill="#151330" stroke="#5a5696" stroke-width="2"/>
+<rect x="284" y="296" width="36" height="20" rx="4" fill="#151330" stroke="#5a5696" stroke-width="2"/>
+<path d="M180 160H220M200 150V170" stroke="#00f0ff" stroke-width="2.5" filter="url(#n)"/>
+<path d="M140 230Q160 250 150 270M260 230Q240 250 250 270" stroke="#3a3768" stroke-width="1.8" stroke-opacity=".5"/>
+</g>
+</svg>

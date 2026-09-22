@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+<title>Camiseta Manga Longa Circuit</title>
+<defs>
+<linearGradient id="t" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#26234a"/><stop offset="1" stop-color="#0d0c1b"/></linearGradient>
+<filter id="n" x="-50%" y="-50%" width="200%" height="200%" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<g stroke-linejoin="round" stroke-linecap="round" fill="none">
+<path d="M152 112L100 132L40 296L90 312L118 216V350H282V216L310 312L360 296L300 132L248 112Q200 144 152 112Z" fill="url(#t)" stroke="#5a5696" stroke-width="2"/>
+<path d="M164 96Q200 122 236 96" stroke="#5a5696" stroke-width="6"/>
+<path d="M170 100Q200 118 230 100" stroke="#0a0914" stroke-width="2"/>
+<rect x="86" y="292" width="30" height="18" rx="4" fill="#151330" stroke="#5a5696" stroke-width="2"/>
+<rect x="284" y="292" width="30" height="18" rx="4" fill="#151330" stroke="#5a5696" stroke-width="2"/>
+<path d="M118 240Q140 260 150 244M282 240Q260 260 250 244" stroke="#3a3768" stroke-width="1.8" stroke-opacity=".5"/>
+<path d="M160 190H200V220H240M160 190V230H180V250M240 220V250H200V260" stroke="#00f0ff" stroke-width="2.5" filter="url(#n)"/>
+<circle cx="160" cy="190" r="4" fill="#00f0ff" stroke="none"/>
+<circle cx="240" cy="220" r="4" fill="#ff2bd6" stroke="none"/>
+<circle cx="200" cy="260" r="4" fill="#fcee0a" stroke="none"/>
+<circle cx="180" cy="250" r="3" fill="#00f0ff" stroke="none"/>
+</g>
+</svg>

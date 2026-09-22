@@ -200,6 +200,19 @@ a { color: var(--ciano); }
 .como h3 { margin-bottom: 2px; font: 600 .98rem var(--fonte); letter-spacing: .08em; text-transform: uppercase; }
 .como p { margin: 0; color: var(--mudo); font-size: .92rem; }
 
+/* ===== looks prontos ===== */
+.looks { padding: 40px 0; border-block: 1px solid var(--linha); background: rgba(16, 14, 32, .4); }
+.looks h2 { margin: 0 0 4px; font: 700 clamp(1.4rem, 3vw, 1.8rem)/1.2 var(--fonte); letter-spacing: .04em; text-transform: uppercase; }
+.looks-sub { margin: 0 0 22px; color: var(--mudo); font-size: .92rem; }
+.looks-grade { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; margin: 0; padding: 0; list-style: none; }
+.look-card { display: flex; flex-direction: column; gap: 12px; padding: 16px; border: 1px solid var(--linha-forte); background: var(--painel); }
+.look-imagens { display: flex; gap: 4px; }
+.look-imagens img { flex: 1; width: 0; min-width: 0; aspect-ratio: 1; background: radial-gradient(circle at 50% 42%, #1f1c40, #0a0916 74%); border: 1px solid var(--linha); padding: 8px; object-fit: contain; }
+.look-corpo h3 { margin: 0 0 2px; font: 600 1.05rem var(--fonte); }
+.look-desc { margin: 0 0 4px; color: var(--mudo); font-size: .88rem; }
+.look-pecas { margin: 0 0 6px; color: #6f6b96; font: 11px var(--mono); letter-spacing: .04em; }
+.look-card .card-preco { margin: 0 0 10px; }
+
 /* ===== coleção ===== */
 .colecao { padding: 56px 0 72px; scroll-margin-top: 70px; }
 #colecao { scroll-margin-top: 70px; }
@@ -253,6 +266,36 @@ a { color: var(--ciano); }
 .card-imagem img, .dp-imagem img { display: block; width: 100%; height: auto; padding: 7%; transition: transform .3s; }
 .card:hover .card-imagem img { transform: scale(1.05); }
 .cod { position: absolute; top: 12px; right: 14px; color: var(--mudo); font: 11px var(--mono); letter-spacing: .1em; }
+.selo-novo { position: absolute; top: 12px; left: 12px; padding: 3px 9px; background: var(--amarelo); color: #100e20; font: 700 11px var(--mono); letter-spacing: .08em; text-transform: uppercase; box-shadow: 0 0 12px rgba(252, 238, 10, .5); }
+
+/* Fundo do quadrado de cada peça varia por categoria, pra grade de 19+ produtos não repetir sempre o mesmo padrão */
+.card[data-cat="Camisetas"] .card-imagem, .card[data-cat="Camadas"] .card-imagem {
+    background:
+        linear-gradient(var(--ciano), var(--ciano)) 10px 10px / 16px 2px no-repeat,
+        linear-gradient(var(--ciano), var(--ciano)) 10px 10px / 2px 16px no-repeat,
+        linear-gradient(var(--magenta), var(--magenta)) calc(100% - 10px) calc(100% - 10px) / 16px 2px no-repeat,
+        linear-gradient(var(--magenta), var(--magenta)) calc(100% - 10px) calc(100% - 10px) / 2px 16px no-repeat,
+        repeating-linear-gradient(0deg, rgba(120, 110, 220, .1) 0 1px, transparent 1px 8px),
+        radial-gradient(circle at 50% 42%, #201c42, #0a0916 74%);
+}
+.card[data-cat="Calças"] .card-imagem, .card[data-cat="Calçados"] .card-imagem {
+    background:
+        linear-gradient(var(--ciano), var(--ciano)) 10px 10px / 16px 2px no-repeat,
+        linear-gradient(var(--ciano), var(--ciano)) 10px 10px / 2px 16px no-repeat,
+        linear-gradient(var(--magenta), var(--magenta)) calc(100% - 10px) calc(100% - 10px) / 16px 2px no-repeat,
+        linear-gradient(var(--magenta), var(--magenta)) calc(100% - 10px) calc(100% - 10px) / 2px 16px no-repeat,
+        repeating-linear-gradient(45deg, rgba(120, 110, 220, .08) 0 2px, transparent 2px 22px),
+        radial-gradient(circle at 50% 42%, #1e1a3e, #0a0916 74%);
+}
+.card[data-cat="Acessórios"] .card-imagem {
+    background:
+        linear-gradient(var(--ciano), var(--ciano)) 10px 10px / 16px 2px no-repeat,
+        linear-gradient(var(--ciano), var(--ciano)) 10px 10px / 2px 16px no-repeat,
+        linear-gradient(var(--magenta), var(--magenta)) calc(100% - 10px) calc(100% - 10px) / 16px 2px no-repeat,
+        linear-gradient(var(--magenta), var(--magenta)) calc(100% - 10px) calc(100% - 10px) / 2px 16px no-repeat,
+        radial-gradient(rgba(120, 110, 220, .18) 1.4px, transparent 1.6px) 0 0 / 18px 18px,
+        radial-gradient(circle at 50% 42%, #1c1938, #0a0916 74%);
+}
 .card-corpo { display: flex; flex: 1; flex-direction: column; gap: 4px; padding: 14px 16px 16px; }
 .card-cat { margin: 0; color: var(--magenta); font: 12px var(--mono); letter-spacing: .14em; text-transform: uppercase; }
 .card-nome { margin: 0; font: 600 1.08rem/1.25 var(--fonte); }
@@ -374,6 +417,9 @@ dialog::backdrop { background: rgba(3, 2, 10, .78); -webkit-backdrop-filter: blu
     .colecao-topo { flex-direction: column; gap: 4px; }
     .carrinho-rodape { max-height: 66%; }
     .dialogo-produto { max-height: calc(100dvh - 16px); }
+    .looks { padding: 28px 0; }
+    .looks-grade { gap: 14px; }
+    .look-card { padding: 12px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
