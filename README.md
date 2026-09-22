@@ -11,6 +11,7 @@ Site pessoal com apresentação, projetos e contato.
 | Projeto | Descrição | Tecnologias |
 |---|---|---|
 | [Fatia Nobre](fatia-nobre/) | Demonstração de atendimento automático por chat: reconhece a pergunta por palavras-chave e responde na hora | HTML, CSS, JavaScript |
+| [Conta a Dois](conta-a-dois/) | Controle de gastos pra casal com backend real: cada pessoa lança pelo próprio dispositivo e os dois veem sincronizar em tempo real, com saldo automático | HTML, CSS, JavaScript, Flask, SQLAlchemy |
 | [Primeiro site](primeiro-projeto/) | Landing page responsiva de apresentação de marca | HTML, CSS, JavaScript |
 | [Controle de gastos](controle-gastos/) | Registro de transações com filtros e resumo financeiro, consumindo a API abaixo | JavaScript, Fetch API |
 | [FlowBoard](flowboard/) | Quadro Kanban com criação de tarefas e drag-and-drop | JavaScript, LocalStorage |

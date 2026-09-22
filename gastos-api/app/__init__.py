@@ -8,6 +8,8 @@ from .database import db
 ORIGENS_PERMITIDAS = [
     "https://samueldevmi.github.io",
     "http://localhost:8765",
+    "http://localhost:8142",
+    "http://localhost:8143",
 ]
 
 SWAGGER_TEMPLATE = {
@@ -49,6 +51,18 @@ SWAGGER_TEMPLATE = {
             "type": "object",
             "properties": {"erro": {"type": "string", "example": "O campo 'descricao' é obrigatório."}},
         },
+        "GastoCasal": {
+            "type": "object",
+            "properties": {
+                "id": {"type": "integer", "example": 1},
+                "descricao": {"type": "string", "example": "Mercado"},
+                "valor": {"type": "number", "format": "float", "example": 150.5},
+                "categoria": {"type": "string", "example": "alimentação"},
+                "data": {"type": "string", "format": "date", "example": "2026-08-01"},
+                "integrante_id": {"type": "integer", "example": 1},
+                "integrante_nome": {"type": "string", "example": "Ana"},
+            },
+        },
     },
 }
 
@@ -87,10 +101,12 @@ def create_app(database_uri: str = "sqlite:///gastos.db") -> Flask:
     db.init_app(app)
     Swagger(app, template=SWAGGER_TEMPLATE, config=SWAGGER_CONFIG)
 
-    from . import models  # noqa: F401  (garante que os modelos sejam registrados)
+    from . import models, models_casal  # noqa: F401  (garante que os modelos sejam registrados)
     from .routes import bp as gastos_bp
+    from .routes_casal import bp as casal_bp
 
     app.register_blueprint(gastos_bp)
+    app.register_blueprint(casal_bp)
 
     with app.app_context():
         db.create_all()

@@ -50,6 +50,22 @@ pytest
 | GET | `/gastos/resumo` | Retorna total geral, quantidade e soma por categoria |
 | GET | `/docs` | Documentação interativa (Swagger UI) — testa os endpoints direto do navegador |
 
+### Casal (usado pelo projeto [Conta a Dois](../conta-a-dois/))
+
+Tabelas separadas das de `/gastos` acima — não têm nenhuma relação com seus dados pessoais.
+
+| Método | Rota | Descrição |
+|---|---|---|
+| POST | `/casal` | Cria um casal novo e o primeiro integrante — `{nome}`. Retorna o código de 6 letras pra compartilhar |
+| POST | `/casal/<codigo>/entrar` | Entra num casal existente com o código — `{nome}` (máximo 2 integrantes por casal) |
+| GET | `/casal/<codigo>` | Consulta um casal (quem já entrou) |
+| GET | `/casal/<codigo>/gastos` | Lista os gastos do casal |
+| POST | `/casal/<codigo>/gastos` | Cria um gasto — `{integrante_id, descricao, valor, categoria, data}` |
+| DELETE | `/casal/<codigo>/gastos/<id>` | Remove um gasto |
+| GET | `/casal/<codigo>/saldo` | Calcula quem deve quanto pra quem |
+
+Casais de demonstração com mais de 30 dias são apagados automaticamente pra não acumular no banco gratuito.
+
 ### Exemplo
 
 ```bash
