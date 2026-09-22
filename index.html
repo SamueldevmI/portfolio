@@ -105,7 +105,7 @@
                 <a class="botao botao-secundario" href="curriculo-samuel-mickael.pdf" download="Curriculo_Samuel_Mickael.pdf">Baixar currículo</a>
             </div>
             <div class="hero-numeros" aria-label="Resumo do portfólio">
-                <div><strong id="statProjetos" data-contar="9" data-formato="pad2">09</strong><span>projetos em destaque</span></div>
+                <div><strong id="statProjetos" data-contar="6" data-formato="pad2">06</strong><span>projetos em destaque</span></div>
                 <div><strong id="statTecnologias" data-contar="9" data-formato="pad2">09</strong><span>tecnologias que uso</span></div>
                 <div><strong data-contar="100" data-sufixo="%">100%</strong><span>dedicação em cada projeto</span></div>
             </div>
@@ -166,9 +166,6 @@
             <div class="filtros-projetos" role="group" aria-label="Filtrar projetos por tecnologia">
                 <button type="button" class="chip-filtro is-ativo" data-filtro="todos">Todos</button>
                 <button type="button" class="chip-filtro" data-filtro="javascript">JavaScript</button>
-                <button type="button" class="chip-filtro" data-filtro="python">Python</button>
-                <button type="button" class="chip-filtro" data-filtro="api">API</button>
-                <button type="button" class="chip-filtro" data-filtro="cli">CLI</button>
                 <button type="button" class="botao-surpresa" id="botaoSurpresa">🎲 Me surpreenda</button>
             </div>
             <div id="lista-projetos" class="lista-projetos">
@@ -230,24 +227,6 @@
                         <button type="button" class="card-orcamento" data-orcamento-tipo="site" data-orcamento-ref="Meu primeiro site">Quero um assim <span aria-hidden="true">→</span></button>
                     </div>
                 </article>
-                <article class="card-projeto" data-tecnologias="javascript html css api pwa flask git" data-destaque>
-                    <div class="projeto-visual visual-print" style="--acento:#1fa5a8" role="img" aria-label="Captura de tela do app Grana em Dia, com saldo, receitas, despesas e histórico" data-stack="JavaScript · API Flask">
-                        <button type="button" class="botao-flip" aria-label="Ver tecnologias usadas" aria-pressed="false">⇄</button>
-                        <button type="button" class="botao-compartilhar" data-compartilhar="./controle-gastos/index.html" data-compartilhar-titulo="Controle de gastos" aria-label="Compartilhar projeto Controle de gastos">⤴</button>
-                        <div class="print-janela">
-                            <div class="print-barra"><i></i><i></i><i></i><span>Grana em Dia</span></div>
-                            <img src="imagem/projetos/gastos.webp" alt="" width="1100" height="688" loading="lazy" decoding="async">
-                        </div>
-                        <div class="print-celular"><img src="imagem/projetos/gastos-celular.webp" alt="" width="390" height="844" loading="lazy" decoding="async"></div>
-                    </div>
-                    <div class="card-conteudo">
-                        <p class="tag">JavaScript · API Flask</p>
-                        <h3>Controle de gastos</h3>
-                        <p>Uma aplicação interativa para acompanhar gastos, com resumo financeiro, filtros e dados salvos numa API REST de verdade.</p>
-                        <div class="links-projeto"><a class="link-projeto" href="./controle-gastos/index.html" target="_blank" rel="noopener noreferrer">Abrir projeto <span aria-hidden="true">↗</span></a><button type="button" class="link-acao" data-demo="./controle-gastos/index.html" data-demo-titulo="Controle de gastos">Visualizar aqui</button><a class="link-codigo" href="https://github.com/SamueldevmI/portfolio/tree/main/controle-gastos" target="_blank" rel="noopener noreferrer">Ver no GitHub</a></div>
-                        <button type="button" class="card-orcamento" data-orcamento-tipo="sistema" data-orcamento-ref="Controle de gastos">Quero um assim <span aria-hidden="true">→</span></button>
-                    </div>
-                </article>
                 <article class="card-projeto" data-tecnologias="javascript html css git">
                     <div class="projeto-visual visual-print" style="--acento:#6d5ce8" role="img" aria-label="Captura de tela do app TaskFlow, com a lista de tarefas e o progresso do dia" data-stack="JavaScript · LocalStorage">
                         <button type="button" class="botao-flip" aria-label="Ver tecnologias usadas" aria-pressed="false">⇄</button>
@@ -299,46 +278,20 @@
                         <button type="button" class="card-orcamento" data-orcamento-tipo="sistema" data-orcamento-ref="FlowBoard">Quero um assim <span aria-hidden="true">→</span></button>
                     </div>
                 </article>
-                <article class="card-projeto" data-tecnologias="python cli pytest git">
-                    <div class="projeto-visual visual-terminal" role="img" aria-label="Terminal executando o planejador de treino em Python" data-stack="Python · Rich · Pytest">
-                        <button type="button" class="botao-flip" aria-label="Ver tecnologias usadas" aria-pressed="false">⇄</button>
-                        <button type="button" class="botao-compartilhar" data-compartilhar="https://github.com/SamueldevmI/portfolio/tree/main/treino-planner" data-compartilhar-titulo="Planejador de Treino" aria-label="Compartilhar projeto Planejador de Treino">⤴</button>
-                        <div class="terminal-topo"><i></i><i></i><i></i></div>
-                        <div class="terminal-corpo">
-                            <p><span class="terminal-prompt">$</span> python main.py</p>
-                            <p>Planejador de Treino Semanal</p>
-                            <p>1. Adicionar/editar treino</p>
-                            <p>2. Ver planejamento</p>
-                            <p class="terminal-cursor">3. Remover treino<span></span></p>
-                        </div>
-                    </div>
-                    <div class="card-conteudo">
-                        <p class="tag">Python · Rich · Pytest</p>
-                        <h3>Planejador de Treino</h3>
-                        <p>Aplicação de terminal para montar a rotina semanal de treinos, com interface colorida, dados em JSON e testes automatizados.</p>
-                        <div class="links-projeto"><a class="link-codigo" href="https://github.com/SamueldevmI/portfolio/tree/main/treino-planner" target="_blank" rel="noopener noreferrer">Ver código no GitHub ↗</a></div>
-                        <button type="button" class="card-orcamento" data-orcamento-tipo="automacao" data-orcamento-ref="Planejador de Treino">Quero um assim <span aria-hidden="true">→</span></button>
-                    </div>
-                </article>
-                <article class="card-projeto" data-tecnologias="python api flask sqlalchemy pytest git" data-destaque>
-                    <div class="projeto-visual visual-api" role="img" aria-label="Endpoints de uma API REST de controle de gastos" data-stack="Python · Flask · SQLAlchemy">
-                        <button type="button" class="botao-flip" aria-label="Ver tecnologias usadas" aria-pressed="false">⇄</button>
-                        <button type="button" class="botao-compartilhar" data-compartilhar="./gastos-api-demo/index.html" data-compartilhar-titulo="Controle de Gastos — API" aria-label="Compartilhar projeto Controle de Gastos API">⤴</button>
-                        <div class="api-linha"><span class="api-metodo metodo-get">GET</span><span>/gastos</span></div>
-                        <div class="api-linha"><span class="api-metodo metodo-post">POST</span><span>/gastos</span></div>
-                        <div class="api-linha"><span class="api-metodo metodo-put">PUT</span><span>/gastos/&lt;id&gt;</span></div>
-                        <div class="api-linha"><span class="api-metodo metodo-delete">DELETE</span><span>/gastos/&lt;id&gt;</span></div>
-                        <div class="api-linha"><span class="api-metodo metodo-get">GET</span><span>/gastos/resumo</span></div>
-                    </div>
-                    <div class="card-conteudo">
-                        <p class="tag">Python · Flask · SQLAlchemy</p>
-                        <h3>Controle de Gastos — API</h3>
-                        <p>Versão backend do controle de gastos: API REST com banco de dados, validação de entrada e testes automatizados. Plano gratuito: a 1ª requisição após inatividade pode levar ~50s.</p>
-                        <div class="links-projeto"><a class="link-projeto" href="./gastos-api-demo/index.html" target="_blank" rel="noopener noreferrer">Testar API <span aria-hidden="true">↗</span></a><button type="button" class="link-acao" data-caso>Ver decisões técnicas</button><button type="button" class="link-acao" data-copiar-codigo='curl -X POST https://gastos-api-z0dt.onrender.com/gastos -H "Content-Type: application/json" -d "{\"descricao\": \"Almoço\", \"valor\": 35.90}"'>Copiar exemplo</button><a class="link-codigo" href="https://github.com/SamueldevmI/portfolio/tree/main/gastos-api" target="_blank" rel="noopener noreferrer">Ver código</a></div>
-                        <button type="button" class="card-orcamento" data-orcamento-tipo="sistema" data-orcamento-ref="Controle de Gastos — API">Quero um assim <span aria-hidden="true">→</span></button>
-                    </div>
-                </article>
             </div>
+        </section>
+
+        <section id="mais-projetos" class="secao mais-projetos">
+            <div class="titulo-secao">
+                <p class="eyebrow">TAMBÉM NO GITHUB</p>
+                <h2>Mais projetos</h2>
+                <p>Fora da vitrine principal, mas ainda no ar — outras práticas ao longo do caminho.</p>
+            </div>
+            <ul class="lista-mini-projetos">
+                <li><a class="mini-projeto" data-tecnologias="javascript api flask" href="./controle-gastos/index.html" target="_blank" rel="noopener noreferrer"><span class="mini-projeto-nome">Controle de gastos</span><span class="mini-projeto-tag">JavaScript · API Flask</span><span class="mini-projeto-seta" aria-hidden="true">↗</span></a></li>
+                <li><a class="mini-projeto" data-tecnologias="python api flask sqlalchemy pytest" href="./gastos-api-demo/index.html" target="_blank" rel="noopener noreferrer"><span class="mini-projeto-nome">Controle de Gastos — API</span><span class="mini-projeto-tag">Python · Flask · SQLAlchemy</span><span class="mini-projeto-seta" aria-hidden="true">↗</span></a></li>
+                <li><a class="mini-projeto" data-tecnologias="python cli pytest" href="https://github.com/SamueldevmI/portfolio/tree/main/treino-planner" target="_blank" rel="noopener noreferrer"><span class="mini-projeto-nome">Planejador de Treino</span><span class="mini-projeto-tag">Python · Rich · Pytest</span><span class="mini-projeto-seta" aria-hidden="true">↗</span></a></li>
+            </ul>
         </section>
 
         <section id="servicos" class="secao servicos">
@@ -350,19 +303,19 @@
             <div class="lista-servicos">
                 <article>
                     <span>01</span>
-                    <h3><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M3 9h18"/><path d="M7 6.5h.01M10 6.5h.01"/></svg>Sites e landing pages</h3>
+                    <h3><span class="servico-icone"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M3 9h18"/><path d="M7 6.5h.01M10 6.5h.01"/></svg></span>Sites e landing pages</h3>
                     <p>Páginas responsivas para apresentar serviços, produtos ou uma marca pessoal.</p>
                     <button type="button" class="link-acao link-servico" data-orcamento-tipo="site">Pedir orçamento disso →</button>
                 </article>
                 <article>
                     <span>02</span>
-                    <h3><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="3" width="8" height="10" rx="2"/><rect x="13" y="3" width="8" height="6" rx="2"/><rect x="13" y="11" width="8" height="10" rx="2"/><rect x="3" y="15" width="8" height="6" rx="2"/></svg>Aplicações web</h3>
+                    <h3><span class="servico-icone"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="3" width="8" height="10" rx="2"/><rect x="13" y="3" width="8" height="6" rx="2"/><rect x="13" y="11" width="8" height="10" rx="2"/><rect x="3" y="15" width="8" height="6" rx="2"/></svg></span>Aplicações web</h3>
                     <p>Ferramentas interativas que resolvem tarefas reais, do planejamento ao controle financeiro.</p>
                     <button type="button" class="link-acao link-servico" data-orcamento-tipo="sistema">Pedir orçamento disso →</button>
                 </article>
                 <article>
                     <span>03</span>
-                    <h3><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M13 2 4.5 13.5H11L10 22l8.5-11.5H12z"/></svg>Automações em Python</h3>
+                    <h3><span class="servico-icone"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M13 2 4.5 13.5H11L10 22l8.5-11.5H12z"/></svg></span>Automações em Python</h3>
                     <p>Soluções para reduzir tarefas repetitivas e deixar processos mais rápidos.</p>
                     <button type="button" class="link-acao link-servico" data-orcamento-tipo="automacao">Pedir orçamento disso →</button>
                 </article>
@@ -406,6 +359,8 @@
 
             <div class="faq">
                 <h3 class="faq-titulo">Perguntas frequentes</h3>
+                <div class="faq-colunas">
+                <div class="faq-coluna">
                 <details class="faq-item" name="faq">
                     <summary>Quanto custa um projeto?</summary>
                     <p>Depende do tamanho e do que ele precisa ter. Depois que eu entender a sua ideia, envio uma proposta com o valor.</p>
@@ -418,6 +373,8 @@
                     <summary>Preciso ter logo, textos e fotos antes de começar?</summary>
                     <p>Ajuda bastante, mas não é obrigatório. Se faltar alguma coisa, a gente combina como resolver.</p>
                 </details>
+                </div>
+                <div class="faq-coluna">
                 <details class="faq-item" name="faq">
                     <summary>E o endereço na internet (domínio) e a hospedagem?</summary>
                     <p>Explico as opções e ajudo você a escolher. Se você já tem um domínio, dá para aproveitar.</p>
@@ -430,6 +387,8 @@
                     <summary>Como funciona o pagamento?</summary>
                     <p>A forma de pagamento é combinada na proposta, antes de começar.</p>
                 </details>
+                </div>
+                </div>
             </div>
         </section>
 
@@ -480,6 +439,7 @@
                 <li><button type="button" data-acao="scroll" data-alvo="#inicio" data-grupo="Ir para">Início</button></li>
                 <li><button type="button" data-acao="scroll" data-alvo="#sobre-mim" data-grupo="Ir para">Sobre mim</button></li>
                 <li><button type="button" data-acao="scroll" data-alvo="#projetos" data-grupo="Ir para">Projetos em destaque</button></li>
+                <li><button type="button" data-acao="scroll" data-alvo="#mais-projetos" data-grupo="Ir para">Mais projetos</button></li>
                 <li><button type="button" data-acao="scroll" data-alvo="#servicos" data-grupo="Ir para">Serviços</button></li>
                 <li><button type="button" data-acao="scroll" data-alvo="#orcamento" data-grupo="Ir para" data-busca="orcamento orçamento proposta preço contratar pedir">Orçamento</button></li>
                 <li><button type="button" data-acao="scroll" data-alvo="#jornada" data-grupo="Ir para">Minha jornada</button></li>
@@ -487,11 +447,11 @@
                 <li><button type="button" data-acao="link" data-alvo="./eldev-music/index.html" data-grupo="Abrir projeto" data-busca="musica app player streaming playlist vinil pwa audius instalavel">Eldev Music — App de música</button></li>
                 <li><button type="button" data-acao="link" data-alvo="./loja-cyberpunk/index.html" data-grupo="Abrir projeto" data-busca="loja ecommerce e-commerce carrinho roupas cyberpunk techwear whatsapp pedido">Glitch District — Loja cyberpunk</button></li>
                 <li><button type="button" data-acao="link" data-alvo="./primeiro-projeto/index.html" data-grupo="Abrir projeto" data-busca="landing page nexus studio site">Meu primeiro site</button></li>
-                <li><button type="button" data-acao="link" data-alvo="./controle-gastos/index.html" data-grupo="Abrir projeto" data-busca="financas dinheiro despesas gastos">Controle de gastos</button></li>
+                <li><button type="button" data-acao="link" data-alvo="./controle-gastos/index.html" data-grupo="Outros projetos" data-busca="financas dinheiro despesas gastos">Controle de gastos</button></li>
                 <li><button type="button" data-acao="link" data-alvo="./taskflow/index.html" data-grupo="Abrir projeto" data-busca="tarefas lista organizador todo">TaskFlow</button></li>
                 <li><button type="button" data-acao="link" data-alvo="./focusflow/index.html" data-grupo="Abrir projeto" data-busca="pomodoro timer foco cronometro">FocusFlow</button></li>
                 <li><button type="button" data-acao="link" data-alvo="./flowboard/index.html" data-grupo="Abrir projeto" data-busca="kanban board colunas drag and drop">FlowBoard</button></li>
-                <li><button type="button" data-acao="link" data-alvo="./gastos-api-demo/index.html" data-grupo="Abrir projeto" data-busca="backend flask rest sqlalchemy python">Controle de Gastos — API</button></li>
+                <li><button type="button" data-acao="link" data-alvo="./gastos-api-demo/index.html" data-grupo="Outros projetos" data-busca="backend flask rest sqlalchemy python">Controle de Gastos — API</button></li>
                 <li><button type="button" data-acao="link" data-alvo="https://wa.me/5567996034205?text=Oi%2C%20Samuel%21%20Vi%20seu%20portf%C3%B3lio%20e%20queria%20pedir%20um%20or%C3%A7amento.%20Meu%20projeto%20%C3%A9%3A%20" data-grupo="Ação" data-busca="whatsapp zap conversar contato direto">Falar direto no WhatsApp</button></li>
                 <li><button type="button" data-acao="link" data-alvo="https://github.com/SamueldevmI" data-grupo="Ação">Ver GitHub</button></li>
                 <li><button type="button" data-acao="link" data-alvo="https://www.linkedin.com/in/samuelrondon-dev/" data-grupo="Ação">Ver LinkedIn</button></li>

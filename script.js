@@ -447,6 +447,8 @@ carregarStatsGithub();
    Clicar ou tocar FIXA o destaque (no celular não existe "passar o mouse"); clicar de novo tira. */
 const habilidadesItens = document.querySelectorAll(".habilidades li[data-tecnologia]");
 const listaProjetosEl = document.getElementById("lista-projetos");
+const listaMiniEl = document.querySelector(".lista-mini-projetos");
+const miniProjetos = document.querySelectorAll(".mini-projeto[data-tecnologias]");
 let tecnologiaFixa = null;
 
 function destacarProjetosPorTecnologia(tecnologia) {
@@ -456,6 +458,11 @@ function destacarProjetosPorTecnologia(tecnologia) {
         const tecnologias = (card.dataset.tecnologias || "").split(" ");
         card.classList.toggle("card-destacado", tecnologias.includes(tecnologia));
     });
+    listaMiniEl?.classList.add("tem-destaque");
+    miniProjetos.forEach((item) => {
+        const tecnologias = (item.dataset.tecnologias || "").split(" ");
+        item.classList.toggle("mini-destacado", tecnologias.includes(tecnologia));
+    });
 }
 
 function limparDestaqueProjetos() {
@@ -463,6 +470,8 @@ function limparDestaqueProjetos() {
     if (!listaProjetosEl) return;
     listaProjetosEl.classList.remove("tem-destaque");
     cardsProjeto.forEach((card) => card.classList.remove("card-destacado"));
+    listaMiniEl?.classList.remove("tem-destaque");
+    miniProjetos.forEach((item) => item.classList.remove("mini-destacado"));
 }
 
 habilidadesItens.forEach((item) => {

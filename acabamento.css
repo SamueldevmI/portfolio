@@ -284,9 +284,9 @@ html:not(.dark-mode) body::after {
    e sombra usam :where() para nao atropelar os estados de hover e do tour. */
 .card-projeto { background: rgba(28, 12, 68, .58); }
 .lista-jornada article { background: rgba(28, 12, 68, .5); }
-.orcamento-caixa, .changelog, .github-atividade { background: rgba(28, 12, 68, .46); }
+.orcamento-caixa, .changelog, .github-atividade, #servicos .lista-servicos article { background: rgba(28, 12, 68, .46); }
 body.dark-mode .card-projeto, body.dark-mode .lista-jornada article { background: rgba(255, 255, 255, .6); }
-body.dark-mode .orcamento-caixa, body.dark-mode .changelog, body.dark-mode .github-atividade { background: rgba(255, 255, 255, .5); }
+body.dark-mode .orcamento-caixa, body.dark-mode .changelog, body.dark-mode .github-atividade, body.dark-mode #servicos .lista-servicos article { background: rgba(255, 255, 255, .5); }
 .card-projeto, .lista-jornada article, .orcamento-caixa, .changelog, .github-atividade {
     border-color: rgba(190, 160, 255, .24);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, .07), 0 22px 50px -30px rgba(var(--cyan-rgb), .3);
@@ -398,4 +398,104 @@ html.dark-mode { color-scheme: light; }
 @media (pointer: coarse) {
     .modal-cabecalho { position: relative; padding-top: 20px; touch-action: none; }
     .modal-alca { display: block; position: absolute; top: 8px; left: 50%; width: 36px; height: 4px; margin-left: -18px; border-radius: 999px; background: var(--line); }
+}
+
+/* ---------- Serviços em cartões ----------
+   "Sites", "Aplicações web" e "Automações" eram só texto empilhado, com um traço fino em cima;
+   agora cada um vira um cartão (o fundo reaproveita o vidro translúcido de duas seções acima, no
+   .orcamento-caixa/.changelog/.github-atividade) com o ícone dentro de um azulejo colorido. */
+#servicos .lista-servicos { gap: 16px; }
+#servicos .lista-servicos article { padding: 24px 22px; border: 1px solid var(--line); border-radius: 18px; transition: border-color .25s ease, transform .25s ease; }
+body.dark-mode #servicos .lista-servicos article { border-color: rgba(255, 255, 255, .72); }
+@media (hover: hover) {
+    #servicos .lista-servicos article:hover { transform: translateY(-3px); border-color: rgba(var(--cyan-rgb), .55); }
+    #servicos .lista-servicos article:hover .servico-icone { background: rgba(var(--cyan-rgb), .24); }
+    body.dark-mode #servicos .lista-servicos article:hover { border-color: #6d4aff; }
+}
+.servico-icone { display: flex; align-items: center; justify-content: center; width: 46px; height: 46px; border-radius: 12px; background: rgba(var(--cyan-rgb), .14); flex: none; }
+@media (prefers-reduced-motion: reduce) {
+    #servicos .lista-servicos article { transition: none; }
+}
+/* no computador (a partir de 1000px) o título sobe pra cima e os 3 cartões ficam lado a lado numa
+   fileira só, usando a largura inteira da seção em vez de ficarem espremidos na coluna da direita */
+@media (min-width: 1000px) {
+    .servicos { grid-template-columns: 1fr; gap: 36px; }
+    #servicos .lista-servicos { grid-template-columns: repeat(3, 1fr); gap: 22px; }
+}
+
+/* ---------- Jornada em zigue-zague no computador ----------
+   A linha do tempo ficava sempre numa coluna só (até 940px), sobrando bastante vazio ao lado em
+   telas largas. A partir de 1000px os itens alternam dos dois lados de uma linha central; abaixo
+   disso continua exatamente como já era, uma coluna só com a linha à esquerda. Sem grid-column
+   explícito: o próprio grid de 2 colunas já preenche linha a linha (ímpar cai na coluna 1, par na
+   coluna 2) — só os pontinhos da linha do tempo precisam saber de que lado ficar. */
+@media (min-width: 1000px) {
+    .lista-jornada.linha-tempo { display: grid; grid-template-columns: 1fr 1fr; column-gap: 72px; align-items: start; max-width: 1040px; margin: 0 auto; padding-left: 0; }
+    .linha-tempo::before { left: 50%; margin-left: -1px; }
+    .lista-jornada.linha-tempo > li:nth-child(odd) article::before,
+    .lista-jornada.linha-tempo > li:nth-child(odd) article.lt-agora::after { left: auto; right: -43px; }
+    .lista-jornada.linha-tempo > li:nth-child(even) article::before,
+    .lista-jornada.linha-tempo > li:nth-child(even) article.lt-agora::after { left: -43px; }
+}
+
+/* ---------- Perguntas frequentes em 2 colunas no computador ----------
+   Sobrava bastante vazio do lado direito, porque a lista de perguntas ficava numa coluna só de
+   820px de largura no máximo. Abaixo de 1000px continua igual, uma coluna só (a mesma ordem das
+   6 perguntas, só divididas em 2 grupos de 3 no HTML). */
+@media (min-width: 1000px) {
+    .faq { max-width: none; }
+    .faq-colunas { display: grid; grid-template-columns: 1fr 1fr; column-gap: 56px; }
+}
+
+/* ---------- Divisórias sutis entre seções ----------
+   A rolagem virava um bloco só, sem fim visível de cada parte. Uma linha fina com brilho marca a
+   costura entre uma seção e a próxima. Não entra onde a seção já tem moldura própria ("Projetos
+   em destaque" e "Tem um projeto em mente?" já são caixas com borda e fundo colorido: uma segunda
+   linha ali ficaria redundante). Funciona igual no celular e no computador. */
+main .secao:not(.projetos, .contato) + .secao:not(.projetos, .contato) { position: relative; }
+main .secao:not(.projetos, .contato) + .secao:not(.projetos, .contato)::before {
+    content: ""; position: absolute; top: 0; left: 50%; transform: translateX(-50%); pointer-events: none;
+    width: min(640px, 70%); height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(var(--cyan-rgb), .4), transparent);
+}
+@media print {
+    main .secao:not(.projetos, .contato) + .secao:not(.projetos, .contato)::before { display: none; }
+}
+
+/* ---------- Rodapé: sublinhado que desliza, como os links do menu ----------
+   GitHub, LinkedIn e "Tour rápido" só tinham o sublinhado comum (fixo, do navegador ou do CSS);
+   agora ele nasce do zero e desliza para dentro ao passar o mouse ou focar, igual ao menu do topo. */
+footer a, footer .link-rodape { position: relative; text-decoration: none; }
+footer a::after, footer .link-rodape::after {
+    content: ""; position: absolute; left: 6px; right: 6px; bottom: 10px; height: 1px;
+    background: currentColor; transform: scaleX(0); transform-origin: left;
+    transition: transform .3s ease;
+}
+@media (hover: hover) {
+    footer a:hover::after, footer .link-rodape:hover::after { transform: scaleX(1); }
+}
+footer a:focus-visible::after, footer .link-rodape:focus-visible::after { transform: scaleX(1); }
+@media (prefers-reduced-motion: reduce) {
+    footer a::after, footer .link-rodape::after { transition: none; }
+}
+
+/* ---------- "Mais projetos": seçãozinha discreta, fora da vitrine principal ----------
+   Controle de gastos, a API dele e o Planejador de Treino saíram da vitrine ("Projetos em
+   destaque") e viraram uma lista simples de links — sem card grande, sem prévia visual. */
+.lista-mini-projetos { display: grid; margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
+.lista-mini-projetos li { border-bottom: 1px solid var(--line); }
+.mini-projeto { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px; padding: 18px 4px; color: var(--text); text-decoration: none; transition: opacity .25s ease, color .25s ease; }
+.mini-projeto-nome { font: 600 1.05rem "Space Grotesk", sans-serif; }
+.mini-projeto-tag { color: var(--muted); font: .78rem "DM Mono", monospace; }
+.mini-projeto-seta { margin-left: auto; color: var(--cyan); transition: transform .2s ease; }
+@media (hover: hover) {
+    .mini-projeto:hover { color: var(--cyan); }
+    .mini-projeto:hover .mini-projeto-seta { transform: translate(3px, -3px); }
+}
+.mini-projeto:focus-visible { border-radius: 4px; }
+/* passar o mouse numa pílula de tecnologia também apaga os itens desta lista que não combinam */
+.lista-mini-projetos.tem-destaque .mini-projeto { opacity: .38; }
+.lista-mini-projetos.tem-destaque .mini-projeto.mini-destacado { opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+    .mini-projeto, .mini-projeto-seta { transition: none; }
 }
