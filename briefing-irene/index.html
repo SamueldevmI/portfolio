@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Briefing do projeto — Irene</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:light;
+  --bg:#e6e1fd; --papel:#f7f5fe; --papel-2:#dad1fd; --tinta:#241a5c; --cinza:#4d4a8a; --linha:rgba(91,70,214,.32); --roxo:#5234ef; --roxo-texto:#4327c9;
+  --serif:'Space Grotesk', system-ui, sans-serif; --sans:'Space Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif; --mono:'DM Mono', ui-monospace, Consolas, monospace;
+  accent-color:var(--roxo);
+}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0; background:var(--bg); color:var(--tinta); font:400 1rem/1.6 var(--sans); -webkit-text-size-adjust:100%}
+h1,h2,p,fieldset,legend{margin:0; padding:0}
+.pagina{max-width:760px; margin:0 auto; padding:0 20px 80px}
+
+.barra{position:sticky; top:0; z-index:10; margin:0 -20px; padding:12px 20px; background:rgba(230,225,253,.94); border-bottom:1px solid var(--linha); backdrop-filter:blur(8px)}
+.barra__linha{display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px 16px}
+.barra__texto{font:500 .78rem/1.3 var(--sans); letter-spacing:.06em; color:var(--cinza)}
+.barra__texto strong{color:var(--roxo-texto)}
+.trilho{height:3px; margin-top:10px; background:var(--linha)}
+.trilho span{display:block; height:100%; width:calc(var(--p, 0) * 100%); background:var(--roxo); transition:width .4s}
+.acoes{display:flex; flex-wrap:wrap; gap:8px}
+.botao{padding:.75em 1.2em; border:1px solid var(--roxo); border-radius:4px; background:var(--roxo); color:#fff; font:600 .72rem/1 var(--sans); letter-spacing:.1em; text-transform:uppercase; cursor:pointer}
+.botao--claro{background:transparent; color:var(--roxo-texto)}
+.botao--fantasma{border-color:transparent; background:none; color:var(--cinza); text-decoration:underline}
+.botao--whats{background:#25d366; border-color:#25d366}
+.botao:hover{filter:brightness(1.08)}
+
+header.topo{padding:56px 0 24px}
+.rotulo-pag{font:600 .72rem/1 var(--sans); letter-spacing:.2em; text-transform:uppercase; color:var(--roxo-texto)}
+h1{margin-top:14px; font:700 clamp(2rem, 7vw, 3rem)/1.1 var(--serif); letter-spacing:-.01em}
+h1 em{color:var(--roxo); font-style:normal}
+.lead{margin-top:18px; max-width:38em; color:var(--cinza)}
+.passos{margin:18px 0 0; padding:16px 20px; background:var(--papel-2); border-radius:8px; font-size:.92rem}
+.passos li{margin-left:1.1em; padding-left:.2em}
+
+.indice{display:flex; flex-wrap:wrap; gap:6px; margin-top:8px}
+.indice a{padding:7px 12px; border:1px solid var(--linha); border-radius:6px; background:var(--papel); color:var(--tinta); font:500 .74rem/1.2 var(--sans); text-decoration:none}
+.indice a:hover{border-color:var(--roxo); color:var(--roxo-texto)}
+section.bloco{scroll-margin-top:84px}
+section.bloco{margin-top:36px; padding:26px 24px 30px; background:var(--papel); border:1px solid var(--linha); border-radius:12px}
+h2{font:700 1.6rem/1.2 var(--serif)}
+h2 span{color:var(--roxo); margin-right:.35em}
+.intro{margin-top:8px; color:var(--cinza); font-size:.92rem}
+.campos{display:grid; gap:20px; margin-top:22px}
+.campo, fieldset.opcoes{display:grid; gap:6px; border:0; min-width:0}
+.rot, legend{font:600 .88rem/1.35 var(--sans); color:var(--tinta)}
+legend{margin-bottom:6px}
+.ess{margin-left:.5em; padding:.15em .55em; border-radius:4px; background:rgba(82,52,239,.12); color:var(--roxo-texto); font:600 .62rem/1.4 var(--sans); letter-spacing:.1em; text-transform:uppercase; font-style:normal; white-space:nowrap}
+small{color:var(--cinza); font-size:.8rem; line-height:1.4}
+input[type=text], input[type=email], input[type=tel], input[type=number], select, textarea{
+  width:100%; padding:12px 14px; border:1px solid var(--linha); border-radius:6px; background:#fff; color:var(--tinta);
+  font:400 1rem/1.4 var(--sans); caret-color:var(--roxo);
+}
+textarea{min-height:6.4em; resize:vertical; field-sizing:content; max-height:22rem}
+input:focus, select:focus, textarea:focus{outline:2px solid var(--roxo); outline-offset:1px; border-color:var(--roxo)}
+::placeholder{color:#8a80b8; opacity:1}
+.opcoes__lista{display:flex; flex-wrap:wrap; gap:8px}
+.opcoes__lista label{display:flex; align-items:center; gap:8px; padding:9px 14px; border:1px solid var(--linha); border-radius:6px; background:#fff; font-size:.92rem; line-height:1.3; cursor:pointer}
+.opcoes__lista label:has(input:checked){border-color:var(--roxo); background:rgba(82,52,239,.08); color:var(--roxo-texto)}
+.opcoes__lista input{margin:0}
+@media (max-width:560px){ section.bloco{padding:22px 16px 26px} }
+
+details.resumo{margin-top:36px; padding:16px 20px; background:var(--papel-2); border-radius:8px}
+details.resumo summary{cursor:pointer; font:600 .8rem/1.4 var(--sans); letter-spacing:.06em}
+pre{margin:14px 0 0; white-space:pre-wrap; word-break:break-word; font:400 .82rem/1.55 var(--mono); color:var(--tinta)}
+.fim{margin-top:36px; display:flex; flex-wrap:wrap; gap:10px; align-items:center}
+.aviso{margin-top:14px; color:var(--cinza); font-size:.85rem}
+.toast{position:fixed; left:50%; bottom:22px; translate:-50% 0; z-index:20; padding:.85em 1.3em; border-radius:6px; background:var(--roxo); color:#fff; font:500 .82rem/1.3 var(--sans); opacity:0; pointer-events:none; transition:opacity .3s}
+.toast--ver{opacity:1}
+</style>
+</head>
+<body>
+<div class="pagina">
+
+  <div class="barra" role="region" aria-label="Progresso e ações">
+    <div class="barra__linha">
+      <p class="barra__texto" aria-live="polite"><strong id="qtd">0</strong> de <span id="total">0</span> respondidos</p>
+      <div class="acoes">
+        <button class="botao botao--whats" type="button" id="whats">Enviar pelo WhatsApp</button>
+        <button class="botao botao--claro" type="button" id="copiar">Copiar respostas</button>
+      </div>
+    </div>
+    <div class="trilho"><span id="trilho"></span></div>
+  </div>
+
+  <header class="topo">
+    <p class="rotulo-pag">Briefing do projeto</p>
+    <h1>Vamos começar o seu <em>projeto</em>, Irene.</h1>
+    <p class="lead">Esse formulário reúne o que eu preciso saber pra te passar uma proposta certeira. Responda o que souber, no seu ritmo — o que não souber pode ficar em branco, a gente conversa depois.</p>
+    <ol class="passos">
+      <li>Preencha aqui. Fica salvo neste aparelho enquanto você digita, então dá pra fechar e voltar depois.</li>
+      <li>Quando terminar, toque em <strong>Enviar pelo WhatsApp</strong> (ou <strong>Copiar respostas</strong>, se preferir mandar por outro canal).</li>
+    </ol>
+  </header>
+
+  <nav class="indice" id="indice" aria-label="Ir para uma seção"></nav>
+
+  <main id="formulario"></main>
+
+  <details class="resumo">
+    <summary>Ver como as respostas vão ficar antes de enviar</summary>
+    <pre id="previa">Nada respondido ainda.</pre>
+  </details>
+
+  <div class="fim">
+    <button class="botao botao--whats" type="button" id="whats2">Enviar pelo WhatsApp</button>
+    <button class="botao botao--claro" type="button" id="copiar2">Copiar respostas</button>
+    <button class="botao botao--fantasma" type="button" id="limpar">Limpar tudo e recomeçar</button>
+  </div>
+  <p class="aviso">Suas respostas ficam só neste aparelho. Nada é enviado até você tocar em enviar ou copiar.</p>
+  <noscript><p class="aviso"><strong>Este formulário precisa de JavaScript ligado no navegador.</strong></p></noscript>
+</div>
+<p class="toast" id="toast" role="status"></p>
+
+<script>
+/* ===== O FORMULÁRIO: para mudar perguntas, é só editar a lista abaixo =====
+   tipo: texto, email, tel, numero, longo (parágrafo), escolha (uma opção), varias (marcar várias). */
+const SECOES = [
+  { id: "voce", titulo: "Você e o seu negócio", intro: "Como te chamar e como vou te encontrar.", campos: [
+    { id: "nome", rotulo: "Seu nome", tipo: "texto", essencial: true, exemplo: "Irene" },
+    { id: "whatsapp", rotulo: "Seu WhatsApp com DDD", tipo: "tel", essencial: true },
+    { id: "negocio", rotulo: "Nome do negócio (se tiver)", tipo: "texto" },
+    { id: "cidade", rotulo: "Cidade onde você atende", tipo: "texto" },
+    { id: "sobre", rotulo: "O que o seu negócio faz ou vende", tipo: "longo", essencial: true, ajuda: "Em poucas palavras: pra quem é e o que você oferece." },
+    { id: "tempo", rotulo: "Há quanto tempo o negócio existe", tipo: "texto" }
+  ]},
+  { id: "projeto", titulo: "O projeto que você quer", intro: "Me ajuda a entender o que você tem em mente.", campos: [
+    { id: "tipo", rotulo: "O que você precisa", tipo: "escolha", essencial: true, opcoes: ["Site institucional", "Loja online", "Sistema ou aplicativo", "Ainda não sei, quero conversar"] },
+    { id: "objetivo", rotulo: "O que você quer alcançar com isso", tipo: "longo", essencial: true, ajuda: "Ex.: mais clientes, vender online, organizar o atendimento, parecer mais profissional." },
+    { id: "publico", rotulo: "Quem são os seus clientes", tipo: "longo" },
+    { id: "prazo", rotulo: "Quando você gostaria de lançar", tipo: "texto", exemplo: "Em um mês, sem pressa, etc." }
+  ]},
+  { id: "conteudo", titulo: "O que você já tem", intro: "Pra eu saber o que falta preparar.", campos: [
+    { id: "logo", rotulo: "Você já tem logo?", tipo: "escolha", opcoes: ["Sim", "Não", "Quero criar um"] },
+    { id: "cores", rotulo: "Já tem cores da marca definidas?", tipo: "texto", ajuda: "Nomes ou códigos de cor, se souber." },
+    { id: "textos", rotulo: "Já tem os textos prontos?", tipo: "escolha", opcoes: ["Sim", "Não", "Só uma parte"] },
+    { id: "fotos", rotulo: "Já tem fotos de qualidade pra usar?", tipo: "escolha", opcoes: ["Sim", "Não", "Só uma parte"] }
+  ]},
+  { id: "recursos", titulo: "O que precisa ter", intro: "Marque tudo que fizer sentido pro seu projeto.", campos: [
+    { id: "recursos", rotulo: "Funcionalidades", tipo: "varias", opcoes: ["Botão de WhatsApp", "Formulário de contato", "Galeria de fotos", "Loja online", "Agendamento", "Blog ou novidades", "Login de cliente", "Painel para eu mesma atualizar"] }
+  ]},
+  { id: "referencias", titulo: "Referências (opcional)", intro: "Sites ou perfis que você gosta, mesmo que sejam de outro ramo.", campos: [
+    { id: "gosta", rotulo: "O que você gosta em outros sites ou perfis", tipo: "longo", ajuda: "Pode colar links." },
+    { id: "naogosta", rotulo: "O que você definitivamente não quer", tipo: "longo" }
+  ]},
+  { id: "final", titulo: "Mais alguma coisa?", intro: "", campos: [
+    { id: "obs", rotulo: "Recados, dúvidas ou qualquer coisa que queira contar", tipo: "longo" }
+  ]}
+];
+const MEU_WHATSAPP = "5567996034205";
+
+/* ===== daqui para baixo é o funcionamento; não precisa mexer ===== */
+const CHAVE = "briefing-irene-v1";
+const principal = document.getElementById("formulario");
+const previa = document.getElementById("previa");
+
+function el(tag, atributos = {}, ...filhos){
+  const e = document.createElement(tag);
+  Object.entries(atributos).forEach(([k, v]) => { if (v === true) e.setAttribute(k, ""); else if (v !== false && v != null) e.setAttribute(k, v); });
+  filhos.flat().forEach(f => e.append(f));
+  return e;
+}
+const marcaEssencial = c => c.essencial ? [" ", el("em", { class: "ess" }, "essencial")] : [];
+
+function entrada(c, extra = {}){
+  const comum = { ...extra, placeholder: c.exemplo ? `ex.: ${c.exemplo}` : null };
+  if (c.longo || c.tipo === "longo") return el("textarea", { ...comum, rows: 3 });
+  const tipo = { email: "email", tel: "tel", numero: "number" }[c.tipo] || "text";
+  return el("input", { ...comum, type: tipo, ...(tipo === "tel" ? { inputmode: "tel", autocomplete: "tel" } : {}), ...(tipo === "email" ? { autocomplete: "email" } : {}) });
+}
+
+function desenharCampo(c){
+  if (c.tipo === "escolha" || c.tipo === "varias"){
+    const tipoInput = c.tipo === "escolha" ? "radio" : "checkbox";
+    const lista = el("div", { class: "opcoes__lista" });
+    c.opcoes.forEach(o => lista.append(el("label", {}, el("input", { type: tipoInput, name: c.id, value: o, "data-k": c.id }), o)));
+    return el("fieldset", { class: "opcoes" }, el("legend", {}, c.rotulo, marcaEssencial(c)), c.ajuda ? el("small", {}, c.ajuda) : "", lista);
+  }
+  return el("label", { class: "campo" }, el("span", { class: "rot" }, c.rotulo, marcaEssencial(c)), c.ajuda ? el("small", {}, c.ajuda) : "", entrada(c, { "data-k": c.id }));
+}
+
+SECOES.forEach((s, i) => document.getElementById("indice").append(el("a", { href: `#s-${s.id}` }, `${i + 1}. ${s.titulo}`)));
+SECOES.forEach((s, i) => {
+  const bloco = el("section", { class: "bloco", id: `s-${s.id}` }, el("h2", {}, el("span", {}, String(i + 1)), s.titulo), s.intro ? el("p", { class: "intro" }, s.intro) : "");
+  const campos = el("div", { class: "campos" });
+  s.campos.forEach(c => campos.append(desenharCampo(c)));
+  bloco.append(campos);
+  principal.append(bloco);
+});
+
+function coletar(){
+  const dados = {};
+  document.querySelectorAll("[data-k]").forEach(e => {
+    const id = e.dataset.k;
+    if (e.type === "checkbox"){ if (e.checked) (dados[id] = dados[id] || []).push(e.value); }
+    else if (e.type === "radio"){ if (e.checked) dados[id] = e.value; }
+    else if (e.value.trim()) dados[id] = e.value.trim();
+  });
+  return dados;
+}
+function devolver(dados){
+  document.querySelectorAll("[data-k]").forEach(e => {
+    const v = dados[e.dataset.k];
+    if (e.type === "checkbox") e.checked = Array.isArray(v) && v.includes(e.value);
+    else if (e.type === "radio") e.checked = v === e.value;
+    else e.value = typeof v === "string" ? v : "";
+  });
+}
+
+const preenchido = v => Array.isArray(v) ? v.length > 0 : !!v;
+
+function montarTexto(dados){
+  const hoje = new Date().toLocaleDateString("pt-BR");
+  const linhas = [`BRIEFING DO PROJETO — ${(dados.nome || "Irene").toUpperCase()} (preenchido em ${hoje})`, ""];
+  let brancos = 0;
+  SECOES.forEach((s, i) => {
+    const partes = [];
+    s.campos.forEach(c => {
+      const v = dados[c.id];
+      if (!preenchido(v)){ brancos++; return; }
+      partes.push(`${c.rotulo}: ${Array.isArray(v) ? v.join(", ") : v}`);
+    });
+    if (partes.length) linhas.push(`## ${i + 1}. ${s.titulo}`, ...partes, "");
+  });
+  linhas.push(`(Perguntas em branco: ${brancos})`);
+  return linhas.join("\n");
+}
+
+function atualizar(){
+  const dados = coletar();
+  let total = 0, feitos = 0;
+  SECOES.forEach(s => s.campos.forEach(c => {
+    total++;
+    if (preenchido(dados[c.id])) feitos++;
+  }));
+  document.getElementById("qtd").textContent = feitos;
+  document.getElementById("total").textContent = total;
+  document.getElementById("trilho").style.setProperty("--p", total ? feitos / total : 0);
+  previa.textContent = feitos ? montarTexto(dados) : "Nada respondido ainda.";
+  return dados;
+}
+function salvar(){
+  const dados = atualizar();
+  try { localStorage.setItem(CHAVE, JSON.stringify(dados)); } catch (e) { /* sem armazenamento: vale só enquanto a página estiver aberta */ }
+}
+document.addEventListener("input", salvar);
+document.addEventListener("change", salvar);
+
+let aviso;
+function toast(texto){
+  const t = document.getElementById("toast");
+  t.textContent = texto;
+  t.classList.add("toast--ver");
+  clearTimeout(aviso);
+  aviso = setTimeout(() => t.classList.remove("toast--ver"), 2600);
+}
+async function copiar(){
+  const texto = montarTexto(atualizar());
+  try { await navigator.clipboard.writeText(texto); toast("Copiado! Agora é só colar na conversa."); }
+  catch (e) {
+    const area = el("textarea", { style: "position:fixed; opacity:0" });
+    area.value = texto; document.body.append(area); area.select();
+    let ok = false; try { ok = document.execCommand("copy"); } catch (e2) { /* sem cópia */ }
+    area.remove();
+    toast(ok ? "Copiado! Agora é só colar na conversa." : "Não deu para copiar. Copie manualmente.");
+  }
+}
+function enviarPeloWhats(){
+  const texto = montarTexto(atualizar());
+  window.open(`https://wa.me/${MEU_WHATSAPP}?text=${encodeURIComponent(texto)}`, "_blank");
+}
+["copiar", "copiar2"].forEach(id => document.getElementById(id).addEventListener("click", copiar));
+["whats", "whats2"].forEach(id => document.getElementById(id).addEventListener("click", enviarPeloWhats));
+document.getElementById("limpar").addEventListener("click", () => {
+  if (!confirm("Apagar tudo o que você preencheu neste aparelho e recomeçar?")) return;
+  try { localStorage.removeItem(CHAVE); } catch (e) { /* sem armazenamento */ }
+  location.reload();
+});
+
+try { devolver(JSON.parse(localStorage.getItem(CHAVE) || "{}")); } catch (e) { /* nada guardado */ }
+atualizar();
+</script>
+</body>
+</html>
