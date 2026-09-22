@@ -9,7 +9,8 @@
 <path d="M290 156L64 22" stroke="#1a1836" stroke-width="26"/>
 <path d="M290 156L64 22" stroke="#00f0ff" stroke-width="1.5" stroke-dasharray="5 7" stroke-opacity=".8" transform="translate(-9 -6)"/>
 <path d="M92 176Q92 152 116 152H296Q320 152 322 178L334 292Q336 316 312 316H118Q96 316 94 292Z" fill="url(#t)" stroke="#5a5696" stroke-width="2"/>
-<path d="M108 198Q208 184 318 202" stroke="#ff2bd6" stroke-width="3" filter="url(#n)"/>
+<path d="M100 176Q100 154 120 152H292Q312 154 314 176L308 222Q200 236 106 222Z" fill="#151330" stroke="#5a5696" stroke-width="2"/>
+<rect x="186" y="216" width="28" height="16" rx="3" fill="#0d0c1b" stroke="#ff2bd6" stroke-width="2.5" filter="url(#n)"/>
 <path d="M120 238H236Q250 238 250 252V296H120Z" stroke="#5a5696" stroke-width="2"/>
 <path d="M120 254H250" stroke="#5a5696" stroke-width="2"/>
 <rect x="270" y="238" width="30" height="34" rx="4" fill="#0d0c1b" stroke="#ff2bd6" stroke-width="3" filter="url(#n)"/>

@@ -6,9 +6,9 @@
 </defs>
 <g stroke-linejoin="round" stroke-linecap="round" fill="none">
 <path d="M134 116C116 48 160 24 200 24C240 24 284 48 266 116Q200 160 134 116Z" fill="#151330" stroke="#5a5696" stroke-width="2"/>
-<path d="M148 112L96 132L44 300L92 316L118 214V352H282V214L308 316L356 300L304 132L252 112Q200 148 148 112Z" fill="url(#t)" stroke="#5a5696" stroke-width="2"/>
+<path d="M148 112L92 134L36 300L88 318L118 214V352H282V214L312 318L364 300L308 134L252 112Q200 148 148 112Z" fill="url(#t)" stroke="#5a5696" stroke-width="2"/>
 <path d="M154 114C148 72 176 54 200 54C224 54 252 72 246 114Q200 144 154 114Z" fill="#05040b" stroke="#5a5696" stroke-width="2"/>
-<path d="M44 300L92 316L86 338L38 322Z M356 300L308 316L314 338L362 322Z" fill="#151330" stroke="#5a5696" stroke-width="2"/>
+<path d="M36 300L88 318L82 340L30 322Z M364 300L312 318L318 340L370 322Z" fill="#151330" stroke="#5a5696" stroke-width="2"/>
 <path d="M118 330H282V352H118Z" fill="#151330" stroke="#5a5696" stroke-width="2"/>
 <path d="M200 142V250" stroke="#ff2bd6" stroke-width="3" filter="url(#n)"/>
 <path d="M136 250H264L276 326H124Z" stroke="#5a5696" stroke-width="2"/>
@@ -18,5 +18,7 @@
 <circle cx="216" cy="200" r="4" fill="#ff2bd6" stroke="none"/>
 <path d="M90 160L66 292M310 160L334 292" stroke="#ff2bd6" stroke-width="3" stroke-dasharray="14 8" filter="url(#n)"/>
 <path d="M128 214V330M272 214V330" stroke="#00f0ff" stroke-width="2" stroke-opacity=".7"/>
+<path d="M118 260Q140 280 150 264M282 260Q260 280 250 264" stroke="#3a3768" stroke-width="2" stroke-opacity=".5"/>
+<path d="M140 330Q170 342 200 336Q230 342 260 330" stroke="#3a3768" stroke-width="1.6" stroke-opacity=".4"/>
 </g>
 </svg>

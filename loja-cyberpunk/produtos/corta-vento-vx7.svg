@@ -5,16 +5,20 @@
 <filter id="n" x="-50%" y="-50%" width="200%" height="200%" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
 </defs>
 <g stroke-linejoin="round" stroke-linecap="round" fill="none">
-<path d="M138 112C126 52 166 30 200 30C234 30 274 52 262 112Q200 150 138 112Z" fill="#151330" stroke="#5a5696" stroke-width="2"/>
-<path d="M150 108L98 128L46 306L90 320L120 206L122 356H278L280 206L310 320L354 306L302 128L250 108Q200 142 150 108Z" fill="url(#t)" stroke="#5a5696" stroke-width="2"/>
-<path d="M158 110C154 74 178 60 200 60C222 60 246 74 242 110Q200 138 158 110Z" fill="#05040b" stroke="#00f0ff" stroke-width="2.5" filter="url(#n)"/>
-<path d="M200 134V356" stroke="#00f0ff" stroke-width="3" filter="url(#n)"/>
+<path d="M136 110C130 60 158 26 200 20C242 26 270 60 264 110Q200 146 136 110Z" fill="#151330" stroke="#5a5696" stroke-width="2"/>
+<path d="M150 108L98 128L46 306L90 320L120 206L128 350Q200 366 272 350L280 206L310 320L354 306L302 128L250 108Q200 142 150 108Z" fill="url(#t)" stroke="#5a5696" stroke-width="2"/>
+<path d="M160 108C156 72 178 58 200 58C222 58 244 72 240 108Q200 134 160 108Z" fill="#05040b" stroke="#00f0ff" stroke-width="2.5" filter="url(#n)"/>
+<path d="M200 24V108" stroke="#5a5696" stroke-width="1.5" stroke-opacity=".7"/>
+<path d="M200 22L172 56M200 22L228 56" stroke="#3a3768" stroke-width="1.5" stroke-opacity=".5"/>
+<path d="M200 134V362" stroke="#00f0ff" stroke-width="3" filter="url(#n)"/>
 <path d="M94 150L72 300M306 150L328 300" stroke="#ff2bd6" stroke-width="3" filter="url(#n)"/>
 <path d="M130 192L178 204V250L130 238Z M270 192L222 204V250L270 238Z" stroke="#5a5696" stroke-width="2"/>
 <path d="M130 192L178 204M270 192L222 204" stroke="#00f0ff" stroke-width="2.5"/>
-<path d="M124 332Q200 348 276 332" stroke="#5a5696" stroke-width="2"/>
-<rect x="146" y="336" width="8" height="14" rx="2" fill="#ff2bd6" stroke="none"/>
-<rect x="246" y="336" width="8" height="14" rx="2" fill="#ff2bd6" stroke="none"/>
+<path d="M120 206Q140 230 156 216M280 206Q260 230 244 216" stroke="#3a3768" stroke-width="2" stroke-opacity=".55"/>
+<path d="M150 300Q180 316 210 306" stroke="#3a3768" stroke-width="1.6" stroke-opacity=".45"/>
+<path d="M140 352Q200 364 260 352" stroke="#5a5696" stroke-width="2"/>
+<circle cx="140" cy="352" r="5" fill="#ff2bd6" stroke="none"/>
+<circle cx="260" cy="352" r="5" fill="#ff2bd6" stroke="none"/>
 <rect x="194" y="128" width="12" height="16" rx="2" fill="#0d0c1b" stroke="#00f0ff" stroke-width="2"/>
 </g>
 </svg>

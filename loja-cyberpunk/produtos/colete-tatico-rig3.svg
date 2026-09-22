@@ -8,6 +8,7 @@
 <path d="M136 46L170 46L200 118L230 46L264 46L286 126L296 356H104L114 126Z" fill="url(#t)" stroke="#5a5696" stroke-width="2"/>
 <path d="M200 118V356" stroke="#00f0ff" stroke-width="3" filter="url(#n)"/>
 <path d="M136 46L124 110M264 46L276 110" stroke="#5a5696" stroke-width="2"/>
+<path d="M140 130Q170 148 200 140Q230 148 260 130" stroke="#3a3768" stroke-width="1.6" stroke-opacity=".4"/>
 <path d="M120 162H190V208H120Z M210 162H280V208H210Z" stroke="#5a5696" stroke-width="2"/>
 <path d="M120 162H190V176H120Z M210 162H280V176H210Z" fill="#151330" stroke="#5a5696" stroke-width="2"/>
 <path d="M155 162V208M245 162V208" stroke="#5a5696" stroke-width="1.5"/>

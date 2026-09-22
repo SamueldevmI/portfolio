@@ -19,5 +19,6 @@
 <path d="M80 198L106 208L102 244L72 234Z M320 198L294 208L298 244L328 234Z" stroke="#5a5696" stroke-width="2"/>
 <path d="M76 218L103 228M324 218L297 228" stroke="#fcee0a" stroke-width="2.5"/>
 <path d="M286 130L304 138L298 156L280 148Z" stroke="#ff2bd6" stroke-width="2.5" filter="url(#n)"/>
+<path d="M140 240Q170 256 200 250Q230 256 260 240" stroke="#3a3768" stroke-width="1.8" stroke-opacity=".45"/>
 </g>
 </svg>
