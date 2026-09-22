@@ -499,3 +499,90 @@ footer a:focus-visible::after, footer .link-rodape:focus-visible::after { transf
 @media (prefers-reduced-motion: reduce) {
     .mini-projeto, .mini-projeto-seta { transition: none; }
 }
+
+/* ---------- Braimstorm de 40 ideias (2026-09-22) ---------- */
+
+/* Texto só pra quem usa leitor de tela (ex.: legenda das capturas de tela reais) */
+.v-oculto { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+
+/* ".print-janela" virou <figure>: zera a margem padrão do navegador pra ficar igual a antes */
+.print-janela { margin: 0; }
+
+/* Baixar o orçamento pronto em PDF: só este texto aparece na tela de impressão do navegador. */
+.orc-impresso { display: none; }
+@media print {
+    body.imprimindo-resumo > * { visibility: hidden; }
+    body.imprimindo-resumo .orc-impresso { display: block; visibility: visible; position: fixed; inset: 0; margin: 0; padding: 48px; white-space: pre-wrap; word-break: break-word; font: 15px/1.7 "Space Grotesk", sans-serif; color: #111; background: #fff; }
+}
+
+/* FAQ abre/fecha com a altura animada, em vez de seco (navegador sem suporte: continua igual a antes) */
+@supports (interpolate-size: allow-keywords) {
+    .faq-item { interpolate-size: allow-keywords; }
+    .faq-item::details-content { height: 0; overflow: hidden; transition: height .28s ease, content-visibility .28s allow-discrete; }
+    .faq-item[open]::details-content { height: auto; content-visibility: visible; }
+    @media (prefers-reduced-motion: reduce) { .faq-item::details-content { transition: none; } }
+}
+
+/* Passar o mouse num projeto escurece um pouco os outros (spotlight) */
+@media (hover: hover) {
+    .lista-projetos:has(.card-projeto:hover) .card-projeto:not(:hover) { opacity: .55; }
+    .lista-projetos .card-projeto { transition: opacity .25s ease; }
+}
+@media (prefers-reduced-motion: reduce) { .lista-projetos .card-projeto { transition: none; } }
+
+/* Destaque de cor a partir das próprias cores do site, em vez de um tom fixo à parte */
+@supports (color: color-mix(in srgb, red, blue)) {
+    .chip-filtro.is-ativo { background: color-mix(in srgb, var(--cyan) 20%, transparent); border-color: var(--cyan); }
+    .orc-opcao[aria-pressed="true"] { box-shadow: 0 0 0 3px color-mix(in srgb, var(--cyan) 25%, transparent); }
+}
+
+/* Quem tem sensibilidade a transparência: os cartões "de vidro" viram sólidos */
+@media (prefers-reduced-transparency: reduce) {
+    .card-projeto, .lista-jornada article, .orcamento-caixa, .changelog, .github-atividade, .aviso-whats, .modal-caixa, .paleta-caixa, .tour-caixa { background: var(--surface) !important; backdrop-filter: none !important; }
+}
+
+/* Modo de alto contraste do Windows: garante borda visível em vez de sumir com o efeito de vidro */
+@media (forced-colors: active) {
+    .card-projeto, .lista-jornada article, .orcamento-caixa, .aviso-whats, .modal-caixa, .faq-item { border: 1px solid CanvasText; }
+    body::before, body::after, .card-projeto::before, .card-projeto::after { display: none; }
+}
+
+/* Link direto pra uma pergunta do FAQ (ex.: #faq-prazo) já abre ela destacada */
+.faq-item:target { border-color: var(--cyan); background: rgba(var(--cyan-rgb), .06); }
+.faq-item:target summary { color: var(--cyan); }
+
+/* Título da seção "gruda" por um instante ao passar por uma seção comprida */
+@media (min-width: 721px) {
+    .secao .eyebrow { position: sticky; top: 18px; z-index: 1; }
+}
+
+/* Toque bem sutil na foto do "Sobre mim" ao passar o mouse */
+@media (hover: hover) {
+    .foto-wrapper img { transition: filter .4s ease; }
+    .foto-wrapper:hover img { filter: saturate(1.15) contrast(1.04); }
+}
+
+/* Cor de seleção/controles nativos (checkbox, range) combinando com o site, se algum dia existir um */
+:root { accent-color: var(--cyan); }
+
+/* Relógio de Campo Grande - MS no contato */
+.contato-relogio { margin: 10px 0 0; color: var(--muted); font: .82rem "DM Mono", monospace; }
+
+/* Aviso "você já me chamou" pra quem volta depois de mandar um orçamento */
+.aviso-ja-chamou { position: relative; margin: 0 0 20px; padding: 14px 40px 14px 16px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); font-size: .88rem; line-height: 1.5; }
+.aviso-ja-chamou a { color: var(--cyan); }
+.aviso-ja-chamou button { position: absolute; top: 8px; right: 8px; width: 26px; height: 26px; border: 0; border-radius: 50%; background: transparent; color: var(--muted); cursor: pointer; }
+
+/* Painel de atalhos (tecla "?") */
+.atalhos-overlay { position: fixed; inset: 0; z-index: 85; display: flex; align-items: center; justify-content: center; padding: 24px; background: rgba(10,5,20,.78); backdrop-filter: blur(4px); }
+.atalhos-overlay[hidden] { display: none; }
+.atalhos-caixa { width: min(420px, 100%); max-height: 86vh; overflow: auto; padding: 24px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); box-shadow: var(--shadow); }
+.atalhos-caixa h3 { margin: 0 0 16px; }
+.atalhos-caixa dl { display: grid; grid-template-columns: auto 1fr; gap: 10px 16px; margin: 0; }
+.atalhos-caixa dt { padding: 3px 8px; border: 1px solid var(--line); border-radius: 4px; background: var(--surface-2); font: 500 .78rem "DM Mono", monospace; white-space: nowrap; }
+.atalhos-caixa dd { margin: 0; color: var(--muted); font-size: .88rem; align-self: center; }
+.atalhos-fechar { display: block; margin: 18px 0 0 auto; }
+
+/* Confete simples ao terminar o orçamento (sem canvas nem biblioteca) */
+.confete { position: fixed; top: -12px; z-index: 90; width: 8px; height: 14px; pointer-events: none; border-radius: 1px; }
+@keyframes cair-confete { to { transform: translateY(105vh) rotate(540deg); opacity: 0; } }

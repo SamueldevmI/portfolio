@@ -433,14 +433,220 @@
 
     /* ---------- Detalhes pequenos ---------- */
 
-    /* Cumprimento pelo horário no título do início, em vez de "Olá" fixo. Sem JS, "Olá" continua aí. */
+    /* Cumprimento pelo horário no título do início — "de volta" pra quem já visitou. Sem JS, "Olá" continua aí. */
     (function saudacao() {
         const h1 = document.querySelector(".hero-conteudo h1");
         const primeiroTexto = h1 ? h1.firstChild : null;
         if (!primeiroTexto || primeiroTexto.nodeType !== Node.TEXT_NODE || !primeiroTexto.textContent.startsWith("Olá")) return;
+        let jaVisitou = false;
+        try {
+            jaVisitou = localStorage.getItem("ja-visitou") === "1";
+            localStorage.setItem("ja-visitou", "1");
+        } catch { /* sem armazenamento: sempre trata como primeira visita, sem problema */ }
         const hora = new Date().getHours();
         const cumprimento = hora < 6 ? "Boa madrugada" : hora < 12 ? "Bom dia" : hora < 18 ? "Boa tarde" : "Boa noite";
-        primeiroTexto.textContent = primeiroTexto.textContent.replace("Olá", cumprimento);
+        primeiroTexto.textContent = primeiroTexto.textContent.replace("Olá", jaVisitou ? `${cumprimento}, que bom te ver de novo` : cumprimento);
+    })();
+
+    /* Link direto pra uma pergunta do FAQ (ex.: #faq-prazo) também abre ela — :target só destaca, não abre. */
+    (function abrirFaqDoLink() {
+        function abrirDoHash() {
+            if (!location.hash) return;
+            try {
+                const alvo = document.querySelector(`.faq-item${location.hash}`);
+                if (alvo) alvo.open = true;
+            } catch { /* link com # esquisito: ignora, sem quebrar a página */ }
+        }
+        abrirDoHash();
+        window.addEventListener("hashchange", abrirDoHash);
+    })();
+
+    /* Relógio de Campo Grande - MS perto do WhatsApp, pra quem é de longe saber se é hora de gente acordada. */
+    (function relogioContato() {
+        const acoes = document.querySelector(".contato-acoes");
+        if (!acoes || typeof Intl === "undefined") return;
+        const p = document.createElement("p");
+        p.className = "contato-relogio";
+        acoes.after(p);
+        let formatador;
+        try {
+            formatador = new Intl.DateTimeFormat("pt-BR", { timeZone: "America/Campo_Grande", hour: "2-digit", minute: "2-digit" });
+        } catch { return; } // fuso não suportado neste navegador: sem relógio, sem quebrar nada
+        function atualizar() { p.textContent = `🕒 Agora em Campo Grande - MS: ${formatador.format(new Date())}`; }
+        atualizar();
+        setInterval(atualizar, 30000);
+    })();
+
+    /* Tema pelo nascer/pôr do sol real de Campo Grande — só refina o palpite por horário fixo que já
+       está na tela (7h-18h), sem mexer se a pessoa já escolheu um tema ou se o celular tem preferência. */
+    (function temaPeloSol() {
+        if (typeof lerTemaSalvo !== "function" || typeof atualizarTema !== "function" || lerTemaSalvo()) return;
+        if (typeof modoEscuroDoSistema !== "undefined" && modoEscuroDoSistema && modoEscuroDoSistema.matches) return;
+        const hoje = new Date().toISOString().slice(0, 10);
+        const CHAVE = "sol-campo-grande";
+        function aplicar(nascer, poeSol) {
+            if (lerTemaSalvo()) return; // pode ter escolhido manualmente enquanto isso carregava
+            atualizarTema(Date.now() >= nascer && Date.now() < poeSol);
+        }
+        let salvo = null;
+        try { salvo = JSON.parse(localStorage.getItem(CHAVE) || "null"); } catch { /* sem armazenamento */ }
+        if (salvo && salvo.dia === hoje) { aplicar(salvo.nascer, salvo.poeSol); return; }
+        fetch("https://api.sunrise-sunset.org/json?lat=-20.4697&lng=-54.6201&formatted=0")
+            .then((r) => r.json())
+            .then((dados) => {
+                if (dados.status !== "OK") return;
+                const nascer = new Date(dados.results.sunrise).getTime();
+                const poeSol = new Date(dados.results.sunset).getTime();
+                try { localStorage.setItem(CHAVE, JSON.stringify({ dia: hoje, nascer, poeSol })); } catch { /* sem armazenamento: busca de novo na próxima visita */ }
+                aplicar(nascer, poeSol);
+            })
+            .catch(() => { /* sem internet ou serviço fora do ar: mantém o palpite por horário que já está na tela */ });
+    })();
+
+    /* "Você já me chamou" — pra quem volta depois de mandar um orçamento, um lembrete com o link direto. */
+    (function jaChamou() {
+        const CHAVE = "orcamento-enviado";
+        function registrar() {
+            try { localStorage.setItem(CHAVE, String(Date.now())); } catch { /* sem armazenamento: só não lembra na próxima visita */ }
+        }
+        document.addEventListener("click", (evento) => {
+            if (evento.target.closest('.orc-acoes a[href*="wa.me"]')) registrar();
+        });
+
+        const contato = document.getElementById("contato");
+        let quando = null;
+        try { quando = Number(localStorage.getItem(CHAVE)) || null; } catch { /* sem armazenamento */ }
+        if (!contato || !quando) return;
+        const DIAS_30 = 30 * 24 * 60 * 60 * 1000;
+        if (Date.now() - quando > DIAS_30) return;
+        const link = contato.querySelector('a[href*="wa.me"]');
+        if (!link) return;
+        const data = new Date(quando).toLocaleDateString("pt-BR");
+        const aviso = document.createElement("div");
+        aviso.className = "aviso-ja-chamou";
+        aviso.innerHTML = `<span>Você já me chamou em ${data}. <a href="${link.href}" target="_blank" rel="noopener noreferrer">Continuar a conversa</a></span>`;
+        const fechar = document.createElement("button");
+        fechar.type = "button";
+        fechar.setAttribute("aria-label", "Fechar aviso");
+        fechar.textContent = "✕";
+        fechar.addEventListener("click", () => aviso.remove());
+        aviso.append(fechar);
+        contato.prepend(aviso);
+    })();
+
+    /* Confete simples ao chegar na mensagem pronta do orçamento — sem canvas nem biblioteca. */
+    (function confeteOrcamento() {
+        const raiz = document.getElementById("orcamentoApp");
+        if (!raiz || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+        let ultimaVez = 0;
+        function estourar() {
+            const agora = Date.now();
+            if (agora - ultimaVez < 4000) return;
+            ultimaVez = agora;
+            const cores = ["var(--cyan)", "var(--violet)", "var(--pink)"];
+            for (let i = 0; i < 24; i++) {
+                const pedaco = document.createElement("i");
+                pedaco.className = "confete";
+                pedaco.style.left = (Math.random() * 100) + "vw";
+                pedaco.style.background = cores[i % cores.length];
+                pedaco.style.animation = `cair-confete ${(1.6 + Math.random() * .9).toFixed(2)}s ease-in ${(Math.random() * .3).toFixed(2)}s forwards`;
+                document.body.appendChild(pedaco);
+                pedaco.addEventListener("animationend", () => pedaco.remove());
+            }
+        }
+        new MutationObserver((mutacoes) => {
+            for (const m of mutacoes) {
+                for (const no of m.addedNodes) {
+                    if (no.nodeType === 1 && (no.matches?.(".orc-mensagem") || no.querySelector?.(".orc-mensagem"))) { estourar(); return; }
+                }
+            }
+        }).observe(raiz, { childList: true, subtree: true });
+    })();
+
+    /* Painel de atalhos escondidos (tecla "?") — Konami não entra na lista de propósito. */
+    (function painelAtalhos() {
+        const overlay = document.createElement("div");
+        overlay.className = "atalhos-overlay";
+        overlay.id = "atalhosOverlay";
+        overlay.hidden = true;
+        overlay.innerHTML = `<div class="atalhos-caixa" role="dialog" aria-modal="true" aria-labelledby="atalhosTitulo">
+            <h3 id="atalhosTitulo">Atalhos do site</h3>
+            <dl>
+                <dt>Ctrl+K</dt><dd>Abre a busca de comandos</dd>
+                <dt>Esc</dt><dd>Fecha o que estiver aberto</dd>
+                <dt>?</dt><dd>Mostra este painel</dd>
+                <dt>↑ no terminal</dt><dd>Repete o último comando</dd>
+            </dl>
+            <button type="button" class="botao botao-secundario atalhos-fechar">Fechar</button>
+        </div>`;
+        document.body.append(overlay);
+        let focoAntes = null;
+        function abrir() {
+            focoAntes = document.activeElement;
+            overlay.hidden = false;
+            overlay.querySelector(".atalhos-fechar").focus();
+        }
+        function fechar() {
+            overlay.hidden = true;
+            if (focoAntes) focoAntes.focus();
+        }
+        overlay.querySelector(".atalhos-fechar").addEventListener("click", fechar);
+        overlay.addEventListener("click", (evento) => { if (evento.target === overlay) fechar(); });
+        document.addEventListener("keydown", (evento) => {
+            if (evento.key === "Escape" && !overlay.hidden) { fechar(); return; }
+            if (evento.key !== "?" || overlay.hidden === false) return;
+            const alvo = evento.target;
+            if (alvo?.matches?.("input, textarea, [contenteditable]")) return;
+            abrir();
+        });
+    })();
+
+    /* Lembra o filtro de tecnologia escolhido (celular ou computador) e reabre o site já filtrado. */
+    (function lembrarFiltro() {
+        if (typeof chipsFiltro === "undefined" || !chipsFiltro.length) return;
+        const CHAVE = "filtro-projetos";
+        chipsFiltro.forEach((chip) => {
+            chip.addEventListener("click", () => {
+                try { localStorage.setItem(CHAVE, chip.dataset.filtro || "todos"); } catch { /* sem armazenamento */ }
+            });
+        });
+        let salvo = null;
+        try { salvo = localStorage.getItem(CHAVE); } catch { /* sem armazenamento */ }
+        if (!salvo || salvo === "todos") return;
+        const chip = Array.from(chipsFiltro).find((c) => c.dataset.filtro === salvo);
+        if (chip) chip.click();
+    })();
+
+    /* Pré-carrega a demonstração ao passar o mouse/dedo no card por um instante (só liga no Wi-Fi/4G bom). */
+    (function preCarregarDemo() {
+        const conexao = navigator.connection;
+        if (conexao && (conexao.saveData || /(^|-)(2g|3g)$/.test(conexao.effectiveType || ""))) return;
+        const jaFeitos = new Set();
+        function preCarregar(caminho) {
+            if (!caminho || caminho.startsWith("http") || jaFeitos.has(caminho)) return;
+            jaFeitos.add(caminho);
+            const link = document.createElement("link");
+            link.rel = "prefetch";
+            link.href = caminho;
+            document.head.appendChild(link);
+        }
+        document.querySelectorAll(".card-projeto [data-demo]").forEach((botao) => {
+            let temporizador = null;
+            const caminho = botao.getAttribute("data-demo");
+            const iniciar = () => { temporizador = setTimeout(() => preCarregar(caminho), 300); };
+            const cancelar = () => clearTimeout(temporizador);
+            botao.addEventListener("mouseenter", iniciar);
+            botao.addEventListener("mouseleave", cancelar);
+            botao.addEventListener("focus", iniciar);
+            botao.addEventListener("blur", cancelar);
+            botao.addEventListener("touchstart", iniciar, { passive: true });
+        });
+    })();
+
+    /* Segundo segredo no terminal, além do Konami code. */
+    (function segundoSegredoTerminal() {
+        if (typeof comandosTerminal === "undefined") return;
+        comandosTerminal.cafe = comandosTerminal["café"] = () => "☕ Bom café é metade do código. Valeu por bisbilhotar o terminal!";
     })();
 
     /* Vibração bem curta ao escolher uma opção no orçamento (celular Android; iPhone ignora sozinho). */
