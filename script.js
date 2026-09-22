@@ -370,21 +370,75 @@ window.addEventListener("scroll", () => {
 });
 atualizarCamadasScroll();
 
+/* "Trabalhando agora em": o nome do projeto mais recente fica guardado no aparelho.
+   A API do GitHub só deixa 60 consultas por hora por endereço de rede, e no celular várias pessoas dividem o mesmo
+   endereço da operadora: sem guardar, a linha sumia sem aviso. Guardamos só o nome e a hora em que o guardamos. */
+const CHAVE_TRABALHANDO = "gh-trabalhando-v1";
+const VALIDADE_TRABALHANDO_MS = 30 * 60 * 1000;          // dentro desse prazo nem pergunta ao GitHub
+const MAXIMO_TRABALHANDO_MS = 14 * 24 * 60 * 60 * 1000;   // mais velho que isso, o nome guardado já não vale mostrar
+
+function lerTrabalhando() {
+    try {
+        const salvo = JSON.parse(localStorage.getItem(CHAVE_TRABALHANDO) || "null");
+        if (!salvo || salvo.v !== 1 || typeof salvo.em !== "number") return null;
+        return {
+            em: salvo.em,
+            nome: typeof salvo.nome === "string" ? salvo.nome : null,
+            ate: typeof salvo.ate === "number" ? salvo.ate : 0
+        };
+    } catch {
+        return null;
+    }
+}
+
+function guardarTrabalhando(dados) {
+    try {
+        localStorage.setItem(CHAVE_TRABALHANDO, JSON.stringify({ v: 1, em: dados.em, nome: dados.nome, ate: dados.ate || 0 }));
+    } catch {
+        /* sem armazenamento: só não guarda */
+    }
+}
+
+function mostrarTrabalhando(nome) {
+    const trabalhandoEl = document.getElementById("trabalhandoAgora");
+    // Nomes de repositório só têm letras, números, ponto, hífen e sublinhado: qualquer outra coisa vinda do aparelho é ignorada.
+    if (!trabalhandoEl || typeof nome !== "string" || !/^[\w.-]{1,100}$/.test(nome)) return;
+    const forte = document.createElement("strong");
+    forte.textContent = nome;
+    trabalhandoEl.textContent = "🔨 Trabalhando agora em: ";
+    trabalhandoEl.appendChild(forte);
+    trabalhandoEl.hidden = false;
+}
+
 async function carregarStatsGithub() {
+    const agora = Date.now();
+    const guardado = lerTrabalhando();
+    // O que estiver guardado aparece na hora, sem esperar a rede.
+    if (guardado && guardado.nome && agora - guardado.em < MAXIMO_TRABALHANDO_MS) mostrarTrabalhando(guardado.nome);
+    if (guardado && guardado.ate > agora) return;                                                // o GitHub pediu para esperar: não insiste
+    if (guardado && guardado.nome && agora - guardado.em < VALIDADE_TRABALHANDO_MS) return;      // guardado há pouco: nem pergunta
+    const anterior = guardado ? { em: guardado.em, nome: guardado.nome } : { em: 0, nome: null };
     try {
         const resposta = await fetch("https://api.github.com/users/SamueldevmI/repos?per_page=100&type=owner");
-        if (!resposta.ok) return;
+        if (!resposta.ok) {
+            // Limite atingido (403/429) ou erro do servidor: guarda "não insista até..." e segue com o nome que já tínhamos.
+            const reinicio = Number(resposta.headers.get("x-ratelimit-reset")) * 1000;
+            const limite = resposta.status === 403 || resposta.status === 429;
+            const espera = limite ? 30 : 5;
+            const ate = limite && reinicio > Date.now() ? Math.min(reinicio, Date.now() + 2 * 60 * 60 * 1000) : Date.now() + espera * 60 * 1000;
+            guardarTrabalhando({ em: anterior.em, nome: anterior.nome, ate });
+            return;
+        }
         const repos = await resposta.json();
         if (!Array.isArray(repos)) return;
 
         const maisRecente = repos.filter((r) => !r.fork).sort((a, b) => new Date(b.pushed_at) - new Date(a.pushed_at))[0];
-        const trabalhandoEl = document.getElementById("trabalhandoAgora");
-        if (maisRecente && trabalhandoEl) {
-            trabalhandoEl.innerHTML = `🔨 Trabalhando agora em: <strong>${maisRecente.name}</strong>`;
-            trabalhandoEl.hidden = false;
+        if (maisRecente) {
+            guardarTrabalhando({ em: Date.now(), nome: maisRecente.name });
+            mostrarTrabalhando(maisRecente.name);
         }
     } catch {
-        /* API do GitHub indisponível ou limite de requisições atingido: sem "trabalhando agora em" nesta visita */
+        /* sem rede ou API fora do ar: fica o nome guardado, se houver */
     }
 }
 carregarStatsGithub();
