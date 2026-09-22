@@ -1,4 +1,4 @@
-"""Gera os ícones do app (icons/*.png e favicon.svg): um disco de vinil âmbar num fundo escuro.
+"""Gera os ícones do app (icons/*.png e favicon.svg): um disco de vinil ciano num fundo azul-noite.
 
 Uso:  python gerar-icones.py
 """
@@ -9,12 +9,12 @@ AQUI = os.path.dirname(os.path.abspath(__file__))
 SAIDA = os.path.join(AQUI, "icons")
 os.makedirs(SAIDA, exist_ok=True)
 
-FUNDO1 = (33, 28, 24)
-FUNDO2 = (16, 14, 12)
-AMBAR = (255, 181, 46)
-CORAL = (255, 77, 109)
-TINTA = (28, 15, 6)
-CREME = (255, 207, 138)
+FUNDO1 = (36, 48, 79)
+FUNDO2 = (10, 14, 26)
+AMBAR = (124, 216, 255)
+CORAL = (124, 107, 255)
+TINTA = (4, 16, 28)
+CREME = (127, 214, 255)
 SUPER = 4  # desenha 4x maior e reduz, pra bordas lisas
 
 
@@ -36,7 +36,7 @@ def icone(t, raio_rel, arredondado):
     cx = cy = g / 2
     r = g * raio_rel
 
-    # o disco: degradê âmbar -> coral dentro de um círculo
+    # o disco: degradê ciano -> azul-violeta dentro de um círculo
     disco = degrade(g, AMBAR, CORAL).convert("RGBA")
     mascara = Image.new("L", (g, g), 0)
     ImageDraw.Draw(mascara).ellipse([cx - r, cy - r, cx + r, cy + r], fill=255)
@@ -79,11 +79,11 @@ with open(os.path.join(SAIDA, "favicon.svg"), "w", encoding="utf-8") as f:
     f.write(
         '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">'
         '<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">'
-        '<stop offset="0" stop-color="#ffb52e"/><stop offset="1" stop-color="#ff4d6d"/></linearGradient></defs>'
-        '<rect width="64" height="64" rx="14" fill="#1a1714"/>'
+        '<stop offset="0" stop-color="#7cd8ff"/><stop offset="1" stop-color="#7c6bff"/></linearGradient></defs>'
+        '<rect width="64" height="64" rx="14" fill="#121a2e"/>'
         '<circle cx="32" cy="32" r="23" fill="url(#g)"/>'
-        '<circle cx="32" cy="32" r="17" fill="none" stroke="#1c0f06" stroke-opacity=".3"/>'
-        '<circle cx="32" cy="32" r="8.5" fill="#1c0f06"/><circle cx="32" cy="32" r="2.4" fill="#ffcf8a"/>'
+        '<circle cx="32" cy="32" r="17" fill="none" stroke="#04101c" stroke-opacity=".3"/>'
+        '<circle cx="32" cy="32" r="8.5" fill="#04101c"/><circle cx="32" cy="32" r="2.4" fill="#7fd6ff"/>'
         '<path d="M14.5 26a19 19 0 0 1 11-10.5" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="2" stroke-linecap="round"/>'
         "</svg>"
     )
