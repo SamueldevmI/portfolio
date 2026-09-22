@@ -480,14 +480,17 @@ footer a:focus-visible::after, footer .link-rodape:focus-visible::after { transf
 }
 
 /* ---------- "Mais projetos": seçãozinha discreta, fora da vitrine principal ----------
-   Controle de gastos, a API dele e o Planejador de Treino saíram da vitrine ("Projetos em
-   destaque") e viraram uma lista simples de links — sem card grande, sem prévia visual. */
+   Controle de gastos, a API dele, o Planejador de Treino e (desde 2026-09-23) o Meu primeiro
+   site saíram da vitrine ("Projetos em destaque") e viraram uma lista simples de links — sem
+   card grande, sem prévia visual, mas com uma linha explicando o que é e pra quem serve. */
 .lista-mini-projetos { display: grid; margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
 .lista-mini-projetos li { border-bottom: 1px solid var(--line); }
-.mini-projeto { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px; padding: 18px 4px; color: var(--text); text-decoration: none; transition: opacity .25s ease, color .25s ease; }
+.mini-projeto { display: flex; flex-direction: column; gap: 8px; padding: 18px 4px; color: var(--text); text-decoration: none; transition: opacity .25s ease, color .25s ease; }
+.mini-projeto-cabecalho { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px; width: 100%; }
 .mini-projeto-nome { font: 600 1.05rem "Space Grotesk", sans-serif; }
 .mini-projeto-tag { color: var(--muted); font: .78rem "DM Mono", monospace; }
 .mini-projeto-seta { margin-left: auto; color: var(--cyan); transition: transform .2s ease; }
+.mini-projeto-desc { margin: 0; max-width: 62ch; color: var(--muted); font-size: .86rem; line-height: 1.5; }
 @media (hover: hover) {
     .mini-projeto:hover { color: var(--cyan); }
     .mini-projeto:hover .mini-projeto-seta { transform: translate(3px, -3px); }
