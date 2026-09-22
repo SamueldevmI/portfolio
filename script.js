@@ -956,6 +956,13 @@ if (botaoBusca && paletaOverlay) {
     const CHAVE = "orcamento-rascunho";
     const VALIDADE_MS = 14 * 24 * 60 * 60 * 1000;
 
+    // Fica fora da caixa do orçamento de propósito: na impressão, ".orcamento-caixa" inteira some
+    // (regra já existente do site), e um elemento dentro de algo com display:none não tem como aparecer.
+    const impresso = document.createElement("pre");
+    impresso.className = "orc-impresso";
+    impresso.setAttribute("aria-hidden", "true");
+    document.body.append(impresso);
+
     // Links com ?origem=instagram e ?tipo=app (só valores conhecidos entram na mensagem)
     const ORIGENS = { instagram: "Instagram", whatsapp: "WhatsApp", linkedin: "LinkedIn", github: "GitHub", facebook: "Facebook", google: "Google" };
     const PARAMETROS = new URLSearchParams(location.search);
@@ -1086,6 +1093,7 @@ if (botaoBusca && paletaOverlay) {
                 : resp[passo.id];
             if (valor) linhas.push(`${passo.rotuloMsg}: ${valor}`);
         });
+        if (resp.siteAtual) linhas.push(`Site/rede social atual: ${resp.siteAtual}`);
         if (resp.obs) linhas.push(`Mais detalhes: ${resp.obs}`);
         return linhas.join("\n");
     }
@@ -1282,6 +1290,15 @@ if (botaoBusca && paletaOverlay) {
         nome.autocomplete = "given-name";
         nome.placeholder = "Ex.: Ana";
         nome.value = typeof resp.nome === "string" ? resp.nome : "";
+        const rotuloSite = criar("label", "orc-rotulo", "Já tem site ou rede social do negócio? (opcional)");
+        rotuloSite.htmlFor = "orcSiteAtual";
+        const site = criar("input", "orc-campo");
+        site.id = "orcSiteAtual";
+        site.type = "text";
+        site.maxLength = 200;
+        site.inputMode = "url";
+        site.placeholder = "Ex.: instagram.com/seunegocio";
+        site.value = typeof resp.siteAtual === "string" ? resp.siteAtual : "";
         const rotuloObs = criar("label", "orc-rotulo", "Quer acrescentar algo? (opcional)");
         rotuloObs.htmlFor = "orcObs";
         const obs = criar("textarea", "orc-campo");
@@ -1293,7 +1310,7 @@ if (botaoBusca && paletaOverlay) {
         const erro = criar("p", "orc-erro", "Escreva seu nome para eu saber com quem estou falando.");
         erro.setAttribute("role", "alert");
         erro.hidden = true;
-        pai.append(rotuloNome, nome, rotuloObs, obs, erro);
+        pai.append(rotuloNome, nome, rotuloSite, site, rotuloObs, obs, erro);
 
         const seguir = () => {
             if (nome.value.trim().length < 2) {
@@ -1315,6 +1332,12 @@ if (botaoBusca && paletaOverlay) {
                 evento.preventDefault();
                 seguir();
             }
+        });
+        site.addEventListener("input", () => {
+            const texto = site.value.trim();
+            if (texto) resp.siteAtual = texto;
+            else delete resp.siteAtual;
+            salvar();
         });
         obs.addEventListener("input", () => {
             const texto = obs.value.trim();
@@ -1364,9 +1387,19 @@ if (botaoBusca && paletaOverlay) {
         copiar.type = "button";
         copiar.addEventListener("click", () => copiarTexto(campo));
 
+        // "Baixar em PDF": usa a caixa de impressão do próprio navegador (sem depender de nada externo).
+        // No celular, a tela de impressão do Android/iPhone já tem a opção "Salvar como PDF".
+        const baixarPdf = criar("button", "botao botao-secundario", "Baixar em PDF");
+        baixarPdf.type = "button";
+        baixarPdf.addEventListener("click", () => {
+            impresso.textContent = campo.value;
+            document.body.classList.add("imprimindo-resumo");
+            window.print();
+        });
+
         enviar.classList.add("orc-pulso");
         const acoes = criar("div", "orc-acoes");
-        acoes.append(enviar, copiar);
+        acoes.append(enviar, copiar, baixarPdf);
 
         // O navegador de dentro do Instagram/Facebook nem sempre abre o WhatsApp: oferece outro caminho.
         let avisoApp = null;
@@ -1392,6 +1425,8 @@ if (botaoBusca && paletaOverlay) {
         caixa.append(campo, acoes, ...(avisoApp ? [avisoApp] : []), nav);
         return caixa;
     }
+    // Uma vez só: tira a marca de "imprimindo" quando a caixa de impressão fecha (cancelar ou salvar).
+    window.addEventListener("afterprint", () => document.body.classList.remove("imprimindo-resumo"));
 
     function desenhar(foco, direcao = 0) {
         const lista = passos();
