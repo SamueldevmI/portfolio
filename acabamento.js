@@ -276,4 +276,180 @@
         celular.addEventListener("change", montar);
         montar();
     })();
+
+    /* ---------- "Não abriu o WhatsApp?" perto de qualquer botão que leve pra lá ----------
+       Só dá pra saber se o WhatsApp abriu de verdade olhando se a pessoa saiu da aba (o celular manda
+       o navegador pra trás quando troca de app). Por isso: clicou num link/botão de WhatsApp, espera um
+       tempinho; se a aba continuar na tela, provavelmente não abriu nada, e aparece um jeito de copiar
+       a mensagem ou o número pra chamar por fora. Cobre tanto os links <a> (menu, orçamento, contato)
+       quanto o botão da paleta de comandos, que abre com window.open em vez de um link de verdade. */
+    (function avisoWhatsApp() {
+        function dadosDoLink(href) {
+            try {
+                const url = new URL(href, location.href);
+                const numero = url.pathname.replace(/\D+/g, "");
+                if (!numero) return null;
+                return { numero, texto: url.searchParams.get("text") || "" };
+            } catch {
+                return null;
+            }
+        }
+
+        let painel = null;
+        let timerFechar = null;
+
+        function esconderAviso() {
+            if (painel) painel.classList.remove("mostrar");
+        }
+
+        async function copiar(valor, mensagemOk) {
+            try {
+                await navigator.clipboard.writeText(valor);
+                if (typeof mostrarToast === "function") mostrarToast(mensagemOk);
+            } catch {
+                if (typeof mostrarToast === "function") mostrarToast("Não foi possível copiar. Copie manualmente.");
+            }
+        }
+
+        function mostrarAviso(dados) {
+            if (!painel) {
+                painel = document.createElement("div");
+                painel.className = "aviso-whats";
+                painel.setAttribute("role", "status");
+                document.body.appendChild(painel);
+            }
+            painel.innerHTML = "";
+
+            const fechar = document.createElement("button");
+            fechar.type = "button";
+            fechar.className = "aviso-whats-fechar";
+            fechar.setAttribute("aria-label", "Fechar aviso");
+            fechar.textContent = "✕";
+            fechar.addEventListener("click", esconderAviso);
+
+            const texto = document.createElement("p");
+            texto.textContent = "O WhatsApp não abriu? Copie e me chame por lá.";
+
+            const acoes = document.createElement("div");
+            acoes.className = "aviso-whats-acoes";
+            if (dados.texto) {
+                const botaoMsg = document.createElement("button");
+                botaoMsg.type = "button";
+                botaoMsg.className = "botao botao-secundario";
+                botaoMsg.textContent = "Copiar mensagem";
+                botaoMsg.addEventListener("click", () => copiar(dados.texto, "Mensagem copiada!"));
+                acoes.append(botaoMsg);
+            }
+            const botaoNum = document.createElement("button");
+            botaoNum.type = "button";
+            botaoNum.className = "botao botao-secundario";
+            botaoNum.textContent = "Copiar número";
+            botaoNum.addEventListener("click", () => copiar("+" + dados.numero, "Número copiado!"));
+            acoes.append(botaoNum);
+
+            painel.append(fechar, texto, acoes);
+            requestAnimationFrame(() => painel.classList.add("mostrar"));
+            clearTimeout(timerFechar);
+            timerFechar = setTimeout(esconderAviso, 12000);
+        }
+
+        function vigiar(href) {
+            const dados = dadosDoLink(href);
+            if (!dados) return;
+            // Olha só uma vez, no fim da espera: se cancelasse na hora em que a aba escondesse,
+            // um instante de tela bloqueada ou uma notificação passageira já contaria como "abriu".
+            setTimeout(() => {
+                if (!document.hidden) mostrarAviso(dados);
+            }, 2200);
+        }
+
+        document.addEventListener("click", (evento) => {
+            const link = evento.target.closest('a[href*="wa.me"]');
+            if (link) vigiar(link.href);
+        });
+
+        // A paleta de comandos (Ctrl+K) abre o WhatsApp com window.open, não com um link <a>.
+        const abrirJanelaOriginal = window.open.bind(window);
+        window.open = function (url, ...resto) {
+            if (typeof url === "string" && url.includes("wa.me")) vigiar(url);
+            return abrirJanelaOriginal(url, ...resto);
+        };
+    })();
+
+    /* ---------- Puxar a demonstração pra baixo fecha ela (gesto comum de app no celular) ----------
+       O botão Voltar do Android já fecha (outro recurso, mais acima); isso aqui é o gesto de arrastar,
+       do jeito que WhatsApp/Instagram fazem com as próprias janelas. Só reage a toque (não a mouse) e
+       começa a partir do cabeçalho da janela, pra não brigar com a rolagem do conteúdo lá dentro. */
+    (function arrastarModal() {
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+        const overlay = document.getElementById("modalOverlay");
+        const caixa = overlay ? overlay.querySelector(".modal-caixa") : null;
+        const cabecalho = overlay ? overlay.querySelector(".modal-cabecalho") : null;
+        const fechar = document.getElementById("modalFechar");
+        if (!overlay || !caixa || !cabecalho || !fechar) return;
+
+        const alca = document.createElement("div");
+        alca.className = "modal-alca";
+        alca.setAttribute("aria-hidden", "true");
+        cabecalho.prepend(alca);
+
+        let inicioY = 0;
+        let arrastando = false;
+        let deslocamento = 0;
+
+        function comecar(evento) {
+            if (evento.pointerType !== "touch" || evento.target.closest("button")) return;
+            inicioY = evento.clientY;
+            arrastando = true;
+            caixa.style.transition = "none";
+        }
+        function mover(evento) {
+            if (!arrastando) return;
+            deslocamento = Math.max(0, evento.clientY - inicioY);
+            caixa.style.transform = `translateY(${deslocamento}px)`;
+            overlay.style.background = deslocamento ? `rgba(10,5,20,${Math.max(.2, .78 - deslocamento / 400)})` : "";
+        }
+        function soltar() {
+            if (!arrastando) return;
+            arrastando = false;
+            caixa.style.transition = "";
+            overlay.style.background = "";
+            const fechou = deslocamento > 110;
+            deslocamento = 0;
+            if (fechou) fechar.click();
+            else caixa.style.transform = "";
+        }
+        cabecalho.addEventListener("pointerdown", comecar);
+        cabecalho.addEventListener("pointermove", mover);
+        cabecalho.addEventListener("pointerup", soltar);
+        cabecalho.addEventListener("pointercancel", soltar);
+        // Se a janela fechar por outro caminho (X, Esc, fundo) ou abrir de novo, não pode sobrar arrasto preso.
+        new MutationObserver(() => {
+            caixa.style.transform = "";
+            caixa.style.transition = "";
+            overlay.style.background = "";
+        }).observe(overlay, { attributes: true, attributeFilter: ["hidden"] });
+    })();
+
+    /* ---------- Detalhes pequenos ---------- */
+
+    /* Cumprimento pelo horário no título do início, em vez de "Olá" fixo. Sem JS, "Olá" continua aí. */
+    (function saudacao() {
+        const h1 = document.querySelector(".hero-conteudo h1");
+        const primeiroTexto = h1 ? h1.firstChild : null;
+        if (!primeiroTexto || primeiroTexto.nodeType !== Node.TEXT_NODE || !primeiroTexto.textContent.startsWith("Olá")) return;
+        const hora = new Date().getHours();
+        const cumprimento = hora < 6 ? "Boa madrugada" : hora < 12 ? "Bom dia" : hora < 18 ? "Boa tarde" : "Boa noite";
+        primeiroTexto.textContent = primeiroTexto.textContent.replace("Olá", cumprimento);
+    })();
+
+    /* Vibração bem curta ao escolher uma opção no orçamento (celular Android; iPhone ignora sozinho). */
+    (function vibrarNaEscolha() {
+        if (!("vibrate" in navigator) || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+        document.addEventListener("click", (evento) => {
+            if (evento.target.closest(".orc-opcao")) {
+                try { navigator.vibrate(12); } catch { /* alguns navegadores negam sem gesto recente: sem problema, é só um extra */ }
+            }
+        });
+    })();
 })();

@@ -379,3 +379,23 @@ html.dark-mode { color-scheme: light; }
 /* area de toque das pilulas: agora sao botoes, entao entram na regra de 44 px (so na vertical, sem invadir a pilula vizinha) */
 .habilidades li button { position: relative; }
 .habilidades li button::after { content: ""; position: absolute; inset: -4px 0; }
+
+/* ---------- Avisos do WhatsApp e gesto de arrastar (2026-09-22) ---------- */
+
+/* "Não abriu?" — aparece perto de qualquer botão de WhatsApp que pareça não ter funcionado */
+.aviso-whats { position: fixed; left: 50%; bottom: calc(90px + env(safe-area-inset-bottom)); z-index: 76; width: min(320px, calc(100% - 28px)); display: flex; flex-direction: column; gap: 10px; padding: 16px 30px 16px 18px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); box-shadow: var(--shadow); opacity: 0; transform: translate(-50%, 14px); pointer-events: none; transition: .25s ease; }
+.aviso-whats.mostrar { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
+.aviso-whats p { margin: 0; font-size: .85rem; line-height: 1.45; color: var(--text); }
+.aviso-whats-acoes { display: flex; flex-wrap: wrap; gap: 8px; }
+.aviso-whats-acoes .botao { min-height: auto; padding: 8px 14px; font-size: .78rem; }
+.aviso-whats-fechar { position: absolute; top: 10px; right: 10px; display: grid; place-items: center; width: 26px; height: 26px; border: 0; border-radius: 50%; background: transparent; color: var(--muted); font-size: .8rem; cursor: pointer; }
+@media (hover: hover) { .aviso-whats-fechar:hover { color: var(--cyan); } }
+.modo-leve .aviso-whats { backdrop-filter: none; }
+@media (prefers-reduced-motion: reduce) { .aviso-whats { transition: none; } }
+
+/* alça de arrastar no topo da janela de demonstração, só faz sentido no toque */
+.modal-alca { display: none; }
+@media (pointer: coarse) {
+    .modal-cabecalho { position: relative; padding-top: 20px; touch-action: none; }
+    .modal-alca { display: block; position: absolute; top: 8px; left: 50%; width: 36px; height: 4px; margin-left: -18px; border-radius: 999px; background: var(--line); }
+}
