@@ -1,0 +1,157 @@
+/* Fatia Nobre — demonstração de atendimento automático (projeto de portfólio) */
+:root {
+    --bg: #0e100c;
+    --painel: #171a13;
+    --linha: #2c3122;
+    --linha-forte: #3f4630;
+    --texto: #f3ead9;
+    --mudo: #a6a894;
+    --tomate: #e8542f;
+    --tomate-forte: #c23616;
+    --manjericao: #7cb342;
+    --creme: #f6ead9;
+    --fonte: "Nunito Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --titulo: "Baloo 2", var(--fonte);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+    margin: 0; min-height: 100vh;
+    background:
+        radial-gradient(900px 480px at 88% -10%, rgba(232, 84, 47, .14), transparent 60%),
+        radial-gradient(700px 420px at -5% 15%, rgba(124, 179, 66, .1), transparent 60%),
+        var(--bg);
+    color: var(--texto); font: 400 1rem/1.55 var(--fonte);
+}
+img { max-width: 100%; }
+h1, h2, p { margin-top: 0; }
+a { color: var(--tomate); }
+:focus-visible { outline: 2px solid var(--manjericao); outline-offset: 2px; }
+.visualmente-oculto { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.pular { position: absolute; left: -999px; top: 8px; z-index: 100; padding: 10px 16px; background: var(--manjericao); color: #0e100c; font-weight: 700; }
+.pular:focus { left: 8px; }
+.miolo { width: min(1080px, calc(100% - 40px)); margin-inline: auto; }
+
+/* ===== aviso de demonstração ===== */
+.aviso-demo {
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 4px 14px;
+    padding: 8px 16px; background: #1a1408; border-bottom: 1px solid #4a3410;
+    color: #f0c46b; font-size: 12.5px; text-align: center;
+}
+.aviso-demo b { padding: 1px 7px; border-radius: 3px; background: #f0c46b; color: #1a1408; letter-spacing: .08em; }
+.aviso-demo a { color: var(--tomate); }
+
+/* ===== topo ===== */
+.topo { position: sticky; top: 0; z-index: 20; padding: 12px 0; background: rgba(14, 16, 12, .86); backdrop-filter: blur(10px); border-bottom: 1px solid var(--linha); }
+.topo-in { display: flex; align-items: center; gap: 16px; }
+.logo { display: flex; align-items: center; gap: 9px; color: var(--texto); text-decoration: none; font: 700 1.1rem var(--titulo); }
+.logo-icone { font-size: 1.3rem; }
+.topo-cta { margin-left: auto; }
+
+/* ===== botões ===== */
+.botao {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    min-height: 44px; padding: 0 20px; border: 0; border-radius: 999px;
+    font: 700 .9rem var(--fonte); text-decoration: none; cursor: pointer; transition: filter .15s, background .15s, transform .15s;
+}
+.botao:active { transform: translateY(1px); }
+.botao-principal { background: linear-gradient(135deg, #ff7a52, var(--tomate) 60%, var(--tomate-forte)); color: #1a0803; }
+.botao-principal:hover { filter: brightness(1.08); }
+.botao-linha { border: 1.5px solid var(--tomate); color: var(--tomate); background: transparent; }
+.botao-linha:hover { background: rgba(232, 84, 47, .12); }
+
+/* ===== layout principal: explicação + telefone ===== */
+.layout { display: grid; grid-template-columns: 1fr; gap: 40px; padding: 40px 0 70px; }
+.eyebrow { margin-bottom: 10px; color: var(--manjericao); font: 700 .78rem "Nunito Sans", monospace; letter-spacing: .1em; text-transform: uppercase; }
+h1 { font: 700 clamp(1.9rem, 5vw, 2.7rem)/1.12 var(--titulo); letter-spacing: -.01em; }
+.lead { max-width: 52ch; margin: 16px 0 0; color: var(--mudo); font-size: 1.05rem; }
+
+.bloco-como { margin-top: 34px; padding: 22px; border-radius: 20px; background: var(--painel); border: 1px solid var(--linha); }
+.bloco-como h2 { font: 700 1.05rem var(--titulo); margin-bottom: 14px; }
+.bloco-como ol { display: grid; gap: 14px; margin: 0; padding: 0; list-style: none; }
+.bloco-como li { display: flex; align-items: flex-start; gap: 12px; }
+.bloco-como .num { flex: none; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: rgba(232, 84, 47, .16); color: var(--tomate); font: 700 .78rem var(--titulo); }
+.bloco-como p { margin: 0; color: var(--mudo); font-size: .92rem; line-height: 1.5; padding-top: 2px; }
+
+.cta-final { margin-top: 26px; padding: 22px; border-radius: 20px; background: linear-gradient(135deg, #2a1a10, #1a1408); border: 1px solid var(--linha-forte); }
+.cta-final p { margin: 0 0 14px; color: var(--texto); font-size: .95rem; }
+
+/* ===== o "telefone": a simulação de chat ===== */
+.telefone { display: flex; justify-content: center; }
+.chat {
+    display: flex; flex-direction: column;
+    width: min(420px, 100%); height: min(78vh, 640px);
+    border-radius: 26px; overflow: hidden;
+    background: #11140d; border: 1px solid var(--linha-forte);
+    box-shadow: 0 30px 60px -22px rgba(0, 0, 0, .7);
+}
+.chat-topo { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: var(--painel); border-bottom: 1px solid var(--linha); }
+.avatar { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 50%; background: rgba(232, 84, 47, .16); font-size: 1.2rem; flex: none; }
+.chat-nome { display: grid; min-width: 0; }
+.chat-nome b { font: 700 .95rem var(--titulo); }
+.chat-nome small { color: var(--manjericao); font-size: .74rem; }
+.reiniciar { margin-left: auto; padding: 6px 12px; border: 1px solid var(--linha-forte); border-radius: 999px; background: none; color: var(--mudo); font: 600 .74rem var(--fonte); cursor: pointer; }
+.reiniciar:hover { color: var(--texto); border-color: var(--mudo); }
+
+.chat-corpo {
+    flex: 1; min-height: 0; overflow-y: auto; padding: 16px 14px; display: flex; flex-direction: column; gap: 4px;
+    background:
+        radial-gradient(circle at 10px 10px, rgba(255, 255, 255, .025) 1px, transparent 1.6px) 0 0 / 22px 22px,
+        var(--bg);
+}
+.msg { max-width: 82%; padding: 9px 13px; border-radius: 16px; font-size: .92rem; line-height: 1.42; animation: chega .22s ease both; }
+.msg + .msg { margin-top: 4px; }
+.msg-bot { align-self: flex-start; background: var(--painel); border: 1px solid var(--linha); border-bottom-left-radius: 4px; }
+.msg-eu { align-self: flex-end; background: linear-gradient(135deg, #ff7a52, var(--tomate) 70%); color: #200a04; border-bottom-right-radius: 4px; font-weight: 600; }
+.msg time { display: block; margin-top: 3px; font-size: .68rem; opacity: .55; text-align: right; }
+@keyframes chega { from { opacity: 0; transform: translateY(6px); } }
+
+.digitando { align-self: flex-start; display: flex; gap: 4px; padding: 11px 14px; border-radius: 16px; background: var(--painel); border: 1px solid var(--linha); border-bottom-left-radius: 4px; }
+.digitando i { width: 6px; height: 6px; border-radius: 50%; background: var(--mudo); animation: pula 1s ease-in-out infinite; }
+.digitando i:nth-child(2) { animation-delay: .15s; }
+.digitando i:nth-child(3) { animation-delay: .3s; }
+@keyframes pula { 0%, 60%, 100% { transform: translateY(0); opacity: .5; } 30% { transform: translateY(-4px); opacity: 1; } }
+
+.chips { display: flex; flex-wrap: wrap; gap: 7px; padding: 0 14px 10px; }
+.chip {
+    padding: 7px 13px; border-radius: 999px; border: 1px solid var(--tomate); background: rgba(232, 84, 47, .1);
+    color: var(--tomate); font: 600 .8rem var(--fonte); cursor: pointer; white-space: nowrap;
+}
+.chip:hover { background: rgba(232, 84, 47, .2); }
+
+.chat-form { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-top: 1px solid var(--linha); background: var(--painel); }
+.chat-form input {
+    flex: 1; min-width: 0; height: 42px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--linha-forte);
+    background: var(--bg); color: var(--texto); font: 400 .92rem var(--fonte); outline: 0;
+}
+.chat-form input:focus { border-color: var(--tomate); }
+.chat-form input::placeholder { color: var(--mudo); }
+.chat-form button {
+    flex: none; display: grid; place-items: center; width: 42px; height: 42px; border-radius: 50%; border: 0;
+    background: var(--tomate); color: #1a0803; cursor: pointer;
+}
+.chat-form button:hover { background: #ff6a3c; }
+
+/* ===== rodapé ===== */
+.rodape { padding: 26px 0 40px; border-top: 1px solid var(--linha); color: var(--mudo); font-size: .84rem; text-align: center; }
+.rodape a { color: var(--mudo); text-decoration: underline; }
+
+/* no celular o chat vem primeiro no HTML (é a parte que a pessoa quer testar); no computador ele passa
+   pro lado direito só visualmente, com a explicação à esquerda — sem mudar a ordem de leitura por trás */
+@media (min-width: 900px) {
+    .layout { grid-template-columns: 1.05fr .95fr; align-items: start; gap: 54px; padding: 56px 0 90px; }
+    .telefone { grid-column: 2; grid-row: 1; position: sticky; top: 90px; }
+    .explicacao { grid-column: 1; grid-row: 1; }
+}
+
+@media (max-width: 460px) {
+    .chat { height: min(76vh, 620px); border-radius: 20px; }
+    .miolo { width: min(1080px, calc(100% - 28px)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * { animation-duration: .01ms !important; }
+    html { scroll-behavior: auto; }
+}

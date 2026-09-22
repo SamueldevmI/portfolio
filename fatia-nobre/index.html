@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Fatia Nobre — Atendimento automático</title>
+    <meta name="description" content="Demonstração de um atendimento automático: a pizzaria fictícia Fatia Nobre reconhece a pergunta por palavras-chave e responde na hora, mesmo de madrugada. Projeto de portfólio de Samuel Mickael.">
+    <meta name="robots" content="noindex">
+    <meta name="theme-color" content="#0e100c">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Fatia Nobre — Atendimento automático">
+    <meta property="og:description" content="Um chat que responde perguntas de um negócio pequeno na hora, sem precisar de gente acordada. Projeto de portfólio.">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230e100c'/%3E%3Cpath d='M7 24 16 7l9 17z' fill='%23e8542f'/%3E%3Ccircle cx='15' cy='18' r='1.6' fill='%23f6ead9'/%3E%3Ccircle cx='19' cy='20.5' r='1.6' fill='%23f6ead9'/%3E%3Ccircle cx='16' cy='21.5' r='1.3' fill='%23f6ead9'/%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <a class="pular" href="#campo">Pular para o campo de mensagem</a>
+
+    <div class="aviso-demo">
+        <b>DEMO</b>
+        <span>Atendimento automático fictício da pizzaria Fatia Nobre. As respostas são geradas aqui mesmo, na hora — nada é enviado a lugar nenhum.</span>
+        <a href="../index.html#projetos" target="_top">← Voltar ao portfólio</a>
+    </div>
+
+    <header class="topo">
+        <div class="miolo topo-in">
+            <a class="logo" href="#" aria-label="Fatia Nobre, início">
+                <span class="logo-icone" aria-hidden="true">🍕</span>
+                <span>Fatia Nobre</span>
+            </a>
+            <a class="botao botao-linha topo-cta" href="https://wa.me/5567996034205?text=Oi%2C%20Samuel%21%20Vi%20a%20demonstra%C3%A7%C3%A3o%20do%20atendimento%20autom%C3%A1tico%20(Fatia%20Nobre)%20e%20queria%20um%20assim%20pro%20meu%20negócio." target="_blank" rel="noopener noreferrer">Quero um desses ↗</a>
+        </div>
+    </header>
+
+    <main class="miolo layout">
+        <section class="telefone" aria-label="Simulação de uma conversa de atendimento">
+            <div class="chat">
+                <div class="chat-topo">
+                    <span class="avatar" aria-hidden="true">🍕</span>
+                    <div class="chat-nome">
+                        <b>Fatia Nobre</b>
+                        <small id="status">digitando…</small>
+                    </div>
+                    <button type="button" class="reiniciar" id="reiniciar">Reiniciar</button>
+                </div>
+                <div class="chat-corpo" id="corpo" role="log" aria-live="polite" aria-label="Mensagens da conversa"></div>
+                <div class="chips" id="chips" aria-label="Perguntas sugeridas"></div>
+                <form class="chat-form" id="form">
+                    <label class="visualmente-oculto" for="campo">Digite uma pergunta</label>
+                    <input id="campo" type="text" placeholder="Digite uma pergunta…" autocomplete="off" maxlength="140">
+                    <button type="submit" aria-label="Enviar mensagem">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M3 20l18-8L3 4v6l12 2-12 2z"/></svg>
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <section class="explicacao">
+            <p class="eyebrow">&gt; ATENDIMENTO AUTOMÁTICO</p>
+            <h1>Responde sozinho, na hora, mesmo de madrugada.</h1>
+            <p class="lead">Pergunte aí em cima o horário, o endereço, o cardápio ou como fazer um pedido. Quem reconhece a pergunta e responde é um programa, não uma pessoa digitando.</p>
+
+            <div class="bloco-como">
+                <h2>Como funciona por trás</h2>
+                <ol>
+                    <li><span class="num">01</span><p>Quando alguém manda uma mensagem, o programa lê o texto e procura palavras-chave — "horário", "endereço", "entrega"...</p></li>
+                    <li><span class="num">02</span><p>Reconhecendo o assunto, ele responde na hora. Não precisa de ninguém acordado de madrugada.</p></li>
+                    <li><span class="num">03</span><p>Se não entende a pergunta, ele mostra os assuntos principais em botões, pra ninguém ficar sem resposta.</p></li>
+                    <li><span class="num">04</span><p>As perguntas e respostas ficam numa lista simples — dá pra adaptar pro seu negócio em poucos minutos.</p></li>
+                </ol>
+            </div>
+
+            <div class="cta-final">
+                <p>Isso aqui é só uma demonstração, mas o mesmo esquema funciona pro seu negócio de verdade, direto no seu WhatsApp.</p>
+                <a class="botao botao-principal" href="https://wa.me/5567996034205?text=Oi%2C%20Samuel%21%20Vi%20a%20demonstra%C3%A7%C3%A3o%20do%20atendimento%20autom%C3%A1tico%20(Fatia%20Nobre)%20e%20queria%20um%20assim%20pro%20meu%20negócio." target="_blank" rel="noopener noreferrer">Quero um desses pro meu negócio</a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="rodape">
+        <div class="miolo">Fatia Nobre não existe de verdade — é uma demonstração de atendimento automático. Feito por <a href="https://github.com/SamueldevmI" target="_blank" rel="noopener noreferrer">Samuel Mickael</a>, projeto de portfólio.</div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
