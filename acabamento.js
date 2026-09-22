@@ -433,19 +433,14 @@
 
     /* ---------- Detalhes pequenos ---------- */
 
-    /* Cumprimento pelo horário no título do início — "de volta" pra quem já visitou. Sem JS, "Olá" continua aí. */
+    /* Cumprimento pelo horário no título do início, em vez de "Olá" fixo. Sem JS, "Olá" continua aí. */
     (function saudacao() {
         const h1 = document.querySelector(".hero-conteudo h1");
         const primeiroTexto = h1 ? h1.firstChild : null;
         if (!primeiroTexto || primeiroTexto.nodeType !== Node.TEXT_NODE || !primeiroTexto.textContent.startsWith("Olá")) return;
-        let jaVisitou = false;
-        try {
-            jaVisitou = localStorage.getItem("ja-visitou") === "1";
-            localStorage.setItem("ja-visitou", "1");
-        } catch { /* sem armazenamento: sempre trata como primeira visita, sem problema */ }
         const hora = new Date().getHours();
         const cumprimento = hora < 6 ? "Boa madrugada" : hora < 12 ? "Bom dia" : hora < 18 ? "Boa tarde" : "Boa noite";
-        primeiroTexto.textContent = primeiroTexto.textContent.replace("Olá", jaVisitou ? `${cumprimento}, que bom te ver de novo` : cumprimento);
+        primeiroTexto.textContent = primeiroTexto.textContent.replace("Olá", cumprimento);
     })();
 
     /* Link direto pra uma pergunta do FAQ (ex.: #faq-prazo) também abre ela — :target só destaca, não abre. */
