@@ -7,12 +7,18 @@
 <g stroke-linejoin="round" stroke-linecap="round" fill="none">
 <path d="M136 110C130 60 158 26 200 20C242 26 270 60 264 110Q200 146 136 110Z" fill="#151330" stroke="#5a5696" stroke-width="2"/>
 <path d="M150 108L98 128L46 306L90 320L120 206L128 350Q200 366 272 350L280 206L310 320L354 306L302 128L250 108Q200 142 150 108Z" fill="url(#t)" stroke="#5a5696" stroke-width="2"/>
+<!-- textura de tecido: tramado bem sutil, so aparece de perto -->
+<path d="M100 130L96 340M136 130L132 340M172 128L170 340M208 128L210 340M244 130L248 340M280 130L286 340" stroke="#201d40" stroke-width="1" stroke-opacity=".4"/>
 <path d="M160 108C156 72 178 58 200 58C222 58 244 72 240 108Q200 134 160 108Z" fill="#05040b" stroke="#00f0ff" stroke-width="2.5" filter="url(#n)"/>
+<!-- acabamento ao redor da borda do capuz -->
+<path d="M144 106C140 62 165 32 200 26C235 32 260 62 256 106" stroke="#3a3768" stroke-width="1.2" stroke-dasharray="1.5 3.5" stroke-opacity=".7"/>
 <path d="M200 24V108" stroke="#5a5696" stroke-width="1.5" stroke-opacity=".7"/>
 <path d="M200 22L172 56M200 22L228 56" stroke="#3a3768" stroke-width="1.5" stroke-opacity=".5"/>
 <path d="M200 134V362" stroke="#00f0ff" stroke-width="3" filter="url(#n)"/>
 <path d="M94 150L72 300M306 150L328 300" stroke="#ff2bd6" stroke-width="3" filter="url(#n)"/>
 <path d="M130 192L178 204V250L130 238Z M270 192L222 204V250L270 238Z" stroke="#5a5696" stroke-width="2"/>
+<!-- acabamento em volta da aba do bolso -->
+<path d="M133 195L175 206M133 195V247M267 195L225 206M267 195V247" stroke="#3a3768" stroke-width="1" stroke-dasharray="1.5 3" stroke-opacity=".6"/>
 <path d="M130 192L178 204M270 192L222 204" stroke="#00f0ff" stroke-width="2.5"/>
 <path d="M120 206Q140 230 156 216M280 206Q260 230 244 216" stroke="#3a3768" stroke-width="2" stroke-opacity=".55"/>
 <path d="M150 300Q180 316 210 306" stroke="#3a3768" stroke-width="1.6" stroke-opacity=".45"/>
@@ -20,5 +26,30 @@
 <circle cx="140" cy="352" r="5" fill="#ff2bd6" stroke="none"/>
 <circle cx="260" cy="352" r="5" fill="#ff2bd6" stroke="none"/>
 <rect x="194" y="128" width="12" height="16" rx="2" fill="#0d0c1b" stroke="#00f0ff" stroke-width="2"/>
+<!-- argola do puxador do ziper -->
+<path d="M204 126Q210 120 206 114" stroke="#00f0ff" stroke-width="1.4"/>
+<!-- costura dupla das mangas (raglan) e das laterais -->
+<path d="M150 108Q132 150 120 206M250 108Q268 150 280 206" stroke="#3a3768" stroke-width="1.3" stroke-dasharray="2 4" stroke-opacity=".85"/>
+<path d="M156 110Q139 150 128 208M244 110Q261 150 272 208" stroke="#3a3768" stroke-width="1" stroke-dasharray="2 4" stroke-opacity=".5"/>
+<path d="M126 212L134 344M274 212L266 344" stroke="#3a3768" stroke-width="1.3" stroke-dasharray="2 4" stroke-opacity=".85"/>
+<path d="M132 214L140 342M268 214L260 342" stroke="#3a3768" stroke-width="1" stroke-dasharray="2 4" stroke-opacity=".5"/>
+<!-- reforco (bartack) nas pontas de tensao das costuras -->
+<rect x="118" y="203" width="6" height="2.4" rx="1" fill="#3a3768" transform="rotate(12 121 204)"/>
+<rect x="276" y="203" width="6" height="2.4" rx="1" fill="#3a3768" transform="rotate(-12 279 204)"/>
+<rect x="131" y="341" width="6" height="2.4" rx="1" fill="#3a3768"/>
+<rect x="263" y="341" width="6" height="2.4" rx="1" fill="#3a3768"/>
+<!-- dentes do ziper -->
+<path d="M194 150H206M194 166H206M194 182H206M194 198H206M194 214H206M194 230H206M194 246H206M194 262H206M194 278H206M194 294H206M194 310H206M194 326H206M194 342H206" stroke="#0a0914" stroke-width="1.2"/>
+<!-- rebites nos cantos dos bolsos -->
+<circle cx="130" cy="192" r="2.5" fill="#5a5696" stroke="none"/>
+<circle cx="178" cy="204" r="2.5" fill="#5a5696" stroke="none"/>
+<circle cx="270" cy="192" r="2.5" fill="#5a5696" stroke="none"/>
+<circle cx="222" cy="204" r="2.5" fill="#5a5696" stroke="none"/>
+<!-- costura do punho, dupla -->
+<path d="M52 300L88 314M348 300L312 314" stroke="#3a3768" stroke-width="1.3" stroke-dasharray="2 3" stroke-opacity=".8"/>
+<path d="M56 306L84 318M344 306L316 318" stroke="#3a3768" stroke-width="1" stroke-dasharray="2 3" stroke-opacity=".5"/>
+<!-- etiqueta interna na barra, com "texto" -->
+<rect x="176" y="354" width="10" height="13" rx="1" fill="#0d0c1b" stroke="#5a5696" stroke-width="1.2"/>
+<path d="M178 358.5H184M178 361H184M178 363.5H184" stroke="#3a3768" stroke-width=".8"/>
 </g>
 </svg>

@@ -6,6 +6,10 @@
 <g stroke-linejoin="round" stroke-linecap="round" fill="none">
 <path d="M126 64L274 322M274 64L126 322M104 196H296M104 322H296" stroke="#5a5696" stroke-width="28"/>
 <path d="M126 64L274 322M274 64L126 322M104 196H296M104 322H296" stroke="#1a1836" stroke-width="24"/>
+<!-- costura nas duas bordas de cada tira -->
+<path d="M117 68L265 326M283 68L135 326" stroke="#3a3768" stroke-width="1" stroke-dasharray="1.4 3" stroke-opacity=".45"/>
+<path d="M135 68L283 326M265 68L117 326" stroke="#3a3768" stroke-width="1" stroke-dasharray="1.4 3" stroke-opacity=".45"/>
+<path d="M104 188H296M104 204H296M104 314H296M104 330H296" stroke="#3a3768" stroke-width="1" stroke-dasharray="1.4 3" stroke-opacity=".45"/>
 <path d="M126 64L274 322M274 64L126 322" stroke="#00f0ff" stroke-width="1.5" stroke-dasharray="5 7" stroke-opacity=".8"/>
 <path d="M104 196H296M104 322H296" stroke="#ff2bd6" stroke-width="1.5" stroke-dasharray="5 7" stroke-opacity=".8"/>
 <circle cx="200" cy="196" r="24" fill="#0d0c1b" stroke="#fcee0a" stroke-width="5" filter="url(#n)"/>

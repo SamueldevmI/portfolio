@@ -7,16 +7,31 @@
 <g stroke-linejoin="round" stroke-linecap="round" fill="none">
 <path d="M126 52H238L246 204C304 212 356 236 360 280V296H112L110 236Z" fill="url(#t)" stroke="#5a5696" stroke-width="2"/>
 <path d="M104 292H366V326Q366 336 354 336H116Q104 336 104 326Z" fill="#151330" stroke="#5a5696" stroke-width="2"/>
+<!-- costura entre o cano e a sola -->
+<path d="M110 288H360" stroke="#3a3768" stroke-width="1.2" stroke-dasharray="2 3.5" stroke-opacity=".7"/>
 <path d="M120 346H350" stroke="#00f0ff" stroke-width="4" filter="url(#n)"/>
 <path d="M132 308V324M152 308V324M172 308V324M192 308V324M212 308V324M232 308V324M252 308V324M272 308V324M292 308V324M312 308V324M332 308V324" stroke="#0a0914" stroke-width="3"/>
 <path d="M126 52H238V78H126Z" fill="#151330" stroke="#5a5696" stroke-width="2"/>
+<!-- alca de puxar no cano -->
+<path d="M176 52Q176 42 184 42Q192 42 192 52" stroke="#5a5696" stroke-width="2"/>
 <path d="M112 236Q160 224 210 232" stroke="#5a5696" stroke-width="2"/>
+<!-- costura reforcada na biqueira -->
+<path d="M116 232Q160 220 208 228" stroke="#3a3768" stroke-width="1" stroke-dasharray="1.4 3" stroke-opacity=".55"/>
 <path d="M132 100L232 124L132 148L232 172L132 196" stroke="#ff2bd6" stroke-width="3" filter="url(#n)"/>
+<!-- ilhoses do cadarco (anel em volta de cada ponto) -->
+<circle cx="132" cy="100" r="6.5" fill="none" stroke="#3a3768" stroke-width="1.2"/>
+<circle cx="232" cy="124" r="6.5" fill="none" stroke="#3a3768" stroke-width="1.2"/>
+<circle cx="132" cy="148" r="6.5" fill="none" stroke="#3a3768" stroke-width="1.2"/>
+<circle cx="232" cy="172" r="6.5" fill="none" stroke="#3a3768" stroke-width="1.2"/>
+<circle cx="132" cy="196" r="6.5" fill="none" stroke="#3a3768" stroke-width="1.2"/>
 <circle cx="132" cy="100" r="4" fill="#5a5696" stroke="none"/>
 <circle cx="232" cy="124" r="4" fill="#5a5696" stroke="none"/>
 <circle cx="132" cy="148" r="4" fill="#5a5696" stroke="none"/>
 <circle cx="232" cy="172" r="4" fill="#5a5696" stroke="none"/>
 <circle cx="132" cy="196" r="4" fill="#5a5696" stroke="none"/>
+<!-- pontas do cadarco -->
+<rect x="126" y="95" width="12" height="7" rx="2" fill="#0d0c1b" stroke="#ff2bd6" stroke-width="1.6"/>
+<rect x="126" y="192" width="12" height="7" rx="2" fill="#0d0c1b" stroke="#ff2bd6" stroke-width="1.6"/>
 <path d="M262 216C300 224 330 240 344 266" stroke="#5a5696" stroke-width="2"/>
 <rect x="270" y="222" width="20" height="16" rx="3" fill="#0d0c1b" stroke="#fcee0a" stroke-width="2.5"/>
 </g>

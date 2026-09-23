@@ -8,9 +8,19 @@
 <path d="M172 88L120 100L84 300L112 312L134 180V352H266V180L288 312L316 300L280 100L228 88Q200 108 172 88Z" fill="url(#t)" stroke="#5a5696" stroke-width="2"/>
 <path d="M170 50Q200 34 230 50L228 90Q200 78 172 90Z" fill="#151330" stroke="#5a5696" stroke-width="2"/>
 <path d="M176 58V86M188 54V88M200 52V90M212 54V88M224 58V86" stroke="#0a0914" stroke-width="2"/>
+<!-- acabamento na borda da gola -->
+<path d="M174 86C176 60 190 44 200 42C210 44 224 60 226 86" stroke="#3a3768" stroke-width="1" stroke-dasharray="1.4 3" stroke-opacity=".6"/>
 <rect x="80" y="296" width="36" height="20" rx="4" fill="#151330" stroke="#5a5696" stroke-width="2"/>
 <rect x="284" y="296" width="36" height="20" rx="4" fill="#151330" stroke="#5a5696" stroke-width="2"/>
+<path d="M83 299H113M83 313H113M287 299H317M287 313H317" stroke="#0a0914" stroke-width="1" stroke-dasharray="1.5 3" stroke-opacity=".55"/>
 <path d="M180 160H220M200 150V170" stroke="#00f0ff" stroke-width="2.5" filter="url(#n)"/>
 <path d="M140 230Q160 250 150 270M260 230Q240 250 250 270" stroke="#3a3768" stroke-width="1.8" stroke-opacity=".5"/>
+<!-- costura dupla das mangas e das laterais (peca justa, marca bem) -->
+<path d="M172 88Q142 194 126 310M228 88Q258 194 274 310" stroke="#3a3768" stroke-width="1.3" stroke-dasharray="2 4" stroke-opacity=".8"/>
+<path d="M178 92Q150 196 134 308M222 92Q250 196 266 308" stroke="#3a3768" stroke-width="1" stroke-dasharray="2 4" stroke-opacity=".5"/>
+<!-- costura da barra -->
+<path d="M138 348Q200 358 262 348" stroke="#3a3768" stroke-width="1.3" stroke-dasharray="2 4" stroke-opacity=".7"/>
+<!-- etiqueta interna na barra -->
+<rect x="194" y="343" width="10" height="12" rx="1" fill="#0d0c1b" stroke="#5a5696" stroke-width="1.2"/>
 </g>
 </svg>

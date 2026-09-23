@@ -7,8 +7,14 @@
 <g stroke-linejoin="round" stroke-linecap="round" fill="none">
 <path d="M62 190L18 180M338 190L382 180" stroke="#5a5696" stroke-width="10"/>
 <path d="M62 190L18 180M338 190L382 180" stroke="#1a1836" stroke-width="6"/>
+<path d="M62 190L18 180M338 190L382 180" stroke="#3a3768" stroke-width="1" stroke-dasharray="1.4 3" stroke-opacity=".5"/>
+<!-- dobradica onde a haste encontra a lente -->
+<circle cx="60" cy="188" r="4" fill="#0d0c1b" stroke="#5a5696" stroke-width="1.4"/>
+<circle cx="340" cy="188" r="4" fill="#0d0c1b" stroke="#5a5696" stroke-width="1.4"/>
 <path d="M56 176Q200 118 344 176L334 238Q200 208 66 238Z" fill="url(#lente)" fill-opacity=".9" stroke="#5a5696" stroke-width="3"/>
 <path d="M56 176Q200 118 344 176L334 238Q200 208 66 238Z" stroke="#00f0ff" stroke-width="2" filter="url(#n)"/>
+<!-- acabamento na borda da lente -->
+<path d="M64 180Q200 126 336 180" stroke="#0d0c1b" stroke-width="1" stroke-dasharray="1.4 3" stroke-opacity=".5"/>
 <path d="M86 188Q200 148 314 188" stroke="#ffffff" stroke-opacity=".6" stroke-width="4"/>
 <path d="M72 214Q200 186 328 214" stroke="#05040b" stroke-opacity=".4" stroke-width="2"/>
 <path d="M76 224Q200 196 324 224" stroke="#05040b" stroke-opacity=".25" stroke-width="2"/>
