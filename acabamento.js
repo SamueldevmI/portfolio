@@ -862,4 +862,95 @@
             try { localStorage.setItem("sem-animacoes", caixa.checked ? "1" : "0"); } catch { /* sem armazenamento: vale só nesta visita */ }
         });
     })();
+
+    /* ---------- Braimstorm de CSS/JS (2026-09-23, parte 3) ---------- */
+
+    /* Dados estruturados (JSON-LD) dos projetos, montados a partir dos cards da própria página.
+       Antes era uma lista fixa no <head> e ficava desatualizada toda vez que um projeto entrava ou
+       saía (foi assim que reparei: faltavam a Fatia Nobre e a Conta a Dois). Agora nunca mais fica. */
+    (function dadosEstruturadosProjetos() {
+        const itens = [];
+        document.querySelectorAll(".card-projeto").forEach((card) => {
+            const nome = card.querySelector("h3")?.textContent.trim();
+            const url = card.querySelector(".link-projeto")?.href;
+            if (!nome || !url) return;
+            itens.push({
+                nome,
+                desc: card.querySelector(".card-conteudo p:not(.tag)")?.textContent.trim() || "",
+                url,
+                categoria: card.dataset.schemaCategoria || "WebApplication",
+                sistema: card.dataset.schemaOs || "Web",
+            });
+        });
+        document.querySelectorAll(".mini-projeto").forEach((a) => {
+            const nome = a.querySelector(".mini-projeto-nome")?.textContent.trim();
+            if (!nome || !a.href) return;
+            itens.push({
+                nome,
+                desc: a.querySelector(".mini-projeto-desc")?.textContent.trim() || "",
+                url: a.href,
+                categoria: a.dataset.schemaCategoria || "WebApplication",
+                sistema: a.dataset.schemaOs || "Web",
+            });
+        });
+        if (!itens.length) return;
+
+        const lista = {
+            "@context": "https://schema.org",
+            "@type": "ItemList",
+            itemListElement: itens.map((item, indice) => ({
+                "@type": "ListItem",
+                position: indice + 1,
+                item: {
+                    "@type": "SoftwareApplication",
+                    name: item.nome,
+                    description: item.desc,
+                    url: item.url,
+                    applicationCategory: item.categoria,
+                    operatingSystem: item.sistema,
+                },
+            })),
+        };
+        const script = document.createElement("script");
+        script.type = "application/ld+json";
+        script.textContent = JSON.stringify(lista);
+        document.head.append(script);
+    })();
+
+    /* Brilho que segue o cursor dentro do card de projeto (o giro 3D já existia; isso é só o brilho). */
+    (function brilhoCursorCards() {
+        if (!window.matchMedia("(hover: hover)").matches || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+        document.querySelectorAll(".card-projeto").forEach((card) => {
+            card.addEventListener("mousemove", (evento) => {
+                const rect = card.getBoundingClientRect();
+                card.style.setProperty("--brilho-x", ((evento.clientX - rect.left) / rect.width) * 100 + "%");
+                card.style.setProperty("--brilho-y", ((evento.clientY - rect.top) / rect.height) * 100 + "%");
+            });
+        });
+    })();
+
+    /* Aviso discreto se a conexão cair no meio da visita, pra não parecer que o site travou. */
+    (function avisoOffline() {
+        if (!("onLine" in navigator)) return;
+        let aviso = null;
+        function mostrar() {
+            if (aviso) return;
+            aviso = document.createElement("div");
+            aviso.className = "aviso-offline";
+            aviso.setAttribute("role", "status");
+            aviso.textContent = "📶 Sem conexão agora. O que já carregou continua funcionando.";
+            document.body.append(aviso);
+            requestAnimationFrame(() => aviso.classList.add("mostrar"));
+        }
+        function esconder() {
+            if (!aviso) return;
+            aviso.classList.remove("mostrar");
+            const alvo = aviso;
+            setTimeout(() => alvo.remove(), 300);
+            aviso = null;
+        }
+        window.addEventListener("offline", mostrar);
+        window.addEventListener("online", esconder);
+        if (!navigator.onLine) mostrar();
+    })();
 })();
