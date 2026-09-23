@@ -221,7 +221,8 @@
 
     /* ---------- Pontinhos do carrossel de projetos (só no celular) ---------- */
     (function carrossel() {
-        const lista = document.getElementById("lista-projetos");
+        /* só os projetos em destaque viram carrossel; os outros ficam em lista embaixo */
+        const lista = document.querySelector("#lista-projetos .destaques") || document.getElementById("lista-projetos");
         if (!lista) return;
         const celular = window.matchMedia("(max-width: 720px)");
         let pontos = null;
@@ -256,7 +257,7 @@
                 pontos.setAttribute("aria-hidden", "true");
                 lista.after(pontos);
             }
-            pontos.hidden = false;
+            pontos.hidden = n < 2;
             if (n !== quantos) {
                 quantos = n;
                 pontos.innerHTML = new Array(n + 1).join("<i></i>");
@@ -755,7 +756,7 @@
 
     /* Sombra nas bordas do carrossel de projetos no celular, avisando que dá pra arrastar mais. */
     (function sombraCarrossel() {
-        const lista = document.getElementById("lista-projetos");
+        const lista = document.querySelector("#lista-projetos .destaques") || document.getElementById("lista-projetos");
         if (!lista) return;
         let quadro = 0;
         function atualizar() {
@@ -896,8 +897,8 @@
                 "<ol>"
             ];
             document.querySelectorAll(".card-projeto").forEach((card) => {
-                const nome = card.querySelector("h3")?.textContent.trim() || "";
-                const desc = card.querySelector(".card-conteudo p:not(.tag)")?.textContent.trim() || "";
+                const nome = (card.querySelector(".projeto-nome") || card.querySelector("h3"))?.textContent.trim() || "";
+                const desc = (card.querySelector(".projeto-resumo") || card.querySelector(".card-conteudo p:not(.tag)"))?.textContent.trim() || "";
                 const link = card.querySelector(".link-projeto")?.href || "";
                 partes.push(`<li><strong>${nome}</strong><br>${desc}${link ? `<br><small>${link}</small>` : ""}</li>`);
             });
@@ -946,12 +947,12 @@
     (function dadosEstruturadosProjetos() {
         const itens = [];
         document.querySelectorAll(".card-projeto").forEach((card) => {
-            const nome = card.querySelector("h3")?.textContent.trim();
+            const nome = (card.querySelector(".projeto-nome") || card.querySelector("h3"))?.textContent.trim();
             const url = card.querySelector(".link-projeto")?.href;
             if (!nome || !url) return;
             itens.push({
                 nome,
-                desc: card.querySelector(".card-conteudo p:not(.tag)")?.textContent.trim() || "",
+                desc: (card.querySelector(".projeto-resumo") || card.querySelector(".card-conteudo p:not(.tag)"))?.textContent.trim() || "",
                 url,
                 categoria: card.dataset.schemaCategoria || "WebApplication",
                 sistema: card.dataset.schemaOs || "Web",
@@ -1027,5 +1028,56 @@
         window.addEventListener("offline", mostrar);
         window.addEventListener("online", esconder);
         if (!navigator.onLine) mostrar();
+    })();
+
+    /* ---------- Cartões de projeto repaginados (2026-09-23) ---------- */
+
+    /* Selo "Novo" nos projetos publicados há menos de 14 dias: sai sozinho, sem ninguém lembrar de tirar. */
+    (function seloNovo() {
+        const hoje = Date.now();
+        document.querySelectorAll(".card-projeto[data-publicado]").forEach((card) => {
+            const publicado = Date.parse(card.dataset.publicado + "T12:00:00");
+            const dias = (hoje - publicado) / 86400000;
+            if (!(dias >= 0 && dias < 14)) return;
+            const selos = card.querySelector(".projeto-selos");
+            if (!selos) return;
+            const selo = document.createElement("span");
+            selo.className = "selo-novo-projeto";
+            selo.textContent = "Novo";
+            selos.prepend(selo);
+        });
+    })();
+
+    /* As prévias animadas (telas do celular trocando, balões do chat) só rodam com o card na tela.
+       Fora dela ficam paradas: não gastam bateria de quem está lendo outra parte do site. */
+    (function previasSoNaTela() {
+        const cards = document.querySelectorAll(".card-projeto");
+        if (!("IntersectionObserver" in window)) {
+            cards.forEach((c) => c.classList.add("em-tela"));
+            return;
+        }
+        const observador = new IntersectionObserver((entradas) => {
+            entradas.forEach((e) => e.target.classList.toggle("em-tela", e.isIntersecting));
+        }, { threshold: 0.25 });
+        cards.forEach((c) => observador.observe(c));
+    })();
+
+    /* Os cards entram um de cada vez, em vez de todos juntos. O atraso é tirado logo depois,
+       senão o "levantar" do mouse em cima do card também ficaria atrasado. */
+    (function entradaEmSequencia() {
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || !("IntersectionObserver" in window)) return;
+        const cards = Array.from(document.querySelectorAll("#lista-projetos .card-projeto"));
+        const observador = new IntersectionObserver((entradas) => {
+            let ordem = 0;
+            entradas.forEach((e) => {
+                if (!e.isIntersecting) return;
+                const card = e.target;
+                observador.unobserve(card);
+                card.style.transitionDelay = ordem * 110 + "ms";
+                ordem++;
+                setTimeout(() => { card.style.transitionDelay = ""; }, 900 + ordem * 110);
+            });
+        }, { threshold: 0.15, rootMargin: "0px 0px -40px 0px" });
+        cards.forEach((c) => observador.observe(c));
     })();
 })();

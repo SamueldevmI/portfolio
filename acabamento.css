@@ -684,9 +684,9 @@ footer a:focus-visible::after, footer .link-rodape:focus-visible::after { transf
 
 /* Sombra nas bordas do carrossel de projetos no celular, avisando que dá pra arrastar mais */
 @media (max-width: 720px) {
-    #lista-projetos.sombra-esq { -webkit-mask-image: linear-gradient(90deg, transparent, #000 28px); mask-image: linear-gradient(90deg, transparent, #000 28px); }
-    #lista-projetos.sombra-dir { -webkit-mask-image: linear-gradient(270deg, transparent, #000 28px); mask-image: linear-gradient(270deg, transparent, #000 28px); }
-    #lista-projetos.sombra-esq.sombra-dir { -webkit-mask-image: linear-gradient(90deg, transparent, #000 28px, #000 calc(100% - 28px), transparent); mask-image: linear-gradient(90deg, transparent, #000 28px, #000 calc(100% - 28px), transparent); }
+    #lista-projetos .destaques.sombra-esq { -webkit-mask-image: linear-gradient(90deg, transparent, #000 28px); mask-image: linear-gradient(90deg, transparent, #000 28px); }
+    #lista-projetos .destaques.sombra-dir { -webkit-mask-image: linear-gradient(270deg, transparent, #000 28px); mask-image: linear-gradient(270deg, transparent, #000 28px); }
+    #lista-projetos .destaques.sombra-esq.sombra-dir { -webkit-mask-image: linear-gradient(90deg, transparent, #000 28px, #000 calc(100% - 28px), transparent); mask-image: linear-gradient(90deg, transparent, #000 28px, #000 calc(100% - 28px), transparent); }
 }
 
 /* Anel de progresso de leitura ao redor do botão "voltar ao topo" */
@@ -734,3 +734,184 @@ html.sem-animacoes, html.sem-animacoes *, html.sem-animacoes *::before, html.sem
 .aviso-offline { position: fixed; left: 50%; bottom: 20px; z-index: 80; padding: 10px 18px; border-radius: 999px; background: #ff4d6d; color: #fff; font: 600 .8rem "Space Grotesk", sans-serif; box-shadow: 0 10px 30px -10px rgba(0,0,0,.5); opacity: 0; transform: translate(-50%, 12px); transition: opacity .3s ease, transform .3s ease; }
 .aviso-offline.mostrar { opacity: 1; transform: translate(-50%, 0); }
 @media (prefers-reduced-motion: reduce) { .aviso-offline { transition: none; } }
+
+/* ---------- Cartões de projeto repaginados (2026-09-23) ----------
+   Cada card tem a cor do próprio projeto (--cor, no style do <article>), um selo de categoria,
+   texto na mesma ordem em todos (o que é, pra quem serve, teste, prazo) e prévias que se mexem. */
+.lista-projetos { counter-reset: projeto; }
+.lista-projetos .destaques { display: contents; }
+.lista-projetos .card-projeto { --cor: var(--cyan); counter-increment: projeto; }
+.lista-projetos .card-projeto.reveal { transition-delay: 0s; }
+
+/* borda, sombra, brilho do cursor e borda giratória na cor do projeto */
+.lista-projetos .card-projeto:focus-within { border-color: var(--cor); box-shadow: 0 0 0 1px var(--cor), 0 22px 48px -18px color-mix(in srgb, var(--cor) 45%, transparent); }
+@media (hover: hover) {
+    .lista-projetos .card-projeto:hover { border-color: var(--cor); box-shadow: 0 0 0 1px var(--cor), 0 22px 48px -18px color-mix(in srgb, var(--cor) 50%, transparent), 0 40px 80px -40px color-mix(in srgb, var(--cor) 55%, transparent); }
+}
+.lista-projetos .card-projeto::before { background: radial-gradient(240px circle at var(--brilho-x) var(--brilho-y), color-mix(in srgb, var(--cor) 20%, transparent), transparent 70%); }
+.lista-projetos .card-projeto::after { background: conic-gradient(from var(--borda-angulo, 0deg), var(--cor), var(--violet), var(--cor)); }
+
+/* botão principal na cor do projeto (clareada no tema escuro, escurecida no claro, pra ler bem) */
+.lista-projetos .card-projeto .links-projeto .link-projeto,
+.lista-projetos .card-projeto .links-projeto .link-projeto:hover { background: color-mix(in srgb, var(--cor) 62%, #fff); color: #12062e; }
+.lista-projetos .card-projeto .links-projeto .link-projeto:hover { box-shadow: 0 12px 26px -10px color-mix(in srgb, var(--cor) 90%, transparent); }
+body.dark-mode .lista-projetos .card-projeto .links-projeto .link-projeto,
+body.dark-mode .lista-projetos .card-projeto .links-projeto .link-projeto:hover { background: color-mix(in srgb, var(--cor) 58%, #000); color: #fff; }
+.lista-projetos .card-projeto .card-orcamento { color: color-mix(in srgb, var(--cor) 60%, #fff); }
+body.dark-mode .lista-projetos .card-projeto .card-orcamento { color: color-mix(in srgb, var(--cor) 55%, #000); }
+
+/* "Ver aqui" e "GitHub" viram ícones redondos, pra "Testar agora" ser a ação clara */
+.lista-projetos .card-projeto .links-projeto { gap: 10px; }
+.lista-projetos .card-projeto .links-projeto .link-icone { display: inline-grid; place-items: center; width: 42px; height: 42px; min-height: 0; padding: 0; border: 1px solid var(--line); border-radius: 50%; color: var(--muted); transition: color .2s ease, border-color .2s ease, transform .2s ease; }
+.lista-projetos .card-projeto .links-projeto .link-icone::after { display: none; }
+.lista-projetos .card-projeto .links-projeto .link-icone svg { width: 18px; height: 18px; }
+.lista-projetos .card-projeto .links-projeto .link-acao svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.lista-projetos .card-projeto .links-projeto .link-codigo svg { fill: currentColor; }
+@media (hover: hover) { .lista-projetos .card-projeto .links-projeto .link-icone:hover { color: var(--text); border-color: var(--cor); transform: translateY(-2px); } }
+.lista-projetos .card-projeto .links-projeto .link-icone:focus-visible { color: var(--text); border-color: var(--cor); }
+@media (pointer: coarse) { .lista-projetos .card-projeto .links-projeto .link-icone { width: 44px; height: 44px; } }
+@media (min-width: 1000px) {
+    .lista-projetos .card-projeto:not([data-destaque]) .links-projeto { flex-wrap: nowrap; }
+    .lista-projetos .card-projeto:not([data-destaque]) .link-projeto { flex: 0 0 auto; }
+}
+
+/* selos na prévia: categoria, "Novo" (some sozinho depois de 14 dias) e "Ao vivo" */
+.projeto-selos { position: absolute; left: 12px; bottom: 12px; z-index: 2; display: flex; flex-wrap: wrap; gap: 6px; pointer-events: none; }
+.projeto-selos span { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; font: 600 .7rem/1.3 "Space Grotesk", sans-serif; letter-spacing: .05em; text-transform: uppercase; }
+.selo-categoria { border: 1px solid color-mix(in srgb, var(--cor) 70%, transparent); background: rgba(11, 5, 21, .78); color: color-mix(in srgb, var(--cor) 45%, #fff); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.selo-novo-projeto { background: #fde047; color: #1a1300; box-shadow: 0 6px 16px -6px rgba(253, 224, 71, .7); }
+.selo-aovivo { position: relative; border: 1px solid rgba(74, 222, 128, .6); background: rgba(11, 5, 21, .78); color: #86efac; }
+.selo-aovivo i { position: relative; width: 7px; height: 7px; border-radius: 50%; background: #4ade80; }
+.selo-aovivo i::after { content: ""; position: absolute; inset: 0; border-radius: 50%; border: 2px solid #4ade80; animation: aovivo-anel 1.8s ease-out infinite; }
+@keyframes aovivo-anel { 0% { transform: scale(1); opacity: .8; } 80%, 100% { transform: scale(2.8); opacity: 0; } }
+
+/* número grande e discreto no canto (conta só os cards à vista, então o filtro renumera) */
+.lista-projetos .card-conteudo { position: relative; }
+.lista-projetos .card-conteudo::after { content: counter(projeto, decimal-leading-zero); position: absolute; top: 12px; right: 20px; color: var(--cor); font: 700 3.2rem/1 "Space Grotesk", sans-serif; letter-spacing: -.05em; opacity: .16; pointer-events: none; }
+
+/* título com o benefício embaixo do nome */
+.lista-projetos .card-conteudo h3, .lista-projetos .card-conteudo .tag { padding-right: 64px; }
+.lista-projetos .card-conteudo h3 .projeto-nome { display: block; }
+.lista-projetos .card-conteudo h3 .titulo-beneficio { display: block; margin-top: 6px; color: color-mix(in srgb, var(--cor) 50%, var(--text)); font-size: .6em; font-weight: 500; line-height: 1.35; letter-spacing: -.01em; }
+
+/* os blocos de texto novos */
+.lista-projetos .card-conteudo :is(.projeto-resumo, .projeto-antes-depois, .projeto-teste, .projeto-meta, .projeto-rotulo) { min-height: 0; }
+.lista-projetos .card-conteudo .projeto-resumo { margin: 8px 0 0; color: var(--muted); line-height: 1.6; }
+.projeto-antes-depois { display: grid; gap: 6px; margin: 14px 0 0; padding: 12px 14px; border: 1px solid color-mix(in srgb, var(--cor) 28%, transparent); border-radius: 10px; background: color-mix(in srgb, var(--cor) 8%, transparent); color: var(--muted); font-size: .88rem; line-height: 1.5; }
+.projeto-antes-depois b { color: var(--text); font-weight: 600; }
+.projeto-serve { margin-top: 14px; }
+.lista-projetos .card-conteudo .projeto-rotulo { margin: 0 0 8px; color: var(--muted); font: .7rem "DM Mono", monospace; letter-spacing: .1em; text-transform: uppercase; }
+.projeto-serve ul { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 0; padding: 0; list-style: none; }
+.projeto-serve li { position: relative; padding-left: 14px; color: var(--text); font-size: .88rem; }
+.projeto-serve li::before { content: ""; position: absolute; top: .5em; left: 0; width: 6px; height: 6px; border-radius: 50%; background: var(--cor); box-shadow: 0 0 8px color-mix(in srgb, var(--cor) 70%, transparent); }
+.projeto-recursos { margin-top: 12px; font-size: .88rem; }
+.projeto-recursos summary { display: inline-flex; align-items: center; gap: 8px; min-height: 32px; color: var(--text); font-weight: 600; cursor: pointer; list-style: none; }
+.projeto-recursos summary::-webkit-details-marker { display: none; }
+.projeto-recursos summary::before { content: "+"; display: inline-grid; place-items: center; width: 20px; height: 20px; border: 1px solid var(--cor); border-radius: 50%; color: var(--cor); font-size: .85rem; line-height: 1; transition: transform .25s ease; }
+.projeto-recursos[open] summary::before { transform: rotate(45deg); }
+.projeto-recursos ul { margin: 8px 0 0; padding-left: 18px; color: var(--muted); line-height: 1.7; }
+.projeto-recursos li::marker { color: var(--cor); }
+@media (pointer: coarse) { .projeto-recursos summary { min-height: 44px; } }
+.lista-projetos .card-conteudo .projeto-teste { margin: 14px 0 0; padding-left: 12px; border-left: 2px solid var(--cor); color: var(--muted); font-size: .88rem; line-height: 1.5; }
+.projeto-teste b { color: var(--text); }
+.lista-projetos .card-conteudo .projeto-meta { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 0; }
+.projeto-meta span { padding: 4px 11px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); font: 500 .78rem/1.5 "Space Grotesk", sans-serif; }
+.projeto-meta .meta-numero { border-color: color-mix(in srgb, var(--cor) 45%, transparent); color: var(--text); }
+
+/* card largo (Eldev, Loja) no computador: texto em duas colunas, "Serve pra" começa a segunda */
+@media (min-width: 1000px) {
+    .lista-projetos .card-projeto[data-largo] .card-conteudo { display: block; columns: 2; column-gap: 56px; padding: 30px 34px; }
+    .lista-projetos .card-projeto[data-largo] .card-conteudo > * { break-inside: avoid; }
+    .lista-projetos .card-projeto[data-largo] .projeto-serve { break-before: column; margin-top: 0; }
+    .lista-projetos .card-projeto[data-largo] .links-projeto { padding-top: 18px; }
+    .lista-projetos .card-projeto[data-largo] .card-conteudo > p:not(.tag) { max-width: none; }
+    /* Fatia e Conta a Dois dividem a linha; os três menores ficam lado a lado embaixo */
+    .lista-projetos .card-projeto[data-destaque]:not([data-largo]) { grid-column: span 3; }
+    .lista-projetos .card-projeto:not([data-destaque]) .projeto-visual { height: 200px; }
+    .lista-projetos .card-projeto:not([data-destaque]) .card-conteudo { padding: 22px; }
+    .lista-projetos .card-projeto:not([data-destaque]) .card-conteudo h3 { font-size: 1.3rem; }
+    .lista-projetos .card-projeto:not([data-destaque]) .card-conteudo::after { font-size: 2.4rem; }
+}
+
+/* prévia em tela de computador: a janela inclina de leve e o print rola devagar até embaixo */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .print-janela img { transition: object-position 4s ease-in-out; }
+    .card-projeto:hover .print-janela img { object-position: bottom center; }
+    .card-projeto:hover .print-janela { transform: translateY(0) perspective(900px) rotateX(3deg); }
+}
+
+/* moldura de celular com as telas trocando sozinhas (tipo um GIF curto) */
+.tela-celular { position: absolute; z-index: 2; right: 6%; bottom: -26px; width: 128px; aspect-ratio: 280 / 606; overflow: hidden; border: 5px solid #0b0716; border-radius: 22px; background: #0b0716; box-shadow: 0 24px 50px -14px rgba(0,0,0,.8), 0 0 0 1px rgba(255,255,255,.16), 0 0 44px -10px color-mix(in srgb, var(--cor) 65%, transparent); transform: rotate(4deg); transition: transform .5s cubic-bezier(.2, .8, .2, 1); }
+.tela-celular::before { content: ""; position: absolute; z-index: 2; top: 5px; left: 50%; width: 32%; height: 8px; border-radius: 999px; background: #0b0716; transform: translateX(-50%); }
+.card-projeto:hover .tela-celular, .card-projeto:focus-within .tela-celular { transform: rotate(2deg) translateY(-8px); }
+.tela-celular .sequencia { position: relative; width: 100%; height: 100%; }
+.tela-celular .sequencia img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; object-position: top center; }
+.tela-celular .sequencia img:not(:first-child) { opacity: 0; }
+.print-celular.tela-celular { right: 5%; bottom: -30px; width: 104px; border-width: 4px; border-radius: 18px; }
+@media (prefers-reduced-motion: no-preference) {
+    html:not(.modo-leve) .tela-celular .sequencia img:nth-child(2) { animation: tela-dois 10s ease-in-out infinite paused; }
+    html:not(.modo-leve) .tela-celular .sequencia img:nth-child(3) { animation: tela-tres 10s ease-in-out infinite paused; }
+    html:not(.modo-leve) .card-projeto.em-tela .tela-celular .sequencia img { animation-play-state: running; }
+}
+@keyframes tela-dois { 0%, 30% { opacity: 0; } 34%, 70% { opacity: 1; } 71%, 100% { opacity: 0; } }
+@keyframes tela-tres { 0%, 63% { opacity: 0; } 67%, 95% { opacity: 1; } 99%, 100% { opacity: 0; } }
+@media (min-width: 1000px) {
+    .card-projeto[data-largo] .tela-celular { right: 5%; width: 138px; }
+    .card-projeto[data-largo] .visual-loja { padding-right: 190px; padding-left: 60px; }
+    .card-projeto[data-largo] .loja-pecas { max-width: 760px; }
+    .card-projeto[data-largo] .visual-loja .loja-carrinho { right: calc(5% + 165px); }
+}
+@media (max-width: 999px) {
+    .visual-eldev:has(.tela-celular), .visual-loja:has(.tela-celular) { padding-right: 120px; }
+    .tela-celular { right: 14px; bottom: -22px; width: 96px; border-width: 4px; border-radius: 17px; }
+}
+
+/* balões do chat da Fatia Nobre aparecendo um de cada vez, como numa conversa de verdade */
+.visual-print:has(.chat-bolhas) .print-janela img { filter: brightness(.55) saturate(.8); }
+.chat-bolhas { position: absolute; z-index: 2; right: 16px; bottom: 44px; display: flex; flex-direction: column; gap: 6px; width: min(64%, 260px); }
+.chat-bolhas .bolha { max-width: 90%; margin: 0; padding: 7px 11px; border-radius: 14px; box-shadow: 0 10px 22px -10px rgba(0,0,0,.7); font: 500 .76rem/1.35 "Space Grotesk", sans-serif; }
+.chat-bolhas .bolha-cliente { align-self: flex-end; border-bottom-right-radius: 4px; background: #ffffff; color: #1a1030; }
+.chat-bolhas .bolha-loja { align-self: flex-start; border-bottom-left-radius: 4px; background: color-mix(in srgb, var(--cor) 78%, #000); color: #ffffff; }
+@media (prefers-reduced-motion: no-preference) {
+    html:not(.modo-leve) .chat-bolhas .bolha { animation: 11s ease infinite paused; }
+    html:not(.modo-leve) .chat-bolhas .bolha:nth-child(1) { animation-name: bolha-1; }
+    html:not(.modo-leve) .chat-bolhas .bolha:nth-child(2) { animation-name: bolha-2; }
+    html:not(.modo-leve) .chat-bolhas .bolha:nth-child(3) { animation-name: bolha-3; }
+    html:not(.modo-leve) .chat-bolhas .bolha:nth-child(4) { animation-name: bolha-4; }
+    html:not(.modo-leve) .card-projeto.em-tela .chat-bolhas .bolha { animation-play-state: running; }
+}
+@keyframes bolha-1 { 0%, 2% { opacity: 0; transform: translateY(8px) scale(.95); } 6%, 86% { opacity: 1; transform: none; } 92%, 100% { opacity: 0; transform: translateY(-4px); } }
+@keyframes bolha-2 { 0%, 14% { opacity: 0; transform: translateY(8px) scale(.95); } 18%, 86% { opacity: 1; transform: none; } 92%, 100% { opacity: 0; transform: translateY(-4px); } }
+@keyframes bolha-3 { 0%, 32% { opacity: 0; transform: translateY(8px) scale(.95); } 36%, 86% { opacity: 1; transform: none; } 92%, 100% { opacity: 0; transform: translateY(-4px); } }
+@keyframes bolha-4 { 0%, 46% { opacity: 0; transform: translateY(8px) scale(.95); } 50%, 86% { opacity: 1; transform: none; } 92%, 100% { opacity: 0; transform: translateY(-4px); } }
+
+/* celular: só os 4 em destaque deslizam pro lado; os outros três ficam em lista, mais compactos */
+@media (max-width: 720px) {
+    .lista-projetos { display: grid; gap: 14px; margin-inline: 0; padding: 0; overflow: visible; scroll-snap-type: none; }
+    .lista-projetos .destaques { display: flex; gap: 14px; margin-inline: -22px; padding: 8px 22px 20px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scroll-padding-inline: 22px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+    .lista-projetos .destaques::-webkit-scrollbar { display: none; }
+    .lista-projetos .destaques:not(:has(.card-projeto:not(.card-oculto))) { display: none; }
+    .lista-projetos .destaques .card-projeto { flex: 0 0 min(86%, 360px); scroll-snap-align: start; }
+    .lista-projetos > .card-projeto { flex: none; }
+    .lista-projetos > .card-projeto .projeto-visual { height: 170px; }
+    .lista-projetos > .card-projeto .card-conteudo { padding: 20px; }
+    .lista-projetos > .card-projeto .card-conteudo h3 { font-size: 1.3rem; }
+    .lista-projetos .card-conteudo::after { font-size: 2.4rem; right: 16px; }
+    .carrossel-pontos { margin: -6px 0 10px; }
+    .chat-bolhas { right: 10px; bottom: 42px; gap: 5px; width: 84%; }
+    .chat-bolhas .bolha { padding: 5px 9px; font-size: .7rem; }
+    /* no celular o botão de testar vem logo depois do resumo; os detalhes ficam pra quem quiser ler mais */
+    .lista-projetos .card-conteudo .projeto-teste { order: 1; }
+    .lista-projetos .card-projeto .links-projeto { order: 2; flex-wrap: nowrap; gap: 8px; padding-top: 16px; margin-top: 0; }
+    .lista-projetos .card-conteudo :is(.projeto-antes-depois, .projeto-serve, .projeto-recursos, .projeto-meta) { order: 3; }
+    .lista-projetos .card-conteudo .projeto-antes-depois { margin-top: 20px; }
+    .lista-projetos .card-projeto .card-orcamento { order: 4; margin-top: auto; }
+    .lista-projetos .card-projeto .projeto-meta { margin-bottom: 20px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .selo-aovivo i::after { animation: none; }
+    .tela-celular, .projeto-recursos summary::before { transition: none; }
+}
+.modo-leve .selo-aovivo i::after { animation: none; }
+@media print { .tela-celular, .chat-bolhas, .projeto-selos { display: none !important; } }
