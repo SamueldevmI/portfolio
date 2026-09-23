@@ -9,17 +9,66 @@ main .eyebrow::before { content: counter(secao, decimal-leading-zero) " / "; col
 .secao.jornada { max-width: none; }
 
 /* ---------- 3. Foto no anel do topo ---------- */
-.hero-foto { position: absolute; z-index: 1; right: calc(4% + 14px + var(--parallax-x, 0px)); top: calc(114px + var(--parallax, 0px)); width: 232px; height: 232px; margin: 0; overflow: hidden; border-radius: 50%; background: #140a34; box-shadow: 0 0 0 1px rgba(var(--cyan-rgb), .4), 0 26px 60px -18px rgba(0,0,0,.75); }
+.hero-foto-anel { position: absolute; z-index: 1; right: calc(4% + 14px + var(--parallax-x, 0px)); top: calc(114px + var(--parallax, 0px)); width: 232px; height: 232px; }
+.hero-foto { position: absolute; inset: 0; margin: 0; overflow: hidden; border-radius: 50%; background: #140a34; box-shadow: 0 0 0 1px rgba(var(--cyan-rgb), .4), 0 26px 60px -18px rgba(0,0,0,.75); }
 .hero-foto img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; } /* a foto já vem quadrada e cortada no rosto */
 .hero-foto::after { content: ""; position: absolute; inset: 0; border-radius: 50%; pointer-events: none; background: linear-gradient(155deg, rgba(var(--cyan-rgb), .34), transparent 58%), radial-gradient(circle at 78% 92%, rgba(120,90,255,.28), transparent 62%); mix-blend-mode: soft-light; }
 body.dark-mode .hero-foto { background: #241a5c; box-shadow: 0 0 0 3px rgba(247,245,254,.7), 0 26px 60px -18px rgba(47,35,144,.55); }
 body.dark-mode .hero-foto::after { background: linear-gradient(155deg, rgba(109,74,255,.4), transparent 60%); mix-blend-mode: soft-light; }
-/* em telas estreitas a foto não cabe ao lado do texto: vira um avatar em linha e o anel vazio some */
-@media (max-width: 999px) {
-    .hero-foto { position: relative; right: auto; top: auto; width: 92px; height: 92px; margin: 0 0 20px; box-shadow: 0 0 0 1px rgba(var(--cyan-rgb), .5), 0 0 34px rgba(var(--cyan-rgb), .38); }
-    body.dark-mode .hero-foto { box-shadow: 0 0 0 3px rgba(247,245,254,.75), 0 0 34px rgba(109,74,255,.6); }
-    .hero-conteudo::after { display: none; }
+
+/* ---------- 3b. Anel vivo ao redor da foto (2026-09-23) ----------
+   Junta num efeito só o que o Samuel pediu do braimstorm: 1) anel giratório, 3) glow que
+   "respira", 4) partículas orbitando, 5) traço que se desenha sozinho ao carregar a página,
+   6) a cor do anel passeando ciano → roxo → rosa (é a própria rotação: o gradiente já tem as
+   3 cores, então girar já troca a cor visível em cada ponto). Tudo CSS puro (compositor),
+   sem JS, pra não pesar o processador — ver [[project_portfolio_acabamento]] sobre o cuidado
+   com CPU ociosa no celular. */
+@property --anel-hero-angulo { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+
+.anel-tracado { position: absolute; inset: -8px; width: calc(100% + 16px); height: calc(100% + 16px); pointer-events: none; }
+.anel-tracado circle { fill: none; stroke: var(--cyan); stroke-width: 1.4; stroke-linecap: round; stroke-dasharray: 296; stroke-dashoffset: 296; animation: desenhar-anel-hero 1.6s .4s cubic-bezier(.22, .7, .3, 1) forwards; }
+@keyframes desenhar-anel-hero { to { stroke-dashoffset: 0; } }
+
+.anel-giro {
+    position: absolute; inset: -9px; border-radius: 50%; pointer-events: none;
+    --anel-hero-angulo: 0deg;
+    background: conic-gradient(from var(--anel-hero-angulo), rgba(var(--cyan-rgb), .95), rgba(var(--violet-rgb), .9), rgba(var(--pink-rgb), .9), rgba(var(--cyan-rgb), .95));
+    -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 2.5px), #000 calc(100% - 2.5px));
+    mask: radial-gradient(farthest-side, transparent calc(100% - 2.5px), #000 calc(100% - 2.5px));
+    animation: girar-anel-hero 9s linear infinite;
 }
+@keyframes girar-anel-hero { to { --anel-hero-angulo: 360deg; } }
+
+.anel-respiro { position: absolute; inset: -20px; border-radius: 50%; pointer-events: none; background: radial-gradient(circle, rgba(var(--cyan-rgb), .32), transparent 68%); animation: respirar-anel-hero 5s ease-in-out infinite; }
+@keyframes respirar-anel-hero { 0%, 100% { opacity: .5; transform: scale(.94); } 50% { opacity: .95; transform: scale(1.05); } }
+
+.particula { position: absolute; top: 50%; left: 50%; width: 6px; height: 6px; margin: -3px 0 0 -3px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 8px rgba(var(--cyan-rgb), .85); pointer-events: none; }
+.particula.p1 { animation: orbita-hero-1 10s linear infinite; }
+.particula.p2 { background: var(--violet); box-shadow: 0 0 8px rgba(var(--violet-rgb), .85); animation: orbita-hero-2 14s linear infinite reverse; }
+.particula.p3 { background: var(--pink); box-shadow: 0 0 8px rgba(var(--pink-rgb), .85); animation: orbita-hero-3 17s linear infinite; }
+@keyframes orbita-hero-1 { from { transform: rotate(0deg) translateX(130px) rotate(0deg); } to { transform: rotate(360deg) translateX(130px) rotate(-360deg); } }
+@keyframes orbita-hero-2 { from { transform: rotate(120deg) translateX(140px) rotate(-120deg); } to { transform: rotate(480deg) translateX(140px) rotate(-480deg); } }
+@keyframes orbita-hero-3 { from { transform: rotate(240deg) translateX(122px) rotate(-240deg); } to { transform: rotate(600deg) translateX(122px) rotate(-600deg); } }
+
+.modo-leve .anel-giro, .modo-leve .anel-respiro, .modo-leve .particula { animation: none; opacity: 0; }
+@media (prefers-reduced-motion: reduce) {
+    .anel-giro, .anel-respiro, .particula { animation: none; }
+    .anel-tracado circle { animation: none; stroke-dashoffset: 0; }
+}
+
+/* em telas estreitas a foto não cabe ao lado do texto: vira um avatar em linha; as partículas
+   (que só cabem numa foto grande) somem, o resto do anel encolhe junto com a foto */
+@media (max-width: 999px) {
+    .hero-foto-anel { position: relative; right: auto; top: auto; width: 92px; height: 92px; margin: 0 0 20px; }
+    .hero-foto { box-shadow: 0 0 0 1px rgba(var(--cyan-rgb), .5), 0 0 34px rgba(var(--cyan-rgb), .38); }
+    body.dark-mode .hero-foto { box-shadow: 0 0 0 3px rgba(247,245,254,.75), 0 0 34px rgba(109,74,255,.6); }
+    .particula { display: none; }
+    .anel-tracado { inset: -4px; width: calc(100% + 8px); height: calc(100% + 8px); }
+    .anel-giro { inset: -5px; }
+    .anel-respiro { inset: -10px; }
+}
+
+@media print { .anel-tracado, .anel-giro, .anel-respiro, .particula { display: none; } }
 
 /* ---------- 4. Sobre mim: foto maior com moldura e título em cima ---------- */
 .sobre { grid-template-columns: 1fr; gap: 40px; align-items: start; }
