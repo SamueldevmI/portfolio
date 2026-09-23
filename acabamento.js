@@ -443,6 +443,81 @@
         primeiroTexto.textContent = primeiroTexto.textContent.replace("Olá", cumprimento);
     })();
 
+    /* ---------- Braimstorm "melhorar os pixels da foto" (2026-09-23), os 5 escolhidos ----------
+       A profundidade (pixel mais "perto" se mexe mais que o mais "longe") é só CSS: cada .pixel já
+       lê --parallax/--parallax-x do .hero-conteudo (são custom properties, herdam sozinhas) e
+       multiplica pelo --p de cada um. As outras 4 precisam de um empurrão de JS. */
+
+    /* 1) Paleta muda com a hora do dia (mais quente de dia, mais viva à noite) */
+    (function periodoPixels() {
+        const hora = new Date().getHours();
+        document.body.classList.add(hora >= 6 && hora < 18 ? "periodo-dia" : "periodo-noite");
+    })();
+
+    /* 2) Pixel perto do cursor brilha mais forte (só em tela com mouse de verdade) */
+    (function realcePixels() {
+        if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+        const heroConteudo = document.querySelector(".hero-conteudo");
+        const pixels = document.querySelectorAll(".campo-pixels .pixel");
+        if (!heroConteudo || !pixels.length) return;
+        let quadro = 0;
+        heroConteudo.addEventListener("mousemove", (evento) => {
+            cancelAnimationFrame(quadro);
+            quadro = requestAnimationFrame(() => {
+                pixels.forEach((pixel) => {
+                    const rect = pixel.getBoundingClientRect();
+                    const dist = Math.hypot(evento.clientX - (rect.left + rect.width / 2), evento.clientY - (rect.top + rect.height / 2));
+                    pixel.style.setProperty("--realce", Math.max(0, 1 - dist / 90).toFixed(2));
+                });
+            });
+        });
+        heroConteudo.addEventListener("mouseleave", () => {
+            pixels.forEach((pixel) => pixel.style.setProperty("--realce", 0));
+        });
+    })();
+
+    /* 3) De vez em quando um pixel some e nasce em outro lugar — constelação viva, não fixa */
+    (function embaralharPixels() {
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+        const pixels = document.querySelectorAll(".campo-pixels .pixel");
+        if (!pixels.length) return;
+        const letras = ["a", "b", "c", "d"];
+        function embaralharUm() {
+            const alvo = pixels[Math.floor(Math.random() * pixels.length)];
+            alvo.classList.add("pixel-trocando");
+            setTimeout(() => {
+                const angulo = Math.random() * Math.PI * 2;
+                const raio = 30 + Math.random() * 18;
+                alvo.style.setProperty("--x", (50 + Math.cos(angulo) * raio).toFixed(1) + "%");
+                alvo.style.setProperty("--y", (50 + Math.sin(angulo) * raio).toFixed(1) + "%");
+                alvo.style.setProperty("--c", "var(--pixel-cor-" + letras[Math.floor(Math.random() * 4)] + ")");
+                requestAnimationFrame(() => alvo.classList.remove("pixel-trocando"));
+            }, 650);
+            setTimeout(embaralharUm, 5000 + Math.random() * 4000);
+        }
+        setTimeout(embaralharUm, 5000 + Math.random() * 4000);
+    })();
+
+    /* 4) Estrela cadente rara cruzando perto da foto — um easter egg discreto */
+    (function estrelaCadente() {
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+        const campo = document.querySelector(".campo-pixels");
+        if (!campo) return;
+        function cair() {
+            if (!document.hidden) {
+                const estrela = document.createElement("i");
+                estrela.className = "estrela-cadente";
+                estrela.style.setProperty("--ang", (18 + Math.random() * 24) + "deg");
+                estrela.style.setProperty("--x", (56 + Math.random() * 12) + "%");
+                estrela.style.setProperty("--y", (6 + Math.random() * 16) + "%");
+                campo.appendChild(estrela);
+                estrela.addEventListener("animationend", () => estrela.remove());
+            }
+            setTimeout(cair, 22000 + Math.random() * 14000);
+        }
+        setTimeout(cair, 22000 + Math.random() * 14000);
+    })();
+
     /* Link direto pra uma pergunta do FAQ (ex.: #faq-prazo) também abre ela — :target só destaca, não abre. */
     (function abrirFaqDoLink() {
         function abrirDoHash() {
