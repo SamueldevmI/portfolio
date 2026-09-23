@@ -522,6 +522,7 @@ body.dark-mode .orcamento-fixo { background:#6d4aff; border-color:#6d4aff; color
     .nav-links a { padding:12px 0; }
     .tour-navegacao #tourPular { min-height:44px; padding:0 8px; }
     .paleta-lista li button { min-height:44px; }
+    .terminal-linha input { min-height:44px; }
 }
 
 /* Modo leve (celular, economia de dados ou internet lenta): desliga os efeitos mais pesados.
@@ -529,6 +530,8 @@ body.dark-mode .orcamento-fixo { background:#6d4aff; border-color:#6d4aff; color
 .modo-leve .ruido { display:none; }
 .modo-leve body::before { inset:0; filter:none; animation:none; }
 .modo-leve .hero::before,.modo-leve .hero-conteudo::after,.modo-leve .eyebrow,.modo-leve h1 span,.modo-leve .nexus-orbe,.modo-leve .ponto-foco { animation:none; }
+/* No modo leve o título grande (LCP) não fica esperando a vez: some o atraso em cascata do hero inteiro, tudo aparece junto */
+.modo-leve .hero-conteudo > * { animation:none; opacity:1; transform:none; }
 .modo-leve .reveal { filter:none; }
 .modo-leve .card-projeto,.modo-leve .botao-compartilhar,.modo-leve .botao-flip,.modo-leve .nav,.modo-leve .nav.nav-flutuante,.modo-leve .modal-overlay,.modo-leve .paleta-overlay { backdrop-filter:none; }
 .modo-leve .nav.nav-flutuante { background:rgba(14,5,36,.95); }
