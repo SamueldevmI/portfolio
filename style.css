@@ -240,8 +240,6 @@ h1 span { -webkit-text-fill-color:transparent; background:linear-gradient(100deg
 @media (hover:hover) { .card-projeto:hover { transform:translateY(-7px); border-color:var(--cyan); box-shadow:0 0 0 1px var(--cyan),0 22px 48px -18px color-mix(in srgb,var(--cyan) 45%,transparent),0 46px 75px -34px color-mix(in srgb,var(--cyan) 32%,transparent),var(--shadow); } }
 
 /* Leve rotação de repouso nos cards, endireita ao interagir (tilt/hover assume o transform) */
-.card-projeto.reveal.is-visible:nth-child(odd) { transform:rotate(-.6deg); }
-.card-projeto.reveal.is-visible:nth-child(even) { transform:rotate(.6deg); }
 
 /* Blur de profundidade de campo: elementos entram em foco ao revelar no scroll */
 .reveal { filter:blur(6px); transition:opacity .6s ease, transform .6s ease, filter .6s ease; }
