@@ -35,7 +35,7 @@
     const COMPASSO = BATIDA * 4;
     const CHAVE_VOLUME = "portfolio-musica-volume";
     let volume = Math.min(1, Math.max(0, Number(ler(CHAVE_VOLUME) || 0.5)));
-    const NIVEL_MUSICA = 0.6; // a música fica um pouco abaixo dos efeitos de clique, cards e orçamento
+    const NIVEL_MUSICA = 0.42; // a música fica abaixo dos efeitos de clique, toque, cards e orçamento
     const midi = (n) => 440 * Math.pow(2, (n - 69) / 12);
 
     // Dó – Lám – Fá – Sol – Dó – Mim – Fá – Sol (um compasso cada)
@@ -129,7 +129,7 @@
         mix = misturaAtual();
         filtro.frequency.value = mix.filtro * (NOITE ? 0.8 : 1);
         efeitos = ctx.createGain();
-        efeitos.gain.value = 1;
+        efeitos.gain.value = 1.25;
         efeitos.connect(compressor); // sem o filtro da seção: efeito sempre nítido
         GRUPOS.forEach((nome) => {
             grupo[nome] = ctx.createGain();
@@ -376,6 +376,14 @@
         const nota = notas[passoHover % notas.length] + 12 + (passoHover >= notas.length ? 12 : 0);
         marimba(nota, agoraMais(), 0.45, efeitos);
     }
+    // Toque na tela (celular) em qualquer lugar: nota da marimba + um brilhinho, subindo pelo acorde
+    function notaToque() {
+        const notas = acordeAgora().notas;
+        passoHover = (passoHover + 1) % notas.length;
+        const t = agoraMais();
+        marimba(notas[passoHover] + 12, t, 0.75, efeitos);
+        sino(notas[(passoHover + 2) % notas.length] + 24, t + 0.06, 0.4, 0.3, efeitos);
+    }
     function notaClique() {
         const notas = acordeAgora().notas;
         sino(notas[3] + 12, agoraMais(), 0.6, 0.55, efeitos);
@@ -593,6 +601,19 @@
         const card = e.target.closest(".card-projeto");
         if (card && !card.contains(e.relatedTarget)) somDoProjeto(card);
     });
+    // Toque rápido na tela (sem arrastar, pra não tocar enquanto a pessoa rola a página)
+    let toqueInicio = null;
+    document.addEventListener("pointerdown", (e) => {
+        if (e.pointerType === "touch") toqueInicio = { x: e.clientX, y: e.clientY, t: performance.now() };
+    }, true);
+    document.addEventListener("pointerup", (e) => {
+        if (e.pointerType !== "touch" || !toqueInicio) return;
+        const parado = Math.hypot(e.clientX - toqueInicio.x, e.clientY - toqueInicio.y) < 12 && performance.now() - toqueInicio.t < 500;
+        toqueInicio = null;
+        if (!parado || e.target.closest(INTERATIVO)) return; // em botão/link quem toca é o som de clique
+        // no primeiro toque o áudio ainda está sendo liberado: espera um instante e toca
+        setTimeout(() => { if (podeTocarEfeito()) notaToque(); }, ctx && ctx.state === "running" ? 0 : 120);
+    }, true);
     document.addEventListener("click", (e) => {
         if (!podeTocarEfeito()) return;
         const alvo = e.target.closest(INTERATIVO);
