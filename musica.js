@@ -646,6 +646,56 @@
         }).observe(orcamento, { childList: true, subtree: true, characterData: true });
     }
 
+    // Cursor: um ponto que segue o mouse pulsando na batida e deixa um rastro de notinhas (só com mouse)
+    if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+        const semMovimento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        const ponto = document.createElement("div");
+        ponto.className = "cursor-batida";
+        ponto.setAttribute("aria-hidden", "true");
+        document.body.append(ponto);
+        const NOTAS = ["♪", "♫", "♩", "♬"];
+        let alvoX = -100, alvoY = -100, x = -100, y = -100, andou = 0, ultimaNota = 0, notasNaTela = 0, sobreClicavel = false, visivel = false;
+
+        document.addEventListener("mousemove", (e) => {
+            andou += Math.hypot(e.clientX - alvoX, e.clientY - alvoY);
+            alvoX = e.clientX; alvoY = e.clientY;
+            if (!visivel) { visivel = true; x = alvoX; y = alvoY; ponto.classList.add("visivel"); }
+            sobreClicavel = !!e.target.closest(INTERATIVO);
+            const agora = performance.now();
+            // mais rápido = mais notas (a cada ~46 px andados), com um limite pra não virar chuva
+            if (!semMovimento && andou > 46 && agora - ultimaNota > 45 && notasNaTela < 22) {
+                andou = 0; ultimaNota = agora; notasNaTela++;
+                const n = document.createElement("span");
+                n.className = "nota-rastro" + (Math.random() < 0.4 ? " nota-rosa" : "");
+                n.textContent = NOTAS[Math.floor(Math.random() * NOTAS.length)];
+                n.setAttribute("aria-hidden", "true");
+                n.style.left = alvoX + "px";
+                n.style.top = alvoY + "px";
+                n.style.setProperty("--dx", (Math.random() * 36 - 18).toFixed(0) + "px");
+                n.style.setProperty("--giro", (Math.random() * 40 - 20).toFixed(0) + "deg");
+                n.addEventListener("animationend", () => { n.remove(); notasNaTela--; }, { once: true });
+                document.body.append(n);
+            }
+        }, { passive: true });
+        document.addEventListener("mouseleave", () => { visivel = false; ponto.classList.remove("visivel"); });
+
+        (function seguir() {
+            x += (alvoX - x) * (semMovimento ? 1 : 0.28);
+            y += (alvoY - y) * (semMovimento ? 1 : 0.28);
+            let pulso = 0;
+            if (!semMovimento && tocando && ctx && ctx.state === "running") {
+                const agora = ctx.currentTime;
+                let inicio = null;
+                linhaDoTempo.forEach((c) => { if (c.t <= agora) inicio = c.t; });
+                if (inicio !== null) pulso = Math.exp(-(((agora - inicio) / BATIDA) % 1) * 5);
+            }
+            const escala = (sobreClicavel ? 0.55 : 1) * (1 + 0.9 * pulso);
+            ponto.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%) scale(${escala.toFixed(3)})`;
+            ponto.style.opacity = visivel ? String(0.55 + 0.45 * pulso) : "0";
+            requestAnimationFrame(seguir);
+        })();
+    }
+
     // Conforme a pessoa rola, a música vai se misturando entre o clima de uma seção e o da próxima.
     let quadroRolagem = 0, ultimoY = window.scrollY, ultimoTempo = performance.now();
     const aoRolar = () => {

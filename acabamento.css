@@ -1158,3 +1158,14 @@ body.dark-mode .linha-tempo .lt-tags li { color: var(--verde); border-color: col
 .pp-promo b { color: var(--pink); font-size: .95rem; }
 /* com desconto valendo, o preço cheio aparece riscado */
 :is(.projeto-preco, .mini-projeto-preco):has(.pp-promo:not([hidden])) .pp-base b { text-decoration: line-through; text-decoration-thickness: 2px; opacity: .65; font-size: .95rem; }
+
+/* ---------- Cursor: ponto na batida + rastro de notinhas (musica.js) ---------- */
+.cursor-batida { position: fixed; left: 0; top: 0; z-index: 98; width: 10px; height: 10px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 12px 2px rgba(var(--cyan-rgb), .6); pointer-events: none; opacity: 0; will-change: transform; }
+.nota-rastro { position: fixed; z-index: 97; color: var(--cyan); font: 700 19px/1 "Space Grotesk", sans-serif; text-shadow: 0 0 10px rgba(var(--cyan-rgb), .7); pointer-events: none; user-select: none; animation: nota-sobe 1.25s ease-out forwards; }
+.nota-rastro.nota-rosa { color: var(--pink); text-shadow: 0 0 8px rgba(var(--pink-rgb), .55); }
+@keyframes nota-sobe {
+    0%   { opacity: 0; transform: translate(-50%, -50%) scale(.6) rotate(0); }
+    18%  { opacity: .95; }
+    100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% - 46px)) scale(1.05) rotate(var(--giro)); }
+}
+@media print { .cursor-batida, .nota-rastro { display: none !important; } }
