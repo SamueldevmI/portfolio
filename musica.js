@@ -3,8 +3,9 @@
    autoral envolvido. Pra trocar por uma música de verdade, dá pra usar um <audio> no lugar do sintetizador.
 
    Como ela é: 112 BPM em dó maior, marimba saltitante fazendo arpejos, baixo pulando, palma e chocalho
-   leves e um sininho com uma melodia que gruda. Um ciclo tem 8 compassos (Dó–Lám–Fá–Sol–Dó–Mim–Fá–Sol);
-   o primeiro ciclo é só a base, e a melodia entra do segundo em diante, alternando sininho e marimba.
+   leves e um sininho com uma melodia que gruda. Um ciclo tem 8 compassos (Dó–Lám–Fá–Sol–Dó–Mim–Fá–Sol).
+   Cada seção da página tem um clima (ver CLIMAS), e a música vai se misturando entre eles conforme a
+   rolagem: cada grupo de instrumentos tem o próprio volume, que sobe e desce devagar.
 
    Regras:
    - O navegador não deixa tocar som antes de a pessoa interagir, então a música começa no primeiro
@@ -55,20 +56,23 @@
     ];
     const ARPEJO = [0, 2, 1, 3, 2, 1, 3, 2]; // ordem das notas do acorde nas 8 colcheias
 
-    // Clima de cada parte da página: a força de cada instrumento (0 = não toca), se tem melodia e o quanto
-    // o som fica aberto (filtro). Muda no fim do compasso em que a pessoa chega na seção.
+    // Clima de cada parte da página: o volume de cada grupo de instrumentos (0 = calado) e o quanto o som
+    // fica aberto (filtro). "fraco" = as notas de contratempo da marimba; "rara" = melodia só com notas
+    // longas e espaçadas. Entre uma seção e outra os valores se misturam aos poucos conforme a rolagem.
     const CLIMAS = {
-        inicio:    { pad: 1,   marimba: 1,    baixo: 1,    bumbo: 1,    palma: 1,   chocalho: 1,   melodia: "ciclo",  brilho: false, filtro: 9000 },  // animado
-        sobre:     { pad: 1.4, marimba: .75,  baixo: .6,   bumbo: 0,    palma: 0,   chocalho: .35, melodia: "nao",    brilho: false, filtro: 3200 },  // íntimo
-        projetos:  { pad: 1,   marimba: 1,    baixo: 1,    bumbo: 1,    palma: 1,   chocalho: 1,   melodia: "sempre", brilho: true,  filtro: 10000 }, // descoberta
-        servicos:  { pad: .8,  marimba: .9,   baixo: 1.25, bumbo: 1.1,  palma: 1.4, chocalho: .9,  melodia: "nao",    brilho: false, filtro: 7500 },  // confiante
-        orcamento: { pad: 1,   marimba: .7,   baixo: .8,   bumbo: .6,   palma: 0,   chocalho: .4,  melodia: "nao",    brilho: false, filtro: 5000 },  // foco
-        jornada:   { pad: 1.8, marimba: .6,   baixo: .5,   bumbo: 0,    palma: 0,   chocalho: 0,   melodia: "rara",   brilho: false, filtro: 2800, esparso: true }, // nostálgico
-        contato:   { pad: 1.2, marimba: 1.05, baixo: 1.1,  bumbo: 1.05, palma: 1.2, chocalho: 1,   melodia: "sempre", brilho: true,  filtro: 10000 }, // final
+        inicio:    { pad: 1,   marimba: 1,    fraco: 1, baixo: 1,    bumbo: 1,    palma: 1,   chocalho: 1,   melodia: .75, rara: 0, brilho: 0, filtro: 9000 },  // animado
+        sobre:     { pad: 1.4, marimba: .75,  fraco: 1, baixo: .6,   bumbo: 0,    palma: 0,   chocalho: .35, melodia: 0,   rara: 0, brilho: 0, filtro: 3200 },  // íntimo
+        projetos:  { pad: 1,   marimba: 1,    fraco: 1, baixo: 1,    bumbo: 1,    palma: 1,   chocalho: 1,   melodia: 1,   rara: 0, brilho: 1, filtro: 10000 }, // descoberta
+        servicos:  { pad: .8,  marimba: .9,   fraco: 1, baixo: 1.25, bumbo: 1.1,  palma: 1.4, chocalho: .9,  melodia: 0,   rara: 0, brilho: 0, filtro: 7500 },  // confiante
+        orcamento: { pad: 1,   marimba: .7,   fraco: 1, baixo: .8,   bumbo: .6,   palma: 0,   chocalho: .4,  melodia: 0,   rara: 0, brilho: 0, filtro: 5000 },  // foco
+        jornada:   { pad: 1.8, marimba: .6,   fraco: 0, baixo: .5,   bumbo: 0,    palma: 0,   chocalho: 0,   melodia: .8,  rara: 1, brilho: 0, filtro: 2800 },  // nostálgico
+        contato:   { pad: 1.2, marimba: 1.05, fraco: 1, baixo: 1.1,  bumbo: 1.05, palma: 1.2, chocalho: 1,   melodia: 1,   rara: 0, brilho: 1, filtro: 10000 }, // final
     };
     const SECAO_CLIMA = { inicio: "inicio", "sobre-mim": "sobre", projetos: "projetos", "mais-projetos": "projetos", servicos: "servicos", orcamento: "orcamento", jornada: "jornada", contato: "contato" };
-    let clima = CLIMAS.inicio;
+    const GRUPOS = ["pad", "marimba", "fraco", "baixo", "bumbo", "palma", "chocalho", "melodia", "brilho"];
+    let mix = Object.assign({}, CLIMAS.inicio);
     let filtroMestre = null;
+    const grupo = {}; // um GainNode por grupo de instrumentos
 
     let ctx = null, mestre = null, saida = null, ruido = null;
     let tocando = false, pausadoPorFora = false, relogio = 0, proximo = 0, indice = 0;
@@ -79,7 +83,6 @@
         ctx = new Contexto();
         const filtro = ctx.createBiquadFilter();
         filtro.type = "lowpass";
-        filtro.frequency.value = clima.filtro; // aberto (brilhante) ou fechado (abafado) conforme a seção
         filtroMestre = filtro;
         const compressor = ctx.createDynamicsCompressor();
         compressor.threshold.value = -16;
@@ -89,6 +92,13 @@
         mestre = ctx.createGain();
         mestre.gain.value = 1;
         mestre.connect(filtro).connect(compressor).connect(saida).connect(ctx.destination);
+        mix = misturaAtual();
+        filtro.frequency.value = mix.filtro;
+        GRUPOS.forEach((nome) => {
+            grupo[nome] = ctx.createGain();
+            grupo[nome].gain.value = volumeDoGrupo(nome, mix);
+            grupo[nome].connect(mestre);
+        });
 
         ruido = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate);
         const dados = ruido.getChannelData(0);
@@ -112,32 +122,32 @@
         o.stop(t + duracao + 0.05);
     }
 
-    function marimba(nota, t, forca) {
+    function marimba(nota, t, forca, destino) {
         // madeira: fundamental curtinha + o harmônico agudo típico da marimba (4x), que some rápido
         const f = midi(nota);
-        tom(f, "sine", t, 0.004, 0.09 * forca, 0.42);
-        tom(f * 4, "sine", t, 0.002, 0.018 * forca, 0.07);
+        tom(f, "sine", t, 0.004, 0.09 * forca, 0.42, destino);
+        tom(f * 4, "sine", t, 0.002, 0.018 * forca, 0.07, destino);
     }
 
-    function sino(nota, t, duracao, forca) {
+    function sino(nota, t, duracao, forca, destino) {
         // glockenspiel: fundamental brilhante + parcial inarmônico (2,76x), com cauda longa
         const f = midi(nota);
-        tom(f, "sine", t, 0.003, 0.075 * forca, Math.max(0.5, duracao * BATIDA + 0.4));
-        tom(f * 2.76, "sine", t, 0.002, 0.02 * forca, 0.25);
-        tom(f * 2, "triangle", t, 0.003, 0.012 * forca, 0.4);
+        tom(f, "sine", t, 0.003, 0.075 * forca, Math.max(0.5, duracao * BATIDA + 0.4), destino);
+        tom(f * 2.76, "sine", t, 0.002, 0.02 * forca, 0.25, destino);
+        tom(f * 2, "triangle", t, 0.003, 0.012 * forca, 0.4, destino);
     }
 
-    function pad(notas, t, forca) {
+    function pad(notas, t, destino) {
         // cordas bem baixinhas por trás, só pra preencher
         const g = ctx.createGain();
         g.gain.setValueAtTime(0.0001, t);
-        g.gain.linearRampToValueAtTime(0.008 * forca, t + 0.3);
-        g.gain.setValueAtTime(0.008 * forca, t + COMPASSO - 0.2);
+        g.gain.linearRampToValueAtTime(0.008, t + 0.3);
+        g.gain.setValueAtTime(0.008, t + COMPASSO - 0.2);
         g.gain.linearRampToValueAtTime(0.0001, t + COMPASSO + 0.1);
         const f = ctx.createBiquadFilter();
         f.type = "lowpass";
         f.frequency.value = 1600;
-        g.connect(f).connect(mestre);
+        g.connect(f).connect(destino);
         notas.forEach((n) => {
             const o = ctx.createOscillator();
             o.type = "sawtooth";
@@ -149,7 +159,7 @@
         });
     }
 
-    function baixo(nota, t, duracao, forca) {
+    function baixo(nota, t, duracao, destino) {
         // baixo curtinho e redondo, que "pula"
         const o = ctx.createOscillator();
         const g = ctx.createGain();
@@ -158,24 +168,24 @@
         o.frequency.value = midi(nota);
         f.type = "lowpass";
         f.frequency.value = 700;
-        envelope(g, t, 0.01, 0.26 * forca, duracao);
-        o.connect(f).connect(g).connect(mestre);
+        envelope(g, t, 0.01, 0.26, duracao);
+        o.connect(f).connect(g).connect(destino);
         o.start(t);
         o.stop(t + duracao + 0.05);
     }
 
-    function bumbo(t, forca) {
+    function bumbo(t, forca, destino) {
         const o = ctx.createOscillator();
         const g = ctx.createGain();
         o.frequency.setValueAtTime(140, t);
         o.frequency.exponentialRampToValueAtTime(48, t + 0.12);
         envelope(g, t, 0.003, 0.5 * forca, 0.26);
-        o.connect(g).connect(mestre);
+        o.connect(g).connect(destino);
         o.start(t);
         o.stop(t + 0.3);
     }
 
-    function barulho(t, tipo, freq, pico, duracao) {
+    function barulho(t, tipo, freq, pico, duracao, destino) {
         const s = ctx.createBufferSource();
         s.buffer = ruido;
         const f = ctx.createBiquadFilter();
@@ -183,69 +193,108 @@
         f.frequency.value = freq;
         const g = ctx.createGain();
         envelope(g, t, 0.002, pico, duracao);
-        s.connect(f).connect(g).connect(mestre);
+        s.connect(f).connect(g).connect(destino);
         s.start(t, Math.random() * 0.5);
         s.stop(t + duracao + 0.02);
     }
 
-    function palma(t, forca) {
+    function palma(t, destino) {
         // três estalinhos colados, como mãos batendo
-        [0, 0.011, 0.022].forEach((d, i) => barulho(t + d, "bandpass", 1500, (i === 2 ? 0.14 : 0.08) * forca, i === 2 ? 0.14 : 0.03));
+        [0, 0.011, 0.022].forEach((d, i) => barulho(t + d, "bandpass", 1500, i === 2 ? 0.14 : 0.08, i === 2 ? 0.14 : 0.03, destino));
     }
 
+    // Tudo é agendado em volume cheio dentro do seu grupo; quem decide o quanto se ouve é o volume do grupo,
+    // que acompanha a rolagem. Grupo praticamente calado nem é agendado, pra poupar processamento.
+    const ativo = (nome) => volumeDoGrupo(nome, mix) > 0.02;
+
     function compasso(n, t) {
-        const c = clima; // o clima vale pro compasso inteiro: a troca de seção entra no próximo
         const pos = n % 8;
         const ciclo = Math.floor(n / 8);
         const acorde = ACORDES[pos];
         const colcheia = BATIDA / 2;
 
-        if (c.pad) pad(acorde.notas, t, c.pad);
-        if (c.marimba) ARPEJO.forEach((i, k) => {
-            if (c.esparso && k % 2) return; // só nos tempos fortes: mais calmo
-            marimba(acorde.notas[i], t + k * colcheia, (k % 2 ? 0.7 : 1) * c.marimba);
+        if (ativo("pad")) pad(acorde.notas, t, grupo.pad);
+        ARPEJO.forEach((i, k) => {
+            const nome = k % 2 ? "fraco" : "marimba"; // contratempo num grupo próprio: some na parte calma
+            if (ativo(nome)) marimba(acorde.notas[i], t + k * colcheia, k % 2 ? 0.7 : 1, grupo[nome]);
         });
 
         // baixo: tônica, oitava no contratempo, quinta e volta
         const b = acorde.baixo;
-        if (c.baixo) [[0, b, 0.7], [1.5, b + 12, 0.35], [2, b + 7, 0.6], [3, b, 0.35], [3.5, b + 12, 0.3]]
-            .forEach(([tempo, nota, dur]) => baixo(nota, t + tempo * BATIDA, dur, c.baixo));
+        if (ativo("baixo")) [[0, b, 0.7], [1.5, b + 12, 0.35], [2, b + 7, 0.6], [3, b, 0.35], [3.5, b + 12, 0.3]]
+            .forEach(([tempo, nota, dur]) => baixo(nota, t + tempo * BATIDA, dur, grupo.baixo));
 
-        if (c.bumbo) {
-            bumbo(t, c.bumbo);
-            bumbo(t + BATIDA * 2, 0.9 * c.bumbo);
-            if (pos === 7) bumbo(t + BATIDA * 3.5, 0.6 * c.bumbo); // puxadinha no fim do ciclo
+        if (ativo("bumbo")) {
+            bumbo(t, 1, grupo.bumbo);
+            bumbo(t + BATIDA * 2, 0.9, grupo.bumbo);
+            if (pos === 7) bumbo(t + BATIDA * 3.5, 0.6, grupo.bumbo); // puxadinha no fim do ciclo
         }
-        if (c.palma) { palma(t + BATIDA, c.palma); palma(t + BATIDA * 3, c.palma); }
-        if (c.chocalho) for (let s = 0; s < 16; s++) { // chocalho em semicolcheias, acentuado no contratempo
+        if (ativo("palma")) { palma(t + BATIDA, grupo.palma); palma(t + BATIDA * 3, grupo.palma); }
+        if (ativo("chocalho")) for (let s = 0; s < 16; s++) { // chocalho em semicolcheias, acentuado no contratempo
             if (Math.random() < 0.08) continue;
-            barulho(t + (BATIDA / 4) * s, "highpass", 8000, (s % 2 ? 0.02 : (s % 4 === 2 ? 0.045 : 0.03)) * c.chocalho, 0.04);
+            barulho(t + (BATIDA / 4) * s, "highpass", 8000, s % 2 ? 0.02 : (s % 4 === 2 ? 0.045 : 0.03), 0.04, grupo.chocalho);
         }
 
         // brilho: duas notas agudas do acorde no fim do compasso, como faísca
-        if (c.brilho) {
-            sino(acorde.notas[3] + 12, t + BATIDA * 2.5, 0.5, 0.45);
-            sino(acorde.notas[2] + 24, t + BATIDA * 3.5, 0.5, 0.35);
+        if (ativo("brilho")) {
+            sino(acorde.notas[3] + 12, t + BATIDA * 2.5, 0.5, 0.45, grupo.brilho);
+            sino(acorde.notas[2] + 24, t + BATIDA * 3.5, 0.5, 0.35, grupo.brilho);
         }
 
-        // melodia: "ciclo" = o primeiro ciclo é só a base e depois alterna sininho e marimba;
-        // "sempre" = sininho direto; "rara" = só as notas do primeiro tempo, bem espaçadas
-        const tocaMelodia = c.melodia === "sempre" || (c.melodia === "ciclo" && ciclo >= 1) || (c.melodia === "rara" && pos % 2 === 0);
-        if (tocaMelodia) {
-            const noSino = c.melodia !== "ciclo" || ciclo % 3 !== 0;
+        // melodia: normal (sininho, e a cada 3 ciclos na marimba) ou "rara" (só a nota do primeiro tempo, longa)
+        if (ativo("melodia")) {
+            const rara = mix.rara > 0.5;
+            if (rara && pos % 2) return;
             MELODIA[pos].forEach(([tempo, nota, dur]) => {
-                if (c.melodia === "rara" && tempo > 0) return;
-                if (noSino) sino(nota, t + tempo * BATIDA, c.melodia === "rara" ? 3 : dur, c.melodia === "rara" ? 0.8 : 1);
-                else marimba(nota + 12, t + tempo * BATIDA, 0.9);
+                if (rara && tempo > 0) return;
+                if (rara || ciclo % 3 !== 0) sino(nota, t + tempo * BATIDA, rara ? 3 : dur, rara ? 0.8 : 1, grupo.melodia);
+                else marimba(nota + 12, t + tempo * BATIDA, 0.9, grupo.melodia);
             });
         }
     }
 
-    function mudarClima(id) {
-        const novo = CLIMAS[id];
-        if (!novo || novo === clima) return;
-        clima = novo;
-        if (ctx && filtroMestre) filtroMestre.frequency.setTargetAtTime(novo.filtro, ctx.currentTime, 1.2); // abre/fecha o som devagar
+    function volumeDoGrupo(nome, m) { return nome === "fraco" ? m.marimba * m.fraco : m[nome]; }
+
+    // Mistura dos climas pela posição do meio da tela: dentro do "miolo" de uma seção vale o clima dela;
+    // entre o miolo de uma e o da próxima, os dois se misturam aos poucos (curva suave).
+    function misturaAtual() {
+        const centro = window.scrollY + window.innerHeight / 2;
+        const trechos = [];
+        Object.keys(SECAO_CLIMA).forEach((id) => {
+            const el = document.getElementById(id);
+            if (!el) return;
+            const r = el.getBoundingClientRect();
+            const topo = r.top + window.scrollY, altura = r.height;
+            const folga = Math.min(altura * 0.3, 450);
+            trechos.push({ c: CLIMAS[SECAO_CLIMA[id]], a: topo + folga, b: topo + altura - folga });
+        });
+        trechos.sort((x, y) => x.a - y.a);
+        if (!trechos.length) return Object.assign({}, CLIMAS.inicio);
+        if (centro <= trechos[0].b) return Object.assign({}, trechos[0].c);
+        for (let i = 0; i < trechos.length - 1; i++) {
+            const atual = trechos[i], prox = trechos[i + 1];
+            if (centro <= atual.b) return Object.assign({}, atual.c);
+            if (centro < prox.a) {
+                let u = (centro - atual.b) / Math.max(1, prox.a - atual.b);
+                u = u * u * (3 - 2 * u);
+                const m = {};
+                Object.keys(atual.c).forEach((k) => {
+                    m[k] = k === "filtro"
+                        ? Math.exp(Math.log(atual.c[k]) * (1 - u) + Math.log(prox.c[k]) * u) // filtro mistura "de ouvido" (escala log)
+                        : atual.c[k] * (1 - u) + prox.c[k] * u;
+                });
+                return m;
+            }
+        }
+        return Object.assign({}, trechos[trechos.length - 1].c);
+    }
+
+    function aplicarMistura() {
+        mix = misturaAtual();
+        if (!ctx) return;
+        const agora = ctx.currentTime;
+        GRUPOS.forEach((nome) => grupo[nome].gain.setTargetAtTime(volumeDoGrupo(nome, mix), agora, 0.35));
+        filtroMestre.frequency.setTargetAtTime(mix.filtro, agora, 0.5);
     }
 
     function agendar() {
@@ -322,13 +371,11 @@
         GESTOS.forEach((tipo) => document.addEventListener(tipo, primeiraInteracao, true));
     }
 
-    // Seção que está no meio da tela decide o clima da música.
-    if ("IntersectionObserver" in window) {
-        const vistas = new IntersectionObserver((entradas) => {
-            entradas.forEach((e) => { if (e.isIntersecting) mudarClima(SECAO_CLIMA[e.target.id]); });
-        }, { rootMargin: "-45% 0px -45% 0px" });
-        Object.keys(SECAO_CLIMA).forEach((id) => { const el = document.getElementById(id); if (el) vistas.observe(el); });
-    }
+    // Conforme a pessoa rola, a música vai se misturando entre o clima de uma seção e o da próxima.
+    let quadroRolagem = 0;
+    const aoRolar = () => { cancelAnimationFrame(quadroRolagem); quadroRolagem = requestAnimationFrame(aplicarMistura); };
+    window.addEventListener("scroll", aoRolar, { passive: true });
+    window.addEventListener("resize", aoRolar);
 
     // Aba escondida: para de tocar (e de gastar processador); voltou, continua.
     document.addEventListener("visibilitychange", function () {
