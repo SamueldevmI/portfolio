@@ -244,7 +244,7 @@
         nome: card.querySelector(".projeto-nome")?.textContent.trim() || "Projeto",
         tag: card.querySelector(".tag")?.textContent.trim() || "",
         frase: card.querySelector(".titulo-beneficio")?.textContent.trim() || "",
-        cor: card.style.getPropertyValue("--cor") || "#b18cff",
+        cor: card.style.getPropertyValue("--cor") || "#ff2a3d",
         link: card.querySelector(".link-projeto")?.getAttribute("href") || "#projetos",
         imagens: [...card.querySelectorAll(".tela-celular img, .print-janela img")].map((i) => i.getAttribute("src")),
     })).filter((p) => p.imagens.length);
