@@ -74,6 +74,7 @@
     let gesto = null;
     document.addEventListener("touchstart", (e) => {
         const n = e.touches.length;
+        if (n === 2 && e.target.closest(".projeto-visual")) { gesto = null; return; } // vira pinça de zoom (mais abaixo)
         if (n === 2 || n === 3) {
             const pts = [...e.touches];
             gesto = { n, x: pts.reduce((s, t) => s + t.clientX, 0) / n, y: pts.reduce((s, t) => s + t.clientY, 0) / n, t: Date.now() };
@@ -159,7 +160,7 @@
     const fixo = document.querySelector(".orcamento-fixo");
     if (fixo && "IntersectionObserver" in window) {
         const padrao = { texto: fixo.textContent, href: fixo.getAttribute("href") };
-        const whats = (msg) => `https://wa.me/${WHATS}?text=${encodeURIComponent(msg)}`;
+        const whats = (msg) => `https://wa.me/${WHATS}?text=${encodeURIComponent(msg + (window.linhaFavoritos ? window.linhaFavoritos() : ""))}`;
         let secao = "inicio", card = null;
         function atualizar() {
             let texto = padrao.texto, href = padrao.href, externo = false;
@@ -215,4 +216,440 @@
         });
         window.addEventListener("appinstalled", () => { instalar.hidden = true; });
     }
+})();
+
+/* ---------- Segunda leva do celular (sem pedir permissão nenhuma) ----------
+   1 stories dos projetos · 2 celular deitado = vitrine · 3 jogo Genius escondido no logo · 4 toque duplo
+   curte o projeto · 5 descobrir projetos arrastando (tipo Tinder) · 6 mandar pro sócio · 7 continuar de
+   onde parou · 8 pinça pra dar zoom nos prints · 9 luz do topo conforme a hora · 10 título da aba chamando */
+(function () {
+    "use strict";
+    if (!window.matchMedia("(pointer: coarse)").matches) return;
+
+    const som = (nome, ...args) => { if (window.musicaSite && window.musicaSite[nome]) window.musicaSite[nome](...args); };
+    const vibrar = (p) => { if (navigator.vibrate) navigator.vibrate(p); };
+    const toast = (t) => { if (typeof window.mostrarToast === "function") window.mostrarToast(t); };
+    const ler = (k, padrao) => { try { const v = localStorage.getItem(k); return v === null ? padrao : JSON.parse(v); } catch (e) { return padrao; } };
+    const gravar = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* sem armazenamento */ } };
+    const semMovimento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const el = (tag, cls, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; };
+    const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+    const WHATS = "5567996034205";
+    const INTERATIVO = "a[href], button, summary, label, input, textarea, select, [role='button']";
+
+    // Os projetos, lidos dos próprios cards (entra projeto novo, entra aqui sozinho)
+    const cards = [...document.querySelectorAll(".card-projeto")];
+    const projetos = cards.map((card) => ({
+        card,
+        nome: card.querySelector(".projeto-nome")?.textContent.trim() || "Projeto",
+        tag: card.querySelector(".tag")?.textContent.trim() || "",
+        frase: card.querySelector(".titulo-beneficio")?.textContent.trim() || "",
+        cor: card.style.getPropertyValue("--cor") || "#b18cff",
+        link: card.querySelector(".link-projeto")?.getAttribute("href") || "#projetos",
+        imagens: [...card.querySelectorAll(".tela-celular img, .print-janela img")].map((i) => i.getAttribute("src")),
+    })).filter((p) => p.imagens.length);
+    const whats = (msg) => `https://wa.me/${WHATS}?text=${encodeURIComponent(msg + linhaFavoritos())}`;
+    const abrirOverlay = (o) => { o.hidden = false; document.body.style.overflow = "hidden"; };
+    const fecharOverlay = (o) => { o.hidden = true; document.body.style.overflow = ""; };
+
+    /* 4) Favoritos (toque duplo no card ou arrastando pra direita no modo Descobrir) */
+    let favoritos = ler("portfolio-favoritos", []);
+    function linhaFavoritos() { return favoritos.length ? `\n\nProjetos que curti no portfólio: ${favoritos.join(", ")}.` : ""; }
+    window.linhaFavoritos = linhaFavoritos;
+    function marcarCards() {
+        projetos.forEach((p) => {
+            let selo = p.card.querySelector(".fav-selo");
+            const fav = favoritos.includes(p.nome);
+            if (fav && !selo) { selo = el("span", "fav-selo", "❤"); selo.setAttribute("aria-label", "Nos seus favoritos"); p.card.querySelector(".projeto-visual").append(selo); }
+            if (!fav && selo) selo.remove();
+        });
+    }
+    function favoritar(nome, forcar) {
+        const ja = favoritos.includes(nome);
+        if (ja && forcar === true) return;
+        favoritos = ja ? favoritos.filter((n) => n !== nome) : [...favoritos, nome];
+        gravar("portfolio-favoritos", favoritos);
+        marcarCards();
+        if (!ja) { som("curtir"); vibrar(15); }
+        return !ja;
+    }
+    marcarCards();
+    // no orçamento, a mensagem pro WhatsApp já sai com os favoritos
+    const orc = document.getElementById("orcamentoApp");
+    if (orc) new MutationObserver(() => {
+        const campo = orc.querySelector("textarea.orc-mensagem");
+        if (!campo || campo.dataset.favoritos || !favoritos.length) return;
+        campo.dataset.favoritos = "1";
+        campo.value += linhaFavoritos();
+        campo.dispatchEvent(new Event("input"));
+    }).observe(orc, { childList: true, subtree: true });
+
+    let ultimoToque = { t: 0, card: null };
+    document.addEventListener("touchend", (e) => {
+        if (e.changedTouches.length !== 1 || e.touches.length) return;
+        const card = e.target.closest(".card-projeto");
+        if (!card || e.target.closest(INTERATIVO)) { ultimoToque.card = null; return; }
+        const agora = Date.now();
+        if (ultimoToque.card === card && agora - ultimoToque.t < 320) {
+            e.preventDefault();
+            ultimoToque.card = null;
+            const p = projetos.find((x) => x.card === card);
+            if (!p) return;
+            const t = e.changedTouches[0];
+            const coracao = el("span", "coracao-voa", "❤");
+            coracao.style.left = t.clientX + "px";
+            coracao.style.top = t.clientY + "px";
+            coracao.addEventListener("animationend", () => coracao.remove(), { once: true });
+            document.body.append(coracao);
+            const entrou = favoritar(p.nome);
+            toast(entrou ? `❤ ${p.nome} nos favoritos (${favoritos.length}). Vai junto no pedido de orçamento.` : `${p.nome} saiu dos favoritos.`);
+        } else ultimoToque = { t: agora, card };
+    });
+
+    /* 1) Stories dos projetos */
+    if (projetos.length) {
+        const vistos = new Set(ler("portfolio-stories-vistos", []));
+        const faixa = el("div", "stories");
+        faixa.setAttribute("aria-label", "Stories dos projetos");
+        projetos.forEach((p, i) => {
+            const b = el("button", "story" + (vistos.has(p.nome) ? " visto" : ""),
+                `<span class="story-anel" style="--cor:${esc(p.cor)}"><img src="${esc(p.imagens[0])}" alt="" loading="lazy" decoding="async"></span><span class="story-nome">${esc(p.nome)}</span>`);
+            b.type = "button";
+            b.setAttribute("aria-label", `Ver story de ${p.nome}`);
+            b.addEventListener("click", () => abrirStory(i));
+            faixa.append(b);
+        });
+        document.querySelector(".hero-acoes")?.after(faixa);
+
+        const ov = el("div", "stories-overlay", `
+            <div class="st-barras"></div>
+            <div class="st-topo"><span class="st-avatar"></span><div><b class="st-nome"></b><span class="st-tag"></span></div><button type="button" class="st-fechar" aria-label="Fechar">✕</button></div>
+            <div class="st-palco"><img class="st-fundo" alt=""><img class="st-img" alt=""></div>
+            <p class="st-frase"></p>
+            <div class="st-acoes"><a class="st-testar" target="_blank" rel="noopener noreferrer">Testar agora ↗</a><a class="st-quero" target="_blank" rel="noopener noreferrer">💬 Quero um assim</a></div>
+            <button type="button" class="st-lado st-voltar" aria-label="Anterior"></button><button type="button" class="st-lado st-avancar" aria-label="Próximo"></button>`);
+        ov.hidden = true;
+        ov.setAttribute("role", "dialog");
+        ov.setAttribute("aria-modal", "true");
+        ov.setAttribute("aria-label", "Stories dos projetos");
+        document.body.append(ov);
+        const q = (s) => ov.querySelector(s);
+        const DURACAO = 3800;
+        let pi = 0, si = 0, inicio = 0, pausado = false, pausaEm = 0, quadro = 0;
+
+        function mostrar() {
+            const p = projetos[pi];
+            vistos.add(p.nome);
+            gravar("portfolio-stories-vistos", [...vistos]);
+            faixa.children[pi]?.classList.add("visto");
+            q(".st-barras").innerHTML = p.imagens.map((_, k) => `<i><b style="width:${k < si ? 100 : 0}%"></b></i>`).join("");
+            q(".st-avatar").style.backgroundImage = `url("${p.imagens[0]}")`;
+            q(".st-avatar").style.setProperty("--cor", p.cor);
+            q(".st-nome").textContent = p.nome;
+            q(".st-tag").textContent = p.tag;
+            q(".st-frase").textContent = p.frase;
+            q(".st-img").src = p.imagens[si];
+            q(".st-fundo").src = p.imagens[si];
+            q(".st-testar").href = p.link;
+            q(".st-quero").href = whats(`Oi, Samuel! Vi o story do ${p.nome} no seu portfólio e quero algo parecido pro meu negócio.`);
+            ov.style.setProperty("--cor", p.cor);
+            inicio = performance.now();
+        }
+        function passo(d) {
+            const p = projetos[pi];
+            si += d;
+            if (si >= p.imagens.length) { pi++; si = 0; if (pi >= projetos.length) return fechar(); som("passagem"); }
+            else if (si < 0) { pi = Math.max(0, pi - 1); si = 0; }
+            mostrar();
+        }
+        function rodar(agora) {
+            if (ov.hidden) return;
+            if (!pausado) {
+                const prog = Math.min(1, (agora - inicio) / DURACAO);
+                const barra = q(".st-barras").children[si]?.firstChild;
+                if (barra) barra.style.width = prog * 100 + "%";
+                if (prog >= 1) passo(1);
+            }
+            quadro = requestAnimationFrame(rodar);
+        }
+        function abrirStory(i) { pi = i; si = 0; abrirOverlay(ov); mostrar(); som("subida"); cancelAnimationFrame(quadro); quadro = requestAnimationFrame(rodar); }
+        function fechar() { cancelAnimationFrame(quadro); fecharOverlay(ov); }
+        q(".st-fechar").addEventListener("click", fechar);
+        // segurar pausa; toque rápido nas laterais avança/volta; arrastar pra baixo fecha
+        let toque = null;
+        ov.addEventListener("pointerdown", (e) => { if (e.target.closest(".st-acoes, .st-fechar")) return; toque = { t: performance.now(), y: e.clientY }; pausado = true; pausaEm = performance.now(); });
+        ov.addEventListener("pointerup", (e) => {
+            if (!toque) return;
+            const segurou = performance.now() - toque.t > 280, desceu = e.clientY - toque.y > 90;
+            inicio += performance.now() - pausaEm;
+            pausado = false;
+            toque = null;
+            if (desceu) return fechar();
+            if (!segurou && e.target.closest(".st-lado")) passo(e.target.closest(".st-avancar") ? 1 : -1);
+        });
+        document.addEventListener("keydown", (e) => { if (!ov.hidden && e.key === "Escape") fechar(); });
+    }
+
+    /* 2) Celular deitado: vitrine dos projetos em tela cheia (o CSS só mostra na horizontal) */
+    if (projetos.length) {
+        const vit = el("div", "vitrine", `<div class="vit-palco"><img class="vit-img" alt=""></div><div class="vit-info"><p class="vit-tag"></p><h2 class="vit-nome"></h2><p class="vit-frase"></p><div class="vit-pontos">${projetos.map(() => "<i></i>").join("")}</div><button type="button" class="vit-sair">Ver o site normal</button></div>`);
+        vit.setAttribute("aria-hidden", "true");
+        document.body.append(vit);
+        const deitado = window.matchMedia("(orientation: landscape) and (max-height: 540px)");
+        let vi = 0, vj = 0, relogio = 0;
+        function mostrarVitrine() {
+            const p = projetos[vi];
+            vit.querySelector(".vit-img").src = p.imagens[vj % p.imagens.length];
+            vit.querySelector(".vit-tag").textContent = p.tag;
+            vit.querySelector(".vit-nome").textContent = p.nome;
+            vit.querySelector(".vit-frase").textContent = p.frase;
+            vit.style.setProperty("--cor", p.cor);
+            [...vit.querySelectorAll(".vit-pontos i")].forEach((d, k) => d.classList.toggle("ativo", k === vi));
+        }
+        function avancar() { vj++; if (vj >= Math.min(2, projetos[vi].imagens.length)) { vj = 0; vi = (vi + 1) % projetos.length; som("passagem"); } mostrarVitrine(); }
+        function atualizar() {
+            clearInterval(relogio);
+            if (deitado.matches && !document.documentElement.classList.contains("sem-vitrine")) {
+                mostrarVitrine();
+                if (!semMovimento) relogio = setInterval(avancar, 3200);
+            }
+            if (!deitado.matches) document.documentElement.classList.remove("sem-vitrine");
+        }
+        vit.querySelector(".vit-sair").addEventListener("click", () => { document.documentElement.classList.add("sem-vitrine"); atualizar(); });
+        vit.addEventListener("click", (e) => { if (!e.target.closest(".vit-sair")) { clearInterval(relogio); avancar(); if (!semMovimento) relogio = setInterval(avancar, 3200); } });
+        deitado.addEventListener("change", atualizar);
+        atualizar();
+    }
+
+    /* 3) Jogo Genius escondido: 5 toques no logo "SM." */
+    const logo = document.querySelector(".logo");
+    if (logo) {
+        const NOTAS = [72, 76, 79, 84];
+        const g = el("div", "genius", `
+            <div class="gn-topo"><b>Genius do Samuel</b><button type="button" class="gn-fechar" aria-label="Fechar jogo">✕</button></div>
+            <p class="gn-status" aria-live="polite">Repita a sequência de cores e sons.</p>
+            <div class="gn-pads">${NOTAS.map((_, i) => `<button type="button" class="gn-pad gn-${i}" data-i="${i}" aria-label="Cor ${i + 1}"></button>`).join("")}<button type="button" class="gn-centro">Jogar</button></div>
+            <p class="gn-recorde"></p>`);
+        g.hidden = true;
+        g.setAttribute("role", "dialog");
+        g.setAttribute("aria-modal", "true");
+        g.setAttribute("aria-label", "Jogo Genius");
+        document.body.append(g);
+        let seq = [], vez = 0, ouvindo = false;
+        const recorde = () => ler("portfolio-genius-recorde", 0);
+        const status = (t) => { g.querySelector(".gn-status").textContent = t; };
+        const mostrarRecorde = () => { g.querySelector(".gn-recorde").textContent = recorde() ? `Recorde: ${recorde()}` : ""; };
+        function acender(i, dur) {
+            const pad = g.querySelector(".gn-" + i);
+            pad.classList.add("aceso");
+            som("nota", NOTAS[i], 1);
+            setTimeout(() => pad.classList.remove("aceso"), dur);
+        }
+        function tocarSequencia() {
+            ouvindo = false;
+            status(`Rodada ${seq.length}: preste atenção…`);
+            const passo = Math.max(260, 620 - seq.length * 25);
+            seq.forEach((n, k) => setTimeout(() => acender(n, passo * 0.7), 500 + k * passo));
+            setTimeout(() => { ouvindo = true; vez = 0; status("Sua vez!"); }, 500 + seq.length * passo);
+        }
+        function novaRodada() { seq.push(Math.floor(Math.random() * 4)); tocarSequencia(); }
+        g.querySelector(".gn-centro").addEventListener("click", () => { seq = []; g.querySelector(".gn-centro").hidden = true; novaRodada(); });
+        g.querySelectorAll(".gn-pad").forEach((pad) => pad.addEventListener("pointerdown", () => {
+            if (!ouvindo) return;
+            const i = Number(pad.dataset.i);
+            acender(i, 220);
+            vibrar(8);
+            if (i !== seq[vez]) {
+                ouvindo = false;
+                som("erro");
+                vibrar([60, 40, 60]);
+                const pontos = seq.length - 1;
+                if (pontos > recorde()) gravar("portfolio-genius-recorde", pontos);
+                status(`Errou! Você fez ${pontos} ${pontos === 1 ? "ponto" : "pontos"}.`);
+                mostrarRecorde();
+                g.querySelector(".gn-centro").textContent = "De novo";
+                g.querySelector(".gn-centro").hidden = false;
+                return;
+            }
+            vez++;
+            if (vez === seq.length) { ouvindo = false; status("Boa! 🎉"); setTimeout(novaRodada, 700); }
+        }));
+        g.querySelector(".gn-fechar").addEventListener("click", () => { ouvindo = false; fecharOverlay(g); });
+        let toques = [];
+        logo.addEventListener("click", (e) => {
+            const agora = Date.now();
+            toques = toques.filter((t) => agora - t < 2500).concat(agora);
+            if (toques.length >= 5) {
+                e.preventDefault();
+                toques = [];
+                status("Repita a sequência de cores e sons.");
+                g.querySelector(".gn-centro").textContent = "Jogar";
+                g.querySelector(".gn-centro").hidden = false;
+                mostrarRecorde();
+                abrirOverlay(g);
+                som("surpresa");
+                vibrar([20, 30, 20]);
+            }
+        });
+    }
+
+    /* 5) Descobrir projetos arrastando: direita curte, esquerda passa */
+    if (projetos.length) {
+        const botao = el("button", "botao-descobrir", "🔥 Descobrir");
+        botao.type = "button";
+        document.querySelector(".filtros-projetos")?.append(botao);
+        const deck = el("div", "deck", `
+            <div class="dk-topo"><b>Arraste: ❤ curtir · ✕ passar</b><button type="button" class="dk-fechar" aria-label="Fechar">✕</button></div>
+            <div class="dk-pilha"></div>
+            <div class="dk-botoes"><button type="button" class="dk-nao" aria-label="Passar">✕</button><button type="button" class="dk-sim" aria-label="Curtir">❤</button></div>
+            <div class="dk-fim" hidden></div>`);
+        deck.hidden = true;
+        deck.setAttribute("role", "dialog");
+        deck.setAttribute("aria-modal", "true");
+        deck.setAttribute("aria-label", "Descobrir projetos");
+        document.body.append(deck);
+        const pilha = deck.querySelector(".dk-pilha");
+        let fila = [];
+        function montar() {
+            pilha.innerHTML = "";
+            deck.querySelector(".dk-fim").hidden = true;
+            deck.querySelector(".dk-botoes").hidden = false;
+            fila = projetos.slice();
+            fila.slice().reverse().forEach((p) => {
+                const c = el("div", "dk-card", `<img src="${esc(p.imagens[0])}" alt=""><div class="dk-info"><p>${esc(p.tag)}</p><h3>${esc(p.nome)}</h3><span>${esc(p.frase)}</span></div><i class="dk-selo dk-selo-sim">CURTI</i><i class="dk-selo dk-selo-nao">PASSO</i>`);
+                c.style.setProperty("--cor", p.cor);
+                c.dataset.nome = p.nome;
+                pilha.append(c);
+            });
+            prepararTopo();
+        }
+        function topo() { return pilha.lastElementChild; }
+        function decidir(sim) {
+            const c = topo();
+            if (!c) return;
+            c.style.transition = "transform .35s ease, opacity .35s ease";
+            c.style.transform = `translateX(${sim ? 130 : -130}%) rotate(${sim ? 22 : -22}deg)`;
+            c.style.opacity = "0";
+            if (sim) favoritar(c.dataset.nome, true); else som("passar");
+            setTimeout(() => { c.remove(); if (!topo()) fim(); else prepararTopo(); }, 330);
+        }
+        function prepararTopo() {
+            const c = topo();
+            if (!c) return;
+            let x0 = null, dx = 0;
+            c.onpointerdown = (e) => { x0 = e.clientX; c.setPointerCapture(e.pointerId); c.style.transition = "none"; };
+            c.onpointermove = (e) => {
+                if (x0 === null) return;
+                dx = e.clientX - x0;
+                c.style.transform = `translateX(${dx}px) rotate(${dx / 18}deg)`;
+                c.style.setProperty("--sim", Math.max(0, Math.min(1, dx / 100)));
+                c.style.setProperty("--nao", Math.max(0, Math.min(1, -dx / 100)));
+            };
+            c.onpointerup = () => {
+                if (x0 === null) return;
+                x0 = null;
+                if (Math.abs(dx) > 90) decidir(dx > 0);
+                else { c.style.transition = "transform .25s ease"; c.style.transform = ""; c.style.setProperty("--sim", 0); c.style.setProperty("--nao", 0); }
+                dx = 0;
+            };
+        }
+        function fim() {
+            deck.querySelector(".dk-botoes").hidden = true;
+            const f = deck.querySelector(".dk-fim");
+            f.hidden = false;
+            f.innerHTML = favoritos.length
+                ? `<p>Você curtiu:</p><b>${esc(favoritos.join(", "))}</b><a class="botao botao-principal" target="_blank" rel="noopener noreferrer" href="${whats("Oi, Samuel! Descobri seus projetos no portfólio e quero um orçamento.")}">💬 Pedir orçamento com esses</a><button type="button" class="botao botao-secundario dk-denovo">Ver de novo</button>`
+                : `<p>Nenhum te pegou? Me conta o que você precisa que eu faço do zero.</p><a class="botao botao-principal" target="_blank" rel="noopener noreferrer" href="${whats("Oi, Samuel! Vi seus projetos e queria algo diferente: ")}">💬 Falar no WhatsApp</a><button type="button" class="botao botao-secundario dk-denovo">Ver de novo</button>`;
+            f.querySelector(".dk-denovo").addEventListener("click", montar);
+            som("subida");
+        }
+        botao.addEventListener("click", () => { montar(); abrirOverlay(deck); som("subida"); });
+        deck.querySelector(".dk-sim").addEventListener("click", () => decidir(true));
+        deck.querySelector(".dk-nao").addEventListener("click", () => decidir(false));
+        deck.querySelector(".dk-fechar").addEventListener("click", () => fecharOverlay(deck));
+    }
+
+    /* 6) Mandar o portfólio pro sócio (gaveta de compartilhar do próprio celular) */
+    const compartilhar = document.getElementById("botaoSocio");
+    if (compartilhar) {
+        compartilhar.hidden = false;
+        compartilhar.addEventListener("click", async () => {
+            const dados = { title: "Samuel Mickael | Sites e sistemas", text: "Olha esse dev de Campo Grande que faz sites, sistemas e apps. Dá pra testar os projetos direto no site:", url: "https://samueldevmi.github.io/portfolio/" };
+            try {
+                if (navigator.share) { await navigator.share(dados); som("subida"); }
+                else { await navigator.clipboard.writeText(`${dados.text} ${dados.url}`); toast("Link copiado! É só colar na conversa com o seu sócio."); }
+            } catch (e) { /* a pessoa fechou a gaveta */ }
+        });
+    }
+
+    /* 7) Continuar de onde parou */
+    if ("IntersectionObserver" in window) {
+        const antes = ler("portfolio-onde-parou", null);
+        let atual = { secao: "inicio", projeto: null };
+        const salvar = () => gravar("portfolio-onde-parou", Object.assign({}, atual, { quando: Date.now() }));
+        const meio = { rootMargin: "-45% 0px -45% 0px" };
+        const obs = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { atual.secao = e.target.id; if (e.target.id !== "projetos") atual.projeto = null; salvar(); } }), meio);
+        ["inicio", "sobre-mim", "projetos", "mais-projetos", "servicos", "orcamento", "jornada", "contato"].forEach((id) => { const s = document.getElementById(id); if (s) obs.observe(s); });
+        const obsCard = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { const p = projetos.find((x) => x.card === e.target); if (p) { atual.projeto = p.nome; salvar(); } } }), meio);
+        projetos.forEach((p) => obsCard.observe(p.card));
+        const NOMES = { "sobre-mim": "o Sobre mim", "mais-projetos": "os outros projetos", servicos: "os serviços", orcamento: "o orçamento", jornada: "a minha jornada", contato: "o contato", projetos: "os projetos" };
+        if (antes && antes.secao !== "inicio" && Date.now() - antes.quando > 20 * 60 * 1000 && !location.hash) {
+            const oque = antes.projeto ? `o ${antes.projeto}` : NOMES[antes.secao] || "o portfólio";
+            const aviso = el("div", "continuar", `<span>👋 Da última vez você viu <b>${esc(oque)}</b>.</span><button type="button" class="ct-sim">Continuar</button><button type="button" class="ct-nao" aria-label="Dispensar">✕</button>`);
+            aviso.setAttribute("role", "status");
+            document.body.append(aviso);
+            const tirar = () => { aviso.classList.add("saindo"); setTimeout(() => aviso.remove(), 300); };
+            aviso.querySelector(".ct-nao").addEventListener("click", tirar);
+            aviso.querySelector(".ct-sim").addEventListener("click", () => {
+                const p = projetos.find((x) => x.nome === antes.projeto);
+                (p ? p.card : document.getElementById(antes.secao))?.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
+                som("subida");
+                tirar();
+            });
+            setTimeout(tirar, 10000);
+        }
+    }
+
+    /* 8) Pinça com dois dedos num print de projeto = zoom (solta e volta ao normal) */
+    let pinca = null;
+    const dist = (t) => Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY);
+    document.addEventListener("touchstart", (e) => {
+        if (e.touches.length !== 2) return;
+        const vis = e.target.closest(".projeto-visual");
+        if (!vis) return;
+        const img = e.target.closest("img") || vis.querySelector(".print-janela img, .tela-celular img");
+        if (!img) return;
+        const r = img.getBoundingClientRect();
+        const mx = (e.touches[0].clientX + e.touches[1].clientX) / 2, my = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+        img.style.transformOrigin = `${((mx - r.left) / r.width) * 100}% ${((my - r.top) / r.height) * 100}%`;
+        img.style.transition = "none";
+        img.classList.add("em-zoom");
+        pinca = { img, d0: dist(e.touches) };
+    }, { passive: true });
+    document.addEventListener("touchmove", (e) => {
+        if (!pinca || e.touches.length !== 2) return;
+        const escala = Math.max(1, Math.min(3, dist(e.touches) / pinca.d0));
+        pinca.img.style.transform = `scale(${escala})`;
+    }, { passive: true });
+    document.addEventListener("touchend", () => {
+        if (!pinca) return;
+        const img = pinca.img;
+        pinca = null;
+        img.style.transition = "transform .3s ease";
+        img.style.transform = "";
+        setTimeout(() => img.classList.remove("em-zoom"), 300);
+    }, { passive: true });
+
+    /* 9) Luz do topo conforme a hora: manhã, tarde ou noite */
+    const hora = new Date().getHours();
+    document.documentElement.classList.add(hora >= 5 && hora < 12 ? "luz-manha" : hora >= 12 && hora < 18 ? "luz-tarde" : "luz-noite");
+    const hero = document.querySelector(".hero");
+    if (hero) hero.prepend(el("div", "luz-do-dia"));
+
+    /* 10) Trocou de app: a aba chama de volta */
+    let tituloOriginal = document.title;
+    document.addEventListener("visibilitychange", () => {
+        if (document.hidden) { tituloOriginal = document.title; document.title = "🎵 Volta aqui… a música tá te esperando"; }
+        else document.title = tituloOriginal;
+    });
 })();
