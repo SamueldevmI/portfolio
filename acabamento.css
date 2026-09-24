@@ -1312,3 +1312,62 @@ body.dark-mode .continuar .ct-sim { background: #ff7a1a; color: #142639; }
 @media (prefers-reduced-motion: reduce) {
     .coracao-voa, .fav-selo, .vit-img, .continuar { animation: none; }
 }
+
+/* ---------- Celular, terceira leva (mobile.js) ---------- */
+/* 1) Ondinha de luz no toque */
+.onda-toque { position: fixed; z-index: 97; width: 90px; height: 90px; margin: -45px 0 0 -45px; border-radius: 50%; background: radial-gradient(circle, rgba(var(--cyan-rgb), .45), rgba(var(--cyan-rgb), .12) 45%, transparent 70%); pointer-events: none; animation: onda-toque .6s ease-out forwards; }
+@keyframes onda-toque { from { transform: scale(.2); opacity: 1; } to { transform: scale(2.4); opacity: 0; } }
+
+/* 2) Rodapé elástico */
+.fim-elastico { position: fixed; left: 0; right: 0; bottom: 0; z-index: 61; height: 0; overflow: hidden; display: flex; align-items: flex-start; justify-content: center; background: linear-gradient(180deg, rgba(var(--cyan-rgb), .35), rgba(var(--pink-rgb), .25)); color: var(--text); font-weight: 600; font-size: .9rem; pointer-events: none; }
+.fim-elastico span { padding-top: 14px; white-space: nowrap; }
+
+/* 5) Ideia por voz */
+.ideia-voz { display: grid; gap: 10px; margin: 18px 0 22px; padding: 16px; border: 1px dashed rgba(var(--cyan-rgb), .5); border-radius: 16px; background: rgba(var(--cyan-rgb), .06); }
+.ideia-titulo { margin: 0; font-weight: 700; font-size: 1.05rem; color: var(--text); }
+.ideia-ajuda { margin: 0; color: var(--muted); font-size: .88rem; }
+.ideia-voz textarea { width: 100%; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); color: var(--text); font: 500 1rem "Space Grotesk", sans-serif; resize: vertical; }
+.ideia-voz .botao { justify-self: stretch; opacity: .75; transition: opacity .2s ease; }
+.ideia-voz .botao.ideia-pronta { opacity: 1; }
+body.dark-mode .ideia-voz textarea { background: #fff; }
+
+/* 7) Calculadora */
+.calc-perda { display: grid; gap: 12px; margin-top: 22px; padding: 18px 16px; border: 1px solid var(--line); border-radius: 18px; background: rgba(28, 12, 68, .46); }
+body.dark-mode .calc-perda { background: #fff; }
+.calc-titulo { margin: 0; font-weight: 700; font-size: 1.1rem; color: var(--text); }
+.calc-perda label { display: grid; gap: 6px; color: var(--muted); font-size: .88rem; }
+.calc-perda label b { color: var(--text); }
+.calc-perda select, .calc-real { min-height: 44px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--text); font: 500 1rem "Space Grotesk", sans-serif; }
+.calc-perda select { padding: 0 10px; }
+.calc-real { display: flex; align-items: center; gap: 6px; padding: 0 12px; }
+.calc-real input { flex: 1; min-width: 0; border: 0; background: none; color: var(--text); font: inherit; }
+.calc-perda input[type="range"] { accent-color: var(--cyan); }
+.calc-resultado { padding: 12px 14px; border-radius: 12px; background: rgba(var(--pink-rgb), .1); color: var(--text); font-size: .95rem; line-height: 1.5; }
+.calc-resultado b { color: var(--pink); }
+body.dark-mode .calc-resultado b { color: #c2410c; }
+.calc-nota { margin: 0; color: var(--muted); font-size: .75rem; text-align: center; }
+
+/* 9) Barra de navegação tipo app (e os botões flutuantes sobem pra não ficar embaixo dela) */
+.barra-app { position: fixed; left: 0; right: 0; bottom: 0; z-index: 62; display: grid; grid-template-columns: repeat(4, 1fr); padding: 6px 6px calc(6px + env(safe-area-inset-bottom)); border-top: 1px solid var(--line); background: color-mix(in srgb, var(--bg) 88%, transparent); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
+html.dark-mode .barra-app { background: rgba(250, 246, 235, .92); }
+.barra-app a { display: grid; justify-items: center; gap: 3px; padding: 6px 0; border-radius: 12px; color: var(--muted); font: 600 .68rem "Space Grotesk", sans-serif; text-decoration: none; transition: color .2s ease, background .2s ease; }
+.barra-app svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.barra-app a.ativo { color: var(--cyan); background: rgba(var(--cyan-rgb), .12); }
+html.tem-barra-app body { padding-bottom: calc(70px + env(safe-area-inset-bottom)); }
+html.tem-barra-app .orcamento-fixo { bottom: calc(80px + env(safe-area-inset-bottom)) !important; }
+html.tem-barra-app .voltar-topo { bottom: calc(80px + env(safe-area-inset-bottom)) !important; }
+html.tem-barra-app .toast { bottom: calc(84px + env(safe-area-inset-bottom)); }
+html.tem-barra-app .continuar { bottom: calc(136px + env(safe-area-inset-bottom)); }
+html.tem-barra-app .fim-elastico { bottom: calc(62px + env(safe-area-inset-bottom)); }
+@media print { .barra-app, .fim-elastico, .onda-toque, .hq-corte { display: none !important; } }
+
+/* 10) Corte de HQ entre seções */
+.hq-corte { position: fixed; inset: 0; z-index: 93; display: grid; place-items: center; pointer-events: none; opacity: 0; background: radial-gradient(circle, rgba(0,0,0,.18) 1.5px, transparent 1.8px) 0 0 / 9px 9px, radial-gradient(circle at 50% 50%, #ffd23f 0 22%, #ff7a1a 23% 40%, transparent 41%); }
+.hq-corte.ativo { animation: hq-fundo .5s ease forwards; }
+.hq-balao { padding: 12px 26px; border: 4px solid #111; background: #fff; color: #e62e2e; font: 900 clamp(2.4rem, 13vw, 4rem)/1 "Space Grotesk", Impact, sans-serif; letter-spacing: .02em; text-shadow: 3px 3px 0 #111; clip-path: polygon(0 12%, 12% 0, 30% 10%, 50% 0, 70% 9%, 88% 0, 100% 14%, 94% 50%, 100% 86%, 86% 100%, 68% 91%, 50% 100%, 30% 90%, 12% 100%, 0 86%, 6% 50%); transform: rotate(var(--giro, -6deg)) scale(.3); }
+.hq-corte.ativo .hq-balao { animation: hq-balao .5s cubic-bezier(.2, 1.6, .4, 1) forwards; }
+@keyframes hq-fundo { 0% { opacity: 0; } 20%, 60% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes hq-balao { 0% { transform: rotate(var(--giro)) scale(.3); } 45% { transform: rotate(var(--giro)) scale(1.1); } 70% { transform: rotate(var(--giro)) scale(1); opacity: 1; } 100% { transform: rotate(var(--giro)) scale(1.25); opacity: 0; } }
+
+/* aviso (toast) com largura de verdade no celular, em vez de uma coluna fininha */
+@media (max-width: 720px) { .toast { width: max-content; max-width: calc(100vw - 32px); line-height: 1.45; text-align: center; } }
