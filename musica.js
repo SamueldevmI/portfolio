@@ -601,6 +601,10 @@
         arpejo() { if (!podeTocarEfeito()) return; const t = agoraMais(); const ns = acordeAgora().notas; [...ns, ...ns.map((n) => n + 12)].forEach((n, i) => marimba(n + 12, t + i * 0.07, 0.8, efeitos)); },
         subida() { if (!podeTocarEfeito()) return; const t = agoraMais(); [0, 4, 7, 12].forEach((d, i) => sino(72 + d, t + i * 0.09, 1.5, 0.6, efeitos)); },
         passagem() { if (!podeTocarEfeito()) return; varrida(agoraMais(), 300, 4000, 0.4); },
+        nota(n, forca) { if (!podeTocarEfeito()) return; const t = agoraMais(); marimba(n, t, forca || 1, efeitos); sino(n + 12, t, 0.8, 0.45 * (forca || 1), efeitos); },
+        erro() { if (!podeTocarEfeito()) return; const t = agoraMais(); tom(midi(43), "sawtooth", t, 0.01, 0.05, 0.5, efeitos); tom(midi(42), "square", t + 0.02, 0.01, 0.03, 0.5, efeitos); },
+        curtir() { if (!podeTocarEfeito()) return; const t = agoraMais(); marimba(84, t, 0.9, efeitos); sino(91, t + 0.07, 0.8, 0.6, efeitos); },
+        passar() { if (!podeTocarEfeito()) return; varrida(agoraMais(), 2400, 500, 0.25); },
         surpresa() { if (!podeTocarEfeito()) return; const t = agoraMais(); [84, 79, 76, 72, 88].forEach((n, i) => sino(n, t + i * 0.06, 0.6, 0.5, efeitos)); },
     };
 
