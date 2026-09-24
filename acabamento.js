@@ -1122,3 +1122,14 @@
     let espera = 0;
     campo.addEventListener("input", function () { clearTimeout(espera); espera = setTimeout(function () { aplicar(true); }, 250); });
 })();
+
+/* Promoção com prazo: tudo que tem data-promo-ate="AAAA-MM-DD" aparece até o fim desse dia e some
+   sozinho depois, pra oferta vencida não ficar no ar. Sem JS continua escondido (atributo hidden). */
+(function () {
+    "use strict";
+    const agora = new Date();
+    document.querySelectorAll("[data-promo-ate]").forEach(function (el) {
+        const fim = new Date(el.getAttribute("data-promo-ate") + "T23:59:59");
+        if (!isNaN(fim) && agora <= fim) el.hidden = false;
+    });
+})();
