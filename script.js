@@ -980,8 +980,8 @@ function executarComandoPaleta(botao) {
     }
 }
 
-if (botaoBusca && paletaOverlay) {
-    botaoBusca.addEventListener("click", abrirPaleta);
+if (paletaOverlay) {
+    botaoBusca?.addEventListener("click", abrirPaleta); // o botão saiu do topo; a paleta segue no atalho de teclado
     paletaInput.addEventListener("input", () => filtrarPaleta(paletaInput.value));
     paletaOverlay.addEventListener("click", (evento) => {
         if (evento.target === paletaOverlay) fecharPaleta();
