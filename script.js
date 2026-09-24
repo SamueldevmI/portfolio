@@ -1459,7 +1459,8 @@ if (paletaOverlay) {
     const botaoFixo = document.querySelector(".orcamento-fixo");
     if (botaoFixo && "IntersectionObserver" in window) {
         const visivel = { hero: true, orcamento: false, contato: false };
-        const atualizar = () => botaoFixo.classList.toggle("is-visivel", !visivel.hero && !visivel.orcamento && !visivel.contato);
+        // no orçamento ele continua na tela: o mobile.js troca o texto pra "Tirar dúvida" e manda pro WhatsApp
+        const atualizar = () => botaoFixo.classList.toggle("is-visivel", !visivel.hero && !visivel.contato);
         [["hero", ".hero"], ["orcamento", "#orcamento"], ["contato", "#contato"]].forEach(([chave, seletor]) => {
             const alvo = document.querySelector(seletor);
             if (!alvo) {
