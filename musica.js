@@ -653,6 +653,7 @@
         ponto.className = "cursor-batida";
         ponto.setAttribute("aria-hidden", "true");
         document.body.append(ponto);
+        document.documentElement.classList.add("tem-cursor-batida");
         const NOTAS = ["♪", "♫", "♩", "♬"];
         let alvoX = -100, alvoY = -100, x = -100, y = -100, andou = 0, ultimaNota = 0, notasNaTela = 0, sobreClicavel = false, visivel = false;
 
@@ -661,9 +662,10 @@
             alvoX = e.clientX; alvoY = e.clientY;
             if (!visivel) { visivel = true; x = alvoX; y = alvoY; ponto.classList.add("visivel"); }
             sobreClicavel = !!e.target.closest(INTERATIVO);
+            ponto.classList.toggle("sobre-clicavel", sobreClicavel);
             const agora = performance.now();
-            // mais rápido = mais notas (a cada ~46 px andados), com um limite pra não virar chuva
-            if (!semMovimento && andou > 46 && agora - ultimaNota > 45 && notasNaTela < 22) {
+            // uma nota a cada ~110 px andados, no máximo 6 na tela: um rastro discreto
+            if (!semMovimento && andou > 110 && agora - ultimaNota > 140 && notasNaTela < 6) {
                 andou = 0; ultimaNota = agora; notasNaTela++;
                 const n = document.createElement("span");
                 n.className = "nota-rastro" + (Math.random() < 0.4 ? " nota-rosa" : "");
@@ -689,9 +691,9 @@
                 linhaDoTempo.forEach((c) => { if (c.t <= agora) inicio = c.t; });
                 if (inicio !== null) pulso = Math.exp(-(((agora - inicio) / BATIDA) % 1) * 5);
             }
-            const escala = (sobreClicavel ? 0.55 : 1) * (1 + 0.9 * pulso);
+            const escala = 1 + (sobreClicavel ? 0.15 : 0.6) * pulso;
             ponto.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%) scale(${escala.toFixed(3)})`;
-            ponto.style.opacity = visivel ? String(0.55 + 0.45 * pulso) : "0";
+            ponto.style.opacity = visivel ? "1" : "0";
             requestAnimationFrame(seguir);
         })();
     }
