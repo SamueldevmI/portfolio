@@ -1148,3 +1148,13 @@ body.dark-mode .linha-tempo .lt-tags li { color: var(--verde); border-color: col
 .som-volume input { display: block; width: 110px; accent-color: var(--cyan); cursor: pointer; }
 .botao-som[aria-pressed="true"] .som-onda { animation: none; opacity: calc(.3 + .7 * var(--pulso, .6)); }
 .botao-som[aria-pressed="true"] svg { transform: scale(calc(1 + .1 * var(--pulso, 0))); transition: transform .05s linear; }
+
+/* ---------- Preço de cada projeto, com o desconto em destaque ---------- */
+.projeto-preco, .mini-projeto-preco { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; margin: 2px 0 12px; color: var(--muted); font-size: .9rem; }
+.mini-projeto-preco { margin: 10px 0 0; font-size: .84rem; }
+.projeto-preco b, .mini-projeto-preco b { color: var(--text); font-size: 1.05rem; }
+.pp-promo[hidden] { display: none; }
+.pp-promo { padding: 4px 10px; border-radius: 10px; background: rgba(var(--pink-rgb), .12); border: 1px solid rgba(var(--pink-rgb), .45); color: var(--text); font-size: .82rem; }
+.pp-promo b { color: var(--pink); font-size: .95rem; }
+/* com desconto valendo, o preço cheio aparece riscado */
+:is(.projeto-preco, .mini-projeto-preco):has(.pp-promo:not([hidden])) .pp-base b { text-decoration: line-through; text-decoration-thickness: 2px; opacity: .65; font-size: .95rem; }
