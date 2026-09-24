@@ -17,163 +17,163 @@ if (NOME_VISITANTE) {
     document.querySelector(".logo")?.setAttribute("aria-label", NOME_VISITANTE + ", início");
 }
 
-/* ===== Catálogo (preço em centavos). Para usar foto real, troque o "img" ===== */
+/* ===== Catálogo (preço em centavos). Fotos do Pexels (licença livre); "pos" e "zoom" enquadram a peça no quadrado ===== */
 const ROUPA = ["P", "M", "G", "GG"];
 const CALCADO = ["38", "39", "40", "41", "42", "43", "44"];
 const CATEGORIAS = ["Casacos", "Camisetas", "Camadas", "Calças", "Calçados", "Acessórios"];
 
 const PRODUTOS = [
     {
-        id: "vx7", nome: "Corta-vento VX-7", cat: "Casacos", preco: 28990, tam: ROUPA, img: "corta-vento-vx7.svg",
-        alt: "Corta-vento preto com capuz e detalhes neon ciano e magenta",
-        resumo: "Capuz, 6 bolsos e fita neon",
-        desc: "Corta-vento leve que segura vento e chuva fina, com capuz ajustável e zíper com fita neon. Feito pra andar de madrugada sem passar frio.",
-        itens: ["Tecido leve que repele chuva fina", "Capuz com cordão de ajuste", "Bolsos com zíper no peito", "Barra ajustável"],
-        busca: "jaqueta casaco capuz chuva vento windbreaker",
+        id: "vx7", nome: "Parka VX-7", cat: "Casacos", preco: 28990, tam: ROUPA, img: "fotos/vx7.webp", pos: "50% 52%", zoom: 1.9,
+        alt: "Parka preta acolchoada pendurada numa arara",
+        resumo: "Acolchoada · capuz · bolsos fundos",
+        desc: "Parka acolchoada que segura o frio de verdade, com capuz e bolsos fundos pra esquentar a mão. Vai do joelho pra cima e combina com tudo da coleção.",
+        itens: ["Enchimento leve e quente", "Capuz fixo", "Bolsos laterais fundos", "Zíper e botões de pressão"],
+        busca: "jaqueta casaco parka frio puffer acolchoado",
     },
     {
-        id: "nexus", nome: "Bomber Cargo Nexus", cat: "Casacos", preco: 24990, tam: ROUPA, img: "bomber-cargo-nexus.svg",
-        alt: "Bomber preta com bolsos cargo nas mangas e zíper amarelo",
-        resumo: "Bolsos cargo nas mangas",
-        desc: "Bomber curta com gola e barra de ribana, bolsos com aba no peito e um bolso cargo em cada manga pra levar o essencial.",
-        itens: ["Zíper amarelo de destaque", "2 bolsos com aba no peito", "Bolso cargo em cada manga", "Gola, punhos e barra de ribana"],
-        busca: "jaqueta casaco bomber cargo militar",
+        id: "nexus", nome: "Jaqueta Puffer Nexus", cat: "Casacos", preco: 24990, tam: ROUPA, img: "fotos/nexus.webp", pos: "50% 78%", zoom: 1.1,
+        alt: "Jaqueta puffer preta de gola alta vestida por uma modelo",
+        resumo: "Puffer curta · gola alta",
+        desc: "Puffer curta de gomos largos e gola alta que fecha até o queixo. Leve pra carregar, quente pra usar à noite.",
+        itens: ["Gomos largos acolchoados", "Gola alta", "Punho com elástico", "Bolsos com zíper"],
+        busca: "jaqueta casaco puffer frio acolchoado",
     },
     {
-        id: "ghost", nome: "Moletom Zip Ghost", cat: "Casacos", preco: 19990, tam: ROUPA, img: "moletom-zip-ghost.svg",
-        alt: "Moletom preto com capuz, zíper e listras neon magenta nas mangas",
-        resumo: "Zíper, capuz e listras neon",
-        desc: "Moletom com zíper inteiro, capuz grande e bolso canguru. As listras tracejadas nas mangas ficam vivas quando bate luz.",
-        itens: ["Zíper inteiro na frente", "Bolso canguru", "Capuz com cordões", "Listras neon nas mangas"],
+        id: "ghost", nome: "Moletom Ghost", cat: "Casacos", preco: 19990, tam: ROUPA, img: "fotos/ghost.webp", pos: "50% 50%", zoom: 1,
+        alt: "Moletom preto de capuz com cordão branco e bolso canguru",
+        resumo: "Capuz · cordão contrastante",
+        desc: "Moletom de capuz em algodão felpado, com cordão branco contrastante e bolso canguru. O básico que vai com tudo.",
+        itens: ["Algodão felpado por dentro", "Capuz com cordão branco", "Bolso canguru", "Punho e barra de ribana"],
         busca: "moletom blusa capuz hoodie frio",
     },
     {
-        id: "rig3", nome: "Colete Tático Rig-3", cat: "Casacos", preco: 15990, tam: ROUPA, img: "colete-tatico-rig3.svg",
-        alt: "Colete preto com bolsos frontais e fivelas ciano",
-        resumo: "4 bolsos frontais e fivelas",
-        desc: "Colete pra usar por cima de tudo: quatro bolsos na frente, fechamento por zíper e fivelas nos ombros. Cabe celular, chaves e o que mais você levar.",
-        itens: ["4 bolsos frontais com aba", "Zíper central", "Fivelas nos ombros", "Ajuste lateral"],
-        busca: "colete tatico bolsos utilitario vest",
+        id: "rig3", nome: "Colete Puffer Rig-3", cat: "Casacos", preco: 15990, tam: ROUPA, img: "fotos/rig3.webp", pos: "50% 48%", zoom: 1.5,
+        alt: "Colete puffer preto sem mangas por cima de camisa branca",
+        resumo: "Sem manga · acolchoado",
+        desc: "Colete acolchoado pra usar por cima de camisa, moletom ou jaqueta leve. Esquenta o tronco sem prender os braços.",
+        itens: ["Acolchoado leve", "Gola alta", "Zíper central", "Bolsos laterais"],
+        busca: "colete puffer vest sem manga acolchoado",
     },
     {
-        id: "blackout", nome: "Trench Blackout", cat: "Casacos", preco: 39990, tam: ROUPA, img: "trench-blackout.svg", novo: true,
-        alt: "Trench coat preto comprido, aberto na frente, com cinto e forro magenta",
-        resumo: "Comprido, aberto e com cinto",
-        desc: "A peça mais recente da coleção: trench comprido até quase o tornozelo, aberto na frente com cinto e um forro que acende em magenta. Pra quem quer entrar numa sala e ser notado.",
-        itens: ["Comprimento longo", "Cinto com fivela", "Forro interno magenta", "Ombros estruturados"],
-        busca: "trench sobretudo casaco longo coat capa",
+        id: "blackout", nome: "Trench Blackout", cat: "Casacos", preco: 39990, tam: ROUPA, img: "fotos/blackout.webp", pos: "50% 52%", zoom: 1.9, novo: true,
+        alt: "Homem de trench coat preto comprido em frente a um prédio claro",
+        resumo: "Comprido · abotoado · elegante",
+        desc: "Trench coat preto comprido, com gola larga e abotoamento duplo. Deixa qualquer roupa com cara de \"vou num lugar importante\".",
+        itens: ["Comprimento abaixo do joelho", "Abotoamento duplo", "Gola larga", "Forro leve"],
+        busca: "trench coat casaco sobretudo comprido",
     },
     {
-        id: "olho", nome: "Camiseta Olho Digital", cat: "Camisetas", preco: 8990, tam: ROUPA, img: "camiseta-olho.svg",
-        alt: "Camiseta preta oversized com um olho neon estampado",
-        resumo: "Oversized · estampa neon",
-        desc: "Camiseta oversized de algodão com um olho digital estampado em ciano e magenta e barras de sinal embaixo.",
-        itens: ["Modelagem oversized", "Algodão", "Estampa neon no peito"],
-        busca: "camiseta camisa tshirt olho estampa",
+        id: "olho", nome: "Camiseta Void", cat: "Camisetas", preco: 8990, tam: ROUPA, img: "fotos/olho.webp", pos: "50% 50%", zoom: 1.05,
+        alt: "Camiseta preta lisa pendurada num cabide contra uma parede clara",
+        resumo: "Básica · algodão pesado",
+        desc: "A camiseta preta perfeita: algodão pesado que não fica transparente, gola que não laceia e caimento reto.",
+        itens: ["Algodão 100% fio 30", "Gola em ribana reforçada", "Caimento reto", "Não desbota na lavagem"],
+        busca: "camiseta tshirt basica lisa preta",
     },
     {
-        id: "sol", nome: "Camiseta Sunset Grid", cat: "Camisetas", preco: 8990, tam: ROUPA, img: "camiseta-sol.svg",
-        alt: "Camiseta preta oversized com sol neon e grade no peito",
-        resumo: "Oversized · sol e grade",
-        desc: "Camiseta oversized com o sol retrô em degradê amarelo e rosa sobre uma grade ciano. Clássico do estilo synthwave.",
-        itens: ["Modelagem oversized", "Algodão", "Estampa em degradê no peito"],
-        busca: "camiseta camisa tshirt sol synthwave retro",
+        id: "sol", nome: "Camiseta Oversized Grid", cat: "Camisetas", preco: 8990, tam: ROUPA, img: "fotos/sol.webp", pos: "45% 50%", zoom: 1.15,
+        alt: "Homem de camiseta preta oversized com estampa tom sobre tom",
+        resumo: "Oversized · estampa tom sobre tom",
+        desc: "Camiseta de modelagem ampla com estampa em preto sobre preto, que só aparece quando bate a luz. Discreta de longe, detalhe de perto.",
+        itens: ["Modelagem oversized", "Estampa tom sobre tom", "Algodão pesado", "Ombro caído"],
+        busca: "camiseta tshirt oversized estampa",
     },
     {
-        id: "nyx", nome: "Blusa Gola Alta Nyx", cat: "Camadas", preco: 13990, tam: ROUPA, img: "blusa-gola-alta-nyx.svg",
-        alt: "Blusa preta justa de gola alta e manga longa com costura em ciano no peito",
+        id: "nyx", nome: "Blusa Gola Alta Nyx", cat: "Camadas", preco: 13990, tam: ROUPA, img: "fotos/nyx.webp", pos: "50% 45%", zoom: 1,
+        alt: "Homem de blusa preta de gola alta com os braços cruzados",
         resumo: "Justa · gola alta · manga longa",
-        desc: "Blusa básica de gola alta e manga longa pra usar sozinha ou por baixo do casaco. Corte justo, tecido canelado na gola e nos punhos.",
-        itens: ["Gola alta canelada", "Manga longa com punho ajustado", "Corte justo", "Costura reforçada no peito"],
-        busca: "blusa camisa gola alta manga longa termica base",
+        desc: "Blusa de gola alta em malha canelada, justa no corpo. Funciona sozinha ou por baixo do trench e da parka.",
+        itens: ["Malha canelada", "Gola alta dobrada", "Manga longa", "Caimento justo"],
+        busca: "blusa gola alta turtleneck manga longa segunda pele",
     },
     {
-        id: "circuit", nome: "Camiseta Manga Longa Circuit", cat: "Camadas", preco: 10990, tam: ROUPA, img: "camiseta-manga-longa-circuit.svg",
-        alt: "Camiseta preta de manga longa com estampa de circuito ciano, magenta e amarelo no peito",
-        resumo: "Manga longa · estampa de circuito",
-        desc: "Camiseta de manga longa com uma estampa de circuito eletrônico no peito, em três cores neon. Boa pra usar sozinha ou de camada por baixo de um colete.",
-        itens: ["Manga longa", "Algodão", "Estampa de circuito no peito", "Punhos canelados"],
-        busca: "camiseta manga longa camisa base segunda pele",
+        id: "circuit", nome: "Manga Longa Circuit", cat: "Camadas", preco: 10990, tam: ROUPA, img: "fotos/circuit.webp", pos: "50% 40%", zoom: 1,
+        alt: "Homem de camiseta preta de manga longa justa",
+        resumo: "Manga longa · justa",
+        desc: "Camiseta de manga longa em malha com elastano, justa sem apertar. Primeira camada pra dias frios e boa sozinha nos mornos.",
+        itens: ["Malha com elastano", "Gola careca", "Manga longa", "Caimento justo"],
+        busca: "camiseta manga longa blusa justa",
     },
     {
-        id: "onyx", nome: "Calça Cargo Onyx", cat: "Calças", preco: 21990, tam: ROUPA, img: "calca-cargo-onyx.svg",
-        alt: "Calça cargo preta com tiras amarelas nos joelhos",
-        resumo: "Cargo com tiras nos joelhos",
-        desc: "Calça cargo de corte reto com bolsos laterais com aba, tiras ajustáveis nos joelhos e uma tira solta na cintura, do jeito techwear.",
-        itens: ["Bolsos cargo com aba", "Tiras amarelas nos joelhos", "Tira solta na cintura", "Barra com detalhe neon"],
-        busca: "calca cargo tatica bolsos pants",
+        id: "onyx", nome: "Calça Cargo Onyx", cat: "Calças", preco: 21990, tam: ROUPA, img: "fotos/onyx.webp", pos: "52% 80%", zoom: 1.9,
+        alt: "Homem de calça cargo preta larga e moletom branco",
+        resumo: "Cargo larga · 6 bolsos",
+        desc: "Calça cargo de modelagem larga em sarja resistente, com bolsos laterais grandes e barra que cai por cima do tênis.",
+        itens: ["Sarja resistente", "6 bolsos", "Modelagem larga", "Cós com passante"],
+        busca: "calca cargo bolsos larga preta",
     },
     {
-        id: "jogger", nome: "Jogger Slit Tech", cat: "Calças", preco: 18990, tam: ROUPA, img: "calca-jogger-slit.svg",
-        alt: "Calça jogger preta afunilada com zíper diagonal na coxa e punho elástico no tornozelo",
-        resumo: "Afunilada · zíper na coxa",
-        desc: "Jogger de corte afunilado com zíper diagonal na coxa e punho elástico no tornozelo. Mais justa que a cargo, boa pra andar de bicicleta ou skate sem a barra sobrando.",
-        itens: ["Corte afunilado", "Zíper diagonal na coxa", "Punho elástico no tornozelo", "Cordão de ajuste na cintura"],
-        busca: "calca jogger afunilada moletom sweatpants pants",
+        id: "jogger", nome: "Calça Cargo Stone", cat: "Calças", preco: 18990, tam: ROUPA, img: "fotos/jogger.webp", pos: "55% 72%", zoom: 1.35,
+        alt: "Homem de calça cargo cinza-chumbo larga em estúdio claro",
+        resumo: "Cargo · lavagem stone",
+        desc: "A irmã cinza-chumbo da Onyx: mesma modelagem larga, em jeans com lavagem stone que fica com cara de usada desde o primeiro dia.",
+        itens: ["Jeans com lavagem stone", "Bolsos cargo laterais", "Modelagem larga", "Barra desfiada"],
+        busca: "calca cargo jeans cinza larga",
     },
     {
-        id: "reflect", nome: "Calça Reflect Wide", cat: "Calças", preco: 23990, tam: ROUPA, img: "calca-reflect-wide.svg",
-        alt: "Calça preta larga que alarga nas pernas com uma faixa refletiva ciano na lateral",
-        resumo: "Larga · faixa refletiva",
-        desc: "Calça de perna larga que alarga em direção à barra, com uma faixa refletiva na lateral que brilha na luz do flash ou do farol. Cordão de ajuste na cintura.",
-        itens: ["Perna larga, alarga na barra", "Faixa refletiva lateral", "Cordão de ajuste na cintura", "Caimento fluido"],
-        busca: "calca larga pantalona flare wide leg refletiva pants",
+        id: "reflect", nome: "Calça Wide Reflect", cat: "Calças", preco: 23990, tam: ROUPA, img: "fotos/reflect.webp", pos: "35% 60%", zoom: 1.25,
+        alt: "Modelo de roupa preta com calça larga posando numa cadeira",
+        resumo: "Larga · cintura alta",
+        desc: "Calça de alfaiataria larga e de cintura alta, em tecido que não amassa. Fica bem com tênis, bota ou salto.",
+        itens: ["Tecido que não amassa", "Cintura alta", "Perna larga", "Bolsos faca"],
+        busca: "calca wide larga alfaiataria cintura alta",
     },
     {
-        id: "nightwalker", nome: "Bota Nightwalker", cat: "Calçados", preco: 34990, tam: CALCADO, img: "bota-nightwalker.svg",
-        alt: "Bota tática preta com fivela amarela e cadarço neon magenta",
-        resumo: "Cano alto, fivela e sola grossa",
-        desc: "Bota de cano alto com cadarço neon, fivela na altura do tornozelo e sola grossa com luz de fundo em ciano.",
-        itens: ["Cano alto", "Cadarço neon", "Fivela de ajuste", "Sola grossa antiderrapante"],
-        busca: "bota coturno calcado sapato tenis boot",
+        id: "nightwalker", nome: "Bota Nightwalker", cat: "Calçados", preco: 34990, tam: CALCADO, img: "fotos/nightwalker.webp", pos: "50% 62%", zoom: 1.15,
+        alt: "Bota coturno preta pisando numa poça",
+        resumo: "Coturno · sola tratorada",
+        desc: "Coturno de cano médio em couro, com sola tratorada que segura bem na chuva. Feito pra durar anos.",
+        itens: ["Couro legítimo", "Sola tratorada", "Cadarço e ilhoses de metal", "Palmilha acolchoada"],
+        busca: "bota coturno couro calcado",
     },
     {
-        id: "volt", nome: "Tênis Chunky Volt", cat: "Calçados", preco: 26990, tam: CALCADO, img: "tenis-chunky-volt.svg",
-        alt: "Tênis preto de sola grossa dupla com detalhe ciano e cadarço magenta",
-        resumo: "Sola grossa dupla · detalhe ciano",
-        desc: "Tênis de sola grossa em duas camadas, com uma faixa ciano entre elas e cadarço magenta. O mais confortável pra andar o dia inteiro.",
-        itens: ["Sola dupla grossa", "Faixa ciano entre as camadas", "Cadarço magenta", "Entressola macia"],
-        busca: "tenis sapatilha chunky sneaker calcado shoe",
+        id: "volt", nome: "Tênis Cano Alto Volt", cat: "Calçados", preco: 26990, tam: CALCADO, img: "fotos/volt.webp", pos: "50% 50%", zoom: 1.05,
+        alt: "Par de tênis pretos de cano alto em lona com sola branca",
+        resumo: "Lona · cano alto",
+        desc: "Tênis de cano alto em lona, com biqueira e sola de borracha branca. O clássico que vai com a coleção inteira.",
+        itens: ["Lona resistente", "Sola de borracha", "Cano alto", "Ilhoses laterais de ventilação"],
+        busca: "tenis sneaker cano alto lona calcado",
     },
     {
-        id: "static", nome: "Bota Baixa Static", cat: "Calçados", preco: 27990, tam: CALCADO, img: "bota-baixa-static.svg",
-        alt: "Bota preta baixa até o tornozelo com zíper lateral ciano e fivela amarela",
-        resumo: "Cano curto · zíper lateral",
-        desc: "Bota de cano curto, até o tornozelo, com zíper lateral pra calçar rápido e fivela de ajuste na frente. Mais leve que a Nightwalker, pra quem não precisa do cano alto.",
-        itens: ["Cano curto (tornozelo)", "Zíper lateral", "Fivela de ajuste frontal", "Sola com luz de fundo magenta"],
-        busca: "bota curta ankle boot calcado sapato tatica",
+        id: "static", nome: "Bota Verniz Static", cat: "Calçados", preco: 27990, tam: CALCADO, img: "fotos/static.webp", pos: "50% 55%", zoom: 1.05,
+        alt: "Par de botas pretas de verniz com cadarço e sola tratorada em fundo branco",
+        resumo: "Verniz · sola tratorada",
+        desc: "Bota de verniz com cadarço, zíper lateral e sola tratorada alta. Brilha na medida certa e dá uns 4 cm de altura.",
+        itens: ["Verniz sintético", "Zíper lateral", "Sola tratorada de 4 cm", "Cadarço encerado"],
+        busca: "bota verniz coturno calcado",
     },
     {
-        id: "filterx", nome: "Máscara Filter-X", cat: "Acessórios", preco: 7990, tam: null, img: "mascara-filter-x.svg",
-        alt: "Máscara respirador com dois filtros que brilham em ciano e magenta",
-        resumo: "Dois filtros que brilham",
-        desc: "Máscara estilo respirador com dois filtros laterais que brilham em ciano e magenta e grade frontal. Vai bem com qualquer jaqueta escura.",
-        itens: ["Filtros laterais luminosos", "Tiras elásticas ajustáveis", "Tamanho único"],
-        busca: "mascara respirador filtro acessorio",
+        id: "filterx", nome: "Máscara Filter-X", cat: "Acessórios", preco: 7990, tam: null, img: "fotos/filterx.webp", pos: "55% 45%", zoom: 1.2,
+        alt: "Pessoa de moletom preto com capuz e máscara preta de tecido",
+        resumo: "Tecido duplo · lavável",
+        desc: "Máscara de tecido duplo com ajuste no nariz e elástico macio atrás da orelha. Lava na máquina e não perde a forma.",
+        itens: ["Tecido duplo", "Ajuste no nariz", "Elástico macio", "Lavável"],
+        busca: "mascara rosto tecido acessorio",
     },
     {
-        id: "pulse", nome: "Viseira Pulse", cat: "Acessórios", preco: 11990, tam: null, img: "viseira-pulse.svg",
-        alt: "Viseira curva com lente em degradê ciano e magenta",
-        resumo: "Lente em degradê neon",
-        desc: "Viseira curva que envolve o rosto, com lente em degradê de ciano pra magenta. O visual mais cyberpunk da coleção.",
-        itens: ["Lente curva em degradê", "Hastes ajustáveis", "Tamanho único"],
-        busca: "viseira oculos lente visor acessorio",
+        id: "pulse", nome: "Óculos Pulse", cat: "Acessórios", preco: 11990, tam: null, img: "fotos/pulse.webp", pos: "52% 50%", zoom: 1.35,
+        alt: "Óculos escuros aviador de lente escura apoiados numa superfície",
+        resumo: "Aviador · lente escura",
+        desc: "Óculos aviador de armação metálica fina e lente escura com proteção UV400. Vem com estojo rígido.",
+        itens: ["Armação metálica", "Lente com proteção UV400", "Plaquetas ajustáveis", "Estojo rígido"],
+        busca: "oculos sol aviador acessorio",
     },
     {
-        id: "cross", nome: "Harness Cross-Strap", cat: "Acessórios", preco: 9990, tam: null, img: "harness-cross.svg",
-        alt: "Harness de tiras cruzadas com argola central amarela",
-        resumo: "Tiras cruzadas e argola",
-        desc: "Harness de tiras cruzadas com argola amarela no centro e fivelas nas pontas. Usa por cima da jaqueta ou da camiseta.",
-        itens: ["Tiras cruzadas ajustáveis", "Argola central", "Fivelas de encaixe", "Tamanho único"],
-        busca: "harness cinto tiras peitoral acessorio",
+        id: "cross", nome: "Boné Cross", cat: "Acessórios", preco: 9990, tam: null, img: "fotos/cross.webp", pos: "50% 22%", zoom: 1.1,
+        alt: "Homem de boné preto e óculos escuros",
+        resumo: "Aba curva · ajuste atrás",
+        desc: "Boné de aba curva em sarja preta, com ajuste de metal atrás. Sem logo gigante: só o bordado pequeno na lateral.",
+        itens: ["Sarja de algodão", "Aba curva", "Fecho de metal ajustável", "Bordado discreto"],
+        busca: "bone cap chapeu acessorio",
     },
     {
-        id: "sling", nome: "Bolsa Sling Null", cat: "Acessórios", preco: 12990, tam: null, img: "bolsa-sling-null.svg",
-        alt: "Bolsa transversal preta com zíper magenta",
-        resumo: "Transversal com zíper neon",
-        desc: "Bolsa transversal compacta com zíper magenta, bolso frontal e fivela de encaixe. Leva celular, carteira e fone.",
-        itens: ["Alça transversal ajustável", "Bolso frontal", "Zíper neon", "Tamanho único"],
-        busca: "bolsa mochila transversal shoulder bag sling acessorio",
+        id: "sling", nome: "Mochila Null", cat: "Acessórios", preco: 12990, tam: null, img: "fotos/sling.webp", pos: "50% 55%", zoom: 1.2,
+        alt: "Mochila preta de couro sintético segurada pela alça",
+        resumo: "Couro sintético · 15 L",
+        desc: "Mochila compacta de 15 litros em couro sintético, com bolso interno pra notebook de até 14 polegadas.",
+        itens: ["Couro sintético impermeável", "Bolso pra notebook 14\"", "Alças acolchoadas", "Bolso frontal com zíper"],
+        busca: "mochila bolsa bag acessorio",
     },
 ];
 
@@ -186,12 +186,12 @@ const LOOKS = [
     },
     {
         id: "ghost-run-set", nome: "Look Ghost Run",
-        desc: "Moletom, viseira e bolsa sling pra andar leve.",
+        desc: "Moletom, óculos e mochila pra andar leve.",
         itens: [{ id: "ghost", tam: "M" }, { id: "pulse", tam: "" }, { id: "sling", tam: "" }],
     },
     {
         id: "blackout-set", nome: "Look Blackout",
-        desc: "O trench novo com o tênis chunky e a máscara.",
+        desc: "O trench novo com o tênis de cano alto e a máscara.",
         itens: [{ id: "blackout", tam: "M" }, { id: "volt", tam: "40" }, { id: "filterx", tam: "" }],
     },
 ];
@@ -266,10 +266,15 @@ function tamanhosHtml(p, prefixo) {
     return `<fieldset class="tamanhos"><legend>Tamanho</legend>${opcoes}</fieldset><p class="dica" role="alert" hidden>Escolha um tamanho.</p>`;
 }
 
+/* Enquadramento da foto no quadrado: onde focar e quanto aproximar */
+function fotoEstilo(p) {
+    return `style="object-position:${p.pos || "50% 50%"};--zoom:${p.zoom || 1};transform-origin:${p.pos || "50% 50%"}"`;
+}
+
 function cardHtml(p, indice) {
     return `<li class="card" data-id="${p.id}" data-cat="${esc(p.cat)}" style="--i:${indice}">
         <button class="card-imagem" type="button" data-abrir="${p.id}" aria-label="Ver detalhes de ${esc(p.nome)}${p.novo ? ", peça nova" : ""}">
-            <img src="produtos/${p.img}" alt="" width="400" height="400" loading="lazy">
+            <img src="produtos/${p.img}" alt="" width="400" height="400" loading="lazy" decoding="async" ${fotoEstilo(p)}>
             ${p.novo ? '<span class="selo-novo">Novo</span>' : ""}
             <span class="cod">${codigo(p.id)}</span>
         </button>
@@ -317,7 +322,7 @@ function renderGrade() {
 const lookPrecoTotal = (look) => look.itens.reduce((soma, i) => soma + produto(i.id).preco, 0);
 
 function lookHtml(look) {
-    const imagens = look.itens.map((i) => `<img src="produtos/${produto(i.id).img}" alt="${esc(produto(i.id).nome)}" width="90" height="90" loading="lazy">`).join("");
+    const imagens = look.itens.map((i) => `<img src="produtos/${produto(i.id).img}" alt="${esc(produto(i.id).nome)}" width="90" height="90" loading="lazy" ${fotoEstilo(produto(i.id))}>`).join("");
     const nomes = look.itens.map((i) => produto(i.id).nome).join(" + ");
     return `<li class="look-card">
         <div class="look-imagens">${imagens}</div>
@@ -362,7 +367,7 @@ function abrirProduto(id) {
     if (!p) return;
     dlgProduto.innerHTML = `<div class="dp">
         <button class="fechar" type="button" data-fechar aria-label="Fechar">×</button>
-        <div class="dp-imagem"><img src="produtos/${p.img}" alt="${esc(p.alt)}" width="400" height="400"></div>
+        <div class="dp-imagem"><img src="produtos/${p.img}" alt="${esc(p.alt)}" width="400" height="400" ${fotoEstilo(p)}></div>
         <div class="dp-info" data-escopo>
             <p class="card-cat">${esc(p.cat)} · ${codigo(p.id)}</p>
             <h2 id="produtoTitulo">${esc(p.nome)}</h2>
@@ -402,7 +407,7 @@ function itemHtml(i) {
     const p = produto(i.id);
     const nomeCompleto = `${p.nome}, ${rotuloTam(i)}`;
     return `<li class="item" data-chave="${chaveDe(i)}">
-        <img src="produtos/${p.img}" alt="" width="72" height="72">
+        <img src="produtos/${p.img}" alt="" width="72" height="72" ${fotoEstilo(p)}>
         <div class="item-info">
             <p class="item-nome">${esc(p.nome)}</p>
             <p class="item-tam">${rotuloTam(i)} · ${brl(p.preco)}</p>
