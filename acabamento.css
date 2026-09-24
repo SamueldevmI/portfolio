@@ -916,3 +916,22 @@ body.dark-mode .lista-projetos .card-projeto .card-orcamento { color: color-mix(
 }
 .modo-leve .selo-aovivo i::after { animation: none; }
 @media print { .tela-celular, .chat-bolhas, .projeto-selos { display: none !important; } }
+
+/* ---------- Visual (2026-09-24): topo, Sobre mim no celular e cards menores ---------- */
+
+/* Topo: nome numa linha própria acima, e o título grande fala do que o cliente ganha */
+.hero-ola { position: relative; z-index: 1; margin: 0 0 14px; color: var(--muted); font-size: clamp(1.1rem, 1.9vw, 1.45rem); }
+.hero-ola strong { color: var(--text); font-weight: 600; }
+.hero-conteudo .hero-ola { animation-delay: .1s; }
+.hero-conteudo h1 { font-size: clamp(2.7rem, 6.4vw, 5.7rem); line-height: .95; letter-spacing: -.06em; }
+
+/* Sobre mim no celular: foto em cima, texto na largura toda (antes o texto virava uma coluna fininha) */
+@media (max-width: 720px) {
+    .sobre-conteudo { grid-template-columns: minmax(0, 1fr); gap: 26px; }
+    .foto-wrapper { margin: 0 8px 0 12px; }
+    #minhafoto { aspect-ratio: 4 / 3; object-position: 50% 35%; }
+}
+
+/* Os 3 projetos menores ficam enxutos: nome, frase e os botões. O resto continua nos 4 destaques. */
+#lista-projetos > .card-projeto :is(.projeto-resumo, .projeto-serve, .projeto-meta, .card-orcamento) { display: none; }
+#lista-projetos > .card-projeto .links-projeto { margin-top: 18px; }
