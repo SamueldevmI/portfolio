@@ -585,7 +585,7 @@ footer a:focus-visible::after, footer .link-rodape:focus-visible::after { transf
 
 /* Passar o mouse num projeto escurece um pouco os outros (spotlight) */
 @media (hover: hover) {
-    .lista-projetos:has(.card-projeto:hover) .card-projeto:not(:hover) { opacity: .55; }
+    .lista-projetos:has(.card-projeto:hover) .card-projeto:not(:hover) { opacity: .82; }
     .lista-projetos .card-projeto { transition: opacity .25s ease; }
 }
 @media (prefers-reduced-motion: reduce) { .lista-projetos .card-projeto { transition: none; } }
@@ -935,3 +935,34 @@ body.dark-mode .lista-projetos .card-projeto .card-orcamento { color: color-mix(
 /* Os 3 projetos menores ficam enxutos: nome, frase e os botões. O resto continua nos 4 destaques. */
 #lista-projetos > .card-projeto :is(.projeto-resumo, .projeto-serve, .projeto-meta, .card-orcamento) { display: none; }
 #lista-projetos > .card-projeto .links-projeto { margin-top: 18px; }
+
+/* ---------- Ajustes finos de visual (2026-09-24, parte 2) ---------- */
+
+/* Topo: Orçamento, busca e tema juntos à direita; os links ficam centralizados no espaço que sobra */
+@media (min-width: 721px) {
+    .nav { justify-content: flex-start; gap: 12px; }
+    .nav .nav-links { margin-inline: auto; }
+}
+
+/* Linha do tempo: o card da direita desce um pouco, então as bolinhas não se encavalam mais no meio */
+@media (min-width: 1000px) {
+    .lista-jornada.linha-tempo > li:nth-child(even) { margin-top: 48px; }
+    /* -45px centraliza a bolinha (18px com a borda) na linha, que fica no meio do vão de 72px */
+    .lista-jornada.linha-tempo > li:nth-child(odd) article::before,
+    .lista-jornada.linha-tempo > li:nth-child(odd) article.lt-agora::after { right: -45px; }
+    .lista-jornada.linha-tempo > li:nth-child(even) article::before,
+    .lista-jornada.linha-tempo > li:nth-child(even) article.lt-agora::after { left: -45px; }
+}
+
+/* Serviços: número em cima do título, em vez de uma coluna só pra ele */
+#servicos .lista-servicos article { grid-template-columns: 1fr; row-gap: 0; }
+#servicos .lista-servicos article > span { margin-bottom: 14px; }
+#servicos .lista-servicos .link-servico { grid-column: 1; }
+
+/* Terminal só no computador: no celular ele ocupava uma tela inteira com o texto cortado */
+@media (max-width: 720px) {
+    .terminal-interativo { display: none; }
+}
+
+/* Voltar ao topo redondo, combinando com o anel de progresso em volta */
+.voltar-topo { border-radius: 50%; }
