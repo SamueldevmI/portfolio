@@ -1139,3 +1139,12 @@ body.dark-mode .linha-tempo .lt-tags li { color: var(--verde); border-color: col
 
 /* Voltar ao topo acima das seções: a de projetos (z-index 2) cobria o botão e o clique caía nela */
 .voltar-topo { z-index: 65; }
+
+/* ---------- Música: barrinha de volume e ícone pulsando na batida (musica.js) ---------- */
+.som-caixa-volume { position: relative; display: inline-flex; }
+.som-volume { position: absolute; top: calc(100% + 8px); left: 50%; z-index: 45; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); box-shadow: var(--shadow); opacity: 0; transform: translate(-50%, -4px); pointer-events: none; transition: opacity .2s ease, transform .2s ease; }
+.som-volume::before { content: ""; position: absolute; left: 0; right: 0; top: -10px; height: 10px; } /* ponte pro mouse não "cair" entre o ícone e a barra */
+.som-caixa-volume:hover .som-volume, .som-caixa-volume:focus-within .som-volume { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
+.som-volume input { display: block; width: 110px; accent-color: var(--cyan); cursor: pointer; }
+.botao-som[aria-pressed="true"] .som-onda { animation: none; opacity: calc(.3 + .7 * var(--pulso, .6)); }
+.botao-som[aria-pressed="true"] svg { transform: scale(calc(1 + .1 * var(--pulso, 0))); transition: transform .05s linear; }
