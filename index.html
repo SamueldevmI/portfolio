@@ -36,7 +36,7 @@
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="imagem/apple-touch-icon.png">
     <link rel="manifest" href="manifest.json">
-    <link rel="preload" as="image" href="imagem/samuel-rosto.jpg" imagesrcset="imagem/samuel-rosto-320.webp 320w, imagem/samuel-rosto.jpg 640w" imagesizes="(max-width: 999px) 92px, 232px" fetchpriority="high">
+    <link rel="preload" as="image" href="imagem/samuel-rosto.jpg" imagesrcset="imagem/samuel-rosto-320.webp 320w, imagem/samuel-rosto.jpg 640w" imagesizes="(max-width: 999px) 92px, (max-width: 1199px) 232px, 128px" fetchpriority="high">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap">
@@ -133,7 +133,13 @@
                     <i class="pixel" style="--x:68.8%; --y:24.5%; --s:3px; --p:.6; --dl:1.14s; --du:2.86s"></i>
                     <i class="pixel" style="--x:86.4%; --y:27.9%; --s:4px; --p:.9; --dl:2.38s; --du:3.12s"></i>
                 </div>
-                <div class="hero-foto"><img src="imagem/samuel-rosto.jpg" srcset="imagem/samuel-rosto-320.webp 320w, imagem/samuel-rosto.jpg 640w" sizes="(max-width: 999px) 92px, 232px" alt="Samuel Mickael" width="640" height="640" fetchpriority="high" decoding="async"></div>
+                <div class="hero-foto"><img src="imagem/samuel-rosto.jpg" srcset="imagem/samuel-rosto-320.webp 320w, imagem/samuel-rosto.jpg 640w" sizes="(max-width: 999px) 92px, (max-width: 1199px) 232px, 128px" alt="Samuel Mickael" width="640" height="640" fetchpriority="high" decoding="async"></div>
+            </div>
+            <!-- telas de projetos ao lado do título, só no computador (loading="lazy": escondidas no celular, nem baixam) -->
+            <div class="hero-telas" aria-hidden="true">
+                <figure class="ht ht-a"><div class="ht-barra"><i></i><i></i><i></i></div><img src="imagem/projetos/conta-a-dois.webp" alt="" width="1100" height="688" loading="lazy" decoding="async"></figure>
+                <figure class="ht ht-b"><div class="ht-barra"><i></i><i></i><i></i></div><img src="imagem/projetos/fatia-nobre.webp" alt="" width="1100" height="688" loading="lazy" decoding="async"></figure>
+                <div class="ht-cel"><img src="imagem/projetos/celular/loja-1.webp" alt="" width="280" height="606" loading="lazy" decoding="async"></div>
             </div>
             <p class="eyebrow">DESENVOLVEDOR WEB &amp; MOBILE<span class="eyebrow-sep"> · </span><span class="eyebrow-cidade">CAMPO GRANDE - MS</span><span class="eyebrow-sep"> · </span><span class="tempo-leitura">⏱ ~3 min pra conhecer o trampo</span></p>
             <p class="hero-ola">Olá! Me chamo <strong>Samuel Mickael</strong>.</p>
