@@ -679,7 +679,8 @@ footer a:focus-visible::after, footer .link-rodape:focus-visible::after { transf
 .filtros-projetos { position: relative; }
 .chip-indicador { position: absolute; top: 0; left: 0; z-index: 0; border-radius: 999px; background: var(--cyan); opacity: 0; transition: transform .3s cubic-bezier(.2,.8,.2,1), width .3s ease, height .3s ease, opacity .2s ease; pointer-events: none; }
 .chip-filtro { position: relative; z-index: 1; }
-.chip-filtro.is-ativo, body.dark-mode .chip-filtro.is-ativo { background: transparent; border-color: transparent; color: var(--cyan); }
+.chip-filtro.is-ativo, body.dark-mode .chip-filtro.is-ativo { background: transparent; border-color: transparent; color: #12062e; }
+body.dark-mode .chip-filtro.is-ativo { color: #ffffff; }
 @media (prefers-reduced-motion: reduce) { .chip-indicador { transition: none; } }
 
 /* Sombra nas bordas do carrossel de projetos no celular, avisando que dá pra arrastar mais */
