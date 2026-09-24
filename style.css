@@ -640,3 +640,6 @@ body::before { --scroll-parallax:inherit; }
     .eldev-info { width:auto; justify-items:start; gap:16px; }
     .eldev-onda { width:340px; height:60px; } .eldev-tocando { display:inline-flex; }
 }
+
+/* card da loja no portfólio: miniaturas com as fotos dos produtos */
+.loja-pecas img { aspect-ratio: 1; object-fit: cover; border: 1px solid rgba(255, 43, 214, .35); border-radius: 6px; filter: saturate(.9) contrast(1.05) drop-shadow(0 8px 14px rgba(0,0,0,.6)); }
