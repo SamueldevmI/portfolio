@@ -798,3 +798,208 @@
         }, 200);
     }, true);
 })();
+
+/* ---------- Quarta leva do celular: o cartão de visita ----------
+   Enquanto a pessoa navega, o site guarda (só neste aparelho) quais seções e projetos ela viu. No fim,
+   um botão gera na hora — via <canvas>, sem servidor — um cartão personalizado com esse resumo, nas
+   cores do site. Dá pra baixar ou mandar direto pela gaveta de compartilhar do celular. */
+(function () {
+    "use strict";
+    if (!window.matchMedia("(pointer: coarse)").matches) return;
+    const botao = document.getElementById("botaoResumo");
+    if (!botao || !window.HTMLCanvasElement) return;
+
+    const ler = (k, padrao) => { try { const v = localStorage.getItem(k); return v === null ? padrao : JSON.parse(v); } catch (e) { return padrao; } };
+    const el = (tag, cls, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; };
+    const som = (nome) => { if (window.musicaSite && window.musicaSite[nome]) window.musicaSite[nome](); };
+    const vibrar = (p) => { if (navigator.vibrate) navigator.vibrate(p); };
+
+    const inicio = Date.now();
+    const SECOES = ["inicio", "sobre-mim", "projetos", "mais-projetos", "servicos", "orcamento", "jornada", "contato"];
+    const secoesVistas = new Set();
+    const projetosVistos = new Set();
+    if ("IntersectionObserver" in window) {
+        const obsSecao = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) secoesVistas.add(e.target.id); }), { threshold: 0.35 });
+        SECOES.forEach((id) => { const s = document.getElementById(id); if (s) obsSecao.observe(s); });
+        const obsCard = new IntersectionObserver((es) => es.forEach((e) => {
+            if (!e.isIntersecting) return;
+            const nome = e.target.querySelector(".projeto-nome")?.textContent.trim();
+            if (nome) projetosVistos.add(nome);
+        }), { threshold: 0.4 });
+        document.querySelectorAll(".card-projeto").forEach((c) => obsCard.observe(c));
+    }
+    botao.hidden = false;
+
+    /* Corta o texto (com "…") pra caber na largura, medindo de verdade em vez de chutar */
+    function truncar(ctx, texto, larguraMax) {
+        if (ctx.measureText(texto).width <= larguraMax) return texto;
+        let t = texto;
+        while (t.length > 1 && ctx.measureText(t + "…").width > larguraMax) t = t.slice(0, -1);
+        return t + "…";
+    }
+
+    /* Desenha um retângulo com cantos arredondados (fallback pra quem não tem roundRect nativo) */
+    function retanguloArredondado(ctx, x, y, w, h, r) {
+        if (ctx.roundRect) { ctx.beginPath(); ctx.roundRect(x, y, w, h, r); return; }
+        ctx.beginPath();
+        ctx.moveTo(x + r, y);
+        ctx.arcTo(x + w, y, x + w, y + h, r);
+        ctx.arcTo(x + w, y + h, x, y + h, r);
+        ctx.arcTo(x, y + h, x, y, r);
+        ctx.arcTo(x, y, x + w, y, r);
+        ctx.closePath();
+    }
+
+    /* Monta as linhas do resumo com base no que a pessoa realmente fez nesta visita */
+    function montarStats() {
+        const minutos = Math.max(1, Math.round((Date.now() - inicio) / 60000));
+        const favoritos = ler("portfolio-favoritos", []);
+        const genius = ler("portfolio-genius-recorde", 0);
+        const stories = ler("portfolio-stories-vistos", []);
+        const linhas = [
+            ["📍", "Seções exploradas", `${secoesVistas.size} de ${SECOES.length}`],
+            ["🧪", "Projetos testados", String(projetosVistos.size || 0)],
+        ];
+        if (favoritos.length) linhas.push(["❤️", "Favoritos", String(favoritos.length)]);
+        if (stories.length) linhas.push(["📖", "Stories vistos", String(stories.length)]);
+        if (genius > 0) linhas.push(["🎮", "Recorde no Genius", `${genius} rodada${genius === 1 ? "" : "s"}`]);
+        linhas.push(["⏱️", "Tempo explorando", `${minutos} min`]);
+        let selo = "deu uma passada 👀";
+        if (favoritos.length >= 2 || projetosVistos.size >= 4) selo = "curtiu mesmo mesmo 🔥";
+        else if (minutos >= 5 || secoesVistas.size >= 6) selo = "explorou tudo 🕵️";
+        else if (genius > 0) selo = "achou o easter egg 🎮";
+        return { minutos, linhas: linhas.slice(0, 6), selo, projetos: [...projetosVistos], favoritos };
+    }
+
+    /* Desenha o cartão inteiro num canvas de alta resolução (1080x1350, proporção de story) */
+    async function desenharCartao() {
+        const { minutos, linhas, selo, projetos, favoritos } = montarStats();
+        // altura do cartão acompanha quanto tem pra mostrar, em vez de deixar um vazio no fim
+        const W = 1080;
+        const H = 470 + linhas.length * 108 + (projetos.length ? 46 : 0) + (favoritos.length ? 46 : 0) + 188;
+        const canvas = document.createElement("canvas");
+        canvas.width = W; canvas.height = H;
+        const ctx = canvas.getContext("2d");
+        try { await document.fonts.load('800 60px "Space Grotesk"'); await document.fonts.load('500 30px "DM Mono"'); } catch (e) { /* usa a fonte padrão do sistema */ }
+
+        // fundo: carvão com glow vermelho, igual ao resto do site
+        const fundo = ctx.createLinearGradient(0, 0, W, H);
+        fundo.addColorStop(0, "#1e1e1e"); fundo.addColorStop(0.55, "#161616"); fundo.addColorStop(1, "#121212");
+        ctx.fillStyle = fundo; ctx.fillRect(0, 0, W, H);
+        const glow1 = ctx.createRadialGradient(120, 60, 0, 120, 60, 620);
+        glow1.addColorStop(0, "rgba(139,26,26,.55)"); glow1.addColorStop(1, "rgba(139,26,26,0)");
+        ctx.fillStyle = glow1; ctx.fillRect(0, 0, W, H);
+        const glow2 = ctx.createRadialGradient(W - 80, H - 120, 0, W - 80, H - 120, 560);
+        glow2.addColorStop(0, "rgba(139,37,37,.4)"); glow2.addColorStop(1, "rgba(139,37,37,0)");
+        ctx.fillStyle = glow2; ctx.fillRect(0, 0, W, H);
+        // grade sutil, igual ao ::after do site
+        ctx.strokeStyle = "rgba(255,42,61,.08)"; ctx.lineWidth = 1;
+        for (let x = 0; x <= W; x += 54) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
+        for (let y = 0; y <= H; y += 54) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+
+        // cabeçalho: logo "SM." + selo do dia
+        ctx.textBaseline = "alphabetic";
+        ctx.font = '700 34px "Space Grotesk", Arial, sans-serif';
+        ctx.fillStyle = "#f6f6f6"; ctx.fillText("SM", 72, 96);
+        const larguraSM = ctx.measureText("SM").width;
+        ctx.fillStyle = "#ff2a3d"; ctx.fillText(".", 72 + larguraSM, 96);
+        ctx.font = '500 22px "DM Mono", monospace'; ctx.fillStyle = "#b0b0b0"; ctx.textAlign = "right";
+        ctx.fillText("RESUMO DA VISITA", W - 72, 90);
+        ctx.textAlign = "left";
+
+        // selo em pílula
+        ctx.font = '600 26px "DM Mono", monospace';
+        const larguraSelo = ctx.measureText(selo).width + 48;
+        retanguloArredondado(ctx, 72, 130, larguraSelo, 56, 28);
+        ctx.fillStyle = "rgba(139,26,26,.5)"; ctx.fill();
+        ctx.strokeStyle = "#ff2a3d"; ctx.lineWidth = 2; ctx.stroke();
+        ctx.fillStyle = "#ffffff"; ctx.fillText(selo, 96, 166);
+
+        // título grande
+        ctx.font = '800 76px "Space Grotesk", Arial, sans-serif'; ctx.fillStyle = "#f6f6f6";
+        const tit1 = `${minutos} min no site`, tit2 = "de Samuel Mickael.";
+        ctx.fillText(tit1, 72, 300);
+        ctx.save();
+        ctx.shadowColor = "rgba(255,42,61,.55)"; ctx.shadowBlur = 26;
+        ctx.fillStyle = "#ff2a3d"; ctx.fillText(tit2, 72, 380);
+        ctx.restore();
+
+        // linhas de estatística, em cartõezinhos
+        let y = 470;
+        ctx.font = '500 30px "DM Mono", monospace';
+        linhas.forEach(([emoji, rotulo, valor]) => {
+            retanguloArredondado(ctx, 72, y, W - 144, 92, 20);
+            ctx.fillStyle = "rgba(38,38,38,.85)"; ctx.fill();
+            ctx.strokeStyle = "rgba(255,255,255,.1)"; ctx.lineWidth = 1; ctx.stroke();
+            ctx.font = "40px Arial"; ctx.fillStyle = "#f6f6f6"; ctx.fillText(emoji, 100, y + 58);
+            ctx.font = '600 30px "Space Grotesk", Arial, sans-serif'; ctx.fillStyle = "#e6e6e6"; ctx.fillText(rotulo, 162, y + 58);
+            ctx.font = '500 28px "DM Mono", monospace'; ctx.fillStyle = "#ff2a3d";
+            ctx.textAlign = "right"; ctx.fillText(valor, W - 100, y + 58); ctx.textAlign = "left";
+            y += 108;
+        });
+
+        // rodapé: projetos testados e favoritos, cada um numa linha curta (com "…" se não couber)
+        ctx.font = '500 26px "DM Mono", monospace'; ctx.fillStyle = "#8f8f8f";
+        if (projetos.length) {
+            ctx.fillText(truncar(ctx, "Testou: " + projetos.join(" · "), W - 144), 72, y + 20);
+            y += 46;
+        }
+        if (favoritos.length) {
+            ctx.fillText(truncar(ctx, "❤ " + favoritos.join(", "), W - 144), 72, y + 20);
+            y += 46;
+        }
+        retanguloArredondado(ctx, 72, y + 40, W - 144, 78, 18);
+        ctx.fillStyle = "rgba(255,42,61,.1)"; ctx.fill();
+        ctx.strokeStyle = "rgba(255,42,61,.5)"; ctx.lineWidth = 2; ctx.stroke();
+        ctx.font = '600 30px "DM Mono", monospace'; ctx.fillStyle = "#ff2a3d";
+        ctx.fillText("samueldevmi.github.io/portfolio", 96, y + 90);
+
+        return canvas;
+    }
+
+    function mostrarOverlay(canvas) {
+        const url = canvas.toDataURL("image/png");
+        const overlay = el("div", "resumo-overlay", `
+            <div class="resumo-caixa">
+                <button type="button" class="resumo-fechar" aria-label="Fechar">✕</button>
+                <img class="resumo-img" src="${url}" alt="Cartão-resumo da sua visita ao portfólio">
+                <div class="resumo-acoes">
+                    <button type="button" class="botao botao-principal resumo-compartilhar">Compartilhar</button>
+                    <a class="botao botao-secundario resumo-baixar" download="resumo-portfolio-samuel-mickael.png" href="${url}">Baixar</a>
+                </div>
+            </div>`);
+        document.body.append(overlay);
+        document.body.style.overflow = "hidden";
+        const fechar = () => { overlay.remove(); document.body.style.overflow = ""; };
+        overlay.querySelector(".resumo-fechar").addEventListener("click", fechar);
+        overlay.addEventListener("click", (e) => { if (e.target === overlay) fechar(); });
+        overlay.querySelector(".resumo-compartilhar").addEventListener("click", async () => {
+            try {
+                const blob = await (await fetch(url)).blob();
+                const arquivo = new File([blob], "resumo-portfolio.png", { type: "image/png" });
+                if (navigator.canShare && navigator.canShare({ files: [arquivo] })) {
+                    await navigator.share({ files: [arquivo], title: "Meu resumo no portfólio do Samuel", text: "Olha o que eu explorei no portfólio dele:" });
+                } else if (navigator.share) {
+                    await navigator.share({ title: "Portfólio de Samuel Mickael", url: "https://samueldevmi.github.io/portfolio/" });
+                } else {
+                    overlay.querySelector(".resumo-baixar").click();
+                }
+                som("subida");
+            } catch (e) { /* a pessoa fechou a gaveta de compartilhar */ }
+        });
+    }
+
+    botao.addEventListener("click", async () => {
+        botao.disabled = true;
+        const textoOriginal = botao.textContent;
+        botao.textContent = "Montando o cartão…";
+        try {
+            const canvas = await desenharCartao();
+            mostrarOverlay(canvas);
+            vibrar(20);
+        } finally {
+            botao.disabled = false;
+            botao.textContent = textoOriginal;
+        }
+    });
+})();

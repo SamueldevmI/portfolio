@@ -1264,3 +1264,17 @@ html:not(.dark-mode) body::after { background: radial-gradient(circle at 70% 25%
 .projetos { background: linear-gradient(120deg, rgba(139,26,26,.32), rgba(22,22,22,.2) 60%) !important; border-block: 1px solid rgba(255,42,61,.25) !important; }
 .contato { background: linear-gradient(135deg, #8b1a1a, #262626 70%) !important; border: 1px solid rgba(255,42,61,.45) !important; box-shadow: 0 0 40px rgba(255,42,61,.18), inset 0 0 30px rgba(255,42,61,.08); }
 .lista-projetos .card-projeto .links-projeto .link-projeto { background: #8b1a1a !important; border: 1px solid #ff2a3d !important; box-shadow: 0 0 12px rgba(255,42,61,.35) !important; }
+
+/* ---------- Cartão de visita (celular): overlay que mostra o resumo gerado por canvas ---------- */
+@media (pointer: coarse) {
+    .resumo-overlay { position: fixed; inset: 0; z-index: 96; display: flex; align-items: center; justify-content: center; padding: 20px; background: rgba(10,10,10,.86); backdrop-filter: blur(6px); animation: resumo-entra .25s ease both; }
+    @keyframes resumo-entra { from { opacity: 0; } to { opacity: 1; } }
+    .resumo-caixa { position: relative; width: min(420px, 100%); display: flex; flex-direction: column; gap: 16px; }
+    .resumo-img { width: 100%; border-radius: 22px; box-shadow: 0 30px 70px -20px rgba(0,0,0,.8), 0 0 40px rgba(255,42,61,.2); border: 1px solid rgba(255,42,61,.4); }
+    .resumo-fechar { position: absolute; top: -46px; right: 0; width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(255,255,255,.25); background: rgba(30,30,30,.8); color: #f6f6f6; font-size: 1.1rem; line-height: 1; }
+    .resumo-acoes { display: flex; gap: 10px; }
+    .resumo-acoes .botao { flex: 1; text-align: center; justify-content: center; }
+    #botaoResumo { display: inline-flex; }
+}
+@media (pointer: coarse) and (prefers-reduced-motion: reduce) { .resumo-overlay { animation: none; } }
+@media not (pointer: coarse) { #botaoResumo { display: none !important; } }
