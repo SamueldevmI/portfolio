@@ -55,6 +55,21 @@
     ];
     const ARPEJO = [0, 2, 1, 3, 2, 1, 3, 2]; // ordem das notas do acorde nas 8 colcheias
 
+    // Clima de cada parte da página: a força de cada instrumento (0 = não toca), se tem melodia e o quanto
+    // o som fica aberto (filtro). Muda no fim do compasso em que a pessoa chega na seção.
+    const CLIMAS = {
+        inicio:    { pad: 1,   marimba: 1,    baixo: 1,    bumbo: 1,    palma: 1,   chocalho: 1,   melodia: "ciclo",  brilho: false, filtro: 9000 },  // animado
+        sobre:     { pad: 1.4, marimba: .75,  baixo: .6,   bumbo: 0,    palma: 0,   chocalho: .35, melodia: "nao",    brilho: false, filtro: 3200 },  // íntimo
+        projetos:  { pad: 1,   marimba: 1,    baixo: 1,    bumbo: 1,    palma: 1,   chocalho: 1,   melodia: "sempre", brilho: true,  filtro: 10000 }, // descoberta
+        servicos:  { pad: .8,  marimba: .9,   baixo: 1.25, bumbo: 1.1,  palma: 1.4, chocalho: .9,  melodia: "nao",    brilho: false, filtro: 7500 },  // confiante
+        orcamento: { pad: 1,   marimba: .7,   baixo: .8,   bumbo: .6,   palma: 0,   chocalho: .4,  melodia: "nao",    brilho: false, filtro: 5000 },  // foco
+        jornada:   { pad: 1.8, marimba: .6,   baixo: .5,   bumbo: 0,    palma: 0,   chocalho: 0,   melodia: "rara",   brilho: false, filtro: 2800, esparso: true }, // nostálgico
+        contato:   { pad: 1.2, marimba: 1.05, baixo: 1.1,  bumbo: 1.05, palma: 1.2, chocalho: 1,   melodia: "sempre", brilho: true,  filtro: 10000 }, // final
+    };
+    const SECAO_CLIMA = { inicio: "inicio", "sobre-mim": "sobre", projetos: "projetos", "mais-projetos": "projetos", servicos: "servicos", orcamento: "orcamento", jornada: "jornada", contato: "contato" };
+    let clima = CLIMAS.inicio;
+    let filtroMestre = null;
+
     let ctx = null, mestre = null, saida = null, ruido = null;
     let tocando = false, pausadoPorFora = false, relogio = 0, proximo = 0, indice = 0;
 
@@ -64,7 +79,8 @@
         ctx = new Contexto();
         const filtro = ctx.createBiquadFilter();
         filtro.type = "lowpass";
-        filtro.frequency.value = 9000; // só tira o chiado mais agudo: o som fica brilhante
+        filtro.frequency.value = clima.filtro; // aberto (brilhante) ou fechado (abafado) conforme a seção
+        filtroMestre = filtro;
         const compressor = ctx.createDynamicsCompressor();
         compressor.threshold.value = -16;
         compressor.ratio.value = 3;
@@ -111,12 +127,12 @@
         tom(f * 2, "triangle", t, 0.003, 0.012 * forca, 0.4);
     }
 
-    function pad(notas, t) {
+    function pad(notas, t, forca) {
         // cordas bem baixinhas por trás, só pra preencher
         const g = ctx.createGain();
         g.gain.setValueAtTime(0.0001, t);
-        g.gain.linearRampToValueAtTime(0.008, t + 0.3);
-        g.gain.setValueAtTime(0.008, t + COMPASSO - 0.2);
+        g.gain.linearRampToValueAtTime(0.008 * forca, t + 0.3);
+        g.gain.setValueAtTime(0.008 * forca, t + COMPASSO - 0.2);
         g.gain.linearRampToValueAtTime(0.0001, t + COMPASSO + 0.1);
         const f = ctx.createBiquadFilter();
         f.type = "lowpass";
@@ -133,7 +149,7 @@
         });
     }
 
-    function baixo(nota, t, duracao) {
+    function baixo(nota, t, duracao, forca) {
         // baixo curtinho e redondo, que "pula"
         const o = ctx.createOscillator();
         const g = ctx.createGain();
@@ -142,7 +158,7 @@
         o.frequency.value = midi(nota);
         f.type = "lowpass";
         f.frequency.value = 700;
-        envelope(g, t, 0.01, 0.26, duracao);
+        envelope(g, t, 0.01, 0.26 * forca, duracao);
         o.connect(f).connect(g).connect(mestre);
         o.start(t);
         o.stop(t + duracao + 0.05);
@@ -172,43 +188,64 @@
         s.stop(t + duracao + 0.02);
     }
 
-    function palma(t) {
+    function palma(t, forca) {
         // três estalinhos colados, como mãos batendo
-        [0, 0.011, 0.022].forEach((d, i) => barulho(t + d, "bandpass", 1500, i === 2 ? 0.14 : 0.08, i === 2 ? 0.14 : 0.03));
+        [0, 0.011, 0.022].forEach((d, i) => barulho(t + d, "bandpass", 1500, (i === 2 ? 0.14 : 0.08) * forca, i === 2 ? 0.14 : 0.03));
     }
 
     function compasso(n, t) {
+        const c = clima; // o clima vale pro compasso inteiro: a troca de seção entra no próximo
         const pos = n % 8;
         const ciclo = Math.floor(n / 8);
         const acorde = ACORDES[pos];
         const colcheia = BATIDA / 2;
 
-        pad(acorde.notas, t);
-        ARPEJO.forEach((i, c) => marimba(acorde.notas[i], t + c * colcheia, c % 2 ? 0.7 : 1));
+        if (c.pad) pad(acorde.notas, t, c.pad);
+        if (c.marimba) ARPEJO.forEach((i, k) => {
+            if (c.esparso && k % 2) return; // só nos tempos fortes: mais calmo
+            marimba(acorde.notas[i], t + k * colcheia, (k % 2 ? 0.7 : 1) * c.marimba);
+        });
 
         // baixo: tônica, oitava no contratempo, quinta e volta
         const b = acorde.baixo;
-        [[0, b, 0.7], [1.5, b + 12, 0.35], [2, b + 7, 0.6], [3, b, 0.35], [3.5, b + 12, 0.3]]
-            .forEach(([tempo, nota, dur]) => baixo(nota, t + tempo * BATIDA, dur));
+        if (c.baixo) [[0, b, 0.7], [1.5, b + 12, 0.35], [2, b + 7, 0.6], [3, b, 0.35], [3.5, b + 12, 0.3]]
+            .forEach(([tempo, nota, dur]) => baixo(nota, t + tempo * BATIDA, dur, c.baixo));
 
-        bumbo(t, 1);
-        bumbo(t + BATIDA * 2, 0.9);
-        if (pos === 7) bumbo(t + BATIDA * 3.5, 0.6); // puxadinha no fim do ciclo
-        palma(t + BATIDA);
-        palma(t + BATIDA * 3);
-        for (let s = 0; s < 16; s++) { // chocalho em semicolcheias, acentuado no contratempo
+        if (c.bumbo) {
+            bumbo(t, c.bumbo);
+            bumbo(t + BATIDA * 2, 0.9 * c.bumbo);
+            if (pos === 7) bumbo(t + BATIDA * 3.5, 0.6 * c.bumbo); // puxadinha no fim do ciclo
+        }
+        if (c.palma) { palma(t + BATIDA, c.palma); palma(t + BATIDA * 3, c.palma); }
+        if (c.chocalho) for (let s = 0; s < 16; s++) { // chocalho em semicolcheias, acentuado no contratempo
             if (Math.random() < 0.08) continue;
-            barulho(t + (BATIDA / 4) * s, "highpass", 8000, s % 2 ? 0.02 : (s % 4 === 2 ? 0.045 : 0.03), 0.04);
+            barulho(t + (BATIDA / 4) * s, "highpass", 8000, (s % 2 ? 0.02 : (s % 4 === 2 ? 0.045 : 0.03)) * c.chocalho, 0.04);
         }
 
-        // melodia: o primeiro ciclo é só a base; depois alterna sininho e marimba uma oitava acima
-        if (ciclo >= 1) {
-            const noSino = ciclo % 3 !== 0;
+        // brilho: duas notas agudas do acorde no fim do compasso, como faísca
+        if (c.brilho) {
+            sino(acorde.notas[3] + 12, t + BATIDA * 2.5, 0.5, 0.45);
+            sino(acorde.notas[2] + 24, t + BATIDA * 3.5, 0.5, 0.35);
+        }
+
+        // melodia: "ciclo" = o primeiro ciclo é só a base e depois alterna sininho e marimba;
+        // "sempre" = sininho direto; "rara" = só as notas do primeiro tempo, bem espaçadas
+        const tocaMelodia = c.melodia === "sempre" || (c.melodia === "ciclo" && ciclo >= 1) || (c.melodia === "rara" && pos % 2 === 0);
+        if (tocaMelodia) {
+            const noSino = c.melodia !== "ciclo" || ciclo % 3 !== 0;
             MELODIA[pos].forEach(([tempo, nota, dur]) => {
-                if (noSino) sino(nota, t + tempo * BATIDA, dur, 1);
+                if (c.melodia === "rara" && tempo > 0) return;
+                if (noSino) sino(nota, t + tempo * BATIDA, c.melodia === "rara" ? 3 : dur, c.melodia === "rara" ? 0.8 : 1);
                 else marimba(nota + 12, t + tempo * BATIDA, 0.9);
             });
         }
+    }
+
+    function mudarClima(id) {
+        const novo = CLIMAS[id];
+        if (!novo || novo === clima) return;
+        clima = novo;
+        if (ctx && filtroMestre) filtroMestre.frequency.setTargetAtTime(novo.filtro, ctx.currentTime, 1.2); // abre/fecha o som devagar
     }
 
     function agendar() {
@@ -283,6 +320,14 @@
         };
         const remover = function () { GESTOS.forEach((tipo) => document.removeEventListener(tipo, primeiraInteracao, true)); };
         GESTOS.forEach((tipo) => document.addEventListener(tipo, primeiraInteracao, true));
+    }
+
+    // Seção que está no meio da tela decide o clima da música.
+    if ("IntersectionObserver" in window) {
+        const vistas = new IntersectionObserver((entradas) => {
+            entradas.forEach((e) => { if (e.isIntersecting) mudarClima(SECAO_CLIMA[e.target.id]); });
+        }, { rootMargin: "-45% 0px -45% 0px" });
+        Object.keys(SECAO_CLIMA).forEach((id) => { const el = document.getElementById(id); if (el) vistas.observe(el); });
     }
 
     // Aba escondida: para de tocar (e de gastar processador); voltou, continua.
