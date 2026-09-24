@@ -30,6 +30,7 @@
     // De noite (19h às 6h) a música fica um pouco mais lenta, mais abafada e com mais cordas
     const HORA = new Date().getHours();
     const NOITE = HORA >= 19 || HORA < 6;
+    const TOQUE = window.matchMedia("(pointer: coarse)").matches;
     const BPM = NOITE ? 100 : 112;
     const BATIDA = 60 / BPM;
     const COMPASSO = BATIDA * 4;
@@ -307,7 +308,7 @@
 
     function volumeDoGrupo(nome, m) {
         let v = nome === "fraco" ? m.marimba * m.fraco : m[nome];
-        if (nome === "bumbo" || nome === "palma" || nome === "chocalho") v *= 0.75 + 0.5 * energia; // rolando rápido = batida mais forte
+        if (nome === "bumbo" || nome === "palma" || nome === "chocalho") v *= TOQUE ? 0.55 + 0.95 * energia : 0.75 + 0.5 * energia; // rolando rápido = batida mais forte (no celular, mais ainda)
         if (nome === "pad" && NOITE) v *= 1.25;
         return v;
     }
@@ -443,6 +444,7 @@
     const ESCADA = [72, 74, 76, 77, 79, 81, 83, 84];
     function notaDaPergunta(n) { sino(ESCADA[Math.min(n, ESCADA.length - 1)], agoraMais(), 1, 0.7, efeitos); }
     function tada() {
+        if (navigator.vibrate) navigator.vibrate([40, 40, 90]);
         const t = agoraMais(0.02);
         [72, 76, 79, 84].forEach((nota, i) => marimba(nota, t + i * 0.07, 1, efeitos));
         sino(88, t + 0.3, 3, 0.9, efeitos);
@@ -592,6 +594,16 @@
         GESTOS.forEach((tipo) => document.addEventListener(tipo, primeiraInteracao, true));
     }
 
+    // Sons que o mobile.js usa (gestos do celular). Só tocam com o áudio liberado.
+    window.musicaSite = {
+        pode: () => podeTocarEfeito(),
+        acorde() { if (!podeTocarEfeito()) return; const t = agoraMais(); acordeAgora().notas.forEach((n, i) => marimba(n + 12, t + i * 0.012, 0.8, efeitos)); sino(acordeAgora().notas[3] + 24, t + 0.05, 1.2, 0.4, efeitos); },
+        arpejo() { if (!podeTocarEfeito()) return; const t = agoraMais(); const ns = acordeAgora().notas; [...ns, ...ns.map((n) => n + 12)].forEach((n, i) => marimba(n + 12, t + i * 0.07, 0.8, efeitos)); },
+        subida() { if (!podeTocarEfeito()) return; const t = agoraMais(); [0, 4, 7, 12].forEach((d, i) => sino(72 + d, t + i * 0.09, 1.5, 0.6, efeitos)); },
+        passagem() { if (!podeTocarEfeito()) return; varrida(agoraMais(), 300, 4000, 0.4); },
+        surpresa() { if (!podeTocarEfeito()) return; const t = agoraMais(); [84, 79, 76, 72, 88].forEach((n, i) => sino(n, t + i * 0.06, 0.6, 0.5, efeitos)); },
+    };
+
     // Efeitos de interação (tocam com ou sem a música, depois que o áudio foi liberado)
     const INTERATIVO = "a[href], button, summary, .chip-filtro, .orc-opcao, [role='button']";
     document.addEventListener("pointerover", (e) => {
@@ -704,7 +716,7 @@
         const agora = performance.now(), y = window.scrollY;
         const velocidade = Math.abs(y - ultimoY) / Math.max(16, agora - ultimoTempo) * 1000; // px por segundo
         ultimoY = y; ultimoTempo = agora;
-        energia = Math.max(energia, Math.min(1, velocidade / 2500));
+        energia = Math.max(energia, Math.min(1, velocidade / (TOQUE ? 1400 : 2500)));
         cancelAnimationFrame(quadroRolagem);
         quadroRolagem = requestAnimationFrame(aplicarMistura);
         const noFim = y + window.innerHeight >= document.documentElement.scrollHeight - 6;
