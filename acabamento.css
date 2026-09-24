@@ -1235,7 +1235,7 @@ html.tem-barra-app .fim-elastico { bottom: calc(62px + env(safe-area-inset-botto
    Paleta: #161616 / #1e1e1e / #262626 (carvão), #8b1a1a e #8b2525 (sangue), #ff2a3d (neon, só em brilho). */
 :root {
     --bg: #161616; --surface: #1e1e1e; --surface-2: #262626;
-    --text: #f6f6f6; --muted: #b0b0b0; --line: rgba(255,255,255,.1);
+    --text: #f6f6f6; --muted: #c6c6c6; --line: rgba(255,255,255,.1);
     --cyan: #ff2a3d;  --cyan-rgb: 255, 42, 61;    /* neon vermelho: destaques, links, brilhos */
     --pink: #8b1a1a;  --pink-rgb: 139, 26, 26;    /* vermelho-sangue */
     --violet: #ffffff; --violet-rgb: 255, 255, 255;
