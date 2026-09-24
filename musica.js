@@ -11,7 +11,8 @@
    - O navegador não deixa tocar som antes de a pessoa interagir, então a música começa no primeiro
      clique/toque/tecla na página, no computador e no celular. Como é gerada no próprio aparelho, não
      gasta internet.
-   - O ícone no topo liga e desliga, e a escolha fica guardada neste aparelho.
+   - O ícone no topo liga e desliga só a música (os efeitos de clique, cards e orçamento continuam), e a
+     escolha fica guardada neste aparelho.
    - Pausa sozinha quando a aba fica escondida e quando uma demo abre na janelinha (a demo pode ter
      som próprio, como o Eldev Music), e volta quando fecha. */
 (function () {
@@ -34,6 +35,7 @@
     const COMPASSO = BATIDA * 4;
     const CHAVE_VOLUME = "portfolio-musica-volume";
     let volume = Math.min(1, Math.max(0, Number(ler(CHAVE_VOLUME) || 0.5)));
+    const NIVEL_MUSICA = 0.6; // a música fica um pouco abaixo dos efeitos de clique, cards e orçamento
     const midi = (n) => 440 * Math.pow(2, (n - 69) / 12);
 
     // Dó – Lám – Fá – Sol – Dó – Mim – Fá – Sol (um compasso cada)
@@ -100,6 +102,7 @@
     let filtroMestre = null;
     const grupo = {}; // um GainNode por grupo de instrumentos
     let efeitos = null; // efeitos de interação (cliques, cards, orçamento): não dependem do clima da seção
+    let musicaBus = null; // só a música passa por aqui: o botão de som zera este, e os efeitos continuam
     const linhaDoTempo = []; // últimos compassos agendados, pra saber qual acorde está tocando agora
 
     let ctx = null, mestre = null, saida = null, ruido = null;
@@ -119,16 +122,19 @@
         saida.gain.value = 0;
         mestre = ctx.createGain();
         mestre.gain.value = 1;
+        musicaBus = ctx.createGain();
+        musicaBus.gain.value = 0;
+        musicaBus.connect(mestre);
         mestre.connect(filtro).connect(compressor).connect(saida).connect(ctx.destination);
         mix = misturaAtual();
         filtro.frequency.value = mix.filtro * (NOITE ? 0.8 : 1);
         efeitos = ctx.createGain();
         efeitos.gain.value = 1;
-        efeitos.connect(mestre);
+        efeitos.connect(compressor); // sem o filtro da seção: efeito sempre nítido
         GRUPOS.forEach((nome) => {
             grupo[nome] = ctx.createGain();
             grupo[nome].gain.value = volumeDoGrupo(nome, mix);
-            grupo[nome].connect(mestre);
+            grupo[nome].connect(musicaBus);
         });
 
         ruido = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate);
@@ -349,7 +355,8 @@
     }
 
     /* ---------- Efeitos de interação: tudo afinado com o acorde que está tocando ---------- */
-    function podeTocarEfeito() { return tocando && ctx && ctx.state === "running" && !pausadoPorFora && !document.hidden; }
+    // Efeitos tocam mesmo com a música desligada: basta o áudio da página estar liberado
+    function podeTocarEfeito() { return ctx && ctx.state === "running" && !pausadoPorFora && !document.hidden; }
     function acordeAgora() {
         const agora = ctx.currentTime;
         let atual = linhaDoTempo[0];
@@ -439,7 +446,7 @@
     let ultimoFinal = -1e9; // em performance.now()
     function tocarFinal() {
         const t = agoraMais(0.05);
-        GRUPOS.forEach((nome) => { grupo[nome].gain.cancelScheduledValues(t); grupo[nome].gain.setTargetAtTime(volumeDoGrupo(nome, mix) * 0.15, t, 0.25); });
+        if (tocando) GRUPOS.forEach((nome) => { grupo[nome].gain.cancelScheduledValues(t); grupo[nome].gain.setTargetAtTime(volumeDoGrupo(nome, mix) * 0.15, t, 0.25); });
         [60, 64, 67, 72, 76, 79, 84].forEach((nota, i) => marimba(nota, t + i * 0.06, 0.9, efeitos));
         [72, 76, 79].forEach((nota) => sino(nota, t + 0.45, 6, 0.6, efeitos));
         baixo(36, t + 0.45, 2.5, efeitos);
@@ -463,34 +470,52 @@
         botao.title = tocando ? "Desligar música" : "Ligar música";
     }
 
+    // Libera o áudio da página (precisa de um gesto da pessoa). Vale pra música e pros efeitos.
+    function destravar() {
+        if (!ctx) montar();
+        if (pausadoPorFora || document.hidden) return Promise.resolve(false);
+        return ctx.resume().then(function () {
+            saida.gain.cancelScheduledValues(ctx.currentTime);
+            saida.gain.setTargetAtTime(volume, ctx.currentTime, 0.3);
+            return true;
+        }).catch(function () { return false; /* o navegador ainda não deixou: o próximo gesto tenta de novo */ });
+    }
+
     let ligar = function () {
         if (!ctx) montar();
         tocando = true;
         atualizarBotao();
-        if (pausadoPorFora || document.hidden) return; // liga assim que a demo fechar / a aba voltar
-        ctx.resume().then(function () {
+        destravar().then(function (ok) {
+            if (!ok || !tocando) return;
             proximo = Math.max(proximo, ctx.currentTime + 0.1);
             agendar();
             clearInterval(relogio);
             relogio = setInterval(agendar, 250);
-            saida.gain.cancelScheduledValues(ctx.currentTime);
-            saida.gain.setTargetAtTime(volume, ctx.currentTime, 0.9); // entra devagar
-        }).catch(function () { /* o navegador ainda não deixou: o próximo gesto tenta de novo */ });
-    }
+            musicaBus.gain.cancelScheduledValues(ctx.currentTime);
+            musicaBus.gain.setTargetAtTime(NIVEL_MUSICA, ctx.currentTime, 0.9); // entra devagar
+        });
+    };
 
+    // Aba escondida ou demo aberta: cala tudo (música e efeitos) e poupa processador
     function silenciar() {
         if (!ctx) return;
         clearInterval(relogio);
         saida.gain.cancelScheduledValues(ctx.currentTime);
         saida.gain.setTargetAtTime(0, ctx.currentTime, 0.15);
-        setTimeout(function () { if (!tocando || pausadoPorFora || document.hidden) ctx.suspend(); }, 700);
+        setTimeout(function () { if (pausadoPorFora || document.hidden) ctx.suspend(); }, 700);
     }
 
+    // Botão de som: tira só a música; os efeitos de clique, cards e orçamento continuam
     function desligar() {
         tocando = false;
         atualizarBotao();
-        silenciar();
+        if (!ctx) return;
+        clearInterval(relogio);
+        musicaBus.gain.cancelScheduledValues(ctx.currentTime);
+        musicaBus.gain.setTargetAtTime(0, ctx.currentTime, 0.15);
     }
+
+    const retomar = () => (tocando ? ligar() : destravar());
 
     // 9) Volume: barrinha que aparece ao passar o mouse (ou focar pelo teclado) no ícone
     if (window.matchMedia("(hover: hover)").matches) {
@@ -507,7 +532,7 @@
         faixa.addEventListener("input", () => {
             volume = Number(faixa.value);
             gravar(CHAVE_VOLUME, String(volume));
-            if (ctx && tocando) saida.gain.setTargetAtTime(volume, ctx.currentTime, 0.08);
+            if (ctx && !pausadoPorFora && !document.hidden) saida.gain.setTargetAtTime(volume, ctx.currentTime, 0.08);
         });
     }
 
@@ -538,15 +563,17 @@
     // Se a música está ligada mas o navegador deixou o áudio suspenso (o gesto não valeu, ou o sistema
     // pausou), o próximo toque/clique/tecla tenta de novo, em vez de ficar mudo pra sempre.
     GESTOS.forEach((tipo) => document.addEventListener(tipo, function () {
-        if (tocando && ctx && ctx.state !== "running" && !pausadoPorFora && !document.hidden) ligar();
+        if (ctx && ctx.state !== "running" && !pausadoPorFora && !document.hidden) retomar();
     }, true));
 
     // Começa sozinha no primeiro clique/toque/tecla, se a pessoa não tiver desligado antes.
+    // Com a música desligada, o primeiro gesto só libera o áudio, pros efeitos funcionarem.
     const preferencia = ler(CHAVE);
-    if (preferencia !== "off") {
+    {
         const primeiraInteracao = function (evento) {
             if (evento.target.closest && evento.target.closest("#botaoSom")) return remover(); // o próprio botão resolve
             remover();
+            if (preferencia === "off") { destravar(); return; }
             ligar();
             if (!ler(CHAVE_AVISO) && typeof window.mostrarToast === "function") {
                 window.mostrarToast("♪ Tocando “Descoberta”, trilha feita pro site. Pra desligar ou mudar o volume, é o ícone de som lá em cima.");
@@ -557,7 +584,7 @@
         GESTOS.forEach((tipo) => document.addEventListener(tipo, primeiraInteracao, true));
     }
 
-    // Efeitos de interação (só tocam com a música ligada)
+    // Efeitos de interação (tocam com ou sem a música, depois que o áudio foi liberado)
     const INTERATIVO = "a[href], button, summary, .chip-filtro, .orc-opcao, [role='button']";
     document.addEventListener("pointerover", (e) => {
         if (e.pointerType !== "mouse" || !podeTocarEfeito()) return;
@@ -617,8 +644,8 @@
 
     // Aba escondida: para de tocar (e de gastar processador); voltou, continua.
     document.addEventListener("visibilitychange", function () {
-        if (!tocando) return;
-        if (document.hidden) silenciar(); else if (!pausadoPorFora) ligar();
+        if (!ctx) return;
+        if (document.hidden) silenciar(); else if (!pausadoPorFora) retomar();
     });
 
     // Demo aberta na janelinha: pausa, porque ela pode ter som próprio. Fechou, volta.
@@ -626,8 +653,8 @@
     if (modal) {
         new MutationObserver(function () {
             const aberta = !modal.hidden && !!modal.querySelector("iframe");
-            if (aberta && !pausadoPorFora) { pausadoPorFora = true; if (tocando) silenciar(); }
-            else if (!aberta && pausadoPorFora) { pausadoPorFora = false; if (tocando) ligar(); }
+            if (aberta && !pausadoPorFora) { pausadoPorFora = true; silenciar(); }
+            else if (!aberta && pausadoPorFora) { pausadoPorFora = false; if (ctx) retomar(); }
         }).observe(modal, { attributes: true, attributeFilter: ["hidden"], childList: true, subtree: true });
     }
 })();
