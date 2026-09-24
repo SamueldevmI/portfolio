@@ -1025,3 +1025,20 @@ body.dark-mode .promo-servicos b { color: #8a2bb7; }
 .desconto-depoimento b { color: var(--cyan); }
 @media (max-width: 720px) { .promo-faixa { gap: 6px 8px; padding: 8px 12px 8px 8px; border-radius: 14px; font-size: .82rem; } .promo-faixa span { display: none; } }
 [data-promo-ate][hidden] { display: none; }
+
+/* ---------- Botão da música de fundo (musica.js) ---------- */
+.botao-som[hidden] { display: none; }
+.botao-som { position: relative; display: grid; place-items: center; width: 36px; height: 34px; padding: 0; border: 1px solid var(--line); border-radius: 8px; background: rgba(24,10,58,.5); color: var(--muted); cursor: pointer; transition: border-color .25s ease, color .25s ease, background .25s ease; }
+.botao-som::after { content: ""; position: absolute; inset: -6px -3px; }
+.botao-som svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.botao-som .som-caixa { fill: currentColor; stroke: none; }
+.botao-som .som-onda { opacity: 0; }
+.botao-som[aria-pressed="true"] { border-color: rgba(var(--cyan-rgb), .6); color: var(--cyan); }
+.botao-som[aria-pressed="true"] .som-x { opacity: 0; }
+.botao-som[aria-pressed="true"] .som-onda { animation: som-pulsa 1.54s ease-in-out infinite; }
+.botao-som[aria-pressed="true"] .som-onda2 { animation-delay: .38s; }
+@keyframes som-pulsa { 0%, 100% { opacity: .35; } 50% { opacity: 1; } }
+@media (hover: hover) { .botao-som:hover { border-color: var(--cyan); color: var(--cyan); } }
+.botao-som:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+body.dark-mode .botao-som { background: rgba(247,245,254,.7); }
+@media (prefers-reduced-motion: reduce) { .botao-som[aria-pressed="true"] .som-onda { animation: none; opacity: 1; } }
