@@ -653,3 +653,155 @@
         else document.title = tituloOriginal;
     });
 })();
+
+/* ---------- Terceira leva do celular: ondinha no toque, rodapé elástico, ideia por voz, calculadora,
+   barra de navegação tipo app e corte de HQ entre seções ---------- */
+(function () {
+    "use strict";
+    if (!window.matchMedia("(pointer: coarse)").matches) return;
+
+    const som = (nome) => { if (window.musicaSite && window.musicaSite[nome]) window.musicaSite[nome](); };
+    const vibrar = (p) => { if (navigator.vibrate) navigator.vibrate(p); };
+    const semMovimento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const el = (tag, cls, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; };
+    const WHATS = "5567996034205";
+    const whats = (msg) => `https://wa.me/${WHATS}?text=${encodeURIComponent(msg + (window.linhaFavoritos ? window.linhaFavoritos() : ""))}`;
+    const brl = (v) => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 });
+
+    /* 1) Ondinha de luz onde o dedo encosta */
+    if (!semMovimento) {
+        let ondas = 0;
+        document.addEventListener("touchstart", (e) => {
+            if (ondas > 6) return;
+            [...e.changedTouches].forEach((t) => {
+                const o = el("span", "onda-toque");
+                o.style.left = t.clientX + "px";
+                o.style.top = t.clientY + "px";
+                ondas++;
+                o.addEventListener("animationend", () => { o.remove(); ondas--; }, { once: true });
+                document.body.append(o);
+            });
+        }, { passive: true });
+    }
+
+    /* 2) No fim da página, puxar mais um pouco estica o rodapé como elástico */
+    const fim = el("div", "fim-elastico", "<span>🕸️ Chegou no fim! Solta que eu te devolvo.</span>");
+    fim.setAttribute("aria-hidden", "true");
+    document.body.append(fim);
+    let puxar = null;
+    const noFim = () => window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 4;
+    document.addEventListener("touchstart", (e) => { puxar = e.touches.length === 1 && noFim() ? { y: e.touches[0].clientY, max: 0 } : null; }, { passive: true });
+    document.addEventListener("touchmove", (e) => {
+        if (!puxar || e.touches.length !== 1) return;
+        const dy = puxar.y - e.touches[0].clientY; // dedo subindo = puxando o fim
+        if (dy <= 0) return;
+        const esticar = Math.min(130, dy * 0.45);
+        puxar.max = Math.max(puxar.max, esticar);
+        fim.style.transition = "none";
+        fim.style.height = esticar + "px";
+    }, { passive: true });
+    document.addEventListener("touchend", () => {
+        if (!puxar) return;
+        if (puxar.max > 60) { som("mola"); vibrar([10, 30, 10]); }
+        puxar = null;
+        fim.style.transition = "height .45s cubic-bezier(.3, 1.6, .5, 1)";
+        fim.style.height = "0px";
+    }, { passive: true });
+
+    /* 5) Contar a ideia do seu jeito (o microfone do teclado do celular vira ditado) */
+    const tituloOrc = document.querySelector(".orcamento-titulo");
+    if (tituloOrc) {
+        const caixa = el("div", "ideia-voz", `
+            <p class="ideia-titulo">🎙️ Prefere falar?</p>
+            <p class="ideia-ajuda">Toque no campo e aperte o <b>microfone do teclado</b>. Fala do seu jeito que o texto sai pronto pro WhatsApp.</p>
+            <textarea rows="4" maxlength="1200" placeholder="Ex.: tenho uma pizzaria e queria um site pros clientes pedirem pelo WhatsApp…" aria-label="Conte sua ideia"></textarea>
+            <a class="botao botao-principal" target="_blank" rel="noopener noreferrer">💬 Mandar minha ideia</a>`);
+        tituloOrc.after(caixa);
+        const campo = caixa.querySelector("textarea"), botao = caixa.querySelector("a");
+        const atualizar = () => {
+            const ideia = campo.value.trim();
+            botao.href = whats(ideia ? `Oi, Samuel! Minha ideia é essa: ${ideia}` : "Oi, Samuel! Quero te contar uma ideia: ");
+            botao.classList.toggle("ideia-pronta", ideia.length > 10);
+        };
+        campo.addEventListener("input", atualizar);
+        atualizar();
+    }
+
+    /* 7) Calculadora: quanto você deixa de ganhar sem site */
+    const servicos = document.querySelector("#servicos .lista-servicos");
+    if (servicos) {
+        const TIPOS = { "Loja de roupa ou acessórios": 120, "Restaurante, lanchonete ou doceria": 60, "Salão, barbearia ou estética": 70, "Clínica ou consultório": 200, "Prestador de serviço": 250, "Outro": 100 };
+        const calc = el("div", "calc-perda", `
+            <p class="calc-titulo">🧮 Quanto você deixa de ganhar sem site?</p>
+            <label>Seu negócio<select>${Object.keys(TIPOS).map((t) => `<option>${t}</option>`).join("")}</select></label>
+            <label>Clientes que você perde por mês <b class="calc-qtd">5</b><input type="range" min="1" max="40" value="5"></label>
+            <label>Quanto cada cliente gasta, em média<span class="calc-real"><span>R$</span><input type="number" inputmode="numeric" min="1" max="100000" value="120"></span></label>
+            <div class="calc-resultado" aria-live="polite"></div>
+            <a class="botao botao-principal" href="#orcamento">Quero parar de perder</a>
+            <p class="calc-nota">É uma estimativa, só pra ter ideia do tamanho da coisa.</p>`);
+        servicos.after(calc);
+        const sel = calc.querySelector("select"), faixa = calc.querySelector('input[type="range"]'), ticket = calc.querySelector('input[type="number"]');
+        const conta = () => {
+            const qtd = Number(faixa.value), valor = Math.max(0, Number(ticket.value) || 0);
+            calc.querySelector(".calc-qtd").textContent = qtd;
+            const mes = qtd * valor, ano = mes * 12;
+            const pagaCom = valor ? Math.max(1, Math.ceil(250 / valor)) : 0;
+            calc.querySelector(".calc-resultado").innerHTML = valor
+                ? `Você deixa de ganhar uns <b>${brl(mes)}</b> por mês, ou <b>${brl(ano)}</b> por ano.<br>Um site a partir de R$ 250 se paga com <b>${pagaCom} ${pagaCom === 1 ? "cliente" : "clientes"}</b>.`
+                : "Coloque quanto cada cliente gasta pra ver a conta.";
+        };
+        sel.addEventListener("change", () => { ticket.value = TIPOS[sel.value]; conta(); });
+        faixa.addEventListener("input", conta);
+        ticket.addEventListener("input", conta);
+        conta();
+    }
+
+    /* 9) Barra de navegação embaixo, tipo aplicativo */
+    const ITENS = [
+        ["inicio", "Início", '<path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 9.5V20h13V9.5"/>'],
+        ["projetos", "Projetos", '<rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/>'],
+        ["orcamento", "Orçamento", '<path d="M6 3.5h9l3.5 3.5v13.5H6z"/><path d="M9 11h7M9 15h7M9 7.5h3"/>'],
+        ["contato", "Contato", '<path d="M20 11.5a8 8 0 0 1-11.8 7L4 20l1.5-4.2A8 8 0 1 1 20 11.5z"/>'],
+    ];
+    const barra = el("nav", "barra-app", ITENS.map(([id, nome, svg]) => `<a href="#${id}" data-secao="${id}"><svg viewBox="0 0 24 24" aria-hidden="true">${svg}</svg><span>${nome}</span></a>`).join(""));
+    barra.setAttribute("aria-label", "Navegação rápida");
+    document.body.append(barra);
+    document.documentElement.classList.add("tem-barra-app");
+    if ("IntersectionObserver" in window) {
+        const mapa = { inicio: "inicio", "sobre-mim": "inicio", projetos: "projetos", "mais-projetos": "projetos", servicos: "orcamento", orcamento: "orcamento", jornada: "contato", contato: "contato" };
+        const obs = new IntersectionObserver((es) => es.forEach((e) => {
+            if (!e.isIntersecting) return;
+            barra.querySelectorAll("a").forEach((a) => a.classList.toggle("ativo", a.dataset.secao === mapa[e.target.id]));
+        }), { rootMargin: "-45% 0px -45% 0px" });
+        Object.keys(mapa).forEach((id) => { const s = document.getElementById(id); if (s) obs.observe(s); });
+    }
+
+    /* 10) Pular de seção pelo menu faz um corte de HQ ("BAM!", "ZIP!", "POW!"...) */
+    const ONOMATOPEIAS = ["BAM!", "ZIP!", "POW!", "THWIP!", "ZAP!", "BOOM!", "VUPT!"];
+    const hq = el("div", "hq-corte", '<span class="hq-balao"></span>');
+    hq.setAttribute("aria-hidden", "true");
+    document.body.append(hq);
+    let hqAnterior = -1;
+    document.addEventListener("click", (e) => {
+        const link = e.target.closest('a[href^="#"]');
+        if (!link || semMovimento) return;
+        const id = link.getAttribute("href").slice(1);
+        const alvo = id && document.getElementById(id);
+        if (!alvo || !alvo.matches("section, header, main > *")) return;
+        e.preventDefault();
+        let i;
+        do { i = Math.floor(Math.random() * ONOMATOPEIAS.length); } while (i === hqAnterior);
+        hqAnterior = i;
+        hq.querySelector(".hq-balao").textContent = ONOMATOPEIAS[i];
+        hq.style.setProperty("--giro", (Math.random() * 16 - 8).toFixed(1) + "deg");
+        hq.classList.remove("ativo");
+        void hq.offsetWidth;
+        hq.classList.add("ativo");
+        som("hq");
+        vibrar(18);
+        setTimeout(() => {
+            alvo.scrollIntoView({ behavior: "auto" });
+            history.replaceState(null, "", "#" + id);
+        }, 200);
+    }, true);
+})();
