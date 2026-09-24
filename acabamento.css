@@ -1159,13 +1159,22 @@ body.dark-mode .linha-tempo .lt-tags li { color: var(--verde); border-color: col
 /* com desconto valendo, o preço cheio aparece riscado */
 :is(.projeto-preco, .mini-projeto-preco):has(.pp-promo:not([hidden])) .pp-base b { text-decoration: line-through; text-decoration-thickness: 2px; opacity: .65; font-size: .95rem; }
 
-/* ---------- Cursor: ponto na batida + rastro de notinhas (musica.js) ---------- */
-.cursor-batida { position: fixed; left: 0; top: 0; z-index: 98; width: 10px; height: 10px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 12px 2px rgba(var(--cyan-rgb), .6); pointer-events: none; opacity: 0; will-change: transform; }
-.nota-rastro { position: fixed; z-index: 97; color: var(--cyan); font: 700 19px/1 "Space Grotesk", sans-serif; text-shadow: 0 0 10px rgba(var(--cyan-rgb), .7); pointer-events: none; user-select: none; animation: nota-sobe 1.25s ease-out forwards; }
-.nota-rastro.nota-rosa { color: var(--pink); text-shadow: 0 0 8px rgba(var(--pink-rgb), .55); }
+/* ---------- Cursor: ponto na batida + rastro de notinhas (musica.js) ----------
+   Com mouse, o ponto É o cursor: a seta do sistema some (menos em campos de texto, onde a barrinha de
+   digitar continua). Um anel em volta cresce sobre o que é clicável. */
+@media (hover: hover) and (pointer: fine) {
+    html.tem-cursor-batida, html.tem-cursor-batida * { cursor: none !important; }
+    html.tem-cursor-batida :is(input:not([type="range"]), textarea, [contenteditable="true"]) { cursor: text !important; }
+}
+.cursor-batida { position: fixed; left: 0; top: 0; z-index: 2147483000; width: 14px; height: 14px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 0 2px rgba(255,255,255,.9), 0 0 16px 3px rgba(var(--cyan-rgb), .75); pointer-events: none; opacity: 0; will-change: transform; transition: width .18s ease, height .18s ease, background-color .18s ease; }
+.cursor-batida.sobre-clicavel { width: 34px; height: 34px; background: rgba(255, 255, 255, .12); box-shadow: 0 0 0 2px #fff, 0 0 0 4px rgba(14, 5, 36, .55), 0 0 18px 2px rgba(var(--cyan-rgb), .5); }
+body.dark-mode .cursor-batida { box-shadow: 0 0 0 2px rgba(20,38,57,.85), 0 0 16px 3px rgba(var(--cyan-rgb), .6); }
+body.dark-mode .cursor-batida.sobre-clicavel { background: rgba(20, 38, 57, .1); box-shadow: 0 0 0 2px #142639, 0 0 0 4px rgba(255, 255, 255, .6), 0 0 18px 2px rgba(var(--cyan-rgb), .4); }
+.nota-rastro { position: fixed; z-index: 2147482999; color: var(--cyan); font: 700 17px/1 "Space Grotesk", sans-serif; text-shadow: 0 0 8px rgba(var(--cyan-rgb), .6); pointer-events: none; user-select: none; animation: nota-sobe .6s ease-out forwards; }
+.nota-rastro.nota-rosa { color: var(--pink); text-shadow: 0 0 8px rgba(var(--pink-rgb), .6); }
 @keyframes nota-sobe {
-    0%   { opacity: 0; transform: translate(-50%, -50%) scale(.6) rotate(0); }
-    18%  { opacity: .95; }
-    100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% - 46px)) scale(1.05) rotate(var(--giro)); }
+    0%   { opacity: 0; transform: translate(-50%, -50%) scale(.7) rotate(0); }
+    20%  { opacity: .9; }
+    100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% - 30px)) scale(1) rotate(var(--giro)); }
 }
 @media print { .cursor-batida, .nota-rastro { display: none !important; } }

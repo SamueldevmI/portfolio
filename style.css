@@ -609,19 +609,6 @@ body::before { --scroll-parallax:inherit; }
     .card-projeto[data-largo] .card-conteudo > p:not(.tag) { max-width:72ch; }
 }
 
-/* Cursor de terminal: a seta vira um bloco e, sobre o que clica, um ">" (só CSS, sem atraso).
-   Nesta página, "dark-mode" no body é o tema CLARO. O anel .cursor-abraco é criado pelo script.js. */
-@media (hover:hover) and (pointer:fine) {
-    html,body { cursor:url("imagem/cursor/bloco-escuro.svg") 6 4,auto; }
-    :is(body.dark-mode,html:has(body.dark-mode)) { cursor:url("imagem/cursor/bloco-claro.svg") 6 4,auto; }
-    body :is(a[href],button:not(:disabled),summary,select,.switch,.chip-filtro,.orc-opcao,.habilidades li,[role="button"]) { cursor:url("imagem/cursor/prompt-escuro.svg") 19 14,pointer !important; }
-    body.dark-mode :is(a[href],button:not(:disabled),summary,select,.switch,.chip-filtro,.orc-opcao,.habilidades li,[role="button"]) { cursor:url("imagem/cursor/prompt-claro.svg") 19 14,pointer !important; }
-}
-.cursor-abraco { position:fixed; top:0; left:0; z-index:99; box-sizing:border-box; width:10px; height:10px; border:1.5px solid var(--cyan); border-radius:5px; background:color-mix(in srgb,var(--cyan) 9%,transparent); box-shadow:0 0 16px color-mix(in srgb,var(--cyan) 40%,transparent); opacity:0; pointer-events:none; transition:opacity .16s ease,border-color .15s ease,background-color .15s ease; }
-.cursor-abraco-ativo { opacity:1; }
-.cursor-abraco-desliza { transition:opacity .16s ease,border-color .15s ease,background-color .15s ease,transform .28s cubic-bezier(.2,.8,.2,1),width .28s cubic-bezier(.2,.8,.2,1),height .28s cubic-bezier(.2,.8,.2,1),border-radius .28s ease; }
-.cursor-abraco-clique { border-color:var(--pink); background:color-mix(in srgb,var(--pink) 16%,transparent); }
-
 /* Eldev Music: prévia do app (disco de vinil + onda sonora) */
 .visual-eldev { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; padding:14px 16px 12px; background:radial-gradient(circle at 84% 6%,rgba(255,138,31,.36),transparent 52%),radial-gradient(circle at 6% 112%,rgba(255,77,109,.28),transparent 52%),linear-gradient(135deg,#1e1814,#100e0c); }
 .eldev-disco { position:relative; flex:none; width:92px; aspect-ratio:1; border-radius:50%; background:radial-gradient(circle,#12100e 0 5%,#ffcf8a 6% 8%,transparent 9%),radial-gradient(circle,#ff8a1f 0 24%,#ff4d6d 25% 30%,transparent 31%),conic-gradient(from 30deg,transparent 0 10%,rgba(255,255,255,.15) 17%,transparent 25% 60%,rgba(255,255,255,.1) 68%,transparent 76%),repeating-radial-gradient(circle,#0c0a08 0 2px,#1c1713 2px 3px); box-shadow:0 16px 34px rgba(0,0,0,.55),0 0 0 5px rgba(255,236,214,.05); }
