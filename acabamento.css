@@ -1139,3 +1139,7 @@ body.dark-mode .linha-tempo .lt-tags li { color: var(--verde); border-color: col
 
 /* Voltar ao topo acima das seções: a de projetos (z-index 2) cobria o botão e o clique caía nela */
 .voltar-topo { z-index: 65; }
+
+/* Foto do Sobre mim colorida nos dois temas (antes era preto e branco) */
+#minhafoto, body.dark-mode #minhafoto { filter: saturate(1.05) contrast(1.04); }
+@media (hover: hover) { .foto-wrapper:hover #minhafoto { filter: saturate(1.18) contrast(1.06); } }
