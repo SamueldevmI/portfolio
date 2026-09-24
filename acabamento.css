@@ -1136,3 +1136,6 @@ body.dark-mode .nome-demo { border-color: color-mix(in srgb, var(--verde-claro) 
 body.dark-mode .linha-tempo::before { background: linear-gradient(to bottom, var(--azul-ceu), #ea580c 55%, var(--verde-claro)); opacity: .7; }
 body.dark-mode .lista-jornada.linha-tempo article::before { border-color: var(--verde-claro); box-shadow: 0 0 0 4px color-mix(in srgb, var(--verde-claro) 18%, transparent); }
 body.dark-mode .linha-tempo .lt-tags li { color: var(--verde); border-color: color-mix(in srgb, var(--verde-claro) 45%, transparent); }
+
+/* Voltar ao topo acima das seções: a de projetos (z-index 2) cobria o botão e o clique caía nela */
+.voltar-topo { z-index: 65; }
