@@ -975,3 +975,13 @@ body.dark-mode .lista-projetos .card-projeto .card-orcamento { color: color-mix(
 .nome-demo input:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; border-color: var(--cyan); }
 .nome-demo input::placeholder { color: var(--muted); opacity: .8; }
 .nome-demo-status { flex: 1 1 260px; margin: 0; color: var(--muted); font-size: .86rem; }
+
+/* ---------- Serviços como pacotes: preço de partida e o que inclui ---------- */
+#servicos .servico-preco { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; margin: 16px 0 0; padding-top: 14px; border-top: 1px solid var(--line); color: var(--muted); }
+#servicos .servico-preco strong { color: var(--text); font-size: 1.35rem; letter-spacing: -.02em; }
+#servicos .servico-preco small { font: .72rem "DM Mono", monospace; letter-spacing: .04em; }
+#servicos .servico-inclui { display: grid; gap: 6px; margin: 12px 0 4px; padding: 0; list-style: none; color: var(--muted); font-size: .88rem; }
+#servicos .servico-inclui li { position: relative; padding-left: 20px; }
+#servicos .servico-inclui li::before { content: ""; position: absolute; left: 2px; top: .42em; width: 9px; height: 5px; border-left: 2px solid var(--cyan); border-bottom: 2px solid var(--cyan); transform: rotate(-45deg); }
+#servicos .lista-servicos article { display: flex; flex-direction: column; }
+#servicos .lista-servicos .link-servico { align-self: flex-start; margin-top: auto; padding-top: 12px; }
