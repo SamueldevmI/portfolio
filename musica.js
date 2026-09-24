@@ -8,8 +8,8 @@
 
    Regras:
    - O navegador não deixa tocar som antes de a pessoa interagir, então a música começa no primeiro
-     clique/toque/tecla na página (no computador). No celular ou em internet lenta (modo leve) ela só
-     liga se a pessoa tocar no ícone.
+     clique/toque/tecla na página, no computador e no celular. Como é gerada no próprio aparelho, não
+     gasta internet.
    - O ícone no topo liga e desliga, e a escolha fica guardada neste aparelho.
    - Pausa sozinha quando a aba fica escondida e quando uma demo abre na janelinha (a demo pode ter
      som próprio, como o Eldev Music), e volta quando fecha. */
@@ -59,6 +59,8 @@
     let tocando = false, pausadoPorFora = false, relogio = 0, proximo = 0, indice = 0;
 
     function montar() {
+        // iPhone: sem isso, a chavinha do modo silencioso emudece o áudio da página mesmo com volume alto
+        try { if (navigator.audioSession) navigator.audioSession.type = "playback"; } catch (e) { /* navegador sem suporte */ }
         ctx = new Contexto();
         const filtro = ctx.createBiquadFilter();
         filtro.type = "lowpass";
@@ -235,7 +237,7 @@
             relogio = setInterval(agendar, 250);
             saida.gain.cancelScheduledValues(ctx.currentTime);
             saida.gain.setTargetAtTime(VOLUME, ctx.currentTime, 0.9); // entra devagar
-        });
+        }).catch(function () { /* o navegador ainda não deixou: o próximo gesto tenta de novo */ });
     }
 
     function silenciar() {
@@ -257,10 +259,19 @@
         else { ligar(); gravar(CHAVE, "on"); }
     });
 
+    // Gestos que o navegador aceita como "permissão pra tocar som". pointerdown de toque não conta em
+    // todo navegador (só o de mouse), por isso entram também touchend e click.
+    const GESTOS = ["pointerdown", "touchend", "click", "keydown"];
+
+    // Se a música está ligada mas o navegador deixou o áudio suspenso (o gesto não valeu, ou o sistema
+    // pausou), o próximo toque/clique/tecla tenta de novo, em vez de ficar mudo pra sempre.
+    GESTOS.forEach((tipo) => document.addEventListener(tipo, function () {
+        if (tocando && ctx && ctx.state !== "running" && !pausadoPorFora && !document.hidden) ligar();
+    }, true));
+
     // Começa sozinha no primeiro clique/toque/tecla, se a pessoa não tiver desligado antes.
     const preferencia = ler(CHAVE);
-    const leve = document.documentElement.classList.contains("modo-leve");
-    if (preferencia === "on" || (preferencia === null && !leve)) {
+    if (preferencia !== "off") {
         const primeiraInteracao = function (evento) {
             if (evento.target.closest && evento.target.closest("#botaoSom")) return remover(); // o próprio botão resolve
             remover();
@@ -270,12 +281,8 @@
                 gravar(CHAVE_AVISO, "1");
             }
         };
-        const remover = function () {
-            document.removeEventListener("pointerdown", primeiraInteracao, true);
-            document.removeEventListener("keydown", primeiraInteracao, true);
-        };
-        document.addEventListener("pointerdown", primeiraInteracao, true);
-        document.addEventListener("keydown", primeiraInteracao, true);
+        const remover = function () { GESTOS.forEach((tipo) => document.removeEventListener(tipo, primeiraInteracao, true)); };
+        GESTOS.forEach((tipo) => document.addEventListener(tipo, primeiraInteracao, true));
     }
 
     // Aba escondida: para de tocar (e de gastar processador); voltou, continua.
