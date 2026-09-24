@@ -129,6 +129,8 @@
         function mostrarImagemReserva() {
             // O gráfico novo não veio (sem rede, serviço fora do ar): só agora baixa a imagem de antes.
             if (imagemAntiga && imagemAntiga.dataset.src && !imagemAntiga.getAttribute("src")) {
+                // Se a reserva também falhar, esconde o quadro inteiro em vez de mostrar imagem quebrada.
+                imagemAntiga.addEventListener("error", function () { desenho.parentElement.style.display = "none"; }, { once: true });
                 imagemAntiga.src = imagemAntiga.dataset.src;
                 imagemAntiga.hidden = false;
             }
