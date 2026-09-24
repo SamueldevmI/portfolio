@@ -104,6 +104,9 @@
             </div>
             <a class="nav-cta" href="#orcamento">Orçamento</a>
             <button id="botaoBusca" class="botao-busca" type="button" aria-label="Buscar (Ctrl+K)" title="Buscar (Ctrl+K)">🔎<span class="busca-atalho"> <kbd>Ctrl</kbd>+<kbd>K</kbd></span></button>
+            <button id="botaoSom" class="botao-som" type="button" aria-pressed="false" aria-label="Ligar música de fundo" title="Ligar música" hidden>
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="som-caixa" d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path class="som-onda som-onda1" d="M15.2 9.3a3.8 3.8 0 0 1 0 5.4"/><path class="som-onda som-onda2" d="M17.8 6.8a7.4 7.4 0 0 1 0 10.4"/><path class="som-x" d="M16 9.8l4.4 4.4M20.4 9.8 16 14.2"/></svg>
+            </button>
             <button id="temaEscuro" class="switch" type="button" aria-label="Ativar tema claro" aria-pressed="true">
                 <span class="bola" aria-hidden="true">
                     <svg class="icone-sol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4 12H2M22 12h-2M5 5l1.4 1.4M17.6 17.6 19 19M19 5l-1.4 1.4M6.4 17.6 5 19"/></svg>
@@ -630,6 +633,7 @@
 
     <script src="script.js"></script>
 <script src="acabamento.js" defer></script>
+<script src="musica.js" defer></script>
 
 </body>
 </html>
