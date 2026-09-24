@@ -303,17 +303,17 @@ html:not(.dark-mode) body::after { content: ""; position: fixed; inset: -22%; po
 html:not(.dark-mode) body::before {
     z-index: -2;
     background:
-        radial-gradient(circle at 28% 30%, rgba(179,77,19,.3) 0, transparent 36%),
-        radial-gradient(circle at 76% 66%, rgba(234,85,0,.22) 0, transparent 32%),
-        linear-gradient(172deg, #09131c 0%, #060c12 46%, #05090e 100%);
+        radial-gradient(circle at 28% 30%, rgba(124, 72, 236, .3) 0, transparent 36%),
+        radial-gradient(circle at 76% 66%, rgba(168, 96, 255, .22) 0, transparent 32%),
+        linear-gradient(172deg, #150838 0%, #0e0524 46%, #0a0420 100%);
     animation: aurora-a 30s ease-in-out infinite alternate;
 }
 html:not(.dark-mode) body::after {
     z-index: -1;
     background:
-        radial-gradient(circle at 72% 28%, rgba(26,129,189,.24) 0, transparent 34%),
-        radial-gradient(circle at 24% 74%, rgba(28,153,226,.2) 0, transparent 36%),
-        radial-gradient(circle at 52% 50%, rgba(69,193,85,.07) 0, transparent 28%);
+        radial-gradient(circle at 72% 28%, rgba(46, 120, 232, .24) 0, transparent 34%),
+        radial-gradient(circle at 24% 74%, rgba(58, 150, 235, .2) 0, transparent 36%),
+        radial-gradient(circle at 52% 50%, rgba(255, 122, 217, .07) 0, transparent 28%);
     animation: aurora-b 38s ease-in-out infinite alternate;
 }
 @keyframes aurora-a {
@@ -679,7 +679,7 @@ footer a:focus-visible::after, footer .link-rodape:focus-visible::after { transf
 .filtros-projetos { position: relative; }
 .chip-indicador { position: absolute; top: 0; left: 0; z-index: 0; border-radius: 999px; background: var(--cyan); opacity: 0; transition: transform .3s cubic-bezier(.2,.8,.2,1), width .3s ease, height .3s ease, opacity .2s ease; pointer-events: none; }
 .chip-filtro { position: relative; z-index: 1; }
-.chip-filtro.is-ativo, body.dark-mode .chip-filtro.is-ativo { background: transparent; border-color: transparent; color: #080f17; }
+.chip-filtro.is-ativo, body.dark-mode .chip-filtro.is-ativo { background: transparent; border-color: transparent; color: #12062e; }
 body.dark-mode .chip-filtro.is-ativo { color: #ffffff; }
 @media (prefers-reduced-motion: reduce) { .chip-indicador { transition: none; } }
 
