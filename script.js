@@ -1,46 +1,7 @@
-const botaoTema = document.getElementById("temaEscuro");
-
-function atualizarTema(escuro) {
-    document.body.classList.toggle("dark-mode", escuro);
-    document.documentElement.classList.toggle("dark-mode", escuro);
-    botaoTema.setAttribute("aria-pressed", String(!escuro));
-    botaoTema.setAttribute("aria-label", escuro ? "Ativar tema escuro" : "Ativar tema claro");
-    const metaTema = document.querySelector('meta[name="theme-color"]');
-    if (metaTema) metaTema.setAttribute("content", escuro ? "#eee3ff" : "#0e0524");
-}
-
-function lerTemaSalvo() {
-    try { return localStorage.getItem("tema"); } catch (erro) { return null; } // alguns navegadores embutidos bloqueiam o armazenamento
-}
-
-// Tema quando a pessoa ainda não escolheu: segue o modo escuro do celular; sem ele, vale o horário local (7h-18h = claro).
-// Atenção: aqui "true" significa aparência CLARA (é a classe dark-mode, que neste site é o tema claro).
-const modoEscuroDoSistema = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
-function aparenciaClaraPadrao() {
-    if (modoEscuroDoSistema && modoEscuroDoSistema.matches) return false;
-    const horaAtual = new Date().getHours();
-    return horaAtual >= 7 && horaAtual < 18;
-}
-
-const temaSalvo = lerTemaSalvo();
-if (temaSalvo) {
-    atualizarTema(temaSalvo === "escuro");
-} else {
-    // Sem preferência salva ainda: o toggle manual sempre tem prioridade assim que a pessoa escolher.
-    atualizarTema(aparenciaClaraPadrao());
-}
-// Se a pessoa liga ou desliga o modo escuro do celular com o site aberto e ainda não escolheu um tema, acompanha.
-if (modoEscuroDoSistema && modoEscuroDoSistema.addEventListener) {
-    modoEscuroDoSistema.addEventListener("change", () => {
-        if (!lerTemaSalvo()) atualizarTema(aparenciaClaraPadrao());
-    });
-}
-
-botaoTema.addEventListener("click", () => {
-    const escuro = !document.body.classList.contains("dark-mode");
-    atualizarTema(escuro);
-    try { localStorage.setItem("tema", escuro ? "escuro" : "claro"); } catch (erro) { /* sem armazenamento: vale só nesta visita */ }
-});
+/* Tema único (preto, vermelho-sangue e branco). O tema claro saiu; limpa a escolha antiga de quem já visitou. */
+document.body.classList.remove("dark-mode");
+document.documentElement.classList.remove("dark-mode");
+try { localStorage.removeItem("tema"); } catch (erro) { /* sem armazenamento */ }
 
 document.getElementById("ano").textContent = new Date().getFullYear();
 
@@ -564,12 +525,6 @@ document.querySelectorAll("[data-copiar-codigo]").forEach((botao) => {
     });
 });
 
-/* Aba reativa: chama atenção quando o visitante troca de aba */
-const tituloOriginal = document.title;
-document.addEventListener("visibilitychange", () => {
-    document.title = document.hidden ? "👀 Volte aqui! — Samuel Mickael" : tituloOriginal;
-});
-
 /* Tour guiado */
 const botaoTour = document.getElementById("botaoTour");
 const tourOverlay = document.getElementById("tourOverlay");
@@ -867,8 +822,6 @@ function executarComandoPaleta(botao) {
         window.open(alvo, alvo.startsWith("http") ? "_blank" : "_self");
     } else if (acao === "tour") {
         abrirTour();
-    } else if (acao === "tema") {
-        botaoTema.click();
     } else if (acao === "surpresa") {
         surpreenderProjeto();
     }

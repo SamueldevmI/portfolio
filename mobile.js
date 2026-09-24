@@ -645,13 +645,6 @@
     document.documentElement.classList.add(hora >= 5 && hora < 12 ? "luz-manha" : hora >= 12 && hora < 18 ? "luz-tarde" : "luz-noite");
     const hero = document.querySelector(".hero");
     if (hero) hero.prepend(el("div", "luz-do-dia"));
-
-    /* 10) Trocou de app: a aba chama de volta */
-    let tituloOriginal = document.title;
-    document.addEventListener("visibilitychange", () => {
-        if (document.hidden) { tituloOriginal = document.title; document.title = "🎵 Volta aqui… a música tá te esperando"; }
-        else document.title = tituloOriginal;
-    });
 })();
 
 /* ---------- Terceira leva do celular: ondinha no toque, rodapé elástico, ideia por voz, calculadora,
