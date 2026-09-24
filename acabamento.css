@@ -691,7 +691,7 @@ body.dark-mode .chip-filtro.is-ativo { color: #ffffff; }
 }
 
 /* Anel de progresso de leitura ao redor do botão "voltar ao topo" */
-.voltar-topo { position: relative; overflow: visible; }
+.voltar-topo { overflow: visible; }
 .voltar-topo-seta { position: relative; z-index: 1; }
 .anel-topo-progresso { position: absolute; inset: -1px; width: calc(100% + 2px); height: calc(100% + 2px); transform: rotate(-90deg); pointer-events: none; z-index: 0; }
 .anel-trilho { fill: none; stroke: var(--line); stroke-width: 2; }
