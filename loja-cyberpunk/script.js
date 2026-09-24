@@ -7,6 +7,16 @@ const LOJA = {
     demo: true,                // true = a mensagem avisa que veio da loja de demonstração
 };
 
+/* Demo com o nome do negócio de quem está vendo: o portfólio abre a loja com ?nome=Loja da Maria */
+const NOME_VISITANTE = (new URLSearchParams(location.search).get("nome") || "").trim().slice(0, 40);
+if (NOME_VISITANTE) {
+    LOJA.nome = NOME_VISITANTE.toUpperCase();
+    document.title = NOME_VISITANTE + " — Loja online (demonstração)";
+    const icone = document.querySelector(".logo-icone");
+    if (icone) icone.textContent = NOME_VISITANTE.charAt(0).toUpperCase();
+    document.querySelector(".logo")?.setAttribute("aria-label", NOME_VISITANTE + ", início");
+}
+
 /* ===== Catálogo (preço em centavos). Para usar foto real, troque o "img" ===== */
 const ROUPA = ["P", "M", "G", "GG"];
 const CALCADO = ["38", "39", "40", "41", "42", "43", "44"];

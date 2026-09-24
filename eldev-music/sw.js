@@ -1,6 +1,6 @@
 // Service worker: guarda o app no aparelho (abre sem internet) e lembra as últimas respostas do catálogo.
 // Ao mudar qualquer arquivo do app, aumente o número em VERSAO pra todo mundo receber a versão nova.
-const VERSAO = 'eldev-music-v7';
+const VERSAO = 'eldev-music-v8';
 const CACHE_APP = `${VERSAO}-app`;
 const CACHE_API = `${VERSAO}-api`;
 

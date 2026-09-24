@@ -1083,3 +1083,42 @@
         cards.forEach((c) => observador.observe(c));
     })();
 })();
+
+/* Demo com o nome do negócio do visitante: o que for digitado vai como ?nome= pras demos que aceitam
+   (loja e atendimento por chat), e os cards delas já mostram o nome. Fica guardado neste aparelho. */
+(function () {
+    "use strict";
+    const campo = document.getElementById("nomeNegocio");
+    const status = document.getElementById("nomeDemoStatus");
+    if (!campo) return;
+    const DEMOS = ["fatia-nobre/", "loja-cyberpunk/"];
+    const CHAVE = "portfolio-nome-negocio";
+    const TEXTO_INICIAL = status ? status.textContent : "";
+
+    const links = [];
+    document.querySelectorAll("a[href], [data-demo], [data-compartilhar]").forEach(function (el) {
+        ["href", "data-demo"].forEach(function (attr) {
+            const url = el.getAttribute(attr);
+            if (url && DEMOS.some(function (d) { return url.indexOf(d) !== -1; })) links.push({ el: el, attr: attr, base: url.split("?")[0] });
+        });
+    });
+    // Nome da marca que aparece no visual dos cards
+    const rotulos = [
+        { el: document.querySelector(".visual-loja .loja-logo"), maiusculo: true },
+        { el: document.querySelector('[data-compartilhar="./fatia-nobre/index.html"]')?.closest(".projeto-visual")?.querySelector(".print-barra span"), maiusculo: false },
+    ].filter(function (r) { return r.el; });
+    rotulos.forEach(function (r) { r.original = r.el.textContent; });
+
+    function aplicar(salvar) {
+        const nome = campo.value.trim().slice(0, 40);
+        links.forEach(function (l) { l.el.setAttribute(l.attr, nome ? l.base + "?nome=" + encodeURIComponent(nome) : l.base); });
+        rotulos.forEach(function (r) { r.el.textContent = nome ? (r.maiusculo ? nome.toUpperCase() : nome) : r.original; });
+        if (status) status.textContent = nome ? "Pronto! A loja e o atendimento por chat agora abrem como “" + nome + "”. Toque em Testar agora." : TEXTO_INICIAL;
+        if (salvar) { try { nome ? localStorage.setItem(CHAVE, nome) : localStorage.removeItem(CHAVE); } catch (e) { /* sem armazenamento: só não lembra */ } }
+    }
+
+    try { campo.value = localStorage.getItem(CHAVE) || ""; } catch (e) { /* segue vazio */ }
+    if (campo.value) aplicar(false);
+    let espera = 0;
+    campo.addEventListener("input", function () { clearTimeout(espera); espera = setTimeout(function () { aplicar(true); }, 250); });
+})();

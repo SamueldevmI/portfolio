@@ -817,3 +817,11 @@ body.tela-cheia .avisos, body.tela-cheia.sem-mini .avisos { bottom: auto; top: c
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
+
+/* ===== faixa de demo no topo, com volta pro portfólio ===== */
+.aviso-demo { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 4px 12px; padding: 8px 16px; border-bottom: 1px solid var(--linha); background: var(--sup); color: var(--tx2); font: 500 12.5px/1.4 var(--f-texto); text-align: center; }
+.aviso-demo b { padding: 1px 7px; border-radius: 4px; background: var(--grad); color: var(--tinta); font-size: 11px; letter-spacing: .08em; }
+.aviso-demo a { color: var(--ac-txt); font-weight: 600; text-decoration: none; }
+.aviso-demo a:hover { text-decoration: underline; }
+@media (display-mode: standalone) { .aviso-demo { display: none; } }
+@media (max-width: 480px) { .aviso-demo span { display: none; } }

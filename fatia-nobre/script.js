@@ -1,5 +1,9 @@
 "use strict";
 
+/* Demo com o nome do negócio de quem está vendo: o portfólio abre o chat com ?nome=Pizzaria do João */
+const NOME_VISITANTE = (new URLSearchParams(location.search).get("nome") || "").trim().slice(0, 40);
+const comNome = (texto) => (NOME_VISITANTE ? texto.split("Fatia Nobre").join(NOME_VISITANTE) : texto);
+
 /* ===== o "cérebro" do atendimento: é só trocar essa lista pra virar o de outro negócio ===== */
 const PERGUNTAS = [
     { id: "saudacao", gatilhos: ["oi", "ola", "boa noite", "bom dia", "boa tarde", "eae", "opa", "oii"],
@@ -29,7 +33,12 @@ const CHIPS_INICIAIS = [
     { rotulo: "Fazer pedido", texto: "Quero fazer um pedido" },
 ];
 
-const MENSAGEM_INICIAL = "Oi! 🍕 Aqui é o atendimento automático da Fatia Nobre. Escolha um assunto abaixo ou digite sua pergunta.";
+const MENSAGEM_INICIAL = comNome("Oi! 🍕 Aqui é o atendimento automático da Fatia Nobre. Escolha um assunto abaixo ou digite sua pergunta.");
+PERGUNTAS.forEach((p) => { p.resposta = comNome(p.resposta); });
+if (NOME_VISITANTE) {
+    document.querySelectorAll("[data-nome-negocio]").forEach((el) => { el.textContent = NOME_VISITANTE; });
+    document.title = NOME_VISITANTE + " — Atendimento automático (demonstração)";
+}
 const SEM_RESPOSTA = "Hmm, não entendi essa 🤔 Mas posso ajudar com um desses assuntos:";
 
 /* tira acento e deixa em minúsculo, pra "Horário?" e "horario" darem o mesmo resultado */
