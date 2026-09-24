@@ -1128,6 +1128,11 @@
 (function () {
     "use strict";
     const agora = new Date();
+    // e o contrário: data-promo-depois="AAAA-MM-DD" só aparece depois desse dia (o que vale quando a promoção acaba)
+    document.querySelectorAll("[data-promo-depois]").forEach(function (el) {
+        const inicio = new Date(el.getAttribute("data-promo-depois") + "T23:59:59");
+        if (!isNaN(inicio) && agora > inicio) el.hidden = false;
+    });
     document.querySelectorAll("[data-promo-ate]").forEach(function (el) {
         const fim = new Date(el.getAttribute("data-promo-ate") + "T23:59:59");
         if (!isNaN(fim) && agora <= fim) el.hidden = false;
