@@ -995,14 +995,15 @@
         document.head.append(script);
     })();
 
-    /* Brilho que segue o cursor dentro do card de projeto (o giro 3D já existia; isso é só o brilho). */
+    /* Brilho que segue o cursor: cards de projeto (o giro 3D já existia; isso é só o brilho), e agora
+       também os links do menu, os cards de serviço e a caixa de orçamento. */
     (function brilhoCursorCards() {
         if (!window.matchMedia("(hover: hover)").matches || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-        document.querySelectorAll(".card-projeto").forEach((card) => {
-            card.addEventListener("mousemove", (evento) => {
-                const rect = card.getBoundingClientRect();
-                card.style.setProperty("--brilho-x", ((evento.clientX - rect.left) / rect.width) * 100 + "%");
-                card.style.setProperty("--brilho-y", ((evento.clientY - rect.top) / rect.height) * 100 + "%");
+        document.querySelectorAll(".card-projeto, .nav-links a, #servicos .lista-servicos article, .orcamento-caixa").forEach((alvo) => {
+            alvo.addEventListener("mousemove", (evento) => {
+                const rect = alvo.getBoundingClientRect();
+                alvo.style.setProperty("--brilho-x", ((evento.clientX - rect.left) / rect.width) * 100 + "%");
+                alvo.style.setProperty("--brilho-y", ((evento.clientY - rect.top) / rect.height) * 100 + "%");
             });
         });
     })();
