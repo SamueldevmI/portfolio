@@ -1392,3 +1392,22 @@ html.tema-aranha .lista-projetos .card-projeto .links-projeto .link-projeto { ba
 /* Espaço sobrando entre o menu e a linha "DESENVOLVEDOR WEB..." (o padding-top original era grande
    demais, sobrando pro nada) */
 .hero-conteudo { padding-top: 64px; }
+
+/* Contorno fino preto em todo texto branco (--text/--muted já são #fff): ajuda a ler em qualquer
+   fundo, principalmente perto dos brilhos neon. text-shadow herda sozinho pros filhos. */
+body { text-shadow: -.6px -.6px 0 rgba(0,0,0,.75), .6px -.6px 0 rgba(0,0,0,.75), -.6px .6px 0 rgba(0,0,0,.75), .6px .6px 0 rgba(0,0,0,.75); }
+
+/* Nome "Samuel Mickael" com uma faísca periódica, além do brilho constante: chama mais atenção
+   sem ficar irritante (o pico acontece só um instante a cada ciclo). */
+.hero-ola strong { animation-name: nome-chama; animation-duration: 6s; }
+@keyframes nome-chama {
+    0%, 84%, 100% { text-shadow: 0 0 12px rgba(var(--cyan-rgb), .4); transform: scale(1); }
+    89% { text-shadow: 0 0 15px rgba(var(--cyan-rgb), .55); transform: scale(1.03); }
+    92% { text-shadow: 0 0 30px rgba(var(--cyan-rgb), .95), 0 0 46px rgba(var(--cyan-rgb), .5); transform: scale(1.07); }
+    96% { text-shadow: 0 0 16px rgba(var(--cyan-rgb), .5); transform: scale(1); }
+}
+
+/* h1 span usa color:transparent + gradiente (background-clip:text): o contorno preto herdado
+   ficava por trás e escurecia o gradiente. Aqui ele sai só desse elemento. */
+h1 span { text-shadow: none; }
+.esqueleto-valor { text-shadow: none; }
