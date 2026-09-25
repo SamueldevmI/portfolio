@@ -755,25 +755,15 @@
         }).observe(orcamento, { childList: true, subtree: true, characterData: true });
     }
 
-    // Cursor: um ponto que segue o mouse pulsando na batida e deixa um rastro de faíscas neon (só com mouse)
-    if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
-        const semMovimento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-        const ponto = document.createElement("div");
-        ponto.className = "cursor-batida";
-        ponto.setAttribute("aria-hidden", "true");
-        document.body.append(ponto);
-        document.documentElement.classList.add("tem-cursor-batida");
-        let alvoX = -100, alvoY = -100, x = -100, y = -100, andou = 0, ultimaFaisca = 0, faiscasNaTela = 0, sobreClicavel = false, visivel = false;
-
+    // Rastro de faíscas neon atrás do cursor (só com mouse). O cursor em si é a seta/mãozinha neon do CSS.
+    if (window.matchMedia("(hover: hover) and (pointer: fine)").matches && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        let alvoX = -100, alvoY = -100, andou = 0, ultimaFaisca = 0, faiscasNaTela = 0;
         document.addEventListener("mousemove", (e) => {
             andou += Math.hypot(e.clientX - alvoX, e.clientY - alvoY);
             alvoX = e.clientX; alvoY = e.clientY;
-            if (!visivel) { visivel = true; x = alvoX; y = alvoY; ponto.classList.add("visivel"); }
-            sobreClicavel = !!e.target.closest(INTERATIVO);
-            ponto.classList.toggle("sobre-clicavel", sobreClicavel);
             const agora = performance.now();
             // uma faísca a cada ~110 px andados, no máximo 6 na tela: um rastro discreto
-            if (!semMovimento && andou > 110 && agora - ultimaFaisca > 140 && faiscasNaTela < 6) {
+            if (andou > 110 && agora - ultimaFaisca > 140 && faiscasNaTela < 6) {
                 andou = 0; ultimaFaisca = agora; faiscasNaTela++;
                 const n = document.createElement("span");
                 n.className = "faisca-rastro" + (Math.random() < 0.4 ? " faisca-branca" : "");
@@ -786,23 +776,6 @@
                 document.body.append(n);
             }
         }, { passive: true });
-        document.addEventListener("mouseleave", () => { visivel = false; ponto.classList.remove("visivel"); });
-
-        (function seguir() {
-            x += (alvoX - x) * (semMovimento ? 1 : 0.28);
-            y += (alvoY - y) * (semMovimento ? 1 : 0.28);
-            let pulso = 0;
-            if (!semMovimento && tocando && ctx && ctx.state === "running") {
-                const agora = ctx.currentTime;
-                let inicio = null;
-                linhaDoTempo.forEach((c) => { if (c.t <= agora) inicio = c.t; });
-                if (inicio !== null) pulso = Math.exp(-(((agora - inicio) / BATIDA) % 1) * 5);
-            }
-            const escala = 1 + (sobreClicavel ? 0.15 : 0.6) * pulso;
-            ponto.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%) scale(${escala.toFixed(3)})`;
-            ponto.style.opacity = visivel ? "1" : "0";
-            requestAnimationFrame(seguir);
-        })();
     }
 
     // Conforme a pessoa rola, a música vai se misturando entre o clima de uma seção e o da próxima.

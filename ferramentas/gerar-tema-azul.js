@@ -56,6 +56,7 @@ function trocarNaLinha(css) {
             const novo = trocarCor(...rgb);
             return "#" + novo.map(hex2).join("") + (h.length === 8 ? h.slice(6) : "");
         })
+        .replace(/%23([0-9a-f]{6})\b/gi, (tudo, h) => "%23" + trocarCor(...[0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16))).map(hex2).join(""))
         .replace(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*([,)])/gi, (tudo, r, g, b, fim) => {
             const [nr, ng, nb] = trocarCor(+r, +g, +b);
             return tudo.replace(/\(.*$/, "") + "(" + nr + "," + ng + "," + nb + fim;
