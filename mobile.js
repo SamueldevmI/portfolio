@@ -873,6 +873,28 @@
 
     /* Desenha o cartão inteiro num canvas de alta resolução (1080x1350, proporção de story) */
     async function desenharCartao() {
+        // no tema azul o cartão sai nas cores dele (mesma troca do ferramentas/gerar-tema-azul.js)
+        const TEMA_AZUL = {
+            "#ff2a3d": "#40f2c8",
+            "#1e1e1e": "#0f1728",
+            "#161616": "#0b111d",
+            "#121212": "#090e18",
+            "rgba(139,26,26,.55)": "rgba(26,67,139,.55)",
+            "rgba(139,26,26,0)": "rgba(26,67,139,0)",
+            "rgba(139,37,37,.4)": "rgba(37,74,139,.4)",
+            "rgba(139,37,37,0)": "rgba(37,74,139,0)",
+            "rgba(255,42,61,.08)": "rgba(64,242,200,.08)",
+            "rgba(255,42,61,.55)": "rgba(64,242,200,.55)",
+            "rgba(255,42,61,.1)": "rgba(64,242,200,.1)",
+            "rgba(255,42,61,.5)": "rgba(64,242,200,.5)",
+            "rgba(139,26,26,.5)": "rgba(26,67,139,.5)",
+            "#f6f6f6": "#f4f5f8",
+            "#b0b0b0": "#9ca8c4",
+            "rgba(38,38,38,.85)": "rgba(19,29,51,.85)",
+            "#e6e6e6": "#e0e4ec",
+            "#8f8f8f": "#7384ab",
+        };
+        const cor = (c) => (document.documentElement.dataset.tema === "azul" && TEMA_AZUL[c]) || c;
         const { minutos, linhas, selo, projetos, favoritos } = montarStats();
         // altura do cartão acompanha quanto tem pra mostrar, em vez de deixar um vazio no fim
         const W = 1080;
@@ -884,26 +906,26 @@
 
         // fundo: carvão com glow vermelho, igual ao resto do site
         const fundo = ctx.createLinearGradient(0, 0, W, H);
-        fundo.addColorStop(0, "#1e1e1e"); fundo.addColorStop(0.55, "#161616"); fundo.addColorStop(1, "#121212");
+        fundo.addColorStop(0, cor("#1e1e1e")); fundo.addColorStop(0.55, cor("#161616")); fundo.addColorStop(1, cor("#121212"));
         ctx.fillStyle = fundo; ctx.fillRect(0, 0, W, H);
         const glow1 = ctx.createRadialGradient(120, 60, 0, 120, 60, 620);
-        glow1.addColorStop(0, "rgba(139,26,26,.55)"); glow1.addColorStop(1, "rgba(139,26,26,0)");
+        glow1.addColorStop(0, cor("rgba(139,26,26,.55)")); glow1.addColorStop(1, cor("rgba(139,26,26,0)"));
         ctx.fillStyle = glow1; ctx.fillRect(0, 0, W, H);
         const glow2 = ctx.createRadialGradient(W - 80, H - 120, 0, W - 80, H - 120, 560);
-        glow2.addColorStop(0, "rgba(139,37,37,.4)"); glow2.addColorStop(1, "rgba(139,37,37,0)");
+        glow2.addColorStop(0, cor("rgba(139,37,37,.4)")); glow2.addColorStop(1, cor("rgba(139,37,37,0)"));
         ctx.fillStyle = glow2; ctx.fillRect(0, 0, W, H);
         // grade sutil, igual ao ::after do site
-        ctx.strokeStyle = "rgba(255,42,61,.08)"; ctx.lineWidth = 1;
+        ctx.strokeStyle = cor("rgba(255,42,61,.08)"); ctx.lineWidth = 1;
         for (let x = 0; x <= W; x += 54) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
         for (let y = 0; y <= H; y += 54) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
 
         // cabeçalho: logo "SM." + selo do dia
         ctx.textBaseline = "alphabetic";
         ctx.font = '700 34px "Space Grotesk", Arial, sans-serif';
-        ctx.fillStyle = "#f6f6f6"; ctx.fillText("SM", 72, 96);
+        ctx.fillStyle = cor("#f6f6f6"); ctx.fillText("SM", 72, 96);
         const larguraSM = ctx.measureText("SM").width;
-        ctx.fillStyle = "#ff2a3d"; ctx.fillText(".", 72 + larguraSM, 96);
-        ctx.font = '500 22px "DM Mono", monospace'; ctx.fillStyle = "#b0b0b0"; ctx.textAlign = "right";
+        ctx.fillStyle = cor("#ff2a3d"); ctx.fillText(".", 72 + larguraSM, 96);
+        ctx.font = '500 22px "DM Mono", monospace'; ctx.fillStyle = cor("#b0b0b0"); ctx.textAlign = "right";
         ctx.fillText("RESUMO DA VISITA", W - 72, 90);
         ctx.textAlign = "left";
 
@@ -911,17 +933,17 @@
         ctx.font = '600 26px "DM Mono", monospace';
         const larguraSelo = ctx.measureText(selo).width + 48;
         retanguloArredondado(ctx, 72, 130, larguraSelo, 56, 28);
-        ctx.fillStyle = "rgba(139,26,26,.5)"; ctx.fill();
-        ctx.strokeStyle = "#ff2a3d"; ctx.lineWidth = 2; ctx.stroke();
+        ctx.fillStyle = cor("rgba(139,26,26,.5)"); ctx.fill();
+        ctx.strokeStyle = cor("#ff2a3d"); ctx.lineWidth = 2; ctx.stroke();
         ctx.fillStyle = "#ffffff"; ctx.fillText(selo, 96, 166);
 
         // título grande
-        ctx.font = '800 76px "Space Grotesk", Arial, sans-serif'; ctx.fillStyle = "#f6f6f6";
+        ctx.font = '800 76px "Space Grotesk", Arial, sans-serif'; ctx.fillStyle = cor("#f6f6f6");
         const tit1 = `${minutos} min no site`, tit2 = "de Samuel Mickael.";
         ctx.fillText(tit1, 72, 300);
         ctx.save();
-        ctx.shadowColor = "rgba(255,42,61,.55)"; ctx.shadowBlur = 26;
-        ctx.fillStyle = "#ff2a3d"; ctx.fillText(tit2, 72, 380);
+        ctx.shadowColor = cor("rgba(255,42,61,.55)"); ctx.shadowBlur = 26;
+        ctx.fillStyle = cor("#ff2a3d"); ctx.fillText(tit2, 72, 380);
         ctx.restore();
 
         // linhas de estatística, em cartõezinhos
@@ -929,17 +951,17 @@
         ctx.font = '500 30px "DM Mono", monospace';
         linhas.forEach(([emoji, rotulo, valor]) => {
             retanguloArredondado(ctx, 72, y, W - 144, 92, 20);
-            ctx.fillStyle = "rgba(38,38,38,.85)"; ctx.fill();
+            ctx.fillStyle = cor("rgba(38,38,38,.85)"); ctx.fill();
             ctx.strokeStyle = "rgba(255,255,255,.1)"; ctx.lineWidth = 1; ctx.stroke();
-            ctx.font = "40px Arial"; ctx.fillStyle = "#f6f6f6"; ctx.fillText(emoji, 100, y + 58);
-            ctx.font = '600 30px "Space Grotesk", Arial, sans-serif'; ctx.fillStyle = "#e6e6e6"; ctx.fillText(rotulo, 162, y + 58);
-            ctx.font = '500 28px "DM Mono", monospace'; ctx.fillStyle = "#ff2a3d";
+            ctx.font = "40px Arial"; ctx.fillStyle = cor("#f6f6f6"); ctx.fillText(emoji, 100, y + 58);
+            ctx.font = '600 30px "Space Grotesk", Arial, sans-serif'; ctx.fillStyle = cor("#e6e6e6"); ctx.fillText(rotulo, 162, y + 58);
+            ctx.font = '500 28px "DM Mono", monospace'; ctx.fillStyle = cor("#ff2a3d");
             ctx.textAlign = "right"; ctx.fillText(valor, W - 100, y + 58); ctx.textAlign = "left";
             y += 108;
         });
 
         // rodapé: projetos testados e favoritos, cada um numa linha curta (com "…" se não couber)
-        ctx.font = '500 26px "DM Mono", monospace'; ctx.fillStyle = "#8f8f8f";
+        ctx.font = '500 26px "DM Mono", monospace'; ctx.fillStyle = cor("#8f8f8f");
         if (projetos.length) {
             ctx.fillText(truncar(ctx, "Testou: " + projetos.join(" · "), W - 144), 72, y + 20);
             y += 46;
@@ -949,9 +971,9 @@
             y += 46;
         }
         retanguloArredondado(ctx, 72, y + 40, W - 144, 78, 18);
-        ctx.fillStyle = "rgba(255,42,61,.1)"; ctx.fill();
-        ctx.strokeStyle = "rgba(255,42,61,.5)"; ctx.lineWidth = 2; ctx.stroke();
-        ctx.font = '600 30px "DM Mono", monospace'; ctx.fillStyle = "#ff2a3d";
+        ctx.fillStyle = cor("rgba(255,42,61,.1)"); ctx.fill();
+        ctx.strokeStyle = cor("rgba(255,42,61,.5)"); ctx.lineWidth = 2; ctx.stroke();
+        ctx.font = '600 30px "DM Mono", monospace'; ctx.fillStyle = cor("#ff2a3d");
         ctx.fillText("samueldevmi.github.io/portfolio", 96, y + 90);
 
         return canvas;

@@ -40,7 +40,18 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap">
-    <link rel="stylesheet" href="style.css?v=20260925temas">
+    <script>
+        /* Tema: vermelho (padrão) ou azul. Escolhido antes de desenhar a página, pra não piscar a cor errada.
+           O style-azul.css é gerado a partir do style.css (ferramentas/gerar-tema-azul.js). */
+        (function () {
+            var tema = "vermelho";
+            try { if (localStorage.getItem("portfolio-tema") === "azul") tema = "azul"; } catch (e) { /* sem armazenamento */ }
+            document.documentElement.dataset.tema = tema;
+            if (tema === "azul") document.querySelector('meta[name="theme-color"]').content = "#0b111d";
+            document.write('<link rel="stylesheet" id="folhaTema" href="' + (tema === "azul" ? "style-azul.css" : "style.css") + '?v=20260925temas">');
+        })();
+    </script>
+    <noscript><link rel="stylesheet" href="style.css?v=20260925temas"></noscript>
     <title id="tituloPagina">Samuel Mickael | Desenvolvedor Web &amp; Mobile</title>
     <script type="application/ld+json">
     {
@@ -102,6 +113,9 @@
                 <a href="#contato">Contato</a>
             </div>
             <a class="nav-cta" href="#orcamento">Orçamento</a>
+            <button id="botaoTema" class="botao-som botao-tema" type="button" aria-label="Trocar para o tema azul" title="Tema azul">
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8"/><path class="tema-metade" d="M12 4a8 8 0 0 1 0 16z"/></svg>
+            </button>
             <button id="botaoSom" class="botao-som" type="button" aria-pressed="false" aria-label="Ligar música de fundo" title="Ligar música" hidden>
                 <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="som-caixa" d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path class="som-onda som-onda1" d="M15.2 9.3a3.8 3.8 0 0 1 0 5.4"/><path class="som-onda som-onda2" d="M17.8 6.8a7.4 7.4 0 0 1 0 10.4"/><path class="som-x" d="M16 9.8l4.4 4.4M20.4 9.8 16 14.2"/></svg>
             </button>

@@ -1449,3 +1449,40 @@ if (paletaOverlay) {
     grafico.addEventListener("error", terminou, { once: true });
     setTimeout(terminou, 15000); // se o serviço do gráfico não responder, não deixa o esqueleto brilhando para sempre
 })();
+
+/* Troca de tema (vermelho <-> azul): carrega a outra folha de estilo e só tira a antiga quando a nova
+   chegou, pra página não ficar sem estilo no meio da troca. A escolha fica guardada neste aparelho. */
+(function () {
+    const botao = document.getElementById("botaoTema");
+    if (!botao) return;
+    const raiz = document.documentElement;
+    const atualizarBotao = () => {
+        const azul = raiz.dataset.tema === "azul";
+        botao.setAttribute("aria-label", azul ? "Trocar para o tema vermelho" : "Trocar para o tema azul");
+        botao.title = azul ? "Tema vermelho" : "Tema azul";
+    };
+    atualizarBotao();
+    let trocando = false;
+    botao.addEventListener("click", () => {
+        if (trocando) return;
+        const atual = document.getElementById("folhaTema");
+        if (!atual) return;
+        trocando = true;
+        const novoTema = raiz.dataset.tema === "azul" ? "vermelho" : "azul";
+        const nova = document.createElement("link");
+        nova.rel = "stylesheet";
+        nova.href = atual.href.replace(/style(-azul)?\.css/, novoTema === "azul" ? "style-azul.css" : "style.css");
+        nova.onload = () => {
+            atual.remove();
+            nova.id = "folhaTema";
+            raiz.dataset.tema = novoTema;
+            const cor = document.querySelector('meta[name="theme-color"]');
+            if (cor) cor.content = novoTema === "azul" ? "#0b111d" : "#161616";
+            try { localStorage.setItem("portfolio-tema", novoTema); } catch (e) { /* sem armazenamento: só não lembra */ }
+            atualizarBotao();
+            trocando = false;
+        };
+        nova.onerror = () => { nova.remove(); trocando = false; mostrarToast("Não deu pra trocar o tema agora. Tente de novo."); };
+        atual.after(nova);
+    });
+})();

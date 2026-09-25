@@ -5,7 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Demonstração ao vivo da API de Controle de Gastos, feita com Flask e SQLAlchemy.">
     <link rel="icon" href="../favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="../style.css">
+    <script>
+        /* Mesmo tema escolhido no portfólio (vermelho ou azul) */
+        (function () {
+            var azul = false;
+            try { azul = localStorage.getItem("portfolio-tema") === "azul"; } catch (e) { /* sem armazenamento */ }
+            document.documentElement.dataset.tema = azul ? "azul" : "vermelho";
+            document.write('<link rel="stylesheet" id="folhaTema" href="../' + (azul ? "style-azul.css" : "style.css") + '">');
+        })();
+    </script>
+    <noscript><link rel="stylesheet" href="../style.css"></noscript>
     <title>Controle de Gastos — Demonstração da API</title>
     <style>
         .demo-wrap { width:min(880px,calc(100% - 44px)); margin:60px auto 100px; }

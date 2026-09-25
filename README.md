@@ -24,6 +24,8 @@ Site pessoal com apresentação, projetos e contato.
 
 Site estático (HTML/CSS/JS puro), publicado com GitHub Pages a partir da branch `main`.
 
+Tem dois temas, vermelho (padrão) e azul, trocados pelo botão ao lado do som. O `style-azul.css` é **gerado** a partir do `style.css`: depois de mexer no `style.css`, rode `node ferramentas/gerar-tema-azul.js` (o CI confere se ficou em dia). Linha que não deve trocar de cor leva o comentário `/* manter-cor */`.
+
 ## Contato
 
 [LinkedIn](https://www.linkedin.com/in/samuelrondon-dev/) · [GitHub](https://github.com/SamueldevmI)
