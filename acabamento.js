@@ -446,6 +446,50 @@
         primeiroTexto.textContent = primeiroTexto.textContent.replace("Olá", cumprimento);
     })();
 
+    /* Nome "decodificando": as letras embaralham e vão travando uma a uma, da esquerda pra
+       direita, até formar o nome. Roda ao carregar e de novo ao passar o mouse. O leitor de tela
+       lê sempre o nome certo (span escondido); o embaralhado fica aria-hidden. */
+    (function nomeDecodificando() {
+        const nome = document.querySelector(".hero-ola strong");
+        if (!nome || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+        const texto = nome.textContent;
+        const leitor = document.createElement("span");
+        leitor.className = "nome-leitor";
+        leitor.textContent = texto;
+        const visual = document.createElement("span");
+        visual.setAttribute("aria-hidden", "true");
+        visual.textContent = texto;
+        nome.textContent = "";
+        nome.append(leitor, visual);
+        const SIMBOLOS = "abcdeghknopqrsuvxyz#%&*+=<>/";
+        let rodando = false;
+        function decodificar() {
+            if (rodando) return;
+            rodando = true;
+            nome.style.width = nome.getBoundingClientRect().width + "px";
+            nome.classList.add("decodificando");
+            let quadro = 0;
+            const relogio = setInterval(() => {
+                quadro++;
+                let saida = "";
+                for (let i = 0; i < texto.length; i++) {
+                    const ch = texto[i];
+                    saida += ch === " " || quadro >= 6 + i * 2 ? ch : SIMBOLOS[Math.floor(Math.random() * SIMBOLOS.length)];
+                }
+                visual.textContent = saida;
+                if (saida === texto) {
+                    clearInterval(relogio);
+                    nome.style.width = "";
+                    nome.classList.remove("decodificando");
+                    rodando = false;
+                }
+            }, 38);
+        }
+        const iniciar = () => setTimeout(decodificar, 350);
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(iniciar); else iniciar();
+        if (window.matchMedia("(hover: hover)").matches) nome.addEventListener("mouseenter", decodificar);
+    })();
+
     /* ---------- Braimstorm "melhorar os pixels da foto" (2026-09-23), os 5 escolhidos ----------
        A profundidade (pixel mais "perto" se mexe mais que o mais "longe") é só CSS: cada .pixel já
        lê --parallax/--parallax-x do .hero-conteudo (são custom properties, herdam sozinhas) e
