@@ -1,9 +1,43 @@
-/* Tema único (preto, vermelho-sangue e branco). O tema claro saiu; limpa a escolha antiga de quem já visitou. */
+/* O tema (vermelho ou azul) é escolhido no <head> do index.html; a troca fica no fim deste arquivo.
+   Limpa o "dark-mode" de quem visitou antes do tema único. */
 document.body.classList.remove("dark-mode");
 document.documentElement.classList.remove("dark-mode");
-try { localStorage.removeItem("tema"); } catch (erro) { /* sem armazenamento */ }
 
 document.getElementById("ano").textContent = new Date().getFullYear();
+
+/* ---------- Ícones próprios (em vez de emoji nativo, que muda de cara em cada aparelho) ----------
+   Cada um é um <path> só, no mesmo traço fino das tech badges (.ic-linha): assim o mesmo desenho
+   serve tanto pra HTML (svgIcone) quanto pra dentro do <canvas> do cartão-resumo (mobile.js lê
+   window.IconesTema.CAMINHOS direto). Emoji de verdade continua nos toasts e nas mensagens que vão
+   pro WhatsApp, porque aí precisa render igual no aparelho de quem recebe. */
+const ICONES_TEMA_CAMINHOS = {
+    instalar: "M6.5 2.5h11v19h-11z M9 5.5h6 M12 8v6.5 M9.2 11.7 12 14.5l2.8-2.8 M10 18h4",
+    socio: "M18 5a2.3 2.3 0 1 1 0 4.6A2.3 2.3 0 0 1 18 5z M6 9.7a2.3 2.3 0 1 1 0 4.6 2.3 2.3 0 0 1 0-4.6z M18 14.4a2.3 2.3 0 1 1 0 4.6 2.3 2.3 0 0 1 0-4.6z M8 11l7.9-3.7 M8 13l7.9 3.7",
+    resumo: "M3.5 6.5h13v13h-13z M7.5 2.5h13v13",
+    dado: "M4.5 4.5h15v15h-15z M8.3 8.3h.01 M12 12h.01 M15.7 15.7h.01",
+    pulso: "M12 12m-1.6 0a1.6 1.6 0 1 0 3.2 0 1.6 1.6 0 1 0-3.2 0 M8.3 8.3a5.2 5.2 0 0 1 7.4 0 M5.6 5.6a9 9 0 0 1 12.8 0",
+    sparkle: "M12 3l1.9 5.6L19.5 10.5l-5.6 1.9L12 18l-1.9-5.6L4.5 10.5l5.6-1.9z",
+    pino: "M12 3a6 6 0 0 1 6 6c0 4.7-6 12-6 12s-6-7.3-6-12a6 6 0 0 1 6-6z M12 6.8a2.2 2.2 0 1 0 0 4.4 2.2 2.2 0 0 0 0-4.4z",
+    frasco: "M9.5 3h5 M10.2 3v6l-4.7 8.3a2 2 0 0 0 1.8 3h9.4a2 2 0 0 0 1.8-3l-4.7-8.3V3 M7.3 15h9.4",
+    coracao: "M12 19.5s-7-4.3-9.4-8.8C.9 7.3 2.6 4 6 4c2 0 3.4 1 4 2.2C10.6 5 12 4 14 4c3.4 0 5.1 3.3 3.4 6.7-2.4 4.5-9.4 8.8-9.4 8.8z",
+    camadas: "M12 3.5 20.5 8 12 12.5 3.5 8z M6 11l6 3.2L18 11 M6 14.5l6 3.2 6-3.2",
+    relogio: "M9.5 2.5h5 M12 5v2 M12 22a7.8 7.8 0 1 0 0-15.6 7.8 7.8 0 0 0 0 15.6z M12 9.6v4.6l3.2 1.9",
+};
+function svgIcone(nome, classe) {
+    const d = ICONES_TEMA_CAMINHOS[nome];
+    if (!d) return "";
+    return `<svg class="ic-linha${classe ? " " + classe : ""}" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="${d}"/></svg>`;
+}
+window.IconesTema = { CAMINHOS: ICONES_TEMA_CAMINHOS, svg: svgIcone };
+
+// Troca o emoji nativo (varia de cara em cada aparelho) pelo ícone do site nos botões fixos do HTML
+{
+    const BOTOES_ICONE = { botaoInstalar: ["instalar", "Instalar o portfólio"], botaoSocio: ["socio", "Mandar pro seu sócio"], botaoResumo: ["resumo", "Meu resumo da visita"], botaoSurpresa: ["dado", "Qual é a sua cara?"] };
+    Object.entries(BOTOES_ICONE).forEach(([id, [icone, texto]]) => {
+        const el = document.getElementById(id);
+        if (el) el.innerHTML = svgIcone(icone, "ic-mini") + texto;
+    });
+}
 
 const elementosRevelar = document.querySelectorAll(".card-projeto, .lista-jornada article, .lista-servicos article, .sobre-conteudo > div:nth-child(2) > p");
 const prefereMenosMovimento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -390,7 +424,7 @@ function mostrarTrabalhando(nome) {
     if (!trabalhandoEl || typeof nome !== "string" || !/^[\w.-]{1,100}$/.test(nome)) return;
     const forte = document.createElement("strong");
     forte.textContent = nome;
-    trabalhandoEl.textContent = "🔨 Trabalhando agora em: ";
+    trabalhandoEl.innerHTML = svgIcone("pulso", "ic-mini") + "Trabalhando agora em: ";
     trabalhandoEl.appendChild(forte);
     trabalhandoEl.hidden = false;
 }
@@ -722,7 +756,7 @@ function destacarProjeto(escolhido) {
     escolhido.classList.add("card-em-foco");
     const selo = document.createElement("span");
     selo.className = "combina-selo";
-    selo.textContent = "✨ É essa!";
+    selo.innerHTML = svgIcone("sparkle", "ic-mini ic-preenchido") + "É essa!";
     escolhido.appendChild(selo);
     requestAnimationFrame(() => selo.classList.add("mostrar"));
     setTimeout(() => {
@@ -1483,10 +1517,11 @@ if (paletaOverlay) {
             nova.id = "folhaTema";
             raiz.dataset.tema = novoTema;
             const cor = document.querySelector('meta[name="theme-color"]');
-            if (cor) cor.content = novoTema === "azul" ? "#0b111d" : "#161616";
+            if (cor) cor.content = novoTema === "azul" ? "#0e1422" : "#161616";
             try { localStorage.setItem("portfolio-tema", novoTema); } catch (e) { /* sem armazenamento: só não lembra */ }
             atualizarBotao();
             trocando = false;
+            if (window.musicaSite && window.musicaSite.pode()) window.musicaSite.curtir();
         };
         nova.onerror = () => { nova.remove(); trocando = false; mostrarToast("Não deu pra trocar o tema agora. Tente de novo."); };
         atual.after(nova);

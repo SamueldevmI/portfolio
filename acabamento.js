@@ -131,7 +131,8 @@
             if (imagemAntiga && imagemAntiga.dataset.src && !imagemAntiga.getAttribute("src")) {
                 // Se a reserva também falhar, esconde o quadro inteiro em vez de mostrar imagem quebrada.
                 imagemAntiga.addEventListener("error", function () { desenho.parentElement.style.display = "none"; }, { once: true });
-                imagemAntiga.src = imagemAntiga.dataset.src;
+                const azul = document.documentElement.dataset.tema === "azul"; // a imagem vem com a cor no link
+                imagemAntiga.src = azul ? imagemAntiga.dataset.src.replace("/ff2a3d/", "/2e7eff/") : imagemAntiga.dataset.src;
                 imagemAntiga.hidden = false;
             }
         }
@@ -870,7 +871,7 @@
             botao = document.createElement("button");
             botao.type = "button";
             botao.className = "link-rodape link-instalar";
-            botao.textContent = "📲 Instalar no celular";
+            botao.innerHTML = (window.IconesTema ? window.IconesTema.svg("instalar", "ic-mini") : "") + "Instalar no celular";
             botao.addEventListener("click", async () => {
                 if (!evento) return;
                 evento.prompt();

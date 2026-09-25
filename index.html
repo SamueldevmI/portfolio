@@ -45,13 +45,17 @@
            O style-azul.css é gerado a partir do style.css (ferramentas/gerar-tema-azul.js). */
         (function () {
             var tema = "vermelho";
-            try { if (localStorage.getItem("portfolio-tema") === "azul") tema = "azul"; } catch (e) { /* sem armazenamento */ }
+            try {
+                var salvo = localStorage.getItem("portfolio-tema");
+                if (!salvo && localStorage.getItem("tema") === "aranha") salvo = "azul"; // quem tinha escolhido o antigo tema Aranha
+                if (salvo === "azul") tema = "azul";
+            } catch (e) { /* sem armazenamento */ }
             document.documentElement.dataset.tema = tema;
-            if (tema === "azul") document.querySelector('meta[name="theme-color"]').content = "#0b111d";
-            document.write('<link rel="stylesheet" id="folhaTema" href="' + (tema === "azul" ? "style-azul.css" : "style.css") + '?v=20260925numeros">');
+            if (tema === "azul") document.querySelector('meta[name="theme-color"]').content = "#0e1422";
+            document.write('<link rel="stylesheet" id="folhaTema" href="' + (tema === "azul" ? "style-azul.css" : "style.css") + '?v=20260925azul2">');
         })();
     </script>
-    <noscript><link rel="stylesheet" href="style.css?v=20260925numeros"></noscript>
+    <noscript><link rel="stylesheet" href="style.css?v=20260925azul2"></noscript>
     <title id="tituloPagina">Samuel Mickael | Desenvolvedor Web &amp; Mobile</title>
     <script type="application/ld+json">
     {
@@ -647,13 +651,13 @@
     </div>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-    <script src="script.js?v=20260925numeros"></script>
-<script src="acabamento.js?v=20260925numeros" defer></script>
+    <script src="script.js?v=20260925azul2"></script>
+<script src="acabamento.js?v=20260925azul2" defer></script>
 <script>
     /* Scripts que a página não precisa pra aparecer: o mobile.js só baixa em tela de toque (no computador
        ele não faz nada) e a música só depois que a página terminou de carregar. */
     (function () {
-        var versao = "?v=20260925numeros";
+        var versao = "?v=20260925azul2";
         function carregar(arquivo) { var s = document.createElement("script"); s.src = arquivo + versao; document.body.appendChild(s); }
         if (matchMedia("(pointer: coarse)").matches) {
             // o pedido de "instalar app" pode chegar antes do mobile.js: fica guardado pra ele usar

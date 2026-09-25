@@ -1593,7 +1593,7 @@ html.sem-animacoes, html.sem-animacoes *, html.sem-animacoes *::before, html.sem
 .botao-som:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
 /* Botão de tema: círculo meio preenchido com a cor do outro tema (no vermelho mostra azul e vice-versa) */
 .botao-tema svg circle { fill: none; }
-.botao-tema .tema-metade { fill: #3d8bff; stroke: none; } /* manter-cor */
+.botao-tema .tema-metade { fill: #2e7dff; stroke: none; } /* manter-cor */
 [data-tema="azul"] .botao-tema .tema-metade { fill: #ff2a3d; } /* manter-cor */
 @media (prefers-reduced-motion: reduce) { .botao-som[aria-pressed="true"] .som-onda { animation: none; opacity: 1; } }
 
@@ -1898,7 +1898,10 @@ html:not(.dark-mode) body::after { background: radial-gradient(circle at 70% 25%
     #botaoResumo { display: inline-flex; }
 }
 @media (pointer: coarse) and (prefers-reduced-motion: reduce) { .resumo-overlay { animation: none; } }
-@media not (pointer: coarse) { #botaoResumo { display: none !important; } }
+/* Esses três botões só funcionam no celular (mobile.js liga o clique deles); o [hidden] do HTML sozinho
+   não bastava porque .botao{display:inline-flex} do style.css vence a regra padrão do navegador pro
+   [hidden] — então ficavam visíveis (e mudos) até no computador. Aqui garante que ficam escondidos. */
+@media not (pointer: coarse) { #botaoInstalar, #botaoSocio, #botaoResumo { display: none !important; } }
 
 /* ---------- 5 efeitos de hover neon: chips, botões, cards e menu ---------- */
 
@@ -1956,6 +1959,12 @@ html:not(.dark-mode) body::after { background: radial-gradient(circle at 70% 25%
     .botao::before, .chip-filtro::before, .chip-surpresa::before { display: none; }
     .botao:hover, .chip-filtro:hover, .chip-surpresa:hover { animation: none; }
 }
+/* ---------- Ícones próprios no lugar de emoji nativo (ver ICONES_TEMA em script.js) ---------- */
+.ic-linha { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.ic-mini { width: 18px; height: 18px; vertical-align: -4px; margin-right: 7px; flex-shrink: 0; }
+.botao .ic-mini, .botao-secundario .ic-mini { color: currentColor; }
+.coracao-icone { fill: #ff2a3d; stroke: #ff2a3d; }
+.ic-preenchido { fill: currentColor; stroke: none; }
 
 /* ---------- Números do topo: grandes, na cor de destaque e clicáveis ---------- */
 .hero-numeros { gap: 14px; }

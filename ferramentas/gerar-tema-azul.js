@@ -1,8 +1,8 @@
 /* Gera o style-azul.css a partir do style.css, trocando só as cores:
-   - vermelho vivo (neon)   -> verde-água/ciano, o destaque do tema azul antigo (#5df4d0)
-   - vermelho escuro (sangue) -> azul
-   - cinza-carvão            -> azul-marinho (#070b16 / #0f172b / #141f37)
-   - cinza claro             -> cinza-azulado
+   - vermelho vivo (neon)     -> azul elétrico (#2e7dff)
+   - vermelho escuro (sangue) -> azul-sangue (#123a8f)
+   - cinza-carvão             -> azul-carvão (#0e1526 / #172033 / #202b45)
+   - cinza claro              -> cinza-azulado
    Branco, preto e as outras cores (verde do WhatsApp etc.) ficam iguais, e também qualquer linha
    marcada com o comentário "manter-cor".
 
@@ -33,12 +33,12 @@ function trocarCor(r, g, b) {
     const [h, s, l] = paraHsl(r, g, b);
     const vermelho = (h >= 330 || h <= 20) && s > 0.25;
     if (vermelho) {
-        if (l < 0.42) return paraRgb(218, Math.min(s, 0.7), l);              // sangue -> azul
-        return paraRgb(166, Math.min(s, 0.87), Math.max(l, 0.6));            // neon -> ciano
+        if (l < 0.42) return paraRgb(221, Math.min(s, 0.78), l);             // sangue -> azul-sangue
+        return paraRgb(217, s, Math.max(l, 0.59));                           // neon -> azul elétrico
     }
     if (s < 0.15 && l > 0.02 && l < 0.97) {
-        if (l <= 0.5) return paraRgb(222, 0.45, l * 0.92);                   // carvão -> marinho
-        return paraRgb(222, 0.25, l);                                        // cinza claro -> cinza-azulado
+        if (l <= 0.3) return paraRgb(221, 0.42, l * 1.1);                    // carvão -> azul-carvão
+        return paraRgb(221, 0.2, l);                                         // cinza médio/claro -> cinza-azulado
     }
     return [r, g, b];
 }
