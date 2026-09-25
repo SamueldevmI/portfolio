@@ -369,6 +369,38 @@ if (!prefereMenosMovimento && window.matchMedia("(hover: hover)").matches) {
     }, { passive: true });
 }
 
+/* Intensidade do fundo: um nível base conforme a seção visível (mais vivo nas seções de
+   conversão, mais calmo nas de leitura) + um arranco suave quando você rola rápido. Tudo
+   suavizado quadro a quadro, sem pisco nem susto. */
+if (!prefereMenosMovimento) {
+    const NIVEL_SECAO = { comparador: .3, "sobre-mim": .25, projetos: .55, "mais-projetos": .4, servicos: .45, orcamento: .55, jornada: .3, contato: .6 };
+    let nivelBaseFundo = .3;
+    const secoesFundo = document.querySelectorAll("main .secao[id]");
+    if (secoesFundo.length) {
+        const obsFundo = new IntersectionObserver((entradas) => {
+            entradas.forEach((entrada) => {
+                if (entrada.isIntersecting && entrada.intersectionRatio > .4) {
+                    nivelBaseFundo = NIVEL_SECAO[entrada.target.id] ?? .35;
+                }
+            });
+        }, { threshold: [0, .4, .6, 1] });
+        secoesFundo.forEach((secao) => obsFundo.observe(secao));
+    }
+
+    let velocSuaveFundo = 0, ultimoYFundo = window.scrollY, ultimoTempoFundo = performance.now();
+    (function atualizarIntensidadeFundo() {
+        const agora = performance.now();
+        const dt = Math.max(16, agora - ultimoTempoFundo);
+        const veloc = Math.min(1, (Math.abs(window.scrollY - ultimoYFundo) / dt * 16) / 40);
+        ultimoYFundo = window.scrollY;
+        ultimoTempoFundo = agora;
+        velocSuaveFundo += (veloc - velocSuaveFundo) * .1;
+        const intensidade = Math.min(1, nivelBaseFundo + velocSuaveFundo * .4);
+        document.body.style.setProperty("--fundo-intensidade", intensidade.toFixed(3));
+        requestAnimationFrame(atualizarIntensidadeFundo);
+    })();
+}
+
 let ticandoBarra = false;
 window.addEventListener("scroll", () => {
     if (ticandoBarra) return;
