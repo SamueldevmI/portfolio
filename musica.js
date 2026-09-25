@@ -641,8 +641,6 @@
     function pulsarIcone() {
         if (!tocando || !ctx || ctx.state !== "running") {
             botao.style.removeProperty("--pulso");
-            document.documentElement.classList.remove("tem-batida-foto");
-            document.documentElement.style.removeProperty("--batida-pulso");
             return;
         }
         const agora = ctx.currentTime;
@@ -652,9 +650,6 @@
             const fase = ((agora - inicio) / BATIDA) % 1;
             const pulso = Math.exp(-fase * 5).toFixed(3);
             botao.style.setProperty("--pulso", pulso);
-            // a fotinha do topo pulsa no mesmo ritmo (ver .hero-foto-pulso em acabamento.css)
-            document.documentElement.classList.add("tem-batida-foto");
-            document.documentElement.style.setProperty("--batida-pulso", pulso);
         }
         requestAnimationFrame(pulsarIcone);
     }
