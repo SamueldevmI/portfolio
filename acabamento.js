@@ -870,7 +870,7 @@
             botao = document.createElement("button");
             botao.type = "button";
             botao.className = "link-rodape link-instalar";
-            botao.textContent = "📲 Instalar no celular";
+            botao.innerHTML = (window.IconesTema ? window.IconesTema.svg("instalar", "ic-mini") : "") + "Instalar no celular";
             botao.addEventListener("click", async () => {
                 if (!evento) return;
                 evento.prompt();

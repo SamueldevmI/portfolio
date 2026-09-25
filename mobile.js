@@ -838,6 +838,31 @@
         return t + "…";
     }
 
+    /* Desenha um dos ícones do site (mesmo <path> das tech badges) dentro do canvas do cartão-resumo,
+       em vez de ctx.fillText(emoji): assim o cartão baixado fica igual em qualquer aparelho, em vez de
+       depender da fonte de emoji do sistema de quem gerou. */
+    function desenharIconeCanvas(ctx, nome, cx, cy, tamanho, cor, preenchido) {
+        const d = window.IconesTema && window.IconesTema.CAMINHOS[nome];
+        if (!d) return;
+        ctx.save();
+        ctx.translate(cx - tamanho / 2, cy - tamanho / 2);
+        ctx.scale(tamanho / 24, tamanho / 24);
+        const caminho = new Path2D(d);
+        if (preenchido) { ctx.fillStyle = cor; ctx.fill(caminho); }
+        else { ctx.strokeStyle = cor; ctx.lineWidth = 2; ctx.lineCap = "round"; ctx.lineJoin = "round"; ctx.stroke(caminho); }
+        ctx.restore();
+    }
+
+    /* O ícone do Genius usa as 4 cores do próprio jogo, em vez do traço vermelho/branco padrão */
+    function desenharGridGenius(ctx, cx, cy, tamanho) {
+        const cores = ["#ff2a3d", "#f6f6f6", "#8b1a1a", "#6e6e72"];
+        const g = tamanho * 0.42, gap = tamanho * 0.12, x0 = cx - tamanho / 2, y0 = cy - tamanho / 2;
+        [[0, 0], [1, 0], [0, 1], [1, 1]].forEach(([cx2, cy2], i) => {
+            retanguloArredondado(ctx, x0 + cx2 * (g + gap), y0 + cy2 * (g + gap), g, g, tamanho * 0.08);
+            ctx.fillStyle = cores[i]; ctx.fill();
+        });
+    }
+
     /* Desenha um retângulo com cantos arredondados (fallback pra quem não tem roundRect nativo) */
     function retanguloArredondado(ctx, x, y, w, h, r) {
         if (ctx.roundRect) { ctx.beginPath(); ctx.roundRect(x, y, w, h, r); return; }
@@ -857,13 +882,13 @@
         const genius = ler("portfolio-genius-recorde", 0);
         const stories = ler("portfolio-stories-vistos", []);
         const linhas = [
-            ["📍", "Seções exploradas", `${secoesVistas.size} de ${SECOES.length}`],
-            ["🧪", "Projetos testados", String(projetosVistos.size || 0)],
+            ["pino", "Seções exploradas", `${secoesVistas.size} de ${SECOES.length}`],
+            ["frasco", "Projetos testados", String(projetosVistos.size || 0)],
         ];
-        if (favoritos.length) linhas.push(["❤️", "Favoritos", String(favoritos.length)]);
-        if (stories.length) linhas.push(["📖", "Stories vistos", String(stories.length)]);
-        if (genius > 0) linhas.push(["🎮", "Recorde no Genius", `${genius} rodada${genius === 1 ? "" : "s"}`]);
-        linhas.push(["⏱️", "Tempo explorando", `${minutos} min`]);
+        if (favoritos.length) linhas.push(["coracao", "Favoritos", String(favoritos.length)]);
+        if (stories.length) linhas.push(["camadas", "Stories vistos", String(stories.length)]);
+        if (genius > 0) linhas.push(["genius", "Recorde no Genius", `${genius} rodada${genius === 1 ? "" : "s"}`]);
+        linhas.push(["relogio", "Tempo explorando", `${minutos} min`]);
         let selo = "deu uma passada 👀";
         if (favoritos.length >= 2 || projetosVistos.size >= 4) selo = "curtiu mesmo mesmo 🔥";
         else if (minutos >= 5 || secoesVistas.size >= 6) selo = "explorou tudo 🕵️";
@@ -927,11 +952,13 @@
         // linhas de estatística, em cartõezinhos
         let y = 470;
         ctx.font = '500 30px "DM Mono", monospace';
-        linhas.forEach(([emoji, rotulo, valor]) => {
+        linhas.forEach(([icone, rotulo, valor]) => {
             retanguloArredondado(ctx, 72, y, W - 144, 92, 20);
             ctx.fillStyle = "rgba(38,38,38,.85)"; ctx.fill();
             ctx.strokeStyle = "rgba(255,255,255,.1)"; ctx.lineWidth = 1; ctx.stroke();
-            ctx.font = "40px Arial"; ctx.fillStyle = "#f6f6f6"; ctx.fillText(emoji, 100, y + 58);
+            if (icone === "genius") desenharGridGenius(ctx, 112, y + 46, 34);
+            else if (icone === "coracao") desenharIconeCanvas(ctx, icone, 112, y + 46, 32, "#ff2a3d", true);
+            else desenharIconeCanvas(ctx, icone, 112, y + 46, 32, "#f6f6f6", false);
             ctx.font = '600 30px "Space Grotesk", Arial, sans-serif'; ctx.fillStyle = "#e6e6e6"; ctx.fillText(rotulo, 162, y + 58);
             ctx.font = '500 28px "DM Mono", monospace'; ctx.fillStyle = "#ff2a3d";
             ctx.textAlign = "right"; ctx.fillText(valor, W - 100, y + 58); ctx.textAlign = "left";
