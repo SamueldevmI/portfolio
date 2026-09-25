@@ -349,7 +349,24 @@ function atualizarCamadasScroll() {
     if (navEl) navEl.classList.toggle("nav-flutuante", window.scrollY > 40);
     if (!prefereMenosMovimento && !document.documentElement.classList.contains("modo-leve")) {
         document.body.style.setProperty("--scroll-parallax", Math.min(window.scrollY * 0.04, 40) + "px");
+        // fração 0-1 da rolagem na página inteira: o fundo continua indo devagar até o fim, não só no topo
+        const alturaTotal = document.documentElement.scrollHeight - window.innerHeight;
+        document.body.style.setProperty("--fundo-scroll", alturaTotal > 0 ? (window.scrollY / alturaTotal).toFixed(4) : "0");
     }
+}
+
+/* Brilho de fundo que segue o mouse pela página inteira (bem fraco, só um ambiente) */
+if (!prefereMenosMovimento && window.matchMedia("(hover: hover)").matches) {
+    let tocandoMouseFundo = false;
+    document.addEventListener("mousemove", (evento) => {
+        if (tocandoMouseFundo) return;
+        tocandoMouseFundo = true;
+        requestAnimationFrame(() => {
+            document.body.style.setProperty("--fundo-mx", ((evento.clientX / window.innerWidth) * 100).toFixed(2) + "%");
+            document.body.style.setProperty("--fundo-my", ((evento.clientY / window.innerHeight) * 100).toFixed(2) + "%");
+            tocandoMouseFundo = false;
+        });
+    }, { passive: true });
 }
 
 let ticandoBarra = false;
