@@ -20,7 +20,8 @@
         .demo-wrap { width:min(880px,calc(100% - 44px)); margin:60px auto 100px; }
         .demo-voltar { display:inline-flex; align-items:center; gap:6px; margin-bottom:28px; color:var(--muted); font:.8rem "DM Mono",monospace; text-decoration:none; }
         .demo-voltar:hover { color:var(--cyan); }
-        .demo-aviso { margin-bottom:28px; padding:14px 18px; border:1px solid rgba(93,244,208,.35); background:rgba(93,244,208,.06); color:var(--cyan); font:.82rem "DM Mono",monospace; }
+        .demo-aviso { margin-bottom:28px; padding:14px 18px; border:1px solid rgba(var(--cyan-rgb),.35); background:rgba(var(--cyan-rgb),.06); color:var(--acento-texto); font:.82rem "DM Mono",monospace; }
+        @media (pointer: coarse) { .demo-voltar { min-height:40px; } }
         .demo-grid { display:grid; grid-template-columns:1fr 1.3fr; gap:24px; align-items:start; }
         .demo-card { padding:24px; border:1px solid var(--line); background:rgba(15,23,43,.6); }
         .demo-card h2 { margin:0 0 18px; font-size:1.2rem; }

@@ -72,7 +72,7 @@ h1 { font: 700 clamp(1.9rem, 5vw, 2.7rem)/1.12 var(--titulo); letter-spacing: -.
 .bloco-como h2 { font: 700 1.05rem var(--titulo); margin-bottom: 14px; }
 .bloco-como ol { display: grid; gap: 14px; margin: 0; padding: 0; list-style: none; }
 .bloco-como li { display: flex; align-items: flex-start; gap: 12px; }
-.bloco-como .num { flex: none; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: rgba(232, 84, 47, .16); color: var(--tomate); font: 700 .78rem var(--titulo); }
+.bloco-como .num { flex: none; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: rgba(232, 84, 47, .16); color: #f26a45; font: 700 .78rem var(--titulo); }
 .bloco-como p { margin: 0; color: var(--mudo); font-size: .92rem; line-height: 1.5; padding-top: 2px; }
 
 .cta-final { margin-top: 26px; padding: 22px; border-radius: 20px; background: linear-gradient(135deg, #2a1a10, #1a1408); border: 1px solid var(--linha-forte); }
@@ -155,3 +155,7 @@ h1 { font: 700 clamp(1.9rem, 5vw, 2.7rem)/1.12 var(--titulo); letter-spacing: -.
     * { animation-duration: .01ms !important; }
     html { scroll-behavior: auto; }
 }
+
+/* "Voltar ao portfólio" com área de toque de verdade no celular (tinha ~18px de altura) */
+@media (pointer: coarse) { a[href^="../index.html"] { display: inline-flex; align-items: center; min-height: 40px; } }
+@media (pointer: coarse) { .reiniciar { min-height: 38px; } }

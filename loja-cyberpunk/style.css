@@ -210,7 +210,7 @@ a { color: var(--ciano); }
 .look-imagens img { flex: 1; width: 0; min-width: 0; aspect-ratio: 1; background: radial-gradient(circle at 50% 42%, #1f1c40, #0a0916 74%); border: 1px solid var(--linha); padding: 8px; object-fit: contain; }
 .look-corpo h3 { margin: 0 0 2px; font: 600 1.05rem var(--fonte); }
 .look-desc { margin: 0 0 4px; color: var(--mudo); font-size: .88rem; }
-.look-pecas { margin: 0 0 6px; color: #6f6b96; font: 11px var(--mono); letter-spacing: .04em; }
+.look-pecas { margin: 0 0 6px; color: #9591c0; font: 11px var(--mono); letter-spacing: .04em; }
 .look-card .card-preco { margin: 0 0 10px; }
 
 /* ===== coleção ===== */
@@ -297,7 +297,7 @@ a { color: var(--ciano); }
         radial-gradient(circle at 50% 42%, #1c1938, #0a0916 74%);
 }
 .card-corpo { display: flex; flex: 1; flex-direction: column; gap: 4px; padding: 14px 16px 16px; }
-.card-cat { margin: 0; color: var(--magenta); font: 12px var(--mono); letter-spacing: .14em; text-transform: uppercase; }
+.card-cat { margin: 0; color: #ff5cdf; font: 12px var(--mono); letter-spacing: .14em; text-transform: uppercase; }
 .card-nome { margin: 0; font: 600 1.08rem/1.25 var(--fonte); }
 .card-nome-botao { padding: 0; border: 0; background: none; color: var(--texto); font: inherit; text-align: left; cursor: pointer; }
 .card-nome-botao:hover { color: var(--ciano); }
@@ -521,3 +521,6 @@ dialog::backdrop { background: rgba(3, 2, 10, .78); -webkit-backdrop-filter: blu
 /* topo e "A marca" com fotos em vez das ilustrações */
 .hero-arte img.hero-foto { width: 70%; height: auto; aspect-ratio: 3 / 4; margin: 4% auto 0; object-fit: cover; object-position: 50% 42%; border: 1px solid var(--linha-forte); clip-path: polygon(22px 0, 100% 0, 100% calc(100% - 22px), calc(100% - 22px) 100%, 0 100%, 0 22px); filter: saturate(.9) contrast(1.05) drop-shadow(0 24px 34px rgba(0, 0, 0, .65)); }
 .sobre-arte img { aspect-ratio: 1; object-fit: cover; border: 1px solid var(--linha-forte); clip-path: polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px); filter: saturate(.9) contrast(1.04); }
+
+/* "Voltar ao portfólio" com área de toque de verdade no celular (tinha ~18px de altura) */
+@media (pointer: coarse) { a[href^="../index.html"] { display: inline-flex; align-items: center; min-height: 40px; } }

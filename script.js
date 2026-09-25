@@ -121,7 +121,8 @@ function favIconTemporario(duracaoMs) {
     const linkFavicon = document.querySelector('link[rel="icon"]');
     if (!linkFavicon) return;
     const original = linkFavicon.href;
-    linkFavicon.href = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='10' fill='%235df4d0'/%3E%3C/svg%3E";
+    const cor = getComputedStyle(document.documentElement).getPropertyValue("--cyan").trim() || "#ff2a3d"; // cor do tema atual
+    linkFavicon.href = "data:image/svg+xml," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><circle cx='12' cy='12' r='10' fill='${cor}'/></svg>`);
     setTimeout(() => { linkFavicon.href = original; }, duracaoMs);
 }
 
