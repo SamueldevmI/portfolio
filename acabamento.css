@@ -1304,11 +1304,10 @@ html:not(.dark-mode) body::before {
     background:
         linear-gradient(rgba(var(--cyan-rgb), .05) 1px, transparent 1px),
         linear-gradient(90deg, rgba(var(--cyan-rgb), .05) 1px, transparent 1px),
-        radial-gradient(circle, rgba(var(--cyan-rgb), .32) 1.2px, transparent 1.5px),
         radial-gradient(circle at 18% 22%, rgba(139,26,26,.28) 0, transparent 34%),
         radial-gradient(circle at 82% 70%, rgba(139,37,37,.2) 0, transparent 32%),
         linear-gradient(172deg, #1e1e1e 0%, #161616 50%, #121212 100%);
-    background-size: 88px 88px, 88px 88px, 88px 88px, auto, auto, auto;
+    background-size: 88px 88px, 88px 88px, auto, auto, auto;
     translate: 0 calc(var(--fundo-scroll, 0) * -60px);
     opacity: calc(.78 + var(--fundo-intensidade, .3) * .22);
     animation: aurora-a 30s ease-in-out infinite alternate, deriva-cor-a 80s ease-in-out infinite alternate;
@@ -1316,11 +1315,10 @@ html:not(.dark-mode) body::before {
 html:not(.dark-mode) body::after {
     background:
         url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
-        radial-gradient(circle, rgba(255,255,255,.55) 1px, transparent 1.4px),
         radial-gradient(circle at var(--fundo-mx, 50%) var(--fundo-my, 50%), rgba(var(--cyan-rgb), .06), transparent 60%),
         radial-gradient(circle at 70% 25%, rgba(255,255,255,.04) 0, transparent 34%),
         radial-gradient(circle at 50% 50%, rgba(255,42,61,.05) 0, transparent 28%);
-    background-size: 140px 140px, 190px 190px, auto, auto, auto;
+    background-size: 140px 140px, auto, auto, auto;
     translate: 0 calc(var(--fundo-scroll, 0) * -30px);
     opacity: calc(.7 + var(--fundo-intensidade, .3) * .2);
     animation: aurora-b 38s ease-in-out infinite alternate, deriva-cor-b 92s ease-in-out infinite alternate;
@@ -1331,6 +1329,46 @@ html:not(.dark-mode) body::after {
 @media (prefers-reduced-motion: reduce) {
     html:not(.dark-mode) body::before, html:not(.dark-mode) body::after { translate: none; opacity: .85; animation: none; }
 }
+
+/* ---------- Pontinhos do fundo: nada de grade fixa (script.js espalha cada um numa posição
+   aleatória), cada um anda numa direção própria (nunca a mesma) e some no fim — não fica
+   voltando pro início como um loop de posição. 3 variações de trajeto pra não enjoar. */
+.pontos-fundo { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+.ponto-fundo {
+    position: absolute;
+    left: var(--px, 50%);
+    top: var(--py, 50%);
+    width: var(--ptam, 3px);
+    height: var(--ptam, 3px);
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,.9), rgba(var(--cyan-rgb), .5) 55%, transparent 75%);
+    opacity: 0;
+    will-change: transform, opacity;
+}
+.ponto-fundo.ponto-1 { animation: ponto-flutua-1 var(--pdur, 16s) ease-in-out forwards; }
+.ponto-fundo.ponto-2 { animation: ponto-flutua-2 var(--pdur, 16s) ease-in-out forwards; }
+.ponto-fundo.ponto-3 { animation: ponto-flutua-3 var(--pdur, 16s) ease-in-out forwards; }
+@keyframes ponto-flutua-1 {
+    0% { opacity: 0; transform: translate(0, 0) scale(.6); }
+    12% { opacity: var(--pop, .7); }
+    88% { opacity: var(--pop, .7); }
+    100% { opacity: 0; transform: translate(var(--dx, 60px), var(--dy, -70px)) scale(1.15); }
+}
+@keyframes ponto-flutua-2 {
+    0% { opacity: 0; transform: translate(0, 0) scale(.6); }
+    15% { opacity: var(--pop, .7); }
+    85% { opacity: var(--pop, .7); }
+    100% { opacity: 0; transform: translate(var(--dx, -50px), var(--dy, 65px)) rotate(20deg) scale(1); }
+}
+@keyframes ponto-flutua-3 {
+    0% { opacity: 0; transform: translate(0, 0) scale(.5); }
+    10% { opacity: var(--pop, .7); }
+    50% { transform: translate(calc(var(--dx, 40px) * .5), calc(var(--dy, 40px) * .6)) scale(1); }
+    90% { opacity: var(--pop, .7); }
+    100% { opacity: 0; transform: translate(var(--dx, 40px), var(--dy, 40px)) scale(1.1); }
+}
+@media (prefers-reduced-motion: reduce) { .pontos-fundo { display: none; } }
+
 /* jogo Genius nas cores do tema */
 .gn-0 { background: #ff2a3d; color: #ff2a3d; } .gn-1 { background: #f6f6f6; color: #f6f6f6; }
 .gn-2 { background: #8b1a1a; color: #ff5a6a; } .gn-3 { background: #6e6e72; color: #bdbdc2; }

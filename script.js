@@ -355,6 +355,40 @@ function atualizarCamadasScroll() {
     }
 }
 
+/* Pontinhos do fundo: sem grade, cada um nasce num lugar aleatório, anda numa direção própria
+   (nunca fixa) e some — não fica voltando pro início como um loop de posição. A geração em si
+   é que fica em loop (espalhando pontinhos novos aos poucos), com 3 trajetos diferentes pra
+   nunca parecer o mesmo padrão se repetindo. */
+if (!prefereMenosMovimento) {
+    const camadaPontos = document.createElement("div");
+    camadaPontos.className = "pontos-fundo";
+    camadaPontos.setAttribute("aria-hidden", "true");
+    document.body.prepend(camadaPontos);
+    const MAX_PONTOS = window.matchMedia("(pointer: coarse)").matches ? 8 : 16;
+    let pontosNaTela = 0;
+    function espalharPonto() {
+        if (pontosNaTela < MAX_PONTOS) {
+            pontosNaTela++;
+            const p = document.createElement("span");
+            const variante = 1 + Math.floor(Math.random() * 3);
+            p.className = "ponto-fundo ponto-" + variante;
+            const angulo = Math.random() * Math.PI * 2;
+            const distancia = 40 + Math.random() * 90;
+            p.style.setProperty("--px", (Math.random() * 100).toFixed(2) + "%");
+            p.style.setProperty("--py", (Math.random() * 100).toFixed(2) + "%");
+            p.style.setProperty("--dx", (Math.cos(angulo) * distancia).toFixed(1) + "px");
+            p.style.setProperty("--dy", (Math.sin(angulo) * distancia).toFixed(1) + "px");
+            p.style.setProperty("--ptam", (2 + Math.random() * 2.4).toFixed(1) + "px");
+            p.style.setProperty("--pop", (.35 + Math.random() * .45).toFixed(2));
+            p.style.setProperty("--pdur", (13 + Math.random() * 11).toFixed(1) + "s");
+            p.addEventListener("animationend", () => { p.remove(); pontosNaTela--; }, { once: true });
+            camadaPontos.appendChild(p);
+        }
+        setTimeout(espalharPonto, 500 + Math.random() * 700);
+    }
+    espalharPonto();
+}
+
 /* Brilho de fundo que segue o mouse pela página inteira (bem fraco, só um ambiente) */
 if (!prefereMenosMovimento && window.matchMedia("(hover: hover)").matches) {
     let tocandoMouseFundo = false;
