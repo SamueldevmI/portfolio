@@ -141,133 +141,195 @@ document.querySelectorAll(".botao").forEach((botao) => {
     });
 });
 
-/* Janelinha "antes × depois" no topo: encena, com os projetos de verdade, como fica o dia a dia do
-   cliente sem sistema e com o sistema pronto. Roda sozinha, troca de cenário a cada rodada e para
-   quando a pessoa passa o mouse ou escolhe um cenário. Nome, link e resumo vêm dos cards de projeto:
-   se um card sair da página, o cenário dele sai junto. */
-(function janelaAntesDepois() {
-    const janela = document.getElementById("janelaAD");
-    if (!janela) return;
-    const abas = janela.querySelector(".ad-abas");
-    const palco = janela.querySelector(".ad-palco");
-    const fase = janela.querySelector(".ad-fase");
-    const barra = janela.querySelector(".ad-barra i");
-    const testar = janela.querySelector(".ad-testar");
-    const querer = janela.querySelector(".ad-querer");
-
-    // antes: mensagens bagunçadas chegando; depois: o sistema resolvendo, com ✓
-    const ROTEIROS = {
-        "Fatia Nobre": {
-            aba: "atendimento",
-            antes: [["msg", "que horas abre?"], ["msg", "tem entrega no centro?"], ["msg", "qual o sabor do dia??"], ["msg", "oi?? alguém?"], ["alerta", "⏳ cliente esperando há 2h14... desistiu ❌"]],
-            depois: [["ok", "“que horas abre?” → Terça a domingo, 18h às 23h30 🍕", "respondido em 0,3s"], ["ok", "“tem entrega?” → Entregamos! Frete grátis até 5 km", "respondido em 0,4s"], ["fim", "e você nem precisou pegar no celular 😴"]],
-        },
-        "Glitch District": {
-            aba: "loja",
-            antes: [["msg", "manda foto do moletom preto"], ["msg", "quanto tá?"], ["msg", "tem M?"], ["msg", "e na outra cor??"], ["alerta", "📸 37 fotos mandadas no direct hoje"]],
-            depois: [["ok", "🛒 Moletom preto · M", "R$ 189"], ["ok", "🛒 Óculos neon", "R$ 79"], ["fim", "pedido de R$ 268 chegou pronto no seu WhatsApp ✓"]],
-        },
-        "Conta a Dois": {
-            aba: "sistema",
-            antes: [["msg", "quem pagou o mercado?"], ["msg", "acho que fui eu..."], ["msg", "anotei num papel, perdi"], ["alerta", "📄 planilha_final_v3_AGORAVAI.xlsx"]],
-            depois: [["ok", "Ana lançou: Mercado · R$ 212", "apareceu no celular do João na hora"], ["ok", "Saldo: João deve R$ 106 pra Ana", "calculado sozinho"], ["fim", "conta fechada, sem discussão ✓"]],
-        },
-        "Eldev Music": {
-            aba: "app",
-            antes: [["msg", "qual era o site mesmo?"], ["msg", "eldevmusic.com.br? .com?"], ["alerta", "❌ página não encontrada · fechou a aba"]],
-            depois: [["ok", "📲 ícone na tela inicial do cliente", "instalou com um toque"], ["ok", "um toque e abriu", "0,8s"], ["fim", "funciona até sem internet ✓"]],
-        },
-    };
-
-    // na ordem dos ROTEIROS (o mais forte primeiro), só os que têm card na página
-    const cards = [...document.querySelectorAll(".card-projeto")];
-    const cenarios = Object.keys(ROTEIROS).map((nome) => {
-        const card = cards.find((c) => c.querySelector(".projeto-nome")?.textContent.trim() === nome);
-        if (!card) return null;
-        return { nome, ...ROTEIROS[nome], link: card.querySelector(".link-projeto")?.getAttribute("href"), pedir: card.querySelector(".card-orcamento") };
-    }).filter(Boolean);
-    if (!cenarios.length) { janela.hidden = true; return; }
-
+/* Comparador "sem site × com site" no topo: encena o dia a dia do cliente sem o site/sistema e com ele
+   pronto, com uma chave que a pessoa pode virar e um placar que vira do número ruim pro bom. Roda sozinho
+   (cenário a cenário) até a pessoa mexer. Nome, link e botão de orçamento vêm dos cards de projeto; o
+   cenário "Google" usa o nome do negócio digitado no campo dos projetos, se tiver. */
+(function comparadorSemCom() {
+    const raiz = document.getElementById("comparador");
+    if (!raiz) return;
+    const abas = raiz.querySelector(".cmp-abas");
+    const palco = raiz.querySelector(".cmp-palco");
+    const metricas = raiz.querySelector(".cmp-metricas");
+    const chave = raiz.querySelector(".cmp-chave");
+    const palavraFase = raiz.querySelector(".cmp-titulo-fase");
+    const barra = raiz.querySelector(".cmp-barra i");
+    const testar = raiz.querySelector(".cmp-testar");
+    const querer = raiz.querySelector(".cmp-querer");
     const semMovimento = prefereMenosMovimento;
     const espera = (ms) => new Promise((r) => setTimeout(r, semMovimento ? 0 : ms));
-    let atual = 0, rodada = 0, pausado = false;
+    const nomeNegocio = () => { try { return (localStorage.getItem("portfolio-nome-negocio") || "").trim(); } catch (e) { return ""; } };
+
+    // Cada linha: [tipo, texto, detalhe]. msg = mensagem chegando; busca/resultado = Google; alerta = deu ruim;
+    // ok = resolvido (com ✓); fim = fecho. metricas: [rótulo, sem, com].
+    const CENARIOS = [
+        {
+            aba: "Google", produto: "site",
+            pedir: () => document.querySelector('.link-servico[data-orcamento-tipo="site"]'),
+            testar: { href: "#projetos", texto: "ver sites que eu fiz ↓", mesmaAba: true },
+            sem: (n) => n
+                ? [["busca", `${n}`], ["resultado", "Nenhum resultado encontrado pra essa busca"], ["msg", "“será que ainda existe?”"], ["alerta", "cliente foi no concorrente ❌"]]
+                : [["busca", "pizzaria perto de mim"], ["resultado", "Pizzaria Concorrente · ⭐ 4,8 · cardápio · WhatsApp"], ["resultado", "Outra Pizzaria · ⭐ 4,6 · pedir online"], ["alerta", "e o seu negócio? não aparece ❌"]],
+            com: (n) => [["busca", n || "pizzaria perto de mim"], ["ok", `${n || "Sua Pizzaria"} · cardápio · horário · WhatsApp`, "aparece com tudo"], ["ok", "cliente tocou em “Pedir pelo WhatsApp”", "nem precisou ligar"], ["fim", "cliente novo, que nem te conhecia ✓"]],
+            metricas: [["No Google", "não aparece", "aparece"], ["Cardápio e horário", "só perguntando", "na tela, 24h"], ["Cliente novo", "vai pro concorrente", "chama você"]],
+        },
+        {
+            aba: "atendimento", produto: "site", card: "Fatia Nobre",
+            sem: () => [["msg", "que horas abre?"], ["msg", "tem entrega no centro?"], ["msg", "qual o sabor do dia??"], ["msg", "oi?? alguém?"], ["alerta", "⏳ cliente esperando há 2h14... desistiu ❌"]],
+            com: () => [["ok", "“que horas abre?” → Terça a domingo, 18h às 23h30 🍕", "0,3s"], ["ok", "“tem entrega?” → Entregamos! Frete grátis até 5 km", "0,4s"], ["fim", "e você nem precisou pegar no celular 😴"]],
+            metricas: [["Tempo de resposta", "2h14", "0,3s"], ["Cliente desistindo", "todo dia", "ninguém"], ["Seu celular", "47 notificações", "em paz"]],
+        },
+        {
+            aba: "loja", produto: "site", card: "Glitch District",
+            sem: () => [["msg", "manda foto do moletom preto"], ["msg", "quanto tá?"], ["msg", "tem M?"], ["msg", "e na outra cor??"], ["alerta", "📸 37 fotos mandadas no direct hoje"]],
+            com: () => [["ok", "🛒 Moletom preto · M", "R$ 189"], ["ok", "🛒 Óculos neon", "R$ 79"], ["fim", "pedido de R$ 268 chegou pronto no seu WhatsApp ✓"]],
+            metricas: [["Pra fechar um pedido", "20 mensagens", "1 toque"], ["Fotos no direct", "37 por dia", "zero"], ["O pedido chega", "picado", "pronto"]],
+        },
+        {
+            aba: "sistema", produto: "sistema", card: "Conta a Dois",
+            sem: () => [["msg", "quem pagou o mercado?"], ["msg", "acho que fui eu..."], ["msg", "anotei num papel, perdi"], ["alerta", "📄 planilha_final_v3_AGORAVAI.xlsx"]],
+            com: () => [["ok", "Ana lançou: Mercado · R$ 212", "na hora"], ["ok", "Saldo: João deve R$ 106 pra Ana", "automático"], ["fim", "conta fechada, sem discussão ✓"]],
+            metricas: [["A conta fica", "no papel", "no celular"], ["Quem deve quanto", "discussão", "calculado"], ["Atualiza", "quando lembra", "na hora"]],
+        },
+        {
+            aba: "app", produto: "app", card: "Eldev Music",
+            sem: () => [["msg", "qual era o site mesmo?"], ["msg", "eldevmusic.com.br? .com?"], ["alerta", "❌ página não encontrada · fechou a aba"]],
+            com: () => [["ok", "📲 ícone na tela inicial do cliente", "1 toque"], ["ok", "abriu na hora", "0,8s"], ["fim", "funciona até sem internet ✓"]],
+            metricas: [["Pra abrir", "lembrar o endereço", "1 toque"], ["Sem internet", "não abre", "funciona"], ["Loja de apps", "precisa", "não precisa"]],
+        },
+    ];
+    const cards = [...document.querySelectorAll(".card-projeto")];
+    const cenarios = CENARIOS.map((c) => {
+        if (!c.card) return c;
+        const card = cards.find((el) => el.querySelector(".projeto-nome")?.textContent.trim() === c.card);
+        if (!card) return null;
+        const link = card.querySelector(".link-projeto");
+        return { ...c, pedir: () => card.querySelector(".card-orcamento"), testar: { href: link?.getAttribute("href") || "#projetos", texto: `testar o ${c.card} ↗` } };
+    }).filter(Boolean);
+
+    let atual = 0, fase = "sem", rodada = 0, automatico = true;
 
     cenarios.forEach((c, i) => {
         const b = document.createElement("button");
         b.type = "button";
         b.textContent = c.aba;
         b.setAttribute("aria-pressed", "false");
-        b.addEventListener("click", () => { pausado = true; janela.classList.add("ad-parado"); tocar(i); });
+        b.addEventListener("click", () => { automatico = false; raiz.classList.add("cmp-manual"); mostrar(i, "sem", true); });
         abas.appendChild(b);
     });
 
-    function linha(tipo, texto, extra) {
+    function linha(tipo, texto, detalhe) {
         const el = document.createElement("div");
-        el.className = "ad-linha ad-" + tipo;
+        el.className = "cmp-linha cmp-" + tipo;
         const t = document.createElement("span");
         t.textContent = texto;
         el.appendChild(t);
-        if (extra) { const e = document.createElement("small"); e.textContent = extra; el.appendChild(e); }
-        if (tipo === "msg") el.style.setProperty("--giro", ((Math.random() * 3 - 1.5).toFixed(1)) + "deg");
+        if (detalhe) { const d = document.createElement("small"); d.textContent = detalhe; el.appendChild(d); }
+        if (tipo === "msg") el.style.setProperty("--giro", (Math.random() * 3 - 1.5).toFixed(1) + "deg");
         palco.appendChild(el);
-        return el;
     }
 
-    async function tocar(i) {
+    function montarPlacar(c) {
+        metricas.innerHTML = "";
+        c.metricas.forEach(([rotulo, sem, com]) => {
+            const m = document.createElement("div");
+            m.className = "cmp-metrica";
+            m.innerHTML = '<small></small><b></b><s></s>';
+            m.querySelector("small").textContent = rotulo;
+            m.querySelector("b").textContent = sem;
+            m.querySelector("s").textContent = sem;
+            m.dataset.sem = sem; m.dataset.com = com;
+            metricas.appendChild(m);
+        });
+    }
+
+    async function virarPlacar(para) {
+        const tiles = [...metricas.children];
+        for (const m of tiles) {
+            m.classList.remove("virou"); void m.offsetWidth;
+            m.querySelector("b").textContent = para === "com" ? m.dataset.com : m.dataset.sem;
+            m.classList.toggle("bom", para === "com");
+            if (!semMovimento) m.classList.add("virou");
+            if (para === "com" && window.musicaSite && window.musicaSite.pode()) window.musicaSite.nota(79 + tiles.indexOf(m) * 4, 0.6);
+            await espera(160);
+        }
+    }
+
+    function acertarChave() {
+        const c = cenarios[atual];
+        chave.setAttribute("aria-checked", String(fase === "com"));
+        chave.querySelector(".cmp-chave-sem").textContent = "sem " + c.produto;
+        chave.querySelector(".cmp-chave-com").textContent = "com " + c.produto;
+        palavraFase.textContent = (fase === "com" ? "com " : "sem ") + c.produto;
+        raiz.dataset.fase = fase;
+    }
+
+    // Mostra um cenário numa fase, animando as linhas; devolve false se outra rodada começou no meio
+    async function mostrar(i, novaFase, trocouCenario) {
         const minha = ++rodada;
-        atual = i;
-        const c = cenarios[i];
-        [...abas.children].forEach((b, j) => b.setAttribute("aria-pressed", String(j === i)));
-        if (testar) { testar.href = c.link || "#projetos"; testar.textContent = `testar o ${c.nome} ↗`; }
         const vivo = () => minha === rodada;
-
-        // ANTES
-        janela.dataset.fase = "antes";
-        fase.textContent = "antes · sem sistema";
+        const c = cenarios[i];
+        if (trocouCenario || i !== atual) {
+            atual = i;
+            [...abas.children].forEach((b, j) => b.setAttribute("aria-pressed", String(j === i)));
+            montarPlacar(c);
+            if (testar) {
+                testar.href = c.testar.href; testar.textContent = c.testar.texto;
+                if (c.testar.mesmaAba) { testar.removeAttribute("target"); testar.removeAttribute("rel"); }
+                else { testar.target = "_blank"; testar.rel = "noopener noreferrer"; }
+            }
+        }
+        fase = novaFase;
+        acertarChave();
+        raiz.classList.add("cmp-trocando");
+        await espera(200);
+        if (!vivo()) return false;
+        raiz.classList.remove("cmp-trocando");
         palco.innerHTML = "";
-        for (const [tipo, texto, extra] of c.antes) { if (!vivo()) return; linha(tipo, texto, extra); await espera(tipo === "alerta" ? 700 : 520); }
-        await espera(1300);
-        if (!vivo()) return;
-
-        // virada
-        janela.classList.add("ad-virando");
-        await espera(420);
-        if (!vivo()) return;
-        janela.classList.remove("ad-virando");
-
-        // DEPOIS
-        janela.dataset.fase = "depois";
-        fase.textContent = "depois · com o sistema pronto";
-        palco.innerHTML = "";
-        for (const [tipo, texto, extra] of c.depois) { if (!vivo()) return; linha(tipo, texto, extra); if (window.musicaSite && window.musicaSite.pode()) window.musicaSite.nota(79 + palco.children.length * 3, 0.5); await espera(650); }
-        if (!vivo()) return;
-
-        // próxima rodada sozinha (a não ser que a pessoa tenha escolhido um cenário)
-        if (semMovimento || pausado) return;
-        barra.style.animation = "none"; void barra.offsetWidth; barra.style.animation = "";
-        janela.classList.add("ad-contando");
-        await espera(3200);
-        janela.classList.remove("ad-contando");
-        if (vivo() && !pausado) tocar((atual + 1) % cenarios.length);
+        const nome = nomeNegocio();
+        const linhas = novaFase === "com" ? c.com(nome) : c.sem(nome);
+        const placar = virarPlacar(novaFase);
+        for (const [tipo, texto, detalhe] of linhas) {
+            if (!vivo()) return false;
+            linha(tipo, texto, detalhe);
+            await espera(novaFase === "com" ? 420 : tipo === "alerta" ? 650 : 480);
+        }
+        await placar;
+        return vivo();
     }
 
-    if (querer) querer.addEventListener("click", () => {
-        const pedir = cenarios[atual].pedir;
-        if (pedir) pedir.click(); else document.getElementById("orcamento")?.scrollIntoView({ behavior: semMovimento ? "auto" : "smooth" });
-    });
+    async function rodarSozinho(i) {
+        if (!automatico) return;
+        if (!(await mostrar(i, "sem", true))) return;
+        await espera(1500);
+        if (!automatico) return;
+        if (!(await mostrar(i, "com"))) return;
+        if (semMovimento) return;
+        raiz.classList.remove("cmp-contando"); void raiz.offsetWidth; raiz.classList.add("cmp-contando");
+        await espera(3800);
+        raiz.classList.remove("cmp-contando");
+        if (automatico) rodarSozinho((i + 1) % cenarios.length);
+    }
 
-    // Só começa quando a janelinha aparece na tela (e segura enquanto o mouse está em cima)
-    janela.addEventListener("mouseenter", () => { if (!janela.classList.contains("ad-parado")) pausado = true; });
-    janela.addEventListener("mouseleave", () => {
-        if (janela.classList.contains("ad-parado")) return;
-        pausado = false;
-        if (!janela.classList.contains("ad-contando") && janela.dataset.fase === "depois") tocar((atual + 1) % cenarios.length);
+    chave.addEventListener("click", () => {
+        automatico = false;
+        raiz.classList.add("cmp-manual");
+        raiz.classList.remove("cmp-contando");
+        mostrar(atual, fase === "com" ? "sem" : "com");
     });
+    if (querer) querer.addEventListener("click", () => {
+        const botao = cenarios[atual].pedir && cenarios[atual].pedir();
+        if (botao) botao.click();
+        else document.getElementById("orcamento")?.scrollIntoView({ behavior: semMovimento ? "auto" : "smooth" });
+    });
+    // digitou o nome do negócio lá nos projetos: o cenário do Google passa a usar
+    document.getElementById("nomeNegocio")?.addEventListener("input", () => setTimeout(() => { if (cenarios[atual].aba === "Google") mostrar(atual, fase); }, 400));
+
     let comecou = false;
-    const comecar = () => { if (!comecou) { comecou = true; tocar(0); } };
+    const comecar = () => { if (!comecou) { comecou = true; if (semMovimento) { automatico = false; mostrar(0, "sem", true); } else rodarSozinho(0); } };
     if ("IntersectionObserver" in window) {
         const obs = new IntersectionObserver((e) => { if (e.some((x) => x.isIntersecting)) { obs.disconnect(); comecar(); } });
-        obs.observe(janela);
+        obs.observe(raiz);
     } else comecar();
 })();
 
