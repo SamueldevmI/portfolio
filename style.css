@@ -2006,6 +2006,18 @@ html:not(.dark-mode) body::after { background: radial-gradient(circle at 70% 25%
 .comparador:not(.cmp-manual) .cmp-chave { animation: cmp-chama 2.4s ease-in-out 3s 3; }
 @keyframes cmp-chama { 50% { box-shadow: 0 0 0 5px rgba(var(--cyan-rgb), .18); } }
 
+/* tipo de negócio e nome */
+.cmp-perfil { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-top: 14px; }
+.cmp-tipos { display: flex; flex-wrap: wrap; gap: 6px; }
+.cmp-tipos button { padding: 5px 11px; border: 1px solid rgba(255,255,255,.14); border-radius: 8px; background: rgba(255,255,255,.03); color: var(--text); font: 500 .76rem "Space Grotesk", Arial, sans-serif; cursor: pointer; transition: border-color .2s ease, background-color .2s ease, transform .15s ease; }
+.cmp-tipos button[aria-pressed="true"] { border-color: var(--cyan); background: rgba(var(--cyan-rgb), .16); box-shadow: 0 0 12px -2px rgba(var(--cyan-rgb), .5); }
+@media (hover: hover) { .cmp-tipos button:hover { border-color: var(--cyan); transform: translateY(-1px); } }
+.cmp-tipos button:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+.cmp-nome { flex: 1 1 180px; }
+.cmp-nome input { width: 100%; padding: 7px 12px; border: 1px dashed rgba(255,255,255,.22); border-radius: 8px; background: rgba(0,0,0,.25); color: var(--text); font: 500 .8rem "Space Grotesk", Arial, sans-serif; }
+.cmp-nome input::placeholder { color: var(--muted); opacity: .6; }
+.cmp-nome input:focus { outline: none; border-style: solid; border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(var(--cyan-rgb), .18); }
+
 /* cenários */
 .cmp-abas { display: flex; gap: 6px; margin-top: 14px; overflow-x: auto; scrollbar-width: none; }
 .cmp-abas::-webkit-scrollbar { display: none; }
@@ -2044,6 +2056,33 @@ html:not(.dark-mode) body::after { background: radial-gradient(circle at 70% 25%
 .cmp-metrica.virou b { animation: cmp-virar .45s cubic-bezier(.3,1.4,.5,1); }
 @keyframes cmp-virar { from { transform: rotateX(90deg); opacity: 0; } }
 
+/* calculadora do prejuízo */
+.cmp-calc { margin: 14px -22px 0; border-top: 1px solid rgba(255,255,255,.08); }
+.cmp-calc summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 22px; font: 600 .9rem "Space Grotesk", Arial, sans-serif; list-style: none; cursor: pointer; }
+.cmp-calc summary::-webkit-details-marker { display: none; }
+.cmp-calc-abrir { flex-shrink: 0; padding: 4px 12px; border: 1px solid var(--cyan); border-radius: 999px; color: var(--cyan); font-size: .74rem; animation: cmp-chama 2.4s ease-in-out 6s 3; }
+.cmp-calc[open] .cmp-calc-abrir { display: none; }
+@media (hover: hover) { .cmp-calc summary:hover .cmp-calc-abrir { background: rgba(var(--cyan-rgb), .14); } }
+.cmp-calc summary:focus-visible { outline: 2px solid var(--cyan); outline-offset: -2px; }
+.cmp-calc-corpo { display: grid; gap: 10px; padding: 0 22px 16px; animation: cmp-entrar .3s ease both; }
+.cmp-calc-campo { display: grid; gap: 6px; color: var(--muted); font-size: .8rem; }
+.cmp-calc-campo b { color: var(--text); }
+.cmp-calc-campo input[type="range"] { width: 100%; height: 6px; border-radius: 999px; background: linear-gradient(90deg, var(--cyan) var(--p, 20%), rgba(255,255,255,.12) var(--p, 20%)); -webkit-appearance: none; appearance: none; cursor: pointer; }
+.cmp-calc-campo input[type="range"]::-webkit-slider-thumb { width: 20px; height: 20px; border: 3px solid var(--bg); border-radius: 50%; background: var(--cyan); box-shadow: 0 0 10px rgba(var(--cyan-rgb), .7); -webkit-appearance: none; appearance: none; }
+.cmp-calc-campo input[type="range"]::-moz-range-thumb { width: 16px; height: 16px; border: 3px solid var(--bg); border-radius: 50%; background: var(--cyan); }
+.cmp-calc-ticket { display: flex; align-items: center; gap: 6px; }
+.cmp-calc-ticket input { width: 90px; padding: 5px 8px; border: 1px solid rgba(255,255,255,.18); border-radius: 6px; background: rgba(0,0,0,.3); color: var(--text); font: 600 .85rem "Space Grotesk", Arial, sans-serif; }
+.cmp-calc-ticket input:focus { outline: none; border-color: var(--cyan); }
+.cmp-calc-texto { margin: 4px 0 0; font-size: .84rem; }
+.cmp-calc-texto b { color: var(--text); }
+.cmp-calc-perda { margin: 0; color: var(--cyan); font: 800 clamp(2rem, 5vw, 2.6rem)/1 "Space Grotesk", Arial, sans-serif; letter-spacing: -.03em; text-shadow: 0 0 22px rgba(var(--cyan-rgb), .55); font-variant-numeric: tabular-nums; }
+.cmp-calc-perda.pulou { animation: cmp-pulo .35s cubic-bezier(.3,1.6,.5,1); }
+.cmp-calc-sub { margin: -4px 0 0; color: var(--muted); font-size: .78rem; }
+.cmp-calc-sub b { color: var(--text); }
+.cmp-calc-site { margin: 2px 0 0; padding: 8px 12px; border-left: 2px solid var(--cyan); background: rgba(var(--cyan-rgb), .07); font-size: .8rem; }
+.cmp-calc-site b { color: var(--cyan); }
+.cmp-calc + .cmp-rodape { margin-top: 0; }
+
 /* rodapé e barra de tempo */
 .cmp-rodape { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px; margin: 16px -22px 0; padding: 12px 22px; border-top: 1px solid rgba(255,255,255,.08); }
 .cmp-testar { color: var(--muted); font-size: .8rem; text-decoration: none; }
@@ -2067,11 +2106,17 @@ html:not(.dark-mode) body::after { background: radial-gradient(circle at 70% 25%
     .cmp-metrica b { font-size: .86rem; }
     .cmp-metrica small { font-size: .58rem; }
     .cmp-rodape { margin: 14px -14px 0; padding: 12px 14px; }
+    .cmp-calc { margin: 14px -14px 0; }
+    .cmp-calc summary { padding: 12px 14px; font-size: .84rem; }
+    .cmp-calc-corpo { padding: 0 14px 14px; }
+    .cmp-tipos { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin: 0 -14px; padding: 0 14px; }
+    .cmp-tipos button { flex-shrink: 0; }
+    .cmp-nome { flex-basis: 100%; }
     .cmp-querer { flex: 1; }
     .cmp-barra { margin: 0 -14px; }
 }
 @media (prefers-reduced-motion: reduce) {
-    .cmp-linha, .cmp-metrica.virou b, .comparador .cmp-chave, .comparador.cmp-trocando .cmp-titulo-fase { animation: none; }
+    .cmp-linha, .cmp-metrica.virou b, .comparador .cmp-chave, .comparador.cmp-trocando .cmp-titulo-fase, .cmp-calc-abrir, .cmp-calc-corpo, .cmp-calc-perda.pulou { animation: none; }
     .cmp-chave::before { transition: none; }
     .cmp-msg { transform: none; }
 }
