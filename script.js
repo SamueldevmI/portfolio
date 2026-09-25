@@ -1671,6 +1671,14 @@ if (paletaOverlay) {
         botao.setAttribute("aria-label", azul ? "Trocar para o tema vermelho" : "Trocar para o tema azul");
         botao.title = azul ? "Tema vermelho" : "Tema azul";
     };
+    // O que não vem da folha de estilo: selo de visitas (cor no link da imagem). Avisa os outros scripts
+    // (ex.: anéis dos stories no celular) com o evento "temaTrocado".
+    const pintarExtras = () => {
+        const azul = raiz.dataset.tema === "azul";
+        const selo = document.querySelector(".selo-visitas");
+        if (selo) selo.src = selo.src.replace(/color=[0-9a-f]{6}/i, "color=" + (azul ? "1a3e8b" : "8b1a1a"));
+    };
+    if (raiz.dataset.tema === "azul") pintarExtras();
     atualizarBotao();
     let trocando = false;
     botao.addEventListener("click", () => {
@@ -1690,6 +1698,8 @@ if (paletaOverlay) {
             if (cor) cor.content = novoTema === "azul" ? "#0e1422" : "#161616";
             try { localStorage.setItem("portfolio-tema", novoTema); } catch (e) { /* sem armazenamento: só não lembra */ }
             atualizarBotao();
+            pintarExtras();
+            document.dispatchEvent(new CustomEvent("temaTrocado", { detail: novoTema }));
             trocando = false;
             if (window.musicaSite && window.musicaSite.pode()) window.musicaSite.curtir();
         };

@@ -244,7 +244,7 @@
         nome: card.querySelector(".projeto-nome")?.textContent.trim() || "Projeto",
         tag: card.querySelector(".tag")?.textContent.trim() || "",
         frase: card.querySelector(".titulo-beneficio")?.textContent.trim() || "",
-        cor: card.style.getPropertyValue("--cor") || "#ff2a3d",
+        get cor() { return getComputedStyle(card).getPropertyValue("--cor").trim() || "#ff2a3d"; }, // a do tema atual
         link: card.querySelector(".link-projeto")?.getAttribute("href") || "#projetos",
         imagens: [...card.querySelectorAll(".tela-celular img, .print-janela img")].map((i) => i.getAttribute("src")),
     })).filter((p) => p.imagens.length);
@@ -311,6 +311,7 @@
         const vistos = new Set(ler("portfolio-stories-vistos", []));
         const faixa = el("div", "stories");
         faixa.setAttribute("aria-label", "Stories dos projetos");
+        document.addEventListener("temaTrocado", () => faixa.querySelectorAll(".story-anel").forEach((anel, i) => anel.style.setProperty("--cor", projetos[i].cor)));
         projetos.forEach((p, i) => {
             const b = el("button", "story" + (vistos.has(p.nome) ? " visto" : ""),
                 `<span class="story-anel" style="--cor:${esc(p.cor)}"><img src="${esc(p.imagens[0])}" alt="" loading="lazy" decoding="async"></span><span class="story-nome">${esc(p.nome)}</span>`);
@@ -853,9 +854,34 @@
         ctx.restore();
     }
 
+    // no tema azul o cartão sai nas cores dele (mesma troca do ferramentas/gerar-tema-azul.js)
+    const TEMA_AZUL = {
+        "#ff2a3d": "#2e7eff",
+        "#1e1e1e": "#131c2f",
+        "#161616": "#0e1422",
+        "#121212": "#0b111c",
+        "rgba(139,26,26,.55)": "rgba(26,62,139,.55)",
+        "rgba(139,26,26,0)": "rgba(26,62,139,0)",
+        "rgba(139,37,37,.4)": "rgba(37,69,139,.4)",
+        "rgba(139,37,37,0)": "rgba(37,69,139,0)",
+        "rgba(255,42,61,.08)": "rgba(46,126,255,.08)",
+        "rgba(255,42,61,.55)": "rgba(46,126,255,.55)",
+        "rgba(255,42,61,.1)": "rgba(46,126,255,.1)",
+        "rgba(255,42,61,.5)": "rgba(46,126,255,.5)",
+        "rgba(139,26,26,.5)": "rgba(26,62,139,.5)",
+        "#f6f6f6": "#f4f5f8",
+        "#b0b0b0": "#a0aac0",
+        "rgba(38,38,38,.85)": "rgba(24,35,59,.85)",
+        "#e6e6e6": "#e1e4eb",
+        "#8f8f8f": "#7987a5",
+        "#6e6e72": "#5a6886",
+        "#8b1a1a": "#1a3e8b",
+    };
+    const cor = (c) => (document.documentElement.dataset.tema === "azul" && TEMA_AZUL[c]) || c;
+
     /* O ícone do Genius usa as 4 cores do próprio jogo, em vez do traço vermelho/branco padrão */
     function desenharGridGenius(ctx, cx, cy, tamanho) {
-        const cores = ["#ff2a3d", "#f6f6f6", "#8b1a1a", "#6e6e72"];
+        const cores = ["#ff2a3d", "#f6f6f6", "#8b1a1a", "#6e6e72"].map(cor);
         const g = tamanho * 0.42, gap = tamanho * 0.12, x0 = cx - tamanho / 2, y0 = cy - tamanho / 2;
         [[0, 0], [1, 0], [0, 1], [1, 1]].forEach(([cx2, cy2], i) => {
             retanguloArredondado(ctx, x0 + cx2 * (g + gap), y0 + cy2 * (g + gap), g, g, tamanho * 0.08);
@@ -898,29 +924,6 @@
 
     /* Desenha o cartão inteiro num canvas de alta resolução (1080x1350, proporção de story) */
     async function desenharCartao() {
-        // no tema azul o cartão sai nas cores dele (mesma troca do ferramentas/gerar-tema-azul.js)
-        const TEMA_AZUL = {
-            "#ff2a3d": "#2e7eff",
-            "#1e1e1e": "#131c2f",
-            "#161616": "#0e1422",
-            "#121212": "#0b111c",
-            "rgba(139,26,26,.55)": "rgba(26,62,139,.55)",
-            "rgba(139,26,26,0)": "rgba(26,62,139,0)",
-            "rgba(139,37,37,.4)": "rgba(37,69,139,.4)",
-            "rgba(139,37,37,0)": "rgba(37,69,139,0)",
-            "rgba(255,42,61,.08)": "rgba(46,126,255,.08)",
-            "rgba(255,42,61,.55)": "rgba(46,126,255,.55)",
-            "rgba(255,42,61,.1)": "rgba(46,126,255,.1)",
-            "rgba(255,42,61,.5)": "rgba(46,126,255,.5)",
-            "rgba(139,26,26,.5)": "rgba(26,62,139,.5)",
-            "#f6f6f6": "#f4f5f8",
-            "#b0b0b0": "#a0aac0",
-            "rgba(38,38,38,.85)": "rgba(24,35,59,.85)",
-            "#e6e6e6": "#e1e4eb",
-            "#8f8f8f": "#7987a5",
-            "#6e6e72": "#5a6886",
-        };
-        const cor = (c) => (document.documentElement.dataset.tema === "azul" && TEMA_AZUL[c]) || c;
         const { minutos, linhas, selo, projetos, favoritos } = montarStats();
         // altura do cartão acompanha quanto tem pra mostrar, em vez de deixar um vazio no fim
         const W = 1080;
