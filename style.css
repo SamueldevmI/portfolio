@@ -232,8 +232,8 @@ h1 span { -webkit-text-fill-color:transparent; background:linear-gradient(100deg
 
 /* Vidro + sombra ambiente nos cards: sensação de flutuar sobre o fundo */
 .card-projeto { backdrop-filter:blur(12px) saturate(1.2); box-shadow:0 20px 45px -30px rgba(var(--cyan-rgb),.22); }
-.card-projeto:focus-within { transform:translateY(-7px); border-color:var(--cyan); box-shadow:0 0 0 1px var(--cyan),0 22px 48px -18px color-mix(in srgb,var(--cyan) 45%,transparent),0 46px 75px -34px color-mix(in srgb,var(--cyan) 32%,transparent),var(--shadow); }
-@media (hover:hover) { .card-projeto:hover { transform:translateY(-7px); border-color:var(--cyan); box-shadow:0 0 0 1px var(--cyan),0 22px 48px -18px color-mix(in srgb,var(--cyan) 45%,transparent),0 46px 75px -34px color-mix(in srgb,var(--cyan) 32%,transparent),var(--shadow); } }
+.card-projeto:focus-within { transform:translateY(-7px); border-color:var(--cyan); box-shadow:0 0 0 1px var(--cyan),0 22px 48px -18px color-mix(in srgb,var(--cyan) 45%,transparent),0 46px 75px -34px color-mix(in srgb,var(--cyan) 32%,transparent),0 30px 65px -15px rgba(var(--cyan-rgb),.4); }
+@media (hover:hover) { .card-projeto:hover { transform:translateY(-7px); border-color:var(--cyan); box-shadow:0 0 0 1px var(--cyan),0 22px 48px -18px color-mix(in srgb,var(--cyan) 45%,transparent),0 46px 75px -34px color-mix(in srgb,var(--cyan) 32%,transparent),0 30px 65px -15px rgba(var(--cyan-rgb),.4); } }
 
 /* Leve rotação de repouso nos cards, endireita ao interagir (tilt/hover assume o transform) */
 
