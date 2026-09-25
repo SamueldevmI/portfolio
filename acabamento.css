@@ -1388,3 +1388,7 @@ html.tema-aranha .lista-projetos .card-projeto .links-projeto .link-projeto { ba
 .botao-tema svg { width: 18px; height: 18px; }
 .botao-tema:hover { border-color: var(--cyan); transform: scale(1.06); }
 .botao-tema[aria-pressed="true"] { color: #ff2a3d; }
+
+/* Espaço sobrando entre o menu e a linha "DESENVOLVEDOR WEB..." (o padding-top original era grande
+   demais, sobrando pro nada) */
+.hero-conteudo { padding-top: 64px; }
