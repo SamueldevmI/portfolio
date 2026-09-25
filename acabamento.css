@@ -859,10 +859,10 @@ html.sem-animacoes, html.sem-animacoes *, html.sem-animacoes *::before, html.sem
 /* Topo: nome numa linha própria acima, e o título grande fala do que o cliente ganha */
 .hero-ola { position: relative; z-index: 1; margin: 0 0 14px; color: var(--muted); font-size: clamp(1.1rem, 1.9vw, 1.45rem); }
 .hero-ola strong { position: relative; display: inline-block; color: var(--cyan); font-weight: 700; text-shadow: 0 0 14px rgba(var(--cyan-rgb), .45); animation: nome-brasa 4s ease-in-out infinite; }
-.hero-ola strong::before, .hero-ola strong::after { content: ""; position: absolute; bottom: 85%; width: 50px; height: 50px; border-radius: 50%; background: radial-gradient(circle, rgba(var(--cyan-rgb), .4), transparent 70%); filter: blur(12px); opacity: 0; mix-blend-mode: screen; pointer-events: none; }
-.hero-ola strong::before { left: -6%; animation: fumaca-sobe 5s ease-in-out infinite; }
-.hero-ola strong::after { left: 55%; width: 38px; height: 38px; animation: fumaca-sobe 6s ease-in-out infinite 2s; }
-@keyframes fumaca-sobe { 0% { transform: translate(0, 6px) scale(.5); opacity: 0; } 25% { opacity: .55; } 100% { transform: translate(14px, -42px) scale(1.5); opacity: 0; } }
+.hero-ola strong::before, .hero-ola strong::after { content: ""; position: absolute; bottom: 80%; width: 64px; height: 64px; border-radius: 50%; background: radial-gradient(circle, rgba(var(--cyan-rgb), .75), transparent 68%); filter: blur(9px); opacity: 0; mix-blend-mode: screen; pointer-events: none; }
+.hero-ola strong::before { left: -14%; animation: fumaca-sobe 4.5s ease-in-out infinite; }
+.hero-ola strong::after { left: 52%; width: 48px; height: 48px; animation: fumaca-sobe 5.2s ease-in-out infinite 1.6s; }
+@keyframes fumaca-sobe { 0% { transform: translate(0, 8px) scale(.45); opacity: 0; } 35% { opacity: .9; } 100% { transform: translate(18px, -52px) scale(1.7); opacity: 0; } }
 @keyframes nome-brasa { 0%, 100% { text-shadow: 0 0 12px rgba(var(--cyan-rgb), .4); } 50% { text-shadow: 0 0 20px rgba(var(--cyan-rgb), .7); } }
 @media (prefers-reduced-motion: reduce) {
     .hero-ola strong { animation: none; }
