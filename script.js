@@ -884,53 +884,55 @@ if (paletaOverlay) {
     const PARAMETROS = new URLSearchParams(location.search);
     const ORIGEM = ORIGENS[(PARAMETROS.get("origem") || "").toLowerCase()] || "";
 
+    const ICONES_TIPO = { site: "🌐", sistema: "🖥️", app: "📱", automacao: "⚙️", naosei: "🧭" };
+
     const TIPOS = {
         site: {
             rotulo: "Site ou página de vendas",
             perguntas: [
-                { id: "dominio", modo: "escolha", pergunta: "Você já tem um endereço na internet (domínio)?", opcoes: ["Sim", "Ainda não", "Não sei o que é isso"], rotuloMsg: "Já tem domínio" },
-                { id: "identidade", modo: "escolha", pergunta: "Você já tem logo e cores da sua marca?", opcoes: ["Sim, tenho os dois", "Só o logo", "Ainda não tenho", "Não sei"], rotuloMsg: "Logo e cores" },
+                { id: "dominio", modo: "escolha", icone: "🔗", pergunta: "Você já tem um endereço na internet (domínio)?", opcoes: ["Sim", "Ainda não", "Não sei o que é isso"], rotuloMsg: "Já tem domínio" },
+                { id: "identidade", modo: "escolha", icone: "🎨", pergunta: "Você já tem logo e cores da sua marca?", opcoes: ["Sim, tenho os dois", "Só o logo", "Ainda não tenho", "Não sei"], rotuloMsg: "Logo e cores" },
             ],
             recursos: ["Botão de WhatsApp", "Formulário de contato", "Galeria de fotos", "Loja online", "Agendamento", "Blog ou novidades"],
         },
         sistema: {
             rotulo: "Sistema web (cadastro, controle, painel)",
             perguntas: [
-                { id: "usuarios", modo: "escolha", pergunta: "Quantas pessoas vão usar o sistema?", opcoes: ["Só eu", "2 a 5 pessoas", "6 a 20 pessoas", "Mais de 20"], rotuloMsg: "Quantas pessoas vão usar" },
-                { id: "hoje", modo: "escolha", pergunta: "Como você controla isso hoje?", opcoes: ["Planilha", "Caderno ou papel", "Outro sistema", "Ainda não controlo"], rotuloMsg: "Como controla hoje" },
+                { id: "usuarios", modo: "escolha", icone: "👥", pergunta: "Quantas pessoas vão usar o sistema?", opcoes: ["Só eu", "2 a 5 pessoas", "6 a 20 pessoas", "Mais de 20"], rotuloMsg: "Quantas pessoas vão usar" },
+                { id: "hoje", modo: "escolha", icone: "📋", pergunta: "Como você controla isso hoje?", opcoes: ["Planilha", "Caderno ou papel", "Outro sistema", "Ainda não controlo"], rotuloMsg: "Como controla hoje" },
             ],
             recursos: ["Login de usuários", "Painel com gráficos", "Cadastro de clientes", "Relatórios em PDF ou Excel", "Avisos por WhatsApp ou e-mail", "Pagamento online"],
         },
         app: {
             rotulo: "Aplicativo de celular",
             perguntas: [
-                { id: "aparelho", modo: "escolha", pergunta: "Para qual celular?", opcoes: ["Android", "iPhone", "Os dois", "Não sei"], rotuloMsg: "Celular" },
-                { id: "offline", modo: "escolha", pergunta: "Ele precisa funcionar sem internet?", opcoes: ["Sim", "Não", "Não sei"], rotuloMsg: "Funcionar sem internet" },
+                { id: "aparelho", modo: "escolha", icone: "📲", pergunta: "Para qual celular?", opcoes: ["Android", "iPhone", "Os dois", "Não sei"], rotuloMsg: "Celular" },
+                { id: "offline", modo: "escolha", icone: "📶", pergunta: "Ele precisa funcionar sem internet?", opcoes: ["Sim", "Não", "Não sei"], rotuloMsg: "Funcionar sem internet" },
             ],
             recursos: ["Login de usuários", "Notificações", "Câmera e fotos", "Mapa e localização", "Pagamento online", "Painel para administrar"],
         },
         automacao: {
             rotulo: "Automação (acabar com tarefa repetitiva)",
             perguntas: [
-                { id: "tarefa", modo: "texto", longo: true, max: 240, pergunta: "Qual tarefa você repete todo dia ou toda semana?", dica: "Ex.: copiar os dados dos e-mails para uma planilha", rotuloMsg: "Tarefa que se repete" },
-                { id: "frequencia", modo: "escolha", pergunta: "Com que frequência ela acontece?", opcoes: ["Todo dia", "Toda semana", "Todo mês", "Não sei"], rotuloMsg: "Frequência" },
+                { id: "tarefa", modo: "texto", longo: true, max: 240, icone: "🔁", pergunta: "Qual tarefa você repete todo dia ou toda semana?", dica: "Ex.: copiar os dados dos e-mails para uma planilha", rotuloMsg: "Tarefa que se repete" },
+                { id: "frequencia", modo: "escolha", icone: "🗓️", pergunta: "Com que frequência ela acontece?", opcoes: ["Todo dia", "Toda semana", "Todo mês", "Não sei"], rotuloMsg: "Frequência" },
             ],
             recursos: ["Planilhas (Excel ou Google)", "E-mail", "WhatsApp", "Relatórios prontos", "Ler PDFs e documentos", "Avisos automáticos"],
         },
         naosei: {
             rotulo: "Ainda não sei o que preciso",
             perguntas: [
-                { id: "problema", modo: "texto", longo: true, max: 240, pergunta: "Qual problema você quer resolver ou o que quer melhorar?", dica: "Ex.: perco muito tempo respondendo as mesmas perguntas", rotuloMsg: "O que quer resolver" },
+                { id: "problema", modo: "texto", longo: true, max: 240, icone: "❓", pergunta: "Qual problema você quer resolver ou o que quer melhorar?", dica: "Ex.: perco muito tempo respondendo as mesmas perguntas", rotuloMsg: "O que quer resolver" },
             ],
             recursos: null,
         },
     };
     const ORDEM = ["site", "sistema", "app", "automacao", "naosei"];
 
-    const PASSO_TIPO = { id: "tipo", modo: "escolha", pergunta: "Que tipo de projeto você quer?", opcoes: ORDEM.map((id) => ({ valor: id, texto: TIPOS[id].rotulo })) };
-    const PASSO_NEGOCIO = { id: "negocio", modo: "texto", opcional: true, max: 160, pergunta: "O que você faz ou vende?", dica: "Ex.: sou dentista e atendo em Campo Grande", rotuloMsg: "Sobre o negócio" };
-    const PASSO_PRAZO = { id: "prazo", modo: "escolha", opcional: true, pergunta: "Para quando você precisa?", opcoes: ["O quanto antes", "Em cerca de 1 mês", "Sem pressa", "Ainda não sei"], rotuloMsg: "Prazo" };
-    const PASSO_CONTATO = { id: "contato", modo: "contato", pergunta: "Como posso te chamar?" };
+    const PASSO_TIPO = { id: "tipo", modo: "escolha", icone: "🎯", pergunta: "Que tipo de projeto você quer?", opcoes: ORDEM.map((id) => ({ valor: id, texto: TIPOS[id].rotulo })) };
+    const PASSO_NEGOCIO = { id: "negocio", modo: "texto", opcional: true, max: 160, icone: "💼", pergunta: "O que você faz ou vende?", dica: "Ex.: sou dentista e atendo em Campo Grande", rotuloMsg: "Sobre o negócio" };
+    const PASSO_PRAZO = { id: "prazo", modo: "escolha", opcional: true, icone: "⏱️", pergunta: "Para quando você precisa?", opcoes: ["O quanto antes", "Em cerca de 1 mês", "Sem pressa", "Ainda não sei"], rotuloMsg: "Prazo" };
+    const PASSO_CONTATO = { id: "contato", modo: "contato", icone: "👋", pergunta: "Como posso te chamar?" };
     const TOTAL_TIPICO = 7;
 
     let resp = {};
@@ -954,7 +956,7 @@ if (paletaOverlay) {
         if (tipo) {
             lista.push(...tipo.perguntas.map((pergunta) => ({ ...pergunta, opcional: true })));
             if (tipo.recursos) {
-                lista.push({ id: "recursos", modo: "varias", opcional: true, pergunta: "O que o projeto precisa ter?", ajuda: "Marque o que quiser. Pode pular.", opcoes: tipo.recursos, rotuloMsg: "Precisa ter" });
+                lista.push({ id: "recursos", modo: "varias", opcional: true, icone: "🧩", pergunta: "O que o projeto precisa ter?", ajuda: "Marque o que quiser. Pode pular.", opcoes: tipo.recursos, rotuloMsg: "Precisa ter" });
             }
         }
         lista.push(PASSO_PRAZO, PASSO_CONTATO);
@@ -1266,7 +1268,13 @@ if (paletaOverlay) {
 
     function criarPasso(passo) {
         const caixa = criar("div", "orc-passo");
-        const titulo = criar("h3", "orc-pergunta", passo.pergunta);
+        const titulo = criar("h3", "orc-pergunta");
+        if (passo.icone) {
+            const icone = criar("span", "orc-pergunta-icone", passo.icone);
+            icone.setAttribute("aria-hidden", "true");
+            titulo.append(icone);
+        }
+        titulo.append(document.createTextNode(passo.pergunta));
         titulo.id = "orcPergunta";
         titulo.tabIndex = -1;
         titulo.dataset.foco = "";
@@ -1281,7 +1289,10 @@ if (paletaOverlay) {
 
     function criarFinal() {
         const caixa = criar("div", "orc-passo");
-        const titulo = criar("h3", "orc-pergunta", "Sua mensagem está pronta");
+        const titulo = criar("h3", "orc-pergunta");
+        const icone = criar("span", "orc-pergunta-icone", "✅");
+        icone.setAttribute("aria-hidden", "true");
+        titulo.append(icone, document.createTextNode("Sua mensagem está pronta"));
         titulo.tabIndex = -1;
         titulo.dataset.foco = "";
         caixa.append(titulo, criar("p", "orc-ajuda", "Confira e mude o que quiser. Ao clicar em enviar, o WhatsApp abre com este texto. Falta só apertar enviar por lá."));
