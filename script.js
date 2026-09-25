@@ -41,11 +41,17 @@ if (heroTexto && !prefereMenosMovimento) {
     }, 320);
 }
 
+// o número de projetos acompanha os cards da página (entrou projeto novo, o número sobe sozinho)
+const statProjetos = document.getElementById("statProjetos");
+const totalProjetos = document.querySelectorAll(".card-projeto").length;
+if (statProjetos && totalProjetos) { statProjetos.dataset.contar = totalProjetos; statProjetos.textContent = totalProjetos; }
+
 const numerosContaveis = document.querySelectorAll("[data-contar]");
 
 if (!prefereMenosMovimento) {
     numerosContaveis.forEach((el) => {
         const alvo = Number(el.dataset.contar);
+        const prefixo = el.dataset.prefixo || "";
         const sufixo = el.dataset.sufixo || "";
         const pad2 = el.dataset.formato === "pad2";
         const duracao = 1200;
@@ -56,7 +62,7 @@ if (!prefereMenosMovimento) {
             const progresso = Math.min((tempo - inicio) / duracao, 1);
             const facilitado = 1 - Math.pow(1 - progresso, 3);
             const valor = Math.round(alvo * facilitado);
-            el.textContent = (pad2 ? String(valor).padStart(2, "0") : String(valor)) + sufixo;
+            el.textContent = prefixo + (pad2 ? String(valor).padStart(2, "0") : String(valor)) + sufixo;
             if (progresso < 1) requestAnimationFrame(passo);
         }
 
