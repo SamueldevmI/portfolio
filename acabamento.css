@@ -858,7 +858,7 @@ html.sem-animacoes, html.sem-animacoes *, html.sem-animacoes *::before, html.sem
 
 /* Topo: nome numa linha própria acima, e o título grande fala do que o cliente ganha */
 .hero-ola { position: relative; z-index: 1; margin: 0 0 14px; color: var(--muted); font-size: clamp(1.1rem, 1.9vw, 1.45rem); }
-.hero-ola strong { color: var(--text); font-weight: 600; }
+.hero-ola strong { color: var(--cyan); font-weight: 700; text-shadow: 0 0 14px rgba(var(--cyan-rgb), .45); }
 .hero-conteudo .hero-ola { animation-delay: .1s; }
 .hero-conteudo h1 { font-size: clamp(2.7rem, 6.4vw, 5.7rem); line-height: .95; letter-spacing: -.06em; }
 
@@ -1027,7 +1027,7 @@ html.sem-animacoes, html.sem-animacoes *, html.sem-animacoes *::before, html.sem
 /* com desconto valendo, o preço cheio aparece riscado */
 :is(.projeto-preco, .mini-projeto-preco):has(.pp-promo:not([hidden])) .pp-base b { text-decoration: line-through; text-decoration-thickness: 2px; opacity: .65; font-size: .95rem; }
 
-/* ---------- Cursor: ponto na batida + rastro de notinhas (musica.js) ----------
+/* ---------- Cursor: ponto na batida + rastro de faíscas neon (musica.js) ----------
    Com mouse, o ponto É o cursor: a seta do sistema some (menos em campos de texto, onde a barrinha de
    digitar continua). Um anel em volta cresce sobre o que é clicável. */
 @media (hover: hover) and (pointer: fine) {
@@ -1036,14 +1036,13 @@ html.sem-animacoes, html.sem-animacoes *, html.sem-animacoes *::before, html.sem
 }
 .cursor-batida { position: fixed; left: 0; top: 0; z-index: 2147483000; width: 14px; height: 14px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 0 2px rgba(255,255,255,.9), 0 0 16px 3px rgba(var(--cyan-rgb), .75); pointer-events: none; opacity: 0; will-change: transform; transition: width .18s ease, height .18s ease, background-color .18s ease; }
 .cursor-batida.sobre-clicavel { width: 34px; height: 34px; background: rgba(255,255,255,.12); box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px rgba(18,18,18,.55), 0 0 18px 2px rgba(var(--cyan-rgb), .5); }
-.nota-rastro { position: fixed; z-index: 2147482999; color: var(--cyan); font: 700 17px/1 "Space Grotesk", sans-serif; text-shadow: 0 0 8px rgba(var(--cyan-rgb), .6); pointer-events: none; user-select: none; animation: nota-sobe .6s ease-out forwards; }
-.nota-rastro.nota-rosa { color: var(--pink); text-shadow: 0 0 8px rgba(var(--pink-rgb), .6); }
-@keyframes nota-sobe {
-    0%   { opacity: 0; transform: translate(-50%, -50%) scale(.7) rotate(0); }
-    20%  { opacity: .9; }
-    100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% - 30px)) scale(1) rotate(var(--giro)); }
+.faisca-rastro { position: fixed; z-index: 2147482999; width: 7px; height: 7px; border-radius: 50%; background: radial-gradient(circle, #ffffff 0%, var(--cyan) 42%, transparent 72%); box-shadow: 0 0 6px 1px rgba(var(--cyan-rgb), .85), 0 0 16px 4px rgba(var(--cyan-rgb), .35); pointer-events: none; user-select: none; animation: faisca-cai .65s ease-out forwards; }
+.faisca-rastro.faisca-branca { background: radial-gradient(circle, #ffffff 0%, #ffffff 36%, transparent 72%); box-shadow: 0 0 6px 1px rgba(255,255,255,.9), 0 0 18px 5px rgba(var(--cyan-rgb), .45); }
+@keyframes faisca-cai {
+    0%   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(.15); }
 }
-@media print { .cursor-batida, .nota-rastro { display: none !important; } }
+@media print { .cursor-batida, .faisca-rastro { display: none !important; } }
 
 /* ---------- Celular: inclinar, puxar pra baixo e botão de WhatsApp (mobile.js) ---------- */
 @media (pointer: coarse) {
