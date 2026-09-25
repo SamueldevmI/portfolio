@@ -639,13 +639,22 @@
 
     // 10) Ondinhas do ícone pulsando na batida de verdade
     function pulsarIcone() {
-        if (!tocando || !ctx || ctx.state !== "running") { botao.style.removeProperty("--pulso"); return; }
+        if (!tocando || !ctx || ctx.state !== "running") {
+            botao.style.removeProperty("--pulso");
+            document.documentElement.classList.remove("tem-batida-foto");
+            document.documentElement.style.removeProperty("--batida-pulso");
+            return;
+        }
         const agora = ctx.currentTime;
         let inicio = null;
         linhaDoTempo.forEach((c) => { if (c.t <= agora) inicio = c.t; });
         if (inicio !== null) {
             const fase = ((agora - inicio) / BATIDA) % 1;
-            botao.style.setProperty("--pulso", Math.exp(-fase * 5).toFixed(3));
+            const pulso = Math.exp(-fase * 5).toFixed(3);
+            botao.style.setProperty("--pulso", pulso);
+            // a fotinha do topo pulsa no mesmo ritmo (ver .hero-foto-pulso em acabamento.css)
+            document.documentElement.classList.add("tem-batida-foto");
+            document.documentElement.style.setProperty("--batida-pulso", pulso);
         }
         requestAnimationFrame(pulsarIcone);
     }
