@@ -1354,3 +1354,37 @@ html:not(.dark-mode) body::after { background: radial-gradient(circle at 70% 25%
 .botao .ic-mini, .botao-secundario .ic-mini { color: currentColor; }
 .coracao-icone { fill: #ff2a3d; stroke: #ff2a3d; }
 .ic-preenchido { fill: currentColor; stroke: none; }
+
+/* ---------- Tema "Aranha": vermelho + azul elétrico (segundo tema, trocável pelo botão no menu) ----------
+   Mesma estrutura do Deadpool, só a paleta muda: fundo azul-carvão, azul elétrico como neon principal
+   e o vermelho vira o acento secundário — como o "orc-pergunta-icone" e a fumacinha, que usam
+   var(--cyan-rgb), isso já muda sozinho; aqui só cobre o que tava com cor cravada (!important). */
+html.tema-aranha {
+    --bg: #0e1526; --surface: #172033; --surface-2: #202b45;
+    --cyan: #2e7dff; --cyan-rgb: 46, 125, 255;   /* azul elétrico: destaques, links, brilhos */
+    --pink: #ff2a3d; --pink-rgb: 255, 42, 61;    /* vermelho vira o acento secundário */
+    --sangue: #123a8f;
+}
+html.tema-aranha { background: #0e1526; }
+html.tema-aranha ::selection { background: #123a8f; color: #ffffff; }
+html.tema-aranha h1 span { background: linear-gradient(100deg, #2e7dff, #6fa8ff 45%, #ff2a3d 70%, #2e7dff) !important; background-size: 200% auto !important; -webkit-background-clip: text !important; background-clip: text !important; filter: drop-shadow(0 0 14px rgba(46,125,255,.55)); }
+html.tema-aranha .botao-principal, html.tema-aranha .orcamento-fixo:not(.fixo-whats), html.tema-aranha .chip-indicador { background: #123a8f !important; border: 1px solid #2e7dff !important; color: #ffffff !important; box-shadow: 0 0 12px rgba(46,125,255,.35), inset 0 0 8px rgba(46,125,255,.18) !important; }
+@media (hover: hover) { html.tema-aranha .botao-principal:hover { background: #1a4fb8 !important; box-shadow: 0 0 22px rgba(46,125,255,.7), inset 0 0 10px rgba(46,125,255,.3) !important; } }
+html.tema-aranha .card-projeto { --cor: #2e7dff !important; }
+html.tema-aranha .card-projeto:nth-of-type(even) { --cor: #ff2a3d !important; }
+html.tema-aranha .projeto-visual.visual-print { --acento: #123a8f !important; }
+html.tema-aranha .lista-projetos .card-projeto .links-projeto .link-projeto { color: #ffffff !important; }
+html.tema-aranha .barra-progresso { background: linear-gradient(90deg, #123a8f, #2e7dff) !important; box-shadow: 0 0 10px rgba(46,125,255,.7); }
+html.tema-aranha body::before { background: radial-gradient(circle at 18% 22%, rgba(18,58,143,.32) 0, transparent 34%), radial-gradient(circle at 82% 70%, rgba(46,125,255,.16) 0, transparent 32%), linear-gradient(172deg, #172033 0%, #0e1526 50%, #0a0f1c 100%); }
+html.tema-aranha body::after { background: radial-gradient(circle at 70% 25%, rgba(255,255,255,.04) 0, transparent 34%), radial-gradient(circle at 50% 50%, rgba(46,125,255,.06) 0, transparent 28%); }
+html.tema-aranha .gn-0 { background: #2e7dff; color: #2e7dff; } html.tema-aranha .gn-1 { background: #f6f6f6; color: #f6f6f6; }
+html.tema-aranha .gn-2 { background: #ff2a3d; color: #ff8a95; } html.tema-aranha .gn-3 { background: #6e6e72; color: #bdbdc2; }
+html.tema-aranha .projetos { background: linear-gradient(120deg, rgba(18,58,143,.36), rgba(14,21,38,.2) 60%) !important; border-block: 1px solid rgba(46,125,255,.3) !important; }
+html.tema-aranha .contato { background: linear-gradient(135deg, #123a8f, #202b45 70%) !important; border: 1px solid rgba(46,125,255,.5) !important; box-shadow: 0 0 40px rgba(46,125,255,.2), inset 0 0 30px rgba(46,125,255,.08); }
+html.tema-aranha .lista-projetos .card-projeto .links-projeto .link-projeto { background: #123a8f !important; border: 1px solid #2e7dff !important; box-shadow: 0 0 12px rgba(46,125,255,.35) !important; }
+
+/* botão de trocar tema: aranha (azul) do lado do de som */
+.botao-tema { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; margin-right: 6px; border: 1px solid rgba(255,255,255,.18); border-radius: 50%; background: transparent; color: var(--cyan); cursor: pointer; transition: border-color .2s ease, color .2s ease, transform .2s ease; }
+.botao-tema svg { width: 18px; height: 18px; }
+.botao-tema:hover { border-color: var(--cyan); transform: scale(1.06); }
+.botao-tema[aria-pressed="true"] { color: #ff2a3d; }

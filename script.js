@@ -1,7 +1,35 @@
-/* Tema único (preto, vermelho-sangue e branco). O tema claro saiu; limpa a escolha antiga de quem já visitou. */
+/* Dois temas: Deadpool (padrão, vermelho-sangue/preto/branco) e Aranha (vermelho + azul elétrico).
+   A escolha fica guardada neste aparelho. Limpa o "dark-mode" de quem visitou antes do tema único. */
 document.body.classList.remove("dark-mode");
 document.documentElement.classList.remove("dark-mode");
-try { localStorage.removeItem("tema"); } catch (erro) { /* sem armazenamento */ }
+(function () {
+    const CHAVE_TEMA = "tema";
+    const ler = () => { try { return localStorage.getItem(CHAVE_TEMA); } catch (e) { return null; } };
+    const gravar = (v) => { try { localStorage.setItem(CHAVE_TEMA, v); } catch (e) { /* sem armazenamento */ } };
+    const meta = document.querySelector('meta[name="theme-color"]');
+    const CORES = { deadpool: "#161616", aranha: "#0e1526" };
+    function aplicar(tema) {
+        document.documentElement.classList.toggle("tema-aranha", tema === "aranha");
+        if (meta) meta.setAttribute("content", CORES[tema] || CORES.deadpool);
+        const botao = document.getElementById("botaoTema");
+        if (botao) {
+            botao.setAttribute("aria-pressed", String(tema === "aranha"));
+            botao.setAttribute("aria-label", tema === "aranha" ? "Trocar para o tema Deadpool" : "Trocar para o tema Homem-Aranha");
+        }
+    }
+    const salvo = ler() === "aranha" ? "aranha" : "deadpool";
+    aplicar(salvo);
+    document.addEventListener("DOMContentLoaded", () => {
+        const botao = document.getElementById("botaoTema");
+        if (!botao) return;
+        botao.addEventListener("click", () => {
+            const novo = document.documentElement.classList.contains("tema-aranha") ? "deadpool" : "aranha";
+            aplicar(novo);
+            gravar(novo);
+            if (window.musicaSite && window.musicaSite.pode()) window.musicaSite.curtir();
+        });
+    });
+})();
 
 document.getElementById("ano").textContent = new Date().getFullYear();
 
