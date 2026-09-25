@@ -1287,7 +1287,10 @@ html:not(.dark-mode) body::after { background: radial-gradient(circle at 70% 25%
     #botaoResumo { display: inline-flex; }
 }
 @media (pointer: coarse) and (prefers-reduced-motion: reduce) { .resumo-overlay { animation: none; } }
-@media not (pointer: coarse) { #botaoResumo { display: none !important; } }
+/* Esses três botões só funcionam no celular (mobile.js liga o clique deles); o [hidden] do HTML sozinho
+   não bastava porque .botao{display:inline-flex} do style.css vence a regra padrão do navegador pro
+   [hidden] — então ficavam visíveis (e mudos) até no computador. Aqui garante que ficam escondidos. */
+@media not (pointer: coarse) { #botaoInstalar, #botaoSocio, #botaoResumo { display: none !important; } }
 
 /* ---------- 5 efeitos de hover neon: chips, botões, cards e menu ---------- */
 
