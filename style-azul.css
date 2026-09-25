@@ -1862,6 +1862,7 @@ html.tem-barra-app .fim-elastico { bottom: calc(62px + env(safe-area-inset-botto
     --pink: #3884ff;  --pink-rgb: 56, 132, 255;    /* vermelho-sangue, agora vivo o bastante pra virar texto */
     --violet: #ffffff; --violet-rgb: 255, 255, 255;
     --sangue: #1a3e8b;
+    --acento-texto: #6ba4ff; /* vermelho mais claro, pra texto pequeno ficar legível em cima de fundo avermelhado */
 }
 html { background: #0e1422; }
 ::selection { background: #1a3e8b; color: #ffffff; }
@@ -2121,3 +2122,39 @@ html:not(.dark-mode) body::after { background: radial-gradient(circle at 70% 25%
     .cmp-chave::before { transition: none; }
     .cmp-msg { transform: none; }
 }
+
+/* ---------- Legibilidade e toque (caça aos bugs de 2026-09-25) ---------- */
+/* Texto pequeno na cor de destaque: o neon puro some em cima dos fundos avermelhados (contraste < 4,5) */
+.eyebrow, .eyebrow-mini, .tag, .pp-promo b, .projeto-preco b, .mini-projeto-preco b, .promo-servicos b, .desconto-depoimento b,
+.linha-tempo .lt-tags li, .barra-app a.ativo, .cmp-calc-site b, .cmp-calc-abrir, .chip-surpresa, .calc-resultado b { color: var(--acento-texto); }
+main .eyebrow::before { color: var(--acento-texto); }
+.contato .eyebrow, .contato .eyebrow::before { color: rgba(255,255,255,.88); }
+/* preço antigo riscado: branco apagado com o risco na cor de destaque (antes era vermelho a 65% e sumia) */
+:is(.projeto-preco, .mini-projeto-preco):has(.pp-promo:not([hidden])) .pp-base b { color: var(--text); opacity: .6; text-shadow: none; text-decoration-color: var(--cyan); }
+/* detalhes dentro dos visuais dos projetos */
+.loja-logo { color: #ffffff; text-shadow: 0 0 12px rgba(var(--cyan-rgb), .9); }
+.eldev-tocando { border-color: var(--acento-texto); color: #ffffff; }
+.botao-surpresa:not(.is-ativo) { border-color: var(--acento-texto); color: var(--acento-texto); }
+/* letra miúda */
+.linha-tempo .lt-tags li { font-size: .7rem; }
+.cmp-metrica small { font-size: .66rem; }
+@media (max-width: 720px) { .cmp-metrica small { font-size: .62rem; letter-spacing: .02em; } }
+
+/* Serviços: a coluna encolhe com a tela (antes ficava com 330px e vazava em telas de 320px) */
+@media (max-width: 720px) { .servicos { grid-template-columns: minmax(0, 1fr); } }
+/* Calculadora dos Serviços: o <select> com a opção mais comprida alargava a grade em telas de 320px */
+.calc-perda { grid-template-columns: minmax(0, 1fr); }
+.calc-perda select { min-width: 0; max-width: 100%; }
+
+/* Volume da música: abre pra dentro da tela (centralizado no botão, vazava pela direita) */
+.som-volume { left: auto; right: 0; transform: translateY(-4px); }
+.som-caixa-volume:hover .som-volume, .som-caixa-volume:focus-within .som-volume { transform: none; }
+
+/* Alvos de toque no celular: nada menor que ~36px */
+@media (pointer: coarse) {
+    .cmp-tipos button, .cmp-abas button { min-height: 36px; }
+    .cmp-testar { display: inline-flex; align-items: center; min-height: 40px; }
+    .botao-flip, .botao-compartilhar { width: 40px; height: 40px; }
+    .habilidades li button { min-height: 36px; }
+}
+
