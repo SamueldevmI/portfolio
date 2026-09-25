@@ -313,7 +313,7 @@ footer, .link-rodape, .chip-filtro, .botao-surpresa { font-size: .8rem; }
 .hero-numeros span { font-size: .82rem; }
 .nav-cta { font-size: .84rem; }
 .orcamento-privacidade { font-size: .84rem; }
-.terminal-cursor, .terminal-titulo { font-size: .78rem; }
+.terminal-cursor { font-size: .78rem; }
 .lista-projetos .card-projeto .links-projeto .link-projeto { font-size: .86rem; }
 .lista-projetos .card-projeto .links-projeto :is(.link-acao, .link-codigo) { display: inline-flex; align-items: center; min-height: 38px; font-size: .86rem; }
 .lista-projetos .card-projeto .card-orcamento { min-height: 44px; font-size: .88rem; }
@@ -906,11 +906,6 @@ html.sem-animacoes, html.sem-animacoes *, html.sem-animacoes *::before, html.sem
 #servicos .lista-servicos article { grid-template-columns: 1fr; row-gap: 0; }
 #servicos .lista-servicos article > span { margin-bottom: 14px; }
 #servicos .lista-servicos .link-servico { grid-column: 1; }
-
-/* Terminal só no computador: no celular ele ocupava uma tela inteira com o texto cortado */
-@media (max-width: 720px) {
-    .terminal-interativo { display: none; }
-}
 
 /* Voltar ao topo redondo, combinando com o anel de progresso em volta */
 .voltar-topo { border-radius: 50%; }
