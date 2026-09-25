@@ -4,7 +4,7 @@
 /* ---------- 8. Ritmo da página: numeração das seções e respiro ---------- */
 body { counter-reset: secao; }
 main .eyebrow { counter-increment: secao; }
-main .eyebrow::before { content: counter(secao, decimal-leading-zero) " / "; color: var(--pink); }
+main .eyebrow::before { content: counter(secao, decimal-leading-zero) " / "; color: var(--cyan); }
 @media (min-width: 721px) { .secao { padding-block: 100px; } }
 .secao.jornada { max-width: none; }
 
@@ -92,19 +92,19 @@ body.periodo-dia { --pixel-cor-a: #ff3d51; --pixel-cor-b: #ff3d51; --pixel-cor-c
 /* ---------- 7. Ícones nas tecnologias e nos serviços ---------- */
 .habilidades li { display: inline-flex; align-items: center; gap: 8px; padding: 7px 13px 7px 10px; border-radius: 999px; background: rgba(var(--cyan-rgb), .06); }
 .habilidades li::before { display: none; }
-.habilidades li svg { width: 15px; height: 15px; flex: none; fill: currentColor; transition: transform .25s ease; }
-.habilidades li:hover svg, .habilidades li.habilidade-ativa svg, .habilidades li:focus-visible svg { transform: scale(1.25) rotate(-6deg); }
-.habilidades li[data-tecnologia="python"] svg { color: #848484; }
-.habilidades li[data-tecnologia="html"] svg { color: #f43649; }
-.habilidades li[data-tecnologia="css"] svg { color: #e6e6e6; }
-.habilidades li[data-tecnologia="javascript"] svg { color: #f71e34; }
+.habilidades li svg { width: 15px; height: 15px; flex: none; fill: currentColor; filter: drop-shadow(0 0 2px currentColor); transition: transform .25s ease, filter .25s ease; }
+.habilidades li:hover svg, .habilidades li.habilidade-ativa svg, .habilidades li:focus-visible svg { transform: scale(1.25) rotate(-6deg); filter: drop-shadow(0 0 4px currentColor); }
+.habilidades li[data-tecnologia="python"] svg { color: #4b8bbe; }
+.habilidades li[data-tecnologia="html"] svg { color: #e34f26; }
+.habilidades li[data-tecnologia="css"] svg { color: #2965f1; }
+.habilidades li[data-tecnologia="javascript"] svg { color: #f7df1e; }
 /* tecnologias novas (PWA, Flask, SQLAlchemy, Pytest, Git): ícones de linha próprios, sem logotipo de marca */
 .habilidades li svg.ic-linha { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.habilidades li[data-tecnologia="pwa"] svg { color: #f74557; }
+.habilidades li[data-tecnologia="pwa"] svg { color: #5a0fc8; }
 .habilidades li[data-tecnologia="flask"] svg { color: #e4e4e4; }
-.habilidades li[data-tecnologia="sqlalchemy"] svg { color: #ff3d51; }
-.habilidades li[data-tecnologia="pytest"] svg { color: #e6e6e6; }
-.habilidades li[data-tecnologia="git"] svg { color: #f42e42; }
+.habilidades li[data-tecnologia="sqlalchemy"] svg { color: #d71f00; }
+.habilidades li[data-tecnologia="pytest"] svg { color: #0a9edc; }
+.habilidades li[data-tecnologia="git"] svg { color: #f05032; }
 
 .lista-servicos article { position: relative; transition: background .3s ease; }
 .lista-servicos article:hover { background: linear-gradient(90deg, rgba(var(--cyan-rgb), .08), transparent 72%); }
@@ -915,7 +915,7 @@ html.sem-animacoes, html.sem-animacoes *, html.sem-animacoes *::before, html.sem
 
 /* ---------- Serviços como pacotes: preço de partida e o que inclui ---------- */
 #servicos .servico-preco { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; margin: 16px 0 0; padding-top: 14px; border-top: 1px solid var(--line); color: var(--muted); }
-#servicos .servico-preco strong { color: var(--text); font-size: 1.35rem; letter-spacing: -.02em; }
+#servicos .servico-preco strong { color: var(--cyan); font-size: 1.35rem; font-weight: 700; letter-spacing: -.02em; text-shadow: 0 0 10px rgba(var(--cyan-rgb), .35); }
 #servicos .servico-preco small { font: .72rem "DM Mono", monospace; letter-spacing: .04em; }
 #servicos .servico-inclui { display: grid; gap: 6px; margin: 12px 0 4px; padding: 0; list-style: none; color: var(--muted); font-size: .88rem; }
 #servicos .servico-inclui li { position: relative; padding-left: 20px; }
@@ -952,9 +952,9 @@ html.sem-animacoes, html.sem-animacoes *, html.sem-animacoes *::before, html.sem
 @keyframes brilho-promo { 0%, 100% { box-shadow: 0 0 18px rgba(var(--cyan-rgb), .35); } 50% { box-shadow: 0 0 30px rgba(var(--cyan-rgb), .65); } }
 @media (prefers-reduced-motion: reduce) { .promo-faixa { animation: none; } }
 .hero-conteudo .promo-faixa { animation-delay: .08s; }
-.promo-servicos { margin-top: 14px; padding: 12px 16px; border-left: 3px solid var(--pink); border-radius: 0 10px 10px 0; background: rgba(var(--pink-rgb), .08); color: var(--text) !important; }
-.promo-servicos b { color: var(--pink); }
-.meta-preco { border-color: rgba(var(--pink-rgb), .45) !important; color: var(--text) !important; }
+.promo-servicos { margin-top: 14px; padding: 12px 16px; border-left: 3px solid var(--cyan); border-radius: 0 10px 10px 0; background: rgba(var(--cyan-rgb), .1); color: var(--text) !important; }
+.promo-servicos b { color: var(--cyan); text-shadow: 0 0 10px rgba(var(--cyan-rgb), .4); }
+.meta-preco { border-color: rgba(var(--cyan-rgb), .5) !important; color: var(--text) !important; }
 #servicos .titulo-secao > h2 + p { color: var(--muted); }
 .desconto-depoimento { margin-top: 10px; padding: 12px 16px; border-left: 3px solid var(--cyan); border-radius: 0 10px 10px 0; background: rgba(var(--cyan-rgb), .08); color: var(--text) !important; }
 .desconto-depoimento b { color: var(--cyan); }
@@ -1020,10 +1020,10 @@ html.sem-animacoes, html.sem-animacoes *, html.sem-animacoes *::before, html.sem
 /* ---------- Preço de cada projeto, com o desconto em destaque ---------- */
 .projeto-preco, .mini-projeto-preco { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; margin: 2px 0 12px; color: var(--muted); font-size: .9rem; }
 .mini-projeto-preco { margin: 10px 0 0; font-size: .84rem; }
-.projeto-preco b, .mini-projeto-preco b { color: var(--text); font-size: 1.05rem; }
+.projeto-preco b, .mini-projeto-preco b { color: var(--cyan); font-size: 1.1rem; font-weight: 700; text-shadow: 0 0 10px rgba(var(--cyan-rgb), .35); }
 .pp-promo[hidden] { display: none; }
-.pp-promo { padding: 4px 10px; border-radius: 10px; background: rgba(var(--pink-rgb), .12); border: 1px solid rgba(var(--pink-rgb), .45); color: var(--text); font-size: .82rem; }
-.pp-promo b { color: var(--pink); font-size: .95rem; }
+.pp-promo { padding: 4px 10px; border-radius: 10px; background: rgba(var(--cyan-rgb), .14); border: 1px solid rgba(var(--cyan-rgb), .5); color: var(--text); font-size: .82rem; }
+.pp-promo b { color: var(--cyan); font-size: 1rem; text-shadow: 0 0 10px rgba(var(--cyan-rgb), .4); }
 /* com desconto valendo, o preço cheio aparece riscado */
 :is(.projeto-preco, .mini-projeto-preco):has(.pp-promo:not([hidden])) .pp-base b { text-decoration: line-through; text-decoration-thickness: 2px; opacity: .65; font-size: .95rem; }
 
@@ -1237,9 +1237,9 @@ html.tem-barra-app .fim-elastico { bottom: calc(62px + env(safe-area-inset-botto
    Paleta: #161616 / #1e1e1e / #262626 (carvão), #8b1a1a e #8b2525 (sangue), #ff2a3d (neon, só em brilho). */
 :root {
     --bg: #161616; --surface: #1e1e1e; --surface-2: #262626;
-    --text: #f6f6f6; --muted: #f0f0f0; --line: rgba(255,255,255,.1);
+    --text: #ffffff; --muted: #ffffff; --line: rgba(255,255,255,.1);
     --cyan: #ff2a3d;  --cyan-rgb: 255, 42, 61;    /* neon vermelho: destaques, links, brilhos */
-    --pink: #8b1a1a;  --pink-rgb: 139, 26, 26;    /* vermelho-sangue */
+    --pink: #ff3860;  --pink-rgb: 255, 56, 96;    /* vermelho-sangue, agora vivo o bastante pra virar texto */
     --violet: #ffffff; --violet-rgb: 255, 255, 255;
     --sangue: #8b1a1a;
 }
