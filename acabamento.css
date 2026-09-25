@@ -1278,3 +1278,10 @@ html:not(.dark-mode) body::after { background: radial-gradient(circle at 70% 25%
 }
 @media (pointer: coarse) and (prefers-reduced-motion: reduce) { .resumo-overlay { animation: none; } }
 @media not (pointer: coarse) { #botaoResumo { display: none !important; } }
+
+/* ---------- Ícones próprios no lugar de emoji nativo (ver ICONES_TEMA em script.js) ---------- */
+.ic-linha { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.ic-mini { width: 18px; height: 18px; vertical-align: -4px; margin-right: 7px; flex-shrink: 0; }
+.botao .ic-mini, .botao-secundario .ic-mini { color: currentColor; }
+.coracao-icone { fill: #ff2a3d; stroke: #ff2a3d; }
+.ic-preenchido { fill: currentColor; stroke: none; }
