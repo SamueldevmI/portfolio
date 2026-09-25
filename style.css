@@ -408,6 +408,7 @@ footer .link-rodape:focus-visible { outline:2px solid var(--cyan); outline-offse
 .orc-passo { margin-top:26px; }
 .orc-pergunta { margin:0 0 6px; font-size:1.5rem; line-height:1.2; letter-spacing:-.02em; }
 .orc-pergunta:focus { outline:none; }
+.orc-pergunta-icone { display:inline-block; margin-right:10px; filter:drop-shadow(0 0 6px rgba(var(--cyan-rgb),.5)); }
 .orc-ajuda { margin:0 0 6px; color:var(--muted); font-size:.86rem; }
 
 .orc-opcoes { display:grid; gap:10px; margin-top:18px; }
@@ -473,9 +474,10 @@ textarea.orc-campo { min-height:96px; resize:vertical; }
     .orcamento-fixo.is-visivel { opacity:1; visibility:visible; transform:none; transition-delay:0s; }
 }
 
-.orcamento-caixa { position:relative; }
-.orcamento-caixa::after { content:""; position:absolute; inset:0; padding:1px; background:conic-gradient(from var(--borda-angulo,0deg),var(--cyan),var(--violet),var(--pink),var(--cyan)); -webkit-mask:linear-gradient(#ffffff 0 0) content-box,linear-gradient(#ffffff 0 0); -webkit-mask-composite:xor; mask-composite:exclude; opacity:0; transition:opacity .3s ease; pointer-events:none; }
+.orcamento-caixa { position:relative; animation:orc-caixa-brilho 3.4s ease-in-out infinite; }
+.orcamento-caixa::after { content:""; position:absolute; inset:0; padding:1px; background:conic-gradient(from var(--borda-angulo,0deg),var(--cyan),var(--violet),var(--pink),var(--cyan)); -webkit-mask:linear-gradient(#ffffff 0 0) content-box,linear-gradient(#ffffff 0 0); -webkit-mask-composite:xor; mask-composite:exclude; opacity:.55; animation:girar-borda 9s linear infinite; transition:opacity .3s ease; pointer-events:none; }
 .orcamento-caixa:focus-within::after { opacity:1; animation:girar-borda 3s linear infinite; }
+@keyframes orc-caixa-brilho { 0%,100% { box-shadow:0 0 22px rgba(var(--cyan-rgb),.16); } 50% { box-shadow:0 0 40px rgba(var(--cyan-rgb),.34); } }
 
 .orc-opcao[aria-pressed="true"]::after { animation:orc-desenhar .3s ease-out both; }
 @keyframes orc-desenhar { from { clip-path:inset(0 100% 0 0); } to { clip-path:inset(0 0 0 0); } }
@@ -488,6 +490,8 @@ textarea.orc-campo { min-height:96px; resize:vertical; }
 .orc-aviso-app { margin:14px 0 0; padding:8px 12px; border-left:2px solid var(--pink); background:rgba(var(--pink-rgb),.08); color:var(--muted); font-size:.82rem; }
 
 @media (prefers-reduced-motion:reduce) {
+    .orcamento-caixa { animation:none; }
+    .orcamento-caixa::after { opacity:.55; animation:none; }
     .orcamento-caixa:focus-within::after { animation:none; }
     .orc-opcao[aria-pressed="true"]::after,.orc-trilho span::after,.orc-pulso { animation:none; }
     .orcamento-fixo { transition:none; }
