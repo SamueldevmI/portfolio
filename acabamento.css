@@ -1411,3 +1411,48 @@ body { text-shadow: -.6px -.6px 0 rgba(0,0,0,.75), .6px -.6px 0 rgba(0,0,0,.75),
    ficava por trás e escurecia o gradiente. Aqui ele sai só desse elemento. */
 h1 span { text-shadow: none; }
 .esqueleto-valor { text-shadow: none; }
+
+/* ---------- Comparador "sem site × com site": arrasta pra revelar (script.js liga o arraste) ---------- */
+.comparador-secao { padding-top: 70px; }
+.cmp-x { color: var(--muted); font-weight: 400; }
+.comparador { position: relative; width: 100%; max-width: 900px; aspect-ratio: 16/10; margin: 10px auto 0; overflow: hidden; border-radius: 16px; border: 1px solid var(--line); box-shadow: 0 30px 70px -30px rgba(0,0,0,.7); cursor: ew-resize; touch-action: pan-y; user-select: none; -webkit-user-select: none; --pos: 50%; }
+.comparador.arrastando .cmp-antes, .comparador.arrastando .cmp-alca, .comparador.arrastando::after { transition: none; }
+.comparador:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
+.cmp-lado { position: absolute; inset: 0; padding: 26px; display: flex; flex-direction: column; }
+.cmp-depois { align-items: flex-end; text-align: right; }
+.cmp-depois { background: linear-gradient(160deg, var(--surface-2) 0%, var(--surface) 100%); }
+.cmp-antes { background: linear-gradient(160deg, #2a2622 0%, #1c1a17 100%); clip-path: inset(0 calc(100% - var(--pos)) 0 0); will-change: clip-path; transition: clip-path .18s ease; }
+.cmp-tag { position: absolute; top: 18px; z-index: 2; padding: 5px 12px; border-radius: 999px; font: 700 .68rem "DM Mono", monospace; letter-spacing: .06em; }
+.cmp-tag-depois { right: 18px; background: rgba(var(--cyan-rgb), .18); border: 1px solid var(--cyan); color: var(--cyan); }
+.cmp-tag-antes { left: 18px; background: rgba(0,0,0,.35); border: 1px solid rgba(255,255,255,.25); color: #e8e2d8; }
+.cmp-alca { position: absolute; top: 50%; left: var(--pos); z-index: 3; width: 44px; height: 44px; margin: -22px 0 0 -22px; display: grid; place-items: center; border-radius: 50%; background: var(--cyan); color: #161616; box-shadow: 0 0 0 4px rgba(var(--cyan-rgb),.2), 0 10px 24px -8px rgba(0,0,0,.6); pointer-events: none; transition: left .18s ease; }
+.cmp-alca svg { width: 20px; height: 20px; }
+.comparador::after { content: ""; position: absolute; top: 0; bottom: 0; left: var(--pos); width: 2px; margin-left: -1px; z-index: 2; background: var(--cyan); box-shadow: 0 0 12px rgba(var(--cyan-rgb),.6); pointer-events: none; transition: left .18s ease; }
+/* lado "depois": telinha de site limpa */
+.cmp-tela { margin-top: 44px; width: 100%; max-width: 340px; border-radius: 10px; overflow: hidden; background: #101010; border: 1px solid rgba(255,255,255,.1); box-shadow: 0 18px 40px -18px rgba(0,0,0,.7); text-align: left; }
+.cmp-tela-topo { display: flex; gap: 5px; padding: 9px 11px; background: #1a1a1a; }
+.cmp-tela-topo i { width: 8px; height: 8px; border-radius: 50%; background: #3a3a3a; }
+.cmp-tela-corpo { padding: 16px; }
+.cmp-tela-titulo { margin: 0 0 8px; color: var(--text); font: 700 .95rem "Space Grotesk", sans-serif; }
+.cmp-item { display: flex; justify-content: space-between; gap: 10px; margin: 0 0 6px; color: var(--muted); font-size: .78rem; }
+.cmp-item b { color: var(--cyan); }
+.cmp-selo { margin: 12px 0 0; color: #6ee89a; font: 600 .72rem "DM Mono", monospace; }
+/* lado "antes": bagunça de papel */
+.cmp-papel { margin-top: 44px; max-width: 320px; }
+.cmp-rabisco { margin: 0 0 10px; color: #d8cfc0; font: italic 500 .92rem "Space Grotesk", sans-serif; transform: rotate(-1.4deg); }
+.cmp-rabisco:nth-child(2) { transform: rotate(1deg); }
+.cmp-foto-borrada { width: 96px; height: 72px; margin: 4px 0 12px; display: grid; place-items: center; border-radius: 6px; background: repeating-linear-gradient(45deg, #3a3630, #3a3630 6px, #2c2924 6px, #2c2924 12px); filter: blur(1.1px); color: #8a8378; font: 500 .58rem "DM Mono", monospace; text-align: center; padding: 4px; }
+.cmp-visto { margin: 4px 0 14px; color: #8a8378; font: 500 .68rem "DM Mono", monospace; }
+.cmp-post-it { display: inline-block; padding: 9px 12px; background: #d8c25a; color: #3a3020; border-radius: 2px; box-shadow: 0 6px 14px -6px rgba(0,0,0,.5); transform: rotate(2.2deg); font: 600 .74rem "Space Grotesk", sans-serif; }
+/* balõezinhos de conversa, usados nos dois lados */
+.cmp-bolha { max-width: 210px; margin: 0 0 8px; padding: 8px 11px; border-radius: 10px; font-size: .76rem; line-height: 1.35; text-align: left; }
+.cmp-bolha-cliente { align-self: flex-start; background: rgba(255,255,255,.08); color: #e8e2d8; border-bottom-left-radius: 2px; }
+.cmp-depois .cmp-bolha-cliente { color: var(--muted); }
+.cmp-bolha-bot { background: rgba(var(--cyan-rgb),.16); border: 1px solid rgba(var(--cyan-rgb),.4); color: var(--text); border-bottom-left-radius: 2px; }
+.cmp-bolha-bot span { display: block; margin-top: 3px; color: var(--cyan); font: 500 .62rem "DM Mono", monospace; }
+@media (max-width: 640px) {
+    .comparador { aspect-ratio: 3/4; }
+    .cmp-tela, .cmp-papel { max-width: 74%; font-size: .92em; }
+    .cmp-lado { padding: 20px 16px; }
+}
+@media (prefers-reduced-motion: reduce) { .cmp-antes, .comparador::after, .cmp-alca { transition: none; } }

@@ -33,6 +33,51 @@ document.documentElement.classList.remove("dark-mode");
 
 document.getElementById("ano").textContent = new Date().getFullYear();
 
+/* Comparador "sem site × com site": arrasta com mouse, dedo ou teclado (setas/Home/End) pra revelar
+   o antes e o depois. Um clique em qualquer ponto já pula o traço pra lá, sem precisar mirar na alça. */
+(function () {
+    const el = document.getElementById("comparadorArraste");
+    if (!el) return;
+    let arrastando = false, ultimoSom = 0;
+
+    function aplicar(pct, tocarSom) {
+        pct = Math.max(0, Math.min(100, pct));
+        el.style.setProperty("--pos", pct + "%");
+        el.setAttribute("aria-valuenow", String(Math.round(pct)));
+        if (tocarSom && window.musicaSite && window.musicaSite.pode()) {
+            const agora = performance.now();
+            if (agora - ultimoSom > 90) { ultimoSom = agora; window.musicaSite.nota(58 + pct / 3.5, 0.3); }
+        }
+    }
+    function posDoPonteiro(evento) {
+        const r = el.getBoundingClientRect();
+        return ((evento.clientX - r.left) / r.width) * 100;
+    }
+    el.addEventListener("pointerdown", (evento) => {
+        evento.preventDefault(); // sem isso o navegador tenta selecionar o texto ao arrastar
+        arrastando = true;
+        el.classList.add("arrastando");
+        el.setPointerCapture(evento.pointerId);
+        aplicar(posDoPonteiro(evento), true);
+    });
+    el.addEventListener("pointermove", (evento) => {
+        if (!arrastando) return;
+        aplicar(posDoPonteiro(evento), true);
+    });
+    const soltar = () => { arrastando = false; el.classList.remove("arrastando"); };
+    el.addEventListener("pointerup", soltar);
+    el.addEventListener("pointercancel", soltar);
+    el.addEventListener("keydown", (evento) => {
+        const atual = Number(el.getAttribute("aria-valuenow")) || 50;
+        if (evento.key === "ArrowLeft") aplicar(atual - 8, true);
+        else if (evento.key === "ArrowRight") aplicar(atual + 8, true);
+        else if (evento.key === "Home") aplicar(0, true);
+        else if (evento.key === "End") aplicar(100, true);
+        else return;
+        evento.preventDefault();
+    });
+})();
+
 /* ---------- Ícones próprios (em vez de emoji nativo, que muda de cara em cada aparelho) ----------
    Cada um é um <path> só, no mesmo traço fino das tech badges (.ic-linha): assim o mesmo desenho
    serve tanto pra HTML (svgIcone) quanto pra dentro do <canvas> do cartão-resumo (mobile.js lê
