@@ -141,238 +141,135 @@ document.querySelectorAll(".botao").forEach((botao) => {
     });
 });
 
-/* Terminal interativo */
-const terminalForm = document.getElementById("terminalForm");
-const terminalInput = document.getElementById("terminalInput");
-const terminalSaida = document.getElementById("terminalSaida");
+/* Janelinha "antes × depois" no topo: encena, com os projetos de verdade, como fica o dia a dia do
+   cliente sem sistema e com o sistema pronto. Roda sozinha, troca de cenário a cada rodada e para
+   quando a pessoa passa o mouse ou escolhe um cenário. Nome, link e resumo vêm dos cards de projeto:
+   se um card sair da página, o cenário dele sai junto. */
+(function janelaAntesDepois() {
+    const janela = document.getElementById("janelaAD");
+    if (!janela) return;
+    const abas = janela.querySelector(".ad-abas");
+    const palco = janela.querySelector(".ad-palco");
+    const fase = janela.querySelector(".ad-fase");
+    const barra = janela.querySelector(".ad-barra i");
+    const testar = janela.querySelector(".ad-testar");
+    const querer = janela.querySelector(".ad-querer");
 
-function imprimirNoTerminal(texto, classe) {
-    const p = document.createElement("p");
-    if (classe) p.className = classe;
-    p.textContent = texto;
-    terminalSaida.appendChild(p);
-    terminalSaida.scrollTop = terminalSaida.scrollHeight;
-}
-
-/* Igual a imprimirNoTerminal, mas letra por letra (máquina de escrever de verdade). */
-function digitarNoTerminal(texto, classe) {
-    return new Promise((resolver) => {
-        const p = document.createElement("p");
-        if (classe) p.className = classe;
-        terminalSaida.appendChild(p);
-        let indice = 0;
-        (function letra() {
-            p.textContent = texto.slice(0, indice);
-            terminalSaida.scrollTop = terminalSaida.scrollHeight;
-            indice++;
-            if (indice <= texto.length) setTimeout(letra, 16 + Math.random() * 20);
-            else resolver();
-        })();
-    });
-}
-
-/* Terminal do topo: comandos clicáveis (ninguém precisa saber o que digitar), cada um faz algo acontecer
-   na página, e um contador de "descobertos" que solta confete quando a pessoa encontra todos. */
-const ATALHOS_TERMINAL = ["whoami", "preco", "surpresa", "tema", "sudo contratar"];
-const descobertos = new Set();
-const historicoTerminal = [];
-let posHistorico = 0;
-let terminalOcupado = false;
-const somTerminal = (nome) => { if (window.musicaSite && window.musicaSite.pode()) window.musicaSite[nome](); };
-const rolarPara = (id) => document.getElementById(id)?.scrollIntoView({ behavior: prefereMenosMovimento ? "auto" : "smooth" });
-
-function soltarConfete(quantos) {
-    if (prefereMenosMovimento) return;
-    const cores = ["var(--cyan)", "#ffffff", "var(--pink)", "var(--violet)"];
-    for (let i = 0; i < quantos; i++) {
-        const pedaco = document.createElement("span");
-        pedaco.className = "confete";
-        pedaco.style.left = Math.random() * 100 + "vw";
-        pedaco.style.background = cores[i % cores.length];
-        pedaco.style.animation = `cair-confete ${(1.6 + Math.random() * 0.9).toFixed(2)}s ease-in ${(Math.random() * 0.3).toFixed(2)}s forwards`;
-        document.body.appendChild(pedaco);
-        pedaco.addEventListener("animationend", () => pedaco.remove());
-    }
-}
-
-// Linha com um link no fim (ex.: "abrir WhatsApp →")
-function imprimirComLink(texto, rotulo, href) {
-    const p = document.createElement("p");
-    p.textContent = texto + " ";
-    const a = document.createElement("a");
-    a.href = href; a.textContent = rotulo; a.className = "terminal-link";
-    if (/^https?:/.test(href)) { a.target = "_blank"; a.rel = "noopener noreferrer"; }
-    p.appendChild(a);
-    terminalSaida.appendChild(p);
-    terminalSaida.scrollTop = terminalSaida.scrollHeight;
-}
-
-// Número que sobe na tela, tipo placar
-function contarNoTerminal(prefixo, alvo, sufixo) {
-    const p = document.createElement("p");
-    p.className = "terminal-placar";
-    terminalSaida.appendChild(p);
-    if (prefereMenosMovimento) { p.textContent = prefixo + alvo + sufixo; return Promise.resolve(); }
-    return new Promise((resolver) => {
-        const inicio = performance.now();
-        (function passo(agora) {
-            const t = Math.min((agora - inicio) / 900, 1);
-            p.textContent = prefixo + Math.round(alvo * (1 - Math.pow(1 - t, 3))) + sufixo;
-            terminalSaida.scrollTop = terminalSaida.scrollHeight;
-            if (t < 1) requestAnimationFrame(passo); else resolver();
-        })(inicio);
-    });
-}
-
-const conquistaTerminal = document.getElementById("terminalConquista");
-function marcarDescoberto(comando) {
-    if (!ATALHOS_TERMINAL.includes(comando) || descobertos.has(comando)) return;
-    descobertos.add(comando);
-    document.querySelector(`.terminal-atalhos [data-comando="${comando}"]`)?.classList.add("feito");
-    if (conquistaTerminal) {
-        conquistaTerminal.textContent = `${descobertos.size}/${ATALHOS_TERMINAL.length} descobertos`;
-        conquistaTerminal.classList.remove("pulou"); void conquistaTerminal.offsetWidth; conquistaTerminal.classList.add("pulou");
-    }
-    if (descobertos.size === ATALHOS_TERMINAL.length) {
-        setTimeout(() => {
-            imprimirNoTerminal("🏆 Você zerou o terminal! Agora só falta o seu projeto.", "terminal-destaque");
-            soltarConfete(60);
-            somTerminal("subida");
-            if (conquistaTerminal) conquistaTerminal.classList.add("completo");
-        }, 500);
-    }
-}
-
-const comandosTerminal = {
-    help: () => "Comandos: whoami, preco, surpresa, tema, sudo contratar, projetos, orcamento, contato, skills, clear",
-    whoami: () => "Samuel Mickael — dev web & mobile em Campo Grande (MS). Faço site e sistema que trabalha enquanto você dorme. E tô aberto a vagas em T.I.",
-    skills: () => "Python · Flask · SQLAlchemy · JavaScript · HTML · CSS · PWA · Git · pytest",
-    async preco() {
-        await contarNoTerminal("site a partir de R$ ", 250, "");
-        imprimirComLink("Quer saber o do seu?", "montar orçamento em 1 min →", "#orcamento");
-        return null;
-    },
-    surpresa() {
-        if (typeof surpreenderProjeto !== "function" || !document.querySelector(".card-projeto")) return "Nenhum projeto por aqui agora.";
-        setTimeout(surpreenderProjeto, 250);
-        return "🎲 Sorteando um projeto pra você testar... ↓";
-    },
-    tema() {
-        const botao = document.getElementById("botaoTema");
-        if (!botao) return "Esse site só tem um tema por enquanto.";
-        botao.click();
-        const vaiPara = document.documentElement.dataset.tema === "azul" ? "vermelho" : "azul";
-        return `🎨 Pintando tudo de ${vaiPara}... gostou? digita "tema" de novo pra voltar.`;
-    },
-    async "sudo contratar"() {
-        await digitarNoTerminal("[sudo] senha para visitante: ********", "terminal-echo");
-        await new Promise((r) => setTimeout(r, prefereMenosMovimento ? 0 : 350));
-        imprimirNoTerminal("✔ Permissão concedida. Bora tirar sua ideia do papel.", "terminal-destaque");
-        soltarConfete(40);
-        const whats = document.querySelector('a[href^="https://wa.me/"]');
-        if (whats) imprimirComLink("", "chamar o Samuel no WhatsApp →", whats.href);
-        return null;
-    },
-    projetos() { rolarPara("projetos"); return "Abrindo a seção de projetos ↓"; },
-    contato() { rolarPara("contato"); return "Abrindo a seção de contato ↓"; },
-    orcamento() { rolarPara("orcamento"); return "Abrindo o orçamento ↓"; },
-    clear() { terminalSaida.innerHTML = ""; return null; },
-};
-const apelidosTerminal = { projects: "projetos", contact: "contato", "orçamento": "orcamento", budget: "orcamento", limpar: "clear", "preço": "preco", price: "preco", sudo: "sudo contratar", "sudo hire": "sudo contratar", ajuda: "help" };
-const nomeDoComando = (texto) => { const t = texto.trim().toLowerCase().replace(/\s+/g, " "); return comandosTerminal[t] ? t : apelidosTerminal[t] || null; };
-
-// "Você quis dizer...?" pelo comando mais parecido (distância de edição)
-function comandoParecido(texto) {
-    const distancia = (a, b) => {
-        const d = Array.from({ length: a.length + 1 }, (_, i) => [i]);
-        for (let j = 1; j <= b.length; j++) d[0][j] = j;
-        for (let i = 1; i <= a.length; i++) for (let j = 1; j <= b.length; j++) d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
-        return d[a.length][b.length];
+    // antes: mensagens bagunçadas chegando; depois: o sistema resolvendo, com ✓
+    const ROTEIROS = {
+        "Fatia Nobre": {
+            aba: "atendimento",
+            antes: [["msg", "que horas abre?"], ["msg", "tem entrega no centro?"], ["msg", "qual o sabor do dia??"], ["msg", "oi?? alguém?"], ["alerta", "⏳ cliente esperando há 2h14... desistiu ❌"]],
+            depois: [["ok", "“que horas abre?” → Terça a domingo, 18h às 23h30 🍕", "respondido em 0,3s"], ["ok", "“tem entrega?” → Entregamos! Frete grátis até 5 km", "respondido em 0,4s"], ["fim", "e você nem precisou pegar no celular 😴"]],
+        },
+        "Glitch District": {
+            aba: "loja",
+            antes: [["msg", "manda foto do moletom preto"], ["msg", "quanto tá?"], ["msg", "tem M?"], ["msg", "e na outra cor??"], ["alerta", "📸 37 fotos mandadas no direct hoje"]],
+            depois: [["ok", "🛒 Moletom preto · M", "R$ 189"], ["ok", "🛒 Óculos neon", "R$ 79"], ["fim", "pedido de R$ 268 chegou pronto no seu WhatsApp ✓"]],
+        },
+        "Conta a Dois": {
+            aba: "sistema",
+            antes: [["msg", "quem pagou o mercado?"], ["msg", "acho que fui eu..."], ["msg", "anotei num papel, perdi"], ["alerta", "📄 planilha_final_v3_AGORAVAI.xlsx"]],
+            depois: [["ok", "Ana lançou: Mercado · R$ 212", "apareceu no celular do João na hora"], ["ok", "Saldo: João deve R$ 106 pra Ana", "calculado sozinho"], ["fim", "conta fechada, sem discussão ✓"]],
+        },
+        "Eldev Music": {
+            aba: "app",
+            antes: [["msg", "qual era o site mesmo?"], ["msg", "eldevmusic.com.br? .com?"], ["alerta", "❌ página não encontrada · fechou a aba"]],
+            depois: [["ok", "📲 ícone na tela inicial do cliente", "instalou com um toque"], ["ok", "um toque e abriu", "0,8s"], ["fim", "funciona até sem internet ✓"]],
+        },
     };
-    let melhor = null, menor = 3;
-    Object.keys(comandosTerminal).forEach((c) => { const n = distancia(texto.toLowerCase(), c); if (n < menor) { menor = n; melhor = c; } });
-    return melhor;
-}
 
-async function rodarComando(valor) {
-    if (!valor || terminalOcupado) return;
-    terminalOcupado = true;
-    imprimirNoTerminal("$ " + valor, "terminal-echo");
-    historicoTerminal.push(valor); posHistorico = historicoTerminal.length;
-    const nome = nomeDoComando(valor);
-    if (nome) {
-        somTerminal(nome === "sudo contratar" ? "subida" : "curtir");
-        const resposta = await comandosTerminal[nome]();
-        if (resposta) await (prefereMenosMovimento ? imprimirNoTerminal(resposta) : digitarNoTerminal(resposta));
-        marcarDescoberto(nome);
-    } else {
-        const talvez = comandoParecido(valor);
-        imprimirNoTerminal(`comando não encontrado: "${valor}".` + (talvez ? ` você quis dizer "${talvez}"?` : ' clica num comando aí embaixo.'), "terminal-erro");
-        somTerminal("erro");
-    }
-    terminalOcupado = false;
-}
+    // na ordem dos ROTEIROS (o mais forte primeiro), só os que têm card na página
+    const cards = [...document.querySelectorAll(".card-projeto")];
+    const cenarios = Object.keys(ROTEIROS).map((nome) => {
+        const card = cards.find((c) => c.querySelector(".projeto-nome")?.textContent.trim() === nome);
+        if (!card) return null;
+        return { nome, ...ROTEIROS[nome], link: card.querySelector(".link-projeto")?.getAttribute("href"), pedir: card.querySelector(".card-orcamento") };
+    }).filter(Boolean);
+    if (!cenarios.length) { janela.hidden = true; return; }
 
-// Clicar num atalho: o comando se digita sozinho no prompt e roda
-async function digitarERodar(comando) {
-    if (terminalOcupado || !terminalInput) return;
-    if (!prefereMenosMovimento) {
-        for (let i = 1; i <= comando.length; i++) { terminalInput.value = comando.slice(0, i); await new Promise((r) => setTimeout(r, 28)); }
-        await new Promise((r) => setTimeout(r, 120));
-    }
-    terminalInput.value = "";
-    rodarComando(comando);
-}
+    const semMovimento = prefereMenosMovimento;
+    const espera = (ms) => new Promise((r) => setTimeout(r, semMovimento ? 0 : ms));
+    let atual = 0, rodada = 0, pausado = false;
 
-if (terminalSaida) {
-    const atalhos = document.getElementById("terminalAtalhos");
-    ATALHOS_TERMINAL.forEach((comando) => {
+    cenarios.forEach((c, i) => {
         const b = document.createElement("button");
-        b.type = "button"; b.dataset.comando = comando; b.textContent = comando;
-        b.addEventListener("click", () => digitarERodar(comando));
-        atalhos?.appendChild(b);
+        b.type = "button";
+        b.textContent = c.aba;
+        b.setAttribute("aria-pressed", "false");
+        b.addEventListener("click", () => { pausado = true; janela.classList.add("ad-parado"); tocar(i); });
+        abas.appendChild(b);
     });
-    if (conquistaTerminal) conquistaTerminal.textContent = `0/${ATALHOS_TERMINAL.length} descobertos`;
-    const convite = () => { const p = document.createElement("p"); p.innerHTML = 'Clica num comando aí embaixo 👇 <span class="terminal-dica">(ou digita, com Tab pra completar)</span>'; terminalSaida.appendChild(p); };
-    if (prefereMenosMovimento) {
-        terminalSaida.innerHTML = "";
-        convite();
-    } else {
-        terminalSaida.innerHTML = "";
-        (async () => {
-            const cards = document.querySelectorAll(".card-projeto").length;
-            for (const linha of ["> conectando você ao Samuel...", `> ${cards} projetos no ar, prontos pra testar ✓`, "> tudo pronto."]) {
-                await digitarNoTerminal(linha, "terminal-echo");
-                await new Promise((r) => setTimeout(r, 140));
-            }
-            convite();
-        })();
-    }
-}
 
-if (terminalForm) {
-    terminalForm.addEventListener("submit", (evento) => {
-        evento.preventDefault();
-        const valor = terminalInput.value.trim();
-        terminalInput.value = "";
-        rodarComando(valor);
+    function linha(tipo, texto, extra) {
+        const el = document.createElement("div");
+        el.className = "ad-linha ad-" + tipo;
+        const t = document.createElement("span");
+        t.textContent = texto;
+        el.appendChild(t);
+        if (extra) { const e = document.createElement("small"); e.textContent = extra; el.appendChild(e); }
+        if (tipo === "msg") el.style.setProperty("--giro", ((Math.random() * 3 - 1.5).toFixed(1)) + "deg");
+        palco.appendChild(el);
+        return el;
+    }
+
+    async function tocar(i) {
+        const minha = ++rodada;
+        atual = i;
+        const c = cenarios[i];
+        [...abas.children].forEach((b, j) => b.setAttribute("aria-pressed", String(j === i)));
+        if (testar) { testar.href = c.link || "#projetos"; testar.textContent = `testar o ${c.nome} ↗`; }
+        const vivo = () => minha === rodada;
+
+        // ANTES
+        janela.dataset.fase = "antes";
+        fase.textContent = "antes · sem sistema";
+        palco.innerHTML = "";
+        for (const [tipo, texto, extra] of c.antes) { if (!vivo()) return; linha(tipo, texto, extra); await espera(tipo === "alerta" ? 700 : 520); }
+        await espera(1300);
+        if (!vivo()) return;
+
+        // virada
+        janela.classList.add("ad-virando");
+        await espera(420);
+        if (!vivo()) return;
+        janela.classList.remove("ad-virando");
+
+        // DEPOIS
+        janela.dataset.fase = "depois";
+        fase.textContent = "depois · com o sistema pronto";
+        palco.innerHTML = "";
+        for (const [tipo, texto, extra] of c.depois) { if (!vivo()) return; linha(tipo, texto, extra); if (window.musicaSite && window.musicaSite.pode()) window.musicaSite.nota(79 + palco.children.length * 3, 0.5); await espera(650); }
+        if (!vivo()) return;
+
+        // próxima rodada sozinha (a não ser que a pessoa tenha escolhido um cenário)
+        if (semMovimento || pausado) return;
+        barra.style.animation = "none"; void barra.offsetWidth; barra.style.animation = "";
+        janela.classList.add("ad-contando");
+        await espera(3200);
+        janela.classList.remove("ad-contando");
+        if (vivo() && !pausado) tocar((atual + 1) % cenarios.length);
+    }
+
+    if (querer) querer.addEventListener("click", () => {
+        const pedir = cenarios[atual].pedir;
+        if (pedir) pedir.click(); else document.getElementById("orcamento")?.scrollIntoView({ behavior: semMovimento ? "auto" : "smooth" });
     });
-    terminalInput.addEventListener("keydown", (evento) => {
-        if (evento.key === "Tab" && terminalInput.value.trim()) {
-            const inicio = terminalInput.value.trim().toLowerCase();
-            const achou = Object.keys(comandosTerminal).find((c) => c.startsWith(inicio));
-            if (achou) { evento.preventDefault(); terminalInput.value = achou; }
-        } else if (evento.key === "ArrowUp" && historicoTerminal.length) {
-            evento.preventDefault();
-            posHistorico = Math.max(0, posHistorico - 1);
-            terminalInput.value = historicoTerminal[posHistorico];
-        } else if (evento.key === "ArrowDown" && historicoTerminal.length) {
-            evento.preventDefault();
-            posHistorico = Math.min(historicoTerminal.length, posHistorico + 1);
-            terminalInput.value = historicoTerminal[posHistorico] || "";
-        }
+
+    // Só começa quando a janelinha aparece na tela (e segura enquanto o mouse está em cima)
+    janela.addEventListener("mouseenter", () => { if (!janela.classList.contains("ad-parado")) pausado = true; });
+    janela.addEventListener("mouseleave", () => {
+        if (janela.classList.contains("ad-parado")) return;
+        pausado = false;
+        if (!janela.classList.contains("ad-contando") && janela.dataset.fase === "depois") tocar((atual + 1) % cenarios.length);
     });
-}
+    let comecou = false;
+    const comecar = () => { if (!comecou) { comecou = true; tocar(0); } };
+    if ("IntersectionObserver" in window) {
+        const obs = new IntersectionObserver((e) => { if (e.some((x) => x.isIntersecting)) { obs.disconnect(); comecar(); } });
+        obs.observe(janela);
+    } else comecar();
+})();
 
 /* Filtro de projetos por tecnologia */
 const chipsFiltro = document.querySelectorAll(".chip-filtro");

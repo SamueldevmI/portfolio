@@ -1986,27 +1986,46 @@ html:not(.dark-mode) body::after { background: radial-gradient(circle at 70% 25%
 }
 @media (prefers-reduced-motion: reduce) { .hero-numeros a { transition: none; } }
 
-
-/* ---------- Terminal do topo: comandos clicáveis e contador de descobertos ---------- */
-.terminal-topo { align-items: center; }
-.terminal-conquista { margin-left: auto; padding: 2px 9px; border: 1px solid rgba(var(--cyan-rgb), .35); border-radius: 999px; color: var(--cyan); font: 500 .64rem "DM Mono", monospace; letter-spacing: .04em; white-space: nowrap; }
-.terminal-conquista:empty { display: none; }
-.terminal-conquista.pulou { animation: conquista-pulo .45s cubic-bezier(.3, 1.6, .5, 1); }
-.terminal-conquista.completo { background: var(--cyan); color: #0e1422; box-shadow: 0 0 14px rgba(var(--cyan-rgb), .6); }
-@keyframes conquista-pulo { 40% { transform: scale(1.25); box-shadow: 0 0 16px rgba(var(--cyan-rgb), .7); } }
-.terminal-atalhos { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px 18px 2px; }
-.terminal-atalhos:empty { display: none; }
-.terminal-atalhos button { position: relative; padding: 6px 12px; border: 1px solid rgba(var(--cyan-rgb), .45); border-radius: 6px; background: rgba(var(--cyan-rgb), .07); color: var(--text); font: 500 .74rem "DM Mono", monospace; cursor: pointer; transition: transform .15s ease, box-shadow .2s ease, border-color .2s ease, background-color .2s ease; }
-.terminal-atalhos button::before { content: "$ "; color: var(--cyan); }
-.terminal-atalhos button.feito { border-color: rgba(255,255,255,.14); background: transparent; color: var(--muted); }
-.terminal-atalhos button.feito::before { content: "✓ "; }
-@media (hover: hover) { .terminal-atalhos button:hover { transform: translateY(-2px); border-color: var(--cyan); box-shadow: 0 0 14px rgba(var(--cyan-rgb), .45); } }
-.terminal-atalhos button:active { transform: scale(.95); }
-.terminal-atalhos button:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
-#terminalSaida p { color: var(--text); }
-#terminalSaida p.terminal-echo { opacity: .6; }
-#terminalSaida p.terminal-destaque { color: var(--cyan); font-weight: 500; text-shadow: 0 0 10px rgba(var(--cyan-rgb), .5); }
-#terminalSaida p.terminal-placar { color: var(--cyan); font: 700 1.5rem/1.2 "Space Grotesk", Arial, sans-serif; letter-spacing: -.02em; text-shadow: 0 0 16px rgba(var(--cyan-rgb), .6); }
-#terminalSaida .terminal-link { color: var(--cyan); text-decoration: underline; text-underline-offset: 3px; }
-#terminalSaida .terminal-dica { color: var(--muted); opacity: .7; }
-@media (prefers-reduced-motion: reduce) { .terminal-conquista.pulou { animation: none; } .terminal-atalhos button { transition: none; } }
+/* ---------- Janelinha "antes × depois" no topo (no lugar do terminal) ---------- */
+.janela-ad { position: relative; z-index: 1; max-width: 600px; margin-top: 48px; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: #0a0f19; box-shadow: var(--shadow); transition: border-color .5s ease, box-shadow .5s ease; }
+.janela-ad .terminal-topo { align-items: center; }
+.ad-abas { display: flex; gap: 4px; margin-left: auto; }
+.ad-abas button { padding: 3px 9px; border: 1px solid rgba(255,255,255,.14); border-radius: 999px; background: transparent; color: var(--muted); font: 500 .64rem "DM Mono", monospace; cursor: pointer; transition: border-color .2s ease, color .2s ease, background-color .2s ease; }
+.ad-abas button[aria-pressed="true"] { border-color: var(--cyan); background: rgba(var(--cyan-rgb), .14); color: var(--text); }
+@media (hover: hover) { .ad-abas button:hover { border-color: var(--cyan); color: var(--text); } }
+.ad-barra { height: 2px; background: rgba(255,255,255,.05); }
+.ad-barra i { display: block; height: 100%; width: 0; background: var(--cyan); box-shadow: 0 0 8px rgba(var(--cyan-rgb), .8); }
+.janela-ad.ad-contando .ad-barra i { animation: ad-encher 3.2s linear forwards; }
+@keyframes ad-encher { from { width: 0; } to { width: 100%; } }
+.ad-fase { margin: 0; padding: 12px 18px 0; font: 600 .66rem "DM Mono", monospace; letter-spacing: .16em; text-transform: uppercase; transition: color .3s ease; }
+.janela-ad[data-fase="antes"] .ad-fase { color: #7381a1; }
+.janela-ad[data-fase="depois"] .ad-fase { color: var(--cyan); text-shadow: 0 0 10px rgba(var(--cyan-rgb), .5); }
+.janela-ad[data-fase="depois"] { border-color: rgba(var(--cyan-rgb), .5); box-shadow: var(--shadow), 0 0 28px -6px rgba(var(--cyan-rgb), .45); }
+.ad-palco { display: flex; flex-direction: column; align-items: flex-start; gap: 7px; min-height: 190px; padding: 12px 18px 14px; }
+.ad-linha { display: flex; align-items: baseline; gap: 10px; max-width: 100%; font-size: .86rem; line-height: 1.35; animation: ad-entrar .35s cubic-bezier(.2,.9,.3,1.3) both; }
+.ad-linha small { color: var(--muted); font: .68rem "DM Mono", monospace; opacity: .75; white-space: nowrap; }
+.ad-msg { padding: 6px 12px; border-radius: 14px 14px 14px 4px; background: #18233b; color: #cbd1dd; transform: rotate(var(--giro, 0deg)); }
+.ad-alerta { margin-top: 4px; color: #8ab7ff; font: 500 .74rem "DM Mono", monospace; }
+.ad-ok { width: 100%; justify-content: space-between; padding: 7px 12px; border: 1px solid rgba(var(--cyan-rgb), .3); border-radius: 6px; background: rgba(var(--cyan-rgb), .07); color: var(--text); }
+.ad-ok span::before { content: "✓ "; color: var(--cyan); font-weight: 700; }
+.ad-ok small { color: var(--cyan); opacity: 1; }
+.ad-fim { margin-top: 4px; color: var(--cyan); font-weight: 600; text-shadow: 0 0 10px rgba(var(--cyan-rgb), .45); }
+@keyframes ad-entrar { from { opacity: 0; transform: translateY(8px) scale(.96) rotate(var(--giro, 0deg)); } }
+.janela-ad.ad-virando .ad-palco { animation: ad-virada .42s ease both; }
+@keyframes ad-virada { 50% { opacity: 0; filter: blur(4px); transform: scale(.98); } }
+.ad-rodape { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; padding: 11px 18px; border-top: 1px solid rgba(255,255,255,.08); }
+.ad-testar { color: var(--muted); font: .72rem "DM Mono", monospace; text-decoration: none; }
+.ad-querer { padding: 7px 14px; border: 1px solid var(--cyan); border-radius: 6px; background: rgba(var(--cyan-rgb), .12); color: var(--text); font: 600 .78rem "Space Grotesk", Arial, sans-serif; cursor: pointer; transition: box-shadow .2s ease, transform .2s ease; }
+@media (hover: hover) { .ad-testar:hover { color: var(--cyan); } .ad-querer:hover { transform: translateY(-2px); box-shadow: 0 0 16px rgba(var(--cyan-rgb), .5); } }
+.ad-abas button:focus-visible, .ad-testar:focus-visible, .ad-querer:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+@media (max-width: 720px) {
+    .janela-ad { max-width: 100%; margin-top: 32px; }
+    .janela-ad .terminal-topo { flex-wrap: wrap; row-gap: 8px; }
+    .ad-abas { flex-basis: 100%; margin-left: 0; overflow-x: auto; }
+    .ad-palco { min-height: 200px; padding: 10px 14px 12px; }
+    .ad-linha { font-size: .8rem; }
+    .ad-ok { flex-wrap: wrap; row-gap: 2px; }
+    .ad-rodape { padding: 10px 14px; }
+    .ad-querer { flex: 1; }
+}
+@media (prefers-reduced-motion: reduce) { .ad-linha, .janela-ad.ad-virando .ad-palco, .janela-ad.ad-contando .ad-barra i { animation: none; } .ad-msg { transform: none; } }
