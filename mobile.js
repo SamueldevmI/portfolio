@@ -200,7 +200,7 @@
     const instalar = document.getElementById("botaoInstalar");
     const jaInstalado = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
     if (instalar && !jaInstalado) {
-        let pedido = null;
+        let pedido = window.pedidoInstalar || null; // guardado pelo index.html se chegou antes deste arquivo
         const ios = /iphone|ipad|ipod/i.test(navigator.userAgent);
         window.addEventListener("beforeinstallprompt", (e) => { e.preventDefault(); pedido = e; });
         instalar.hidden = false;

@@ -40,8 +40,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap">
-    <link rel="stylesheet" href="style.css?v=20260925fumaca3">
-<link rel="stylesheet" href="acabamento.css?v=20260925fumaca3">
+    <link rel="stylesheet" href="style.css?v=20260925temas">
     <title id="tituloPagina">Samuel Mickael | Desenvolvedor Web &amp; Mobile</title>
     <script type="application/ld+json">
     {
@@ -634,10 +633,23 @@
     </div>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-    <script src="script.js?v=20260925fumaca3"></script>
-<script src="acabamento.js?v=20260925fumaca3" defer></script>
-<script src="musica.js?v=20260925fumaca3" defer></script>
-<script src="mobile.js?v=20260925fumaca3" defer></script>
+    <script src="script.js?v=20260925temas"></script>
+<script src="acabamento.js?v=20260925temas" defer></script>
+<script>
+    /* Scripts que a página não precisa pra aparecer: o mobile.js só baixa em tela de toque (no computador
+       ele não faz nada) e a música só depois que a página terminou de carregar. */
+    (function () {
+        var versao = "?v=20260925temas";
+        function carregar(arquivo) { var s = document.createElement("script"); s.src = arquivo + versao; document.body.appendChild(s); }
+        if (matchMedia("(pointer: coarse)").matches) {
+            // o pedido de "instalar app" pode chegar antes do mobile.js: fica guardado pra ele usar
+            addEventListener("beforeinstallprompt", function (e) { e.preventDefault(); window.pedidoInstalar = e; });
+            carregar("mobile.js");
+        }
+        function depois() { (window.requestIdleCallback || setTimeout)(function () { carregar("musica.js"); }); }
+        if (document.readyState === "complete") depois(); else addEventListener("load", depois, { once: true });
+    })();
+</script>
 
 </body>
 </html>
