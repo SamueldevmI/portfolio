@@ -648,7 +648,6 @@
                 <dt>Ctrl+K</dt><dd>Abre a busca de comandos</dd>
                 <dt>Esc</dt><dd>Fecha o que estiver aberto</dd>
                 <dt>?</dt><dd>Mostra este painel</dd>
-                <dt>↑ no terminal</dt><dd>Repete o último comando</dd>
             </dl>
             <button type="button" class="botao botao-secundario atalhos-fechar">Fechar</button>
         </div>`;
@@ -716,13 +715,7 @@
         });
     })();
 
-    /* Segundo segredo no terminal, além do Konami code. */
-    (function segundoSegredoTerminal() {
-        if (typeof comandosTerminal === "undefined") return;
-        comandosTerminal.cafe = comandosTerminal["café"] = () => "☕ Bom café é metade do código. Valeu por bisbilhotar o terminal!";
-    })();
-
-    /* Vibração bem curta ao escolher uma opção no orçamento (celular Android; iPhone ignora sozinho). */
+/* Vibração bem curta ao escolher uma opção no orçamento (celular Android; iPhone ignora sozinho). */
     (function vibrarNaEscolha() {
         if (!("vibrate" in navigator) || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
         document.addEventListener("click", (evento) => {

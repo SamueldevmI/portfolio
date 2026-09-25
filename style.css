@@ -53,18 +53,6 @@ html { scrollbar-color:var(--surface-2) var(--bg); scrollbar-width:thin; }
 @media (prefers-reduced-motion:reduce) { .hero-conteudo > * { animation:none; } }
 @media (prefers-reduced-motion:reduce) { .reveal { opacity:1; transform:none; transition:none; } }
 
-/* Terminal interativo (hero) */
-.terminal-interativo { position:relative; z-index:1; max-width:600px; margin-top:48px; border:1px solid var(--line); border-radius:6px; overflow:hidden; background:#101010; box-shadow:var(--shadow); animation:subir-fade .7s ease both; animation-delay:.74s; }
-.terminal-titulo { margin-left:8px; color:var(--muted); font:.68rem "DM Mono",monospace; }
-#terminalSaida { max-height:160px; overflow-y:auto; }
-#terminalSaida p.terminal-echo { color:#f4f4f4; }
-#terminalSaida p.terminal-erro { color:var(--pink); }
-.terminal-linha { display:flex; align-items:center; gap:8px; padding:12px 18px; border-top:1px solid rgba(255,255,255,.08); }
-.terminal-linha .terminal-prompt { margin:0; }
-.terminal-linha input { flex:1; min-width:0; border:0; background:transparent; color:#fafafa; font:.78rem "DM Mono",monospace; outline:0; }
-.terminal-linha input::placeholder { color:var(--muted); }
-@media (prefers-reduced-motion:reduce) { .terminal-interativo { animation:none; } }
-
 /* Filtros de projeto */
 .filtros-projetos { display:flex; flex-wrap:wrap; gap:9px; margin-bottom:28px; }
 .chip-filtro { padding:8px 16px; border:1px solid var(--line); border-radius:999px; background:rgba(29,29,29,.5); color:var(--muted); font:.72rem "DM Mono",monospace; cursor:pointer; transition:.25s ease; }
@@ -105,7 +93,7 @@ html { scrollbar-color:var(--surface-2) var(--bg); scrollbar-width:thin; }
 .confete { position:fixed; top:-40px; z-index:80; font-size:1.6rem; pointer-events:none; animation:cair linear forwards; }
 @keyframes cair { to { transform:translateY(112vh) rotate(360deg); opacity:0; } }
 
-@media(max-width:720px) { .terminal-interativo { max-width:100%; margin-top:32px; } #terminalSaida { max-height:130px; } .modal-caixa { max-height:92vh; } .modal-corpo iframe { height:58vh; } .sobre-conteudo .github-atividade { margin-top:24px; padding:16px 16px; } }
+@media(max-width:720px) { .modal-caixa { max-height:92vh; } .modal-corpo iframe { height:58vh; } .sobre-conteudo .github-atividade { margin-top:24px; padding:16px 16px; } }
 @media (prefers-reduced-motion:reduce) { .confete { animation:none; display:none; } }
 
 /* Barra de progresso de leitura */
@@ -368,7 +356,7 @@ body,.card-projeto,.nav,.botao,.chip-filtro,.habilidades li,footer,.contato,.lis
 }
 
 @media print {
-    .barra-progresso,.indicador-secoes,.nav,.terminal-interativo,.filtros-projetos,.botao-compartilhar,.link-acao,.voltar-topo,.toast,.modal-overlay,.tour-overlay,.paleta-overlay,.ruido,.selo-visitas,.botao,.chip-filtro,.hero-conteudo::after,.hero::before,.sobre::before,.jornada::after,.contato::before,.pular-conteudo,.botao-flip,.cursor-abraco { display:none !important; }
+    .barra-progresso,.indicador-secoes,.nav,.filtros-projetos,.botao-compartilhar,.link-acao,.voltar-topo,.toast,.modal-overlay,.tour-overlay,.paleta-overlay,.ruido,.selo-visitas,.botao,.chip-filtro,.hero-conteudo::after,.hero::before,.sobre::before,.jornada::after,.contato::before,.pular-conteudo,.botao-flip,.cursor-abraco { display:none !important; }
     body { background:#ffffff; color:#111111; }
     .hero { min-height:auto; }
     .secao { padding:24px 0; }
@@ -514,7 +502,6 @@ textarea.orc-campo { min-height:96px; resize:vertical; }
     .nav-links a { padding:12px 0; }
     .tour-navegacao #tourPular { min-height:44px; padding:0 8px; }
     .paleta-lista li button { min-height:44px; }
-    .terminal-linha input { min-height:44px; }
 }
 
 /* Modo leve (celular, economia de dados ou internet lenta): desliga os efeitos mais pesados.
