@@ -1475,3 +1475,11 @@ html.tem-batida-foto .hero-foto-pulso {
     box-shadow: 0 0 calc(8px + var(--batida-pulso, 0) * 28px) rgba(var(--cyan-rgb), calc(.3 + var(--batida-pulso, 0) * .5));
 }
 @media (prefers-reduced-motion: reduce) { .hero-foto-pulso { animation: none; opacity: .4; } }
+
+/* Nome "Samuel Mickael" também acompanha a batida (mesma classe tem-batida-foto): a faísca
+   periódica (nome-chama) fica só pra quando a música tá desligada. */
+html.tem-batida-foto .hero-ola strong {
+    animation: none;
+    transform: scale(calc(1 + var(--batida-pulso, 0) * .06));
+    text-shadow: 0 0 calc(10px + var(--batida-pulso, 0) * 26px) rgba(var(--cyan-rgb), calc(.35 + var(--batida-pulso, 0) * .55));
+}
