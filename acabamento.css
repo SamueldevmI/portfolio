@@ -945,10 +945,12 @@ html.sem-animacoes, html.sem-animacoes *, html.sem-animacoes *::before, html.sem
 
 /* ---------- Promoção de lançamento (some sozinha depois do prazo, ver acabamento.js) ---------- */
 .promo-faixa[hidden], .promo-servicos[hidden], .promo-faq[hidden] { display: none; }
-.promo-faixa { position: relative; z-index: 1; display: inline-flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; margin: 0 0 16px; padding: 7px 14px 7px 7px; border: 1px solid rgba(var(--pink-rgb), .55); border-radius: 999px; background: rgba(var(--pink-rgb), .1); color: var(--text); font-size: .88rem; text-decoration: none; transition: background .25s ease, border-color .25s ease; }
-.promo-faixa b { padding: 3px 9px; border-radius: 999px; background: var(--pink); color: #101010; font: 600 .72rem "DM Mono", monospace; letter-spacing: .06em; }
-.promo-faixa span { color: var(--pink); transition: transform .25s ease; }
-@media (hover: hover) { .promo-faixa:hover { background: rgba(var(--pink-rgb), .18); border-color: var(--pink); } .promo-faixa:hover span { transform: translateX(3px); } }
+.promo-faixa { position: relative; z-index: 1; display: inline-flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; margin: 0 0 16px; padding: 7px 14px 7px 7px; border: 1px solid rgba(var(--cyan-rgb), .7); border-radius: 999px; background: rgba(var(--cyan-rgb), .14); color: var(--text); font-size: .88rem; text-decoration: none; box-shadow: 0 0 18px rgba(var(--cyan-rgb), .35); animation: brilho-promo 2.2s ease-in-out infinite; transition: background .25s ease, border-color .25s ease, box-shadow .25s ease; }
+.promo-faixa b { padding: 3px 9px; border-radius: 999px; background: var(--cyan); color: #161616; font: 600 .72rem "DM Mono", monospace; letter-spacing: .06em; text-shadow: 0 0 8px rgba(255,255,255,.4); }
+.promo-faixa span { color: var(--cyan); transition: transform .25s ease; }
+@media (hover: hover) { .promo-faixa:hover { background: rgba(var(--cyan-rgb), .22); border-color: var(--cyan); box-shadow: 0 0 26px rgba(var(--cyan-rgb), .55); } .promo-faixa:hover span { transform: translateX(3px); } }
+@keyframes brilho-promo { 0%, 100% { box-shadow: 0 0 18px rgba(var(--cyan-rgb), .35); } 50% { box-shadow: 0 0 30px rgba(var(--cyan-rgb), .65); } }
+@media (prefers-reduced-motion: reduce) { .promo-faixa { animation: none; } }
 .hero-conteudo .promo-faixa { animation-delay: .08s; }
 .promo-servicos { margin-top: 14px; padding: 12px 16px; border-left: 3px solid var(--pink); border-radius: 0 10px 10px 0; background: rgba(var(--pink-rgb), .08); color: var(--text) !important; }
 .promo-servicos b { color: var(--pink); }
@@ -1235,7 +1237,7 @@ html.tem-barra-app .fim-elastico { bottom: calc(62px + env(safe-area-inset-botto
    Paleta: #161616 / #1e1e1e / #262626 (carvão), #8b1a1a e #8b2525 (sangue), #ff2a3d (neon, só em brilho). */
 :root {
     --bg: #161616; --surface: #1e1e1e; --surface-2: #262626;
-    --text: #f6f6f6; --muted: #e2e2e2; --line: rgba(255,255,255,.1);
+    --text: #f6f6f6; --muted: #f0f0f0; --line: rgba(255,255,255,.1);
     --cyan: #ff2a3d;  --cyan-rgb: 255, 42, 61;    /* neon vermelho: destaques, links, brilhos */
     --pink: #8b1a1a;  --pink-rgb: 139, 26, 26;    /* vermelho-sangue */
     --violet: #ffffff; --violet-rgb: 255, 255, 255;
