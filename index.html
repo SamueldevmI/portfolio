@@ -52,10 +52,10 @@
             } catch (e) { /* sem armazenamento */ }
             document.documentElement.dataset.tema = tema;
             if (tema === "azul") document.querySelector('meta[name="theme-color"]').content = "#0e1422";
-            document.write('<link rel="stylesheet" id="folhaTema" href="' + (tema === "azul" ? "style-azul.css" : "style.css") + '?v=20260925azul2">');
+            document.write('<link rel="stylesheet" id="folhaTema" href="' + (tema === "azul" ? "style-azul.css" : "style.css") + '?v=20260925terminal">');
         })();
     </script>
-    <noscript><link rel="stylesheet" href="style.css?v=20260925azul2"></noscript>
+    <noscript><link rel="stylesheet" href="style.css?v=20260925terminal"></noscript>
     <title id="tituloPagina">Samuel Mickael | Desenvolvedor Web &amp; Mobile</title>
     <script type="application/ld+json">
     {
@@ -170,13 +170,14 @@
                 <a href="https://wa.me/5567996034205?text=Oi%2C%20Samuel%21%20Vi%20seu%20portf%C3%B3lio%20e%20queria%20pedir%20um%20or%C3%A7amento.%20Meu%20projeto%20%C3%A9%3A%20" target="_blank" rel="noopener noreferrer"><strong data-contar="24" data-sufixo="h">24h</strong><span>pra responder sua mensagem</span></a>
             </div>
             <div class="terminal-interativo" aria-label="Terminal interativo do portfólio">
-                <div class="terminal-topo"><i></i><i></i><i></i><span class="terminal-titulo">samuel@portfolio:~</span></div>
+                <div class="terminal-topo"><i></i><i></i><i></i><span class="terminal-titulo">samuel@portfolio:~</span><span class="terminal-conquista" id="terminalConquista" aria-live="polite"></span></div>
                 <div class="terminal-corpo" id="terminalSaida">
                     <p>Digite <span class="terminal-prompt">help</span> para conhecer os comandos disponíveis.</p>
                 </div>
+                <div class="terminal-atalhos" id="terminalAtalhos" aria-label="Comandos pra clicar"></div>
                 <form id="terminalForm" class="terminal-linha" autocomplete="off">
                     <span class="terminal-prompt">$</span>
-                    <input id="terminalInput" type="text" placeholder="digite um comando…" aria-label="Comando do terminal" autocapitalize="off" spellcheck="false">
+                    <input id="terminalInput" type="text" placeholder="ou digite aqui… (Tab completa)" aria-label="Comando do terminal" autocapitalize="off" spellcheck="false">
                 </form>
             </div>
         </div>
@@ -651,13 +652,13 @@
     </div>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-    <script src="script.js?v=20260925azul2"></script>
-<script src="acabamento.js?v=20260925azul2" defer></script>
+    <script src="script.js?v=20260925terminal"></script>
+<script src="acabamento.js?v=20260925terminal" defer></script>
 <script>
     /* Scripts que a página não precisa pra aparecer: o mobile.js só baixa em tela de toque (no computador
        ele não faz nada) e a música só depois que a página terminou de carregar. */
     (function () {
-        var versao = "?v=20260925azul2";
+        var versao = "?v=20260925terminal";
         function carregar(arquivo) { var s = document.createElement("script"); s.src = arquivo + versao; document.body.appendChild(s); }
         if (matchMedia("(pointer: coarse)").matches) {
             // o pedido de "instalar app" pode chegar antes do mobile.js: fica guardado pra ele usar

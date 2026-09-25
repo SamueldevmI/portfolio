@@ -171,66 +171,206 @@ function digitarNoTerminal(texto, classe) {
     });
 }
 
-/* Boot sequence no terminal, antes de liberar o prompt */
-if (terminalSaida) {
-    const linhasBoot = ["Iniciando sessão...", "Carregando módulos: html, css, javascript...", "Pronto."];
-    if (prefereMenosMovimento) {
-        terminalSaida.innerHTML = '<p>Digite <span class="terminal-prompt">help</span> para conhecer os comandos disponíveis.</p>';
-    } else {
-        terminalSaida.innerHTML = "";
-        (async () => {
-            for (const linha of linhasBoot) {
-                await digitarNoTerminal(linha, "terminal-echo");
-                await new Promise((r) => setTimeout(r, 160));
-            }
-            const p = document.createElement("p");
-            p.innerHTML = 'Digite <span class="terminal-prompt">help</span> para conhecer os comandos disponíveis.';
-            terminalSaida.appendChild(p);
-        })();
+/* Terminal do topo: comandos clicáveis (ninguém precisa saber o que digitar), cada um faz algo acontecer
+   na página, e um contador de "descobertos" que solta confete quando a pessoa encontra todos. */
+const ATALHOS_TERMINAL = ["whoami", "preco", "surpresa", "tema", "sudo contratar"];
+const descobertos = new Set();
+const historicoTerminal = [];
+let posHistorico = 0;
+let terminalOcupado = false;
+const somTerminal = (nome) => { if (window.musicaSite && window.musicaSite.pode()) window.musicaSite[nome](); };
+const rolarPara = (id) => document.getElementById(id)?.scrollIntoView({ behavior: prefereMenosMovimento ? "auto" : "smooth" });
+
+function soltarConfete(quantos) {
+    if (prefereMenosMovimento) return;
+    const cores = ["var(--cyan)", "#ffffff", "var(--pink)", "var(--violet)"];
+    for (let i = 0; i < quantos; i++) {
+        const pedaco = document.createElement("span");
+        pedaco.className = "confete";
+        pedaco.style.left = Math.random() * 100 + "vw";
+        pedaco.style.background = cores[i % cores.length];
+        pedaco.style.animation = `cair-confete ${(1.6 + Math.random() * 0.9).toFixed(2)}s ease-in ${(Math.random() * 0.3).toFixed(2)}s forwards`;
+        document.body.appendChild(pedaco);
+        pedaco.addEventListener("animationend", () => pedaco.remove());
+    }
+}
+
+// Linha com um link no fim (ex.: "abrir WhatsApp →")
+function imprimirComLink(texto, rotulo, href) {
+    const p = document.createElement("p");
+    p.textContent = texto + " ";
+    const a = document.createElement("a");
+    a.href = href; a.textContent = rotulo; a.className = "terminal-link";
+    if (/^https?:/.test(href)) { a.target = "_blank"; a.rel = "noopener noreferrer"; }
+    p.appendChild(a);
+    terminalSaida.appendChild(p);
+    terminalSaida.scrollTop = terminalSaida.scrollHeight;
+}
+
+// Número que sobe na tela, tipo placar
+function contarNoTerminal(prefixo, alvo, sufixo) {
+    const p = document.createElement("p");
+    p.className = "terminal-placar";
+    terminalSaida.appendChild(p);
+    if (prefereMenosMovimento) { p.textContent = prefixo + alvo + sufixo; return Promise.resolve(); }
+    return new Promise((resolver) => {
+        const inicio = performance.now();
+        (function passo(agora) {
+            const t = Math.min((agora - inicio) / 900, 1);
+            p.textContent = prefixo + Math.round(alvo * (1 - Math.pow(1 - t, 3))) + sufixo;
+            terminalSaida.scrollTop = terminalSaida.scrollHeight;
+            if (t < 1) requestAnimationFrame(passo); else resolver();
+        })(inicio);
+    });
+}
+
+const conquistaTerminal = document.getElementById("terminalConquista");
+function marcarDescoberto(comando) {
+    if (!ATALHOS_TERMINAL.includes(comando) || descobertos.has(comando)) return;
+    descobertos.add(comando);
+    document.querySelector(`.terminal-atalhos [data-comando="${comando}"]`)?.classList.add("feito");
+    if (conquistaTerminal) {
+        conquistaTerminal.textContent = `${descobertos.size}/${ATALHOS_TERMINAL.length} descobertos`;
+        conquistaTerminal.classList.remove("pulou"); void conquistaTerminal.offsetWidth; conquistaTerminal.classList.add("pulou");
+    }
+    if (descobertos.size === ATALHOS_TERMINAL.length) {
+        setTimeout(() => {
+            imprimirNoTerminal("🏆 Você zerou o terminal! Agora só falta o seu projeto.", "terminal-destaque");
+            soltarConfete(60);
+            somTerminal("subida");
+            if (conquistaTerminal) conquistaTerminal.classList.add("completo");
+        }, 500);
     }
 }
 
 const comandosTerminal = {
-    help: () => "Comandos: whoami, skills, projetos, orcamento, contato, clear",
-    whoami: () => "Samuel Mickael — estudante de ADS (4º semestre), dev front-end & back-end. Buscando a primeira oportunidade em T.I.",
+    help: () => "Comandos: whoami, preco, surpresa, tema, sudo contratar, projetos, orcamento, contato, skills, clear",
+    whoami: () => "Samuel Mickael — dev web & mobile em Campo Grande (MS). Faço site e sistema que trabalha enquanto você dorme. E tô aberto a vagas em T.I.",
     skills: () => "Python · Flask · SQLAlchemy · JavaScript · HTML · CSS · PWA · Git · pytest",
-    projetos() {
-        document.getElementById("projetos").scrollIntoView({ behavior: prefereMenosMovimento ? "auto" : "smooth" });
-        return "Abrindo a seção de projetos ↓";
-    },
-    contato() {
-        document.getElementById("contato").scrollIntoView({ behavior: prefereMenosMovimento ? "auto" : "smooth" });
-        return "Abrindo a seção de contato ↓";
-    },
-    orcamento() {
-        document.getElementById("orcamento")?.scrollIntoView({ behavior: prefereMenosMovimento ? "auto" : "smooth" });
-        return "Abrindo o orçamento ↓";
-    },
-    clear() {
-        terminalSaida.innerHTML = "";
+    async preco() {
+        await contarNoTerminal("site a partir de R$ ", 250, "");
+        imprimirComLink("Quer saber o do seu?", "montar orçamento em 1 min →", "#orcamento");
         return null;
     },
+    surpresa() {
+        if (typeof surpreenderProjeto !== "function" || !document.querySelector(".card-projeto")) return "Nenhum projeto por aqui agora.";
+        setTimeout(surpreenderProjeto, 250);
+        return "🎲 Sorteando um projeto pra você testar... ↓";
+    },
+    tema() {
+        const botao = document.getElementById("botaoTema");
+        if (!botao) return "Esse site só tem um tema por enquanto.";
+        botao.click();
+        const vaiPara = document.documentElement.dataset.tema === "azul" ? "vermelho" : "azul";
+        return `🎨 Pintando tudo de ${vaiPara}... gostou? digita "tema" de novo pra voltar.`;
+    },
+    async "sudo contratar"() {
+        await digitarNoTerminal("[sudo] senha para visitante: ********", "terminal-echo");
+        await new Promise((r) => setTimeout(r, prefereMenosMovimento ? 0 : 350));
+        imprimirNoTerminal("✔ Permissão concedida. Bora tirar sua ideia do papel.", "terminal-destaque");
+        soltarConfete(40);
+        const whats = document.querySelector('a[href^="https://wa.me/"]');
+        if (whats) imprimirComLink("", "chamar o Samuel no WhatsApp →", whats.href);
+        return null;
+    },
+    projetos() { rolarPara("projetos"); return "Abrindo a seção de projetos ↓"; },
+    contato() { rolarPara("contato"); return "Abrindo a seção de contato ↓"; },
+    orcamento() { rolarPara("orcamento"); return "Abrindo o orçamento ↓"; },
+    clear() { terminalSaida.innerHTML = ""; return null; },
 };
-comandosTerminal.projects = comandosTerminal.projetos;
-comandosTerminal.contact = comandosTerminal.contato;
-comandosTerminal["orçamento"] = comandosTerminal.orcamento;
-comandosTerminal.budget = comandosTerminal.orcamento;
-comandosTerminal.limpar = comandosTerminal.clear;
+const apelidosTerminal = { projects: "projetos", contact: "contato", "orçamento": "orcamento", budget: "orcamento", limpar: "clear", "preço": "preco", price: "preco", sudo: "sudo contratar", "sudo hire": "sudo contratar", ajuda: "help" };
+const nomeDoComando = (texto) => { const t = texto.trim().toLowerCase().replace(/\s+/g, " "); return comandosTerminal[t] ? t : apelidosTerminal[t] || null; };
+
+// "Você quis dizer...?" pelo comando mais parecido (distância de edição)
+function comandoParecido(texto) {
+    const distancia = (a, b) => {
+        const d = Array.from({ length: a.length + 1 }, (_, i) => [i]);
+        for (let j = 1; j <= b.length; j++) d[0][j] = j;
+        for (let i = 1; i <= a.length; i++) for (let j = 1; j <= b.length; j++) d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+        return d[a.length][b.length];
+    };
+    let melhor = null, menor = 3;
+    Object.keys(comandosTerminal).forEach((c) => { const n = distancia(texto.toLowerCase(), c); if (n < menor) { menor = n; melhor = c; } });
+    return melhor;
+}
+
+async function rodarComando(valor) {
+    if (!valor || terminalOcupado) return;
+    terminalOcupado = true;
+    imprimirNoTerminal("$ " + valor, "terminal-echo");
+    historicoTerminal.push(valor); posHistorico = historicoTerminal.length;
+    const nome = nomeDoComando(valor);
+    if (nome) {
+        somTerminal(nome === "sudo contratar" ? "subida" : "curtir");
+        const resposta = await comandosTerminal[nome]();
+        if (resposta) await (prefereMenosMovimento ? imprimirNoTerminal(resposta) : digitarNoTerminal(resposta));
+        marcarDescoberto(nome);
+    } else {
+        const talvez = comandoParecido(valor);
+        imprimirNoTerminal(`comando não encontrado: "${valor}".` + (talvez ? ` você quis dizer "${talvez}"?` : ' clica num comando aí embaixo.'), "terminal-erro");
+        somTerminal("erro");
+    }
+    terminalOcupado = false;
+}
+
+// Clicar num atalho: o comando se digita sozinho no prompt e roda
+async function digitarERodar(comando) {
+    if (terminalOcupado || !terminalInput) return;
+    if (!prefereMenosMovimento) {
+        for (let i = 1; i <= comando.length; i++) { terminalInput.value = comando.slice(0, i); await new Promise((r) => setTimeout(r, 28)); }
+        await new Promise((r) => setTimeout(r, 120));
+    }
+    terminalInput.value = "";
+    rodarComando(comando);
+}
+
+if (terminalSaida) {
+    const atalhos = document.getElementById("terminalAtalhos");
+    ATALHOS_TERMINAL.forEach((comando) => {
+        const b = document.createElement("button");
+        b.type = "button"; b.dataset.comando = comando; b.textContent = comando;
+        b.addEventListener("click", () => digitarERodar(comando));
+        atalhos?.appendChild(b);
+    });
+    if (conquistaTerminal) conquistaTerminal.textContent = `0/${ATALHOS_TERMINAL.length} descobertos`;
+    const convite = () => { const p = document.createElement("p"); p.innerHTML = 'Clica num comando aí embaixo 👇 <span class="terminal-dica">(ou digita, com Tab pra completar)</span>'; terminalSaida.appendChild(p); };
+    if (prefereMenosMovimento) {
+        terminalSaida.innerHTML = "";
+        convite();
+    } else {
+        terminalSaida.innerHTML = "";
+        (async () => {
+            const cards = document.querySelectorAll(".card-projeto").length;
+            for (const linha of ["> conectando você ao Samuel...", `> ${cards} projetos no ar, prontos pra testar ✓`, "> tudo pronto."]) {
+                await digitarNoTerminal(linha, "terminal-echo");
+                await new Promise((r) => setTimeout(r, 140));
+            }
+            convite();
+        })();
+    }
+}
 
 if (terminalForm) {
     terminalForm.addEventListener("submit", (evento) => {
         evento.preventDefault();
         const valor = terminalInput.value.trim();
-        if (!valor) return;
-        imprimirNoTerminal("$ " + valor, "terminal-echo");
-        const comando = comandosTerminal[valor.toLowerCase()];
-        if (comando) {
-            const resposta = comando();
-            if (resposta) imprimirNoTerminal(resposta);
-        } else {
-            imprimirNoTerminal(`comando não encontrado: "${valor}". digite "help".`, "terminal-erro");
-        }
         terminalInput.value = "";
+        rodarComando(valor);
+    });
+    terminalInput.addEventListener("keydown", (evento) => {
+        if (evento.key === "Tab" && terminalInput.value.trim()) {
+            const inicio = terminalInput.value.trim().toLowerCase();
+            const achou = Object.keys(comandosTerminal).find((c) => c.startsWith(inicio));
+            if (achou) { evento.preventDefault(); terminalInput.value = achou; }
+        } else if (evento.key === "ArrowUp" && historicoTerminal.length) {
+            evento.preventDefault();
+            posHistorico = Math.max(0, posHistorico - 1);
+            terminalInput.value = historicoTerminal[posHistorico];
+        } else if (evento.key === "ArrowDown" && historicoTerminal.length) {
+            evento.preventDefault();
+            posHistorico = Math.min(historicoTerminal.length, posHistorico + 1);
+            terminalInput.value = historicoTerminal[posHistorico] || "";
+        }
     });
 }
 

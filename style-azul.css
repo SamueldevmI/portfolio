@@ -1986,3 +1986,27 @@ html:not(.dark-mode) body::after { background: radial-gradient(circle at 70% 25%
 }
 @media (prefers-reduced-motion: reduce) { .hero-numeros a { transition: none; } }
 
+
+/* ---------- Terminal do topo: comandos clicáveis e contador de descobertos ---------- */
+.terminal-topo { align-items: center; }
+.terminal-conquista { margin-left: auto; padding: 2px 9px; border: 1px solid rgba(var(--cyan-rgb), .35); border-radius: 999px; color: var(--cyan); font: 500 .64rem "DM Mono", monospace; letter-spacing: .04em; white-space: nowrap; }
+.terminal-conquista:empty { display: none; }
+.terminal-conquista.pulou { animation: conquista-pulo .45s cubic-bezier(.3, 1.6, .5, 1); }
+.terminal-conquista.completo { background: var(--cyan); color: #0e1422; box-shadow: 0 0 14px rgba(var(--cyan-rgb), .6); }
+@keyframes conquista-pulo { 40% { transform: scale(1.25); box-shadow: 0 0 16px rgba(var(--cyan-rgb), .7); } }
+.terminal-atalhos { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px 18px 2px; }
+.terminal-atalhos:empty { display: none; }
+.terminal-atalhos button { position: relative; padding: 6px 12px; border: 1px solid rgba(var(--cyan-rgb), .45); border-radius: 6px; background: rgba(var(--cyan-rgb), .07); color: var(--text); font: 500 .74rem "DM Mono", monospace; cursor: pointer; transition: transform .15s ease, box-shadow .2s ease, border-color .2s ease, background-color .2s ease; }
+.terminal-atalhos button::before { content: "$ "; color: var(--cyan); }
+.terminal-atalhos button.feito { border-color: rgba(255,255,255,.14); background: transparent; color: var(--muted); }
+.terminal-atalhos button.feito::before { content: "✓ "; }
+@media (hover: hover) { .terminal-atalhos button:hover { transform: translateY(-2px); border-color: var(--cyan); box-shadow: 0 0 14px rgba(var(--cyan-rgb), .45); } }
+.terminal-atalhos button:active { transform: scale(.95); }
+.terminal-atalhos button:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+#terminalSaida p { color: var(--text); }
+#terminalSaida p.terminal-echo { opacity: .6; }
+#terminalSaida p.terminal-destaque { color: var(--cyan); font-weight: 500; text-shadow: 0 0 10px rgba(var(--cyan-rgb), .5); }
+#terminalSaida p.terminal-placar { color: var(--cyan); font: 700 1.5rem/1.2 "Space Grotesk", Arial, sans-serif; letter-spacing: -.02em; text-shadow: 0 0 16px rgba(var(--cyan-rgb), .6); }
+#terminalSaida .terminal-link { color: var(--cyan); text-decoration: underline; text-underline-offset: 3px; }
+#terminalSaida .terminal-dica { color: var(--muted); opacity: .7; }
+@media (prefers-reduced-motion: reduce) { .terminal-conquista.pulou { animation: none; } .terminal-atalhos button { transition: none; } }
