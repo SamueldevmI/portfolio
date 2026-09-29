@@ -142,17 +142,20 @@ document.querySelectorAll(".botao").forEach((botao) => {
     });
 });
 
-/* Comparador "sem site × com site" no topo. A pessoa escolhe o tipo de negócio (e, se quiser, digita o
-   nome) e a cena se adapta: busca no Google, perguntas no WhatsApp e pedidos/agenda/loja daquele ramo.
-   Uma chave vira de "sem" pra "com", o placar vira do ruim pro bom, a calculadora mostra quanto se perde
-   por mês e o botão do fim fala a dor da cena (e abre o orçamento já preenchido). Roda sozinho até a
-   pessoa mexer. O nome é o mesmo do campo "Nome do seu negócio" dos projetos (os dois ficam iguais). */
+/* Comparador "sem site × com site" no topo: os dois lados rodando ao mesmo tempo (lado a lado no
+   computador, um embaixo do outro no celular). A pessoa escolhe o tipo de negócio (e, se quiser, digita o
+   nome) e a cena se adapta: Google, WhatsApp e pedidos/agenda/loja daquele ramo. Cada lado tem o seu
+   placar, a calculadora mostra quanto se perde por mês e o botão do fim fala a dor da cena (abre o
+   orçamento já preenchido). Roda sozinho, cena a cena, até a pessoa mexer. O nome é o mesmo do campo
+   "Nome do seu negócio" dos projetos (os dois ficam iguais). */
 (function comparadorSemCom() {
     const raiz = document.getElementById("comparador");
     if (!raiz) return;
     const $ = (sel) => raiz.querySelector(sel);
-    const tiposEl = $(".cmp-tipos"), abas = $(".cmp-abas"), palco = $(".cmp-palco"), metricas = $(".cmp-metricas");
-    const chave = $(".cmp-chave"), palavraFase = $(".cmp-titulo-fase"), testar = $(".cmp-testar"), querer = $(".cmp-querer");
+    const tiposEl = $(".cmp-tipos"), abas = $(".cmp-abas"), testar = $(".cmp-testar"), querer = $(".cmp-querer");
+    const palco = { sem: $('.cmp-palco[data-lado="sem"]'), com: $('.cmp-palco[data-lado="com"]') };
+    const placar = { sem: $('.cmp-metricas[data-lado="sem"]'), com: $('.cmp-metricas[data-lado="com"]') };
+    const notif = $(".cmp-notif");
     const campoNome = $(".cmp-nome input"), campoNomeProjetos = document.getElementById("nomeNegocio");
     const semMovimento = prefereMenosMovimento;
     const espera = (ms) => new Promise((r) => setTimeout(r, semMovimento ? 0 : ms));
@@ -169,7 +172,7 @@ document.querySelectorAll(".botao").forEach((botao) => {
             concorrentes: ["Barbearia Navalha · ⭐ 4,9 · agenda online", "Corte Fino · ⭐ 4,7 · WhatsApp"],
             perguntas: [["tem horário sábado?", "Sábado das 8h às 18h, escolhe o horário no site 💈"], ["quanto é o corte?", "Corte R$ 35 · barba R$ 25"], ["aceita pix?", ""]] },
         "loja de roupa": { emoji: "👕", exemplo: "Sua Loja", busca: "loja de roupa", extra: "loja", ticket: 150, mensagens: 50,
-            concorrentes: ["Estilo Urbano · ⭐ 4,8 · loja online", "Vitrine Store · ⭐ 4,6 · entrega"], 
+            concorrentes: ["Estilo Urbano · ⭐ 4,8 · loja online", "Vitrine Store · ⭐ 4,6 · entrega"],
             perguntas: [["tem M?", "Tem P, M e G, é só escolher no site"], ["quanto tá o moletom?", "R$ 189, com foto de todos os ângulos"], ["entrega?", ""]] },
         "salão": { emoji: "💇", exemplo: "Seu Salão", busca: "salão de beleza", extra: "agenda", ticket: 90, mensagens: 40,
             concorrentes: ["Studio Bella · ⭐ 4,9 · agenda online", "Espaço Glamour · ⭐ 4,7 · WhatsApp"],
@@ -190,6 +193,8 @@ document.querySelectorAll(".botao").forEach((botao) => {
         return href ? { href, texto, novaAba: true } : { href: "#projetos", texto: "ver projetos parecidos ↓" };
     };
 
+    // Linhas: [tipo, texto, detalhe]. msg = mensagem chegando; busca/resultado = Google; alerta = deu ruim;
+    // ok = resolvido (com ✓); fim = fecho. metricas: [rótulo, sem, com].
     function cenas(tipo, nome) {
         const n = NEGOCIOS[tipo];
         const marca = nome || n.exemplo;
@@ -197,50 +202,49 @@ document.querySelectorAll(".botao").forEach((botao) => {
             {
                 aba: "Google", tipoOrc: "site", cta: "quero aparecer no Google →", testar: { href: "#projetos", texto: "ver sites que eu fiz ↓" },
                 sem: nome
-                    ? [["busca", nome], ["resultado", "Nenhum resultado encontrado pra essa busca"], ["msg", "“será que ainda existe?”"], ["alerta", "cliente foi no concorrente ❌"]]
-                    : [["busca", `${n.busca} perto de mim`], ["resultado", n.concorrentes[0]], ["resultado", n.concorrentes[1]], ["alerta", "e o seu negócio? não aparece ❌"]],
-                com: [["busca", nome || `${n.busca} perto de mim`], ["ok", `${marca} · horário · endereço · WhatsApp`, "aparece com tudo"], ["ok", "cliente tocou em “Chamar no WhatsApp”", "nem precisou ligar"], ["fim", "cliente novo, que nem te conhecia ✓"]],
-                metricas: [["No Google", "não aparece", "aparece"], ["Horário e preços", "só perguntando", "na tela, 24h"], ["Cliente novo", "vai pro concorrente", "chama você"]],
+                    ? [["busca", nome], ["resultado", "Nenhum resultado. Você quis dizer: concorrente?"], ["msg", "“será que fechou?” 🤔"], ["alerta", "fechou nada, só não tem site 🥲"]]
+                    : [["busca", `${n.busca} perto de mim`], ["resultado", n.concorrentes[0]], ["resultado", n.concorrentes[1]], ["resultado", "…página 7 do Google: nem sinal de você 👻"], ["alerta", "cliente foi no concorrente. o concorrente agradece 🙏"]],
+                com: [["busca", nome || `${n.busca} perto de mim`], ["ok", `${marca} · horário · endereço · WhatsApp`, "apareceu bonitão"], ["ok", "cliente tocou em “Chamar no WhatsApp”", "sem ligar, sem sofrer"], ["fim", "cliente novo chegando e você nem fez nada 😎"]],
+                metricas: [["No Google", "fantasma 👻", "aparece"], ["Horário e preço", "só perguntando", "na tela, 24h"], ["Cliente novo", "vai pro vizinho", "chama você"]],
             },
             {
                 aba: "WhatsApp", tipoOrc: "automacao", cta: "quero parar de responder a mesma coisa →", testar: demo("Fatia Nobre", "testar um atendimento automático ↗"),
-                sem: [...n.perguntas.map(([p]) => ["msg", p]), ["msg", "oi?? alguém?"], ["alerta", "⏳ cliente esperando há 2 horas... desistiu ❌"]],
-                com: [...n.perguntas.filter(([, r]) => r).slice(0, 2).map(([p, r]) => ["ok", `“${p}” → ${r}`, "na hora"]), ["fim", "e você nem precisou pegar no celular 😴"]],
-                metricas: [["Tempo de resposta", "horas", "na hora"], ["Mesma pergunta", "o dia todo", "respondida sozinha"], ["Seu celular", "não para", "em paz"]],
+                sem: [...n.perguntas.map(([p]) => ["msg", p]), ["msg", "oi??"], ["msg", "OI???"], ["alerta", "você respondendo às 23h47 de chinelo 🩴 e ele já comprou em outro lugar"]],
+                com: [...n.perguntas.filter(([, r]) => r).slice(0, 2).map(([p, r]) => ["ok", `“${p}” → ${r}`, "na hora"]), ["fim", "e você? dormindo 😴 o site respondeu tudo"]],
+                metricas: [["Tempo de resposta", "quando der", "na hora"], ["Mesma pergunta", "47ª vez hoje", "respondida sozinha"], ["Seu celular", "não para de apitar", "em paz"]],
             },
         ];
         if (n.extra === "pedidos") lista.push({
             aba: "pedidos", tipoOrc: "site", cta: "quero receber pedido pronto →", testar: demo("Glitch District", "testar uma loja com pedido no WhatsApp ↗"),
-            sem: [["msg", "quero uma calabresa grande"], ["msg", "e uma coca 2L"], ["msg", "ah, e meia portuguesa"], ["msg", "qual o total?"], ["alerta", "📝 pedido anotado errado de novo ❌"]],
-            com: [["ok", "🍕 Calabresa grande", "R$ 52"], ["ok", "🥤 Coca 2L", "R$ 14"], ["fim", "pedido de R$ 66 chegou pronto no seu WhatsApp ✓"]],
-            metricas: [["Pra fechar um pedido", "várias mensagens", "1 toque"], ["Erro no pedido", "acontece", "não acontece"], ["O pedido chega", "picado", "pronto"]],
+            sem: [["msg", "quero uma calabresa grande"], ["msg", "não, média"], ["msg", "meia calabresa meia frango"], ["msg", "e uma coca... não, guaraná"], ["alerta", "📝 anotou errado. de novo. 🤡"]],
+            com: [["ok", "🍕 Média · meia calabresa, meia frango", "R$ 52"], ["ok", "🥤 Guaraná 2L", "R$ 12"], ["fim", "pedido chegou certinho no WhatsApp. sem telefone sem fio ✓"]],
+            metricas: [["Pra fechar um pedido", "15 mensagens", "1 toque"], ["Erro no pedido", "toda sexta", "zero"], ["O pedido chega", "picado", "pronto"]],
         });
         if (n.extra === "loja") lista.push({
             aba: "loja", tipoOrc: "site", cta: "quero uma loja que vende sozinha →", testar: demo("Glitch District", "testar a loja ↗"),
-            sem: [["msg", "manda foto do moletom preto"], ["msg", "quanto tá?"], ["msg", "tem M?"], ["msg", "e na outra cor??"], ["alerta", "📸 foto no direct o dia inteiro"]],
-            com: [["ok", "🛒 Moletom preto · M", "R$ 189"], ["ok", "🛒 Boné preto", "R$ 79"], ["fim", "pedido de R$ 268 chegou pronto no seu WhatsApp ✓"]],
-            metricas: [["Pra fechar um pedido", "várias mensagens", "1 toque"], ["Fotos no direct", "o dia todo", "nenhuma"], ["O pedido chega", "picado", "pronto"]],
+            sem: [["msg", "manda foto do moletom preto"], ["msg", "agora de costas"], ["msg", "e vestido?"], ["msg", "tem M?"], ["alerta", "📸 você virou modelo, fotógrafo e vendedor no mesmo dia"]],
+            com: [["ok", "🛒 Moletom preto · M", "R$ 189"], ["ok", "🛒 Boné preto", "R$ 79"], ["fim", "pedido de R$ 268 no WhatsApp e você nem tirou foto ✓"]],
+            metricas: [["Pra fechar um pedido", "20 mensagens", "1 toque"], ["Fotos no direct", "o dia todo", "nenhuma"], ["O pedido chega", "picado", "pronto"]],
         });
         if (n.extra === "agenda") lista.push({
             aba: "agenda", tipoOrc: "sistema", cta: "quero uma agenda que se preenche sozinha →", testar: { href: "#projetos", texto: "ver sistemas que eu fiz ↓" },
-            sem: [["msg", n.perguntas[0][0]], ["msg", "e às 15h?"], ["msg", "vou ver aqui e te falo"], ["msg", "e aí??"], ["alerta", "📅 dois clientes marcados no mesmo horário ❌"]],
-            com: [["ok", "cliente escolheu sábado, 15h", "sozinho"], ["ok", "confirmação no WhatsApp dos dois", "automática"], ["fim", "agenda cheia, sem troca de mensagem ✓"]],
-            metricas: [["Pra marcar horário", "várias mensagens", "2 toques"], ["Horário duplicado", "acontece", "impossível"], ["A agenda fica", "no caderno", "no celular"]],
+            sem: [["msg", n.perguntas[0][0]], ["msg", "e às 15h?"], ["msg", "vou ver aqui e te falo"], ["msg", "e aí??"], ["alerta", "📅 dois clientes no mesmo horário. vai ser um encontro constrangedor 😬"]],
+            com: [["ok", "cliente escolheu sábado, 15h", "sozinho"], ["ok", "lembrete no WhatsApp um dia antes", "automático"], ["fim", "agenda cheia e zero “e aí??” ✓"]],
+            metricas: [["Pra marcar horário", "10 mensagens", "2 toques"], ["Horário duplicado", "acontece", "impossível"], ["A agenda fica", "no caderno", "no celular"]],
         });
         return lista;
     }
 
     let tipo = NEGOCIOS[ler("portfolio-tipo-negocio")] ? ler("portfolio-tipo-negocio") : "pizzaria";
-    let lista = [], atual = 0, fase = "sem", rodada = 0, automatico = true;
+    let lista = [], atual = 0, rodada = 0, automatico = true;
     const nome = () => (campoNome?.value || "").trim().slice(0, 40);
-
     const pararAuto = () => { automatico = false; raiz.classList.add("cmp-manual"); raiz.classList.remove("cmp-contando"); };
 
     // chips de tipo de negócio
     Object.entries(NEGOCIOS).forEach(([chaveTipo, n]) => {
         const b = document.createElement("button");
         b.type = "button"; b.dataset.tipo = chaveTipo; b.textContent = `${n.emoji} ${chaveTipo}`;
-        b.addEventListener("click", () => { tipo = chaveTipo; gravar("portfolio-tipo-negocio", tipo); pararAuto(); montar(); mostrar(0, "sem", true); calcular(true); });
+        b.addEventListener("click", () => { tipo = chaveTipo; gravar("portfolio-tipo-negocio", tipo); pararAuto(); montar(); mostrar(0); calcular(true); });
         tiposEl.appendChild(b);
     });
 
@@ -250,50 +254,40 @@ document.querySelectorAll(".botao").forEach((botao) => {
         abas.replaceChildren(...lista.map((c, i) => {
             const b = document.createElement("button");
             b.type = "button"; b.textContent = c.aba; b.setAttribute("aria-pressed", "false");
-            b.addEventListener("click", () => { pararAuto(); mostrar(i, "sem", true); });
+            b.addEventListener("click", () => { pararAuto(); mostrar(i); });
             return b;
         }));
         if (campoNome) campoNome.placeholder = `nome da sua ${tipo} (opcional)`.replace("sua salão", "seu salão").replace("sua loja de roupa", "sua loja");
     }
 
-    function linha(t, texto, detalhe) {
+    function linha(lado, t, texto, detalhe) {
         const el = document.createElement("div");
         el.className = "cmp-linha cmp-" + t;
         const s = document.createElement("span"); s.textContent = texto; el.appendChild(s);
         if (detalhe) { const d = document.createElement("small"); d.textContent = detalhe; el.appendChild(d); }
-        if (t === "msg") el.style.setProperty("--giro", (Math.random() * 3 - 1.5).toFixed(1) + "deg");
-        palco.appendChild(el);
+        if (t === "msg") el.style.setProperty("--giro", (Math.random() * 4 - 2).toFixed(1) + "deg");
+        palco[lado].appendChild(el);
     }
 
     function montarPlacar(c) {
-        metricas.replaceChildren(...c.metricas.map(([rotulo, sem, com]) => {
+        ["sem", "com"].forEach((lado) => placar[lado].replaceChildren(...c.metricas.map(([rotulo, sem, com]) => {
             const m = document.createElement("div");
             m.className = "cmp-metrica";
-            m.innerHTML = "<small></small><b></b><s></s>";
+            m.innerHTML = "<small></small><b></b>";
             m.querySelector("small").textContent = rotulo;
-            m.querySelector("b").textContent = sem;
-            m.querySelector("s").textContent = sem;
-            m.dataset.sem = sem; m.dataset.com = com;
+            m.querySelector("b").textContent = lado === "sem" ? sem : com;
             return m;
-        }));
+        })));
     }
-    async function virarPlacar(para) {
-        const tiles = [...metricas.children];
-        for (const m of tiles) {
-            m.classList.remove("virou"); void m.offsetWidth;
-            m.querySelector("b").textContent = para === "com" ? m.dataset.com : m.dataset.sem;
-            m.classList.toggle("bom", para === "com");
-            if (!semMovimento) m.classList.add("virou");
-            if (para === "com" && window.musicaSite && window.musicaSite.pode()) window.musicaSite.nota(79 + tiles.indexOf(m) * 4, 0.6);
-            await espera(160);
+    async function acenderPlacar() {
+        for (const lado of ["sem", "com"]) for (const [i, m] of [...placar[lado].children].entries()) {
+            m.classList.add("aceso");
+            if (lado === "com" && window.musicaSite && window.musicaSite.pode()) window.musicaSite.nota(79 + i * 4, 0.5);
+            await espera(110);
         }
     }
 
-    function acertarTopo() {
-        chave.setAttribute("aria-checked", String(fase === "com"));
-        palavraFase.textContent = fase === "com" ? "com site" : "sem site";
-        raiz.dataset.fase = fase;
-        const c = lista[atual];
+    function acertarRodape(c) {
         querer.textContent = c.cta;
         querer.dataset.orcamentoTipo = c.tipoOrc;
         querer.dataset.orcamentoRef = `${nome() || tipo} — ${c.cta.replace(" →", "")}`.slice(0, 80);
@@ -301,58 +295,62 @@ document.querySelectorAll(".botao").forEach((botao) => {
         if (c.testar.novaAba) { testar.target = "_blank"; testar.rel = "noopener noreferrer"; } else { testar.removeAttribute("target"); testar.removeAttribute("rel"); }
     }
 
-    async function mostrar(i, novaFase, trocouCena) {
+    // Mostra uma cena: as linhas dos dois lados vão entrando intercaladas (o "sem" bagunçado, o "com" em ordem)
+    async function mostrar(i) {
         const minha = ++rodada;
         const vivo = () => minha === rodada;
         const c = lista[i];
-        if (trocouCena || i !== atual) {
-            atual = i;
-            [...abas.children].forEach((b, j) => b.setAttribute("aria-pressed", String(j === i)));
-            montarPlacar(c);
-        }
-        fase = novaFase;
-        acertarTopo();
+        atual = i;
+        [...abas.children].forEach((b, j) => b.setAttribute("aria-pressed", String(j === i)));
+        acertarRodape(c);
+        montarPlacar(c);
         raiz.classList.add("cmp-trocando");
-        await espera(200);
+        await espera(180);
         if (!vivo()) return false;
         raiz.classList.remove("cmp-trocando");
-        palco.innerHTML = "";
-        const placar = virarPlacar(novaFase);
-        for (const [t, texto, detalhe] of (novaFase === "com" ? c.com : c.sem)) {
-            if (!vivo()) return false;
-            linha(t, texto, detalhe);
-            await espera(novaFase === "com" ? 420 : t === "alerta" ? 650 : 480);
+        palco.sem.innerHTML = ""; palco.com.innerHTML = "";
+        let notificacoes = 0;
+        if (notif) { notif.hidden = true; notif.textContent = "0"; }
+        const passos = Math.max(c.sem.length, c.com.length);
+        for (let p = 0; p < passos; p++) {
+            if (c.sem[p]) {
+                if (!vivo()) return false;
+                linha("sem", ...c.sem[p]);
+                if (c.sem[p][0] === "msg" && notif) { notificacoes += 1 + Math.floor(Math.random() * 4); notif.textContent = notificacoes; notif.hidden = false; notif.classList.remove("pulou"); void notif.offsetWidth; notif.classList.add("pulou"); }
+                await espera(c.sem[p][0] === "alerta" ? 500 : 380);
+            }
+            if (c.com[p]) {
+                if (!vivo()) return false;
+                linha("com", ...c.com[p]);
+                await espera(380);
+            }
         }
-        await placar;
+        if (!vivo()) return false;
+        await acenderPlacar();
         return vivo();
     }
 
     async function rodarSozinho(i) {
         if (!automatico) return;
-        if (!(await mostrar(i, "sem", true))) return;
-        await espera(1500);
-        if (!automatico || !(await mostrar(i, "com"))) return;
-        if (semMovimento) return;
+        if (!(await mostrar(i)) || semMovimento) return;
         raiz.classList.remove("cmp-contando"); void raiz.offsetWidth; raiz.classList.add("cmp-contando");
-        await espera(3800);
+        await espera(5000);
         raiz.classList.remove("cmp-contando");
         if (automatico) rodarSozinho((i + 1) % lista.length);
     }
 
-    chave.addEventListener("click", () => { pararAuto(); mostrar(atual, fase === "com" ? "sem" : "com"); });
-
     // nome: o mesmo do campo dos projetos, nos dois sentidos
     if (campoNome) {
         campoNome.value = ler("portfolio-nome-negocio");
-        let espera2 = 0;
+        let atraso = 0;
         campoNome.addEventListener("input", () => {
-            clearTimeout(espera2);
-            espera2 = setTimeout(() => {
+            clearTimeout(atraso);
+            atraso = setTimeout(() => {
                 if (campoNomeProjetos) { campoNomeProjetos.value = campoNome.value; campoNomeProjetos.dispatchEvent(new Event("input")); }
                 else gravar("portfolio-nome-negocio", nome());
                 pararAuto();
                 lista = cenas(tipo, nome());
-                mostrar(0, fase === "com" ? "com" : "sem", true);
+                mostrar(0);
             }, 350);
         });
         campoNome.addEventListener("focus", pararAuto);
@@ -361,7 +359,7 @@ document.querySelectorAll(".botao").forEach((botao) => {
         if (document.activeElement === campoNome) return;
         campoNome.value = campoNomeProjetos.value;
         lista = cenas(tipo, nome());
-        acertarTopo();
+        acertarRodape(lista[atual]);
     });
 
     /* Calculadora: quanto some por mês sem resposta rápida (estimativa: 1 em cada 5 desiste) */
@@ -396,8 +394,7 @@ document.querySelectorAll(".botao").forEach((botao) => {
     montar();
     calcular(true);
     let comecou = false;
-    const comecar = () => { if (comecou) return; comecou = true; if (semMovimento) { automatico = false; mostrar(0, "sem", true); } else rodarSozinho(0); };
-    mostrar(0, "sem", true); // já deixa a primeira cena montada
+    const comecar = () => { if (comecou) return; comecou = true; if (semMovimento) { automatico = false; mostrar(0); } else rodarSozinho(0); };
     if ("IntersectionObserver" in window) {
         const obs = new IntersectionObserver((e) => { if (e.some((x) => x.isIntersecting)) { obs.disconnect(); comecar(); } });
         obs.observe(raiz);
