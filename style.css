@@ -2109,6 +2109,12 @@ h1 span { text-shadow: none; }
 }
 @media (prefers-reduced-motion: reduce) { .hero-foto-pulso { animation: none; opacity: .4; } }
 
+/* selo de prazo na faixa de promoção */
+.promo-prazo[hidden] { display: none; }
+.promo-prazo { padding: 2px 9px; border-radius: 999px; background: #ffffff; color: #161616; font: 700 .7rem "DM Mono", monospace; font-style: normal; letter-spacing: .04em; text-transform: uppercase; text-shadow: none; animation: prazo-pisca 1.6s ease-in-out infinite; }
+@keyframes prazo-pisca { 50% { opacity: .55; } }
+@media (prefers-reduced-motion: reduce) { .promo-prazo { animation: none; } }
+
 /* ---------- Comparador "sem site × com site" no topo: os dois lados ao mesmo tempo ---------- */
 .comparador { --cmp-ruim: #a3a3a3; position: relative; z-index: 1; max-width: 100%; margin-top: 48px; padding: 22px 22px 0; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: linear-gradient(160deg, var(--surface), var(--bg)); box-shadow: var(--shadow); }
 .cmp-titulo { margin: 0; font: 700 clamp(1.3rem, 2.6vw, 1.8rem)/1.15 "Space Grotesk", Arial, sans-serif; letter-spacing: -.02em; }

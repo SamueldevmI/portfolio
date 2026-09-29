@@ -71,7 +71,7 @@ if (heroTexto && !prefereMenosMovimento) {
     setTimeout(function digitarHero() {
         heroTexto.textContent = textoCompletoHero.slice(0, indiceCharHero);
         indiceCharHero++;
-        if (indiceCharHero <= textoCompletoHero.length) setTimeout(digitarHero, 18);
+        if (indiceCharHero <= textoCompletoHero.length) setTimeout(digitarHero, 14);
     }, 320);
 }
 

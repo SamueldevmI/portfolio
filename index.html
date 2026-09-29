@@ -52,10 +52,10 @@
             } catch (e) { /* sem armazenamento */ }
             document.documentElement.dataset.tema = tema;
             if (tema === "azul") document.querySelector('meta[name="theme-color"]').content = "#0e1422";
-            document.write('<link rel="stylesheet" id="folhaTema" href="' + (tema === "azul" ? "style-azul.css" : "style.css") + '?v=20260926merge">');
+            document.write('<link rel="stylesheet" id="folhaTema" href="' + (tema === "azul" ? "style-azul.css" : "style.css") + '?v=20260929ganchos2">');
         })();
     </script>
-    <noscript><link rel="stylesheet" href="style.css?v=20260926merge"></noscript>
+    <noscript><link rel="stylesheet" href="style.css?v=20260929ganchos2"></noscript>
     <title id="tituloPagina">Samuel Mickael | Desenvolvedor Web &amp; Mobile</title>
     <script type="application/ld+json">
     {
@@ -156,13 +156,13 @@
                 <div class="ht-cel"><img src="imagem/projetos/celular/loja-1.webp" alt="" width="280" height="606" loading="lazy" decoding="async"></div>
             </div>
             <p class="eyebrow"><span class="status-disponivel"><i aria-hidden="true"></i>Aceitando novos projetos</span>DESENVOLVEDOR WEB &amp; MOBILE<span class="eyebrow-sep"> · </span><span class="eyebrow-cidade">CAMPO GRANDE - MS</span><span class="eyebrow-sep"> · </span><span class="tempo-leitura">⏱ ~3 min pra conhecer o trampo</span></p>
-            <a class="promo-faixa" href="#orcamento" data-promo-ate="2026-09-30" hidden><b>40% OFF</b> pros 5 primeiros clientes que fecharem até 30/09 <span aria-hidden="true">→</span></a>
+            <a class="promo-faixa" href="#orcamento" data-promo-ate="2026-09-30" hidden><b>40% OFF</b> pros 5 primeiros clientes que fecharem até 30/09 <em class="promo-prazo" data-prazo="2026-09-30" hidden></em><span aria-hidden="true">→</span></a>
             <p class="hero-ola">Olá! Me chamo <strong>Samuel Mickael</strong>.</p>
             <h1>Sites e sistemas que <span>trabalham por você.</span></h1>
-            <p class="hero-texto">Do site de apresentação ao sistema com banco de dados: sob medida, simples de usar e funcionando no celular e no computador.</p>
+            <p class="hero-texto">Perdendo cliente por demora pra responder, planilha bagunçada ou site que ninguém encontra? Eu crio o site ou sistema sob medida que resolve isso: simples de usar e funcionando no celular e no computador.</p>
             <div class="hero-acoes">
-                <a class="botao botao-principal" href="#orcamento">Pedir orçamento</a>
-                <a class="botao botao-secundario" href="#projetos">Ver projetos</a>
+                <a class="botao botao-principal" href="#orcamento">Quero meu orçamento</a>
+                <a class="botao botao-secundario" href="#projetos">Ver projetos funcionando</a>
                 <a class="botao botao-secundario" href="curriculo-samuel-mickael.pdf" download="Curriculo_Samuel_Mickael.pdf">Baixar currículo</a>
             </div>
             <div class="hero-numeros" aria-label="Resumo do portfólio">
@@ -400,7 +400,7 @@
                         <p class="tag">Lista de tarefas com prioridade</p>
                         <h3><span class="projeto-nome">TaskFlow</span> <span class="titulo-beneficio">o que é urgente fica no topo</span></h3>
                         <p class="projeto-preco"><span class="pp-base">a partir de <b>R$&nbsp;300</b></span><span class="pp-promo" data-promo-ate="2026-09-30" hidden>até 30/09: <b>R$&nbsp;150</b> com os 50% (lançamento + depoimento)</span><span class="pp-promo" data-promo-depois="2026-09-30" hidden><b>R$&nbsp;270</b> deixando um depoimento (10% off)</span></p>
-                        <p class="projeto-resumo">Anote as tarefas, marque o que é urgente e risque o que já fez. Tudo fica salvo no próprio&nbsp;aparelho.</p>
+                        <p class="projeto-resumo">Anota tudo e mesmo assim o urgente se perde no meio da lista? Aqui você marca o que é urgente e ele sobe pro topo; o que já fez, é só riscar. Tudo fica salvo no próprio&nbsp;aparelho.</p>
                         <div class="projeto-serve"><p class="projeto-rotulo">Serve pra</p><ul><li>Freelancer</li><li>Equipe pequena</li><li>Estudante</li></ul></div>
                         <p class="projeto-meta"><span class="meta-numero">3 níveis de prioridade</span><span class="meta-prazo">Prazo de algo assim: 1 a 2 semanas</span></p>
                         <div class="links-projeto"><a class="link-projeto" href="./taskflow/index.html" target="_blank" rel="noopener noreferrer">Testar agora <span aria-hidden="true">↗</span></a><button type="button" class="link-acao link-icone" data-demo="./taskflow/index.html" data-demo-titulo="TaskFlow" aria-label="Ver TaskFlow aqui, sem sair da página" title="Ver aqui, sem sair da página"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button><a class="link-codigo link-icone" href="https://github.com/SamueldevmI/portfolio/tree/main/taskflow" target="_blank" rel="noopener noreferrer" aria-label="Ver o código de TaskFlow no GitHub" title="Ver o código no GitHub"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 .5C5.65.5.5 5.65.5 12a11.5 11.5 0 0 0 7.86 10.92c.58.1.79-.25.79-.56v-2c-3.2.7-3.87-1.37-3.87-1.37-.53-1.33-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.19-3.08-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.8 1.19 1.82 1.19 3.08 0 4.41-2.69 5.38-5.25 5.67.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/></svg></a></div>
@@ -422,7 +422,7 @@
                         <p class="tag">Cronômetro de foco</p>
                         <h3><span class="projeto-nome">FocusFlow</span> <span class="titulo-beneficio">foco de 25 minutos, pausa na hora certa</span></h3>
                         <p class="projeto-preco"><span class="pp-base">a partir de <b>R$&nbsp;250</b></span><span class="pp-promo" data-promo-ate="2026-09-30" hidden>até 30/09: <b>R$&nbsp;125</b> com os 50% (lançamento + depoimento)</span><span class="pp-promo" data-promo-depois="2026-09-30" hidden><b>R$&nbsp;225</b> deixando um depoimento (10% off)</span></p>
-                        <p class="projeto-resumo">Um cronômetro que divide o trabalho em blocos de foco e pausas, e conta quantos blocos você já&nbsp;completou.</p>
+                        <p class="projeto-resumo">Senta pra trabalhar e dez minutos depois está no celular? Este cronômetro divide o trabalho em blocos de foco e pausas, e conta quantos blocos você já&nbsp;completou.</p>
                         <div class="projeto-serve"><p class="projeto-rotulo">Serve pra</p><ul><li>Estudante</li><li>Quem trabalha em casa</li><li>Curso ou escola</li></ul></div>
                         <p class="projeto-meta"><span class="meta-numero">3 modos: 25, 5 e 15 min</span><span class="meta-prazo">Prazo de algo assim: 1 semana</span></p>
                         <div class="links-projeto"><a class="link-projeto" href="./focusflow/index.html" target="_blank" rel="noopener noreferrer">Testar agora <span aria-hidden="true">↗</span></a><button type="button" class="link-acao link-icone" data-demo="./focusflow/index.html" data-demo-titulo="FocusFlow" aria-label="Ver FocusFlow aqui, sem sair da página" title="Ver aqui, sem sair da página"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button><a class="link-codigo link-icone" href="https://github.com/SamueldevmI/portfolio/tree/main/focusflow" target="_blank" rel="noopener noreferrer" aria-label="Ver o código de FocusFlow no GitHub" title="Ver o código no GitHub"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 .5C5.65.5.5 5.65.5 12a11.5 11.5 0 0 0 7.86 10.92c.58.1.79-.25.79-.56v-2c-3.2.7-3.87-1.37-3.87-1.37-.53-1.33-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.19-3.08-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.8 1.19 1.82 1.19 3.08 0 4.41-2.69 5.38-5.25 5.67.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/></svg></a></div>
@@ -444,7 +444,7 @@
                         <p class="tag">Quadro de tarefas em colunas</p>
                         <h3><span class="projeto-nome">FlowBoard</span> <span class="titulo-beneficio">do “a fazer” ao “pronto”, arrastando</span></h3>
                         <p class="projeto-preco"><span class="pp-base">a partir de <b>R$&nbsp;300</b></span><span class="pp-promo" data-promo-ate="2026-09-30" hidden>até 30/09: <b>R$&nbsp;150</b> com os 50% (lançamento + depoimento)</span><span class="pp-promo" data-promo-depois="2026-09-30" hidden><b>R$&nbsp;270</b> deixando um depoimento (10% off)</span></p>
-                        <p class="projeto-resumo">Um quadro com três colunas: a fazer, fazendo e pronto. No computador, você arrasta cada tarefa conforme ela&nbsp;anda.</p>
+                        <p class="projeto-resumo">Não sabe mais o que já andou e o que está parado? Um quadro com três colunas (a fazer, fazendo e pronto), e no computador você arrasta cada tarefa conforme ela&nbsp;anda.</p>
                         <div class="projeto-serve"><p class="projeto-rotulo">Serve pra</p><ul><li>Equipe pequena</li><li>Agência</li><li>Organizar um projeto</li></ul></div>
                         <p class="projeto-meta"><span class="meta-numero">3 colunas de trabalho</span><span class="meta-prazo">Prazo de algo assim: 1 a 2 semanas</span></p>
                         <div class="links-projeto"><a class="link-projeto" href="./flowboard/index.html" target="_blank" rel="noopener noreferrer">Testar agora <span aria-hidden="true">↗</span></a><button type="button" class="link-acao link-icone" data-demo="./flowboard/index.html" data-demo-titulo="FlowBoard" aria-label="Ver FlowBoard aqui, sem sair da página" title="Ver aqui, sem sair da página"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button><a class="link-codigo link-icone" href="https://github.com/SamueldevmI/portfolio/tree/main/flowboard" target="_blank" rel="noopener noreferrer" aria-label="Ver o código de FlowBoard no GitHub" title="Ver o código no GitHub"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 .5C5.65.5.5 5.65.5 12a11.5 11.5 0 0 0 7.86 10.92c.58.1.79-.25.79-.56v-2c-3.2.7-3.87-1.37-3.87-1.37-.53-1.33-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.19-3.08-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.8 1.19 1.82 1.19 3.08 0 4.41-2.69 5.38-5.25 5.67.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/></svg></a></div>
@@ -610,7 +610,7 @@
     <footer>© <span id="ano"></span> Samuel Mickael. Feito com dedicação. · <a href="https://github.com/SamueldevmI" target="_blank" rel="me noopener noreferrer">GitHub</a> · <a class="link-linkedin" href="https://www.linkedin.com/in/samuelrondon-dev/?utm_source=portfolio&utm_medium=footer&utm_campaign=site" target="_blank" rel="me noopener noreferrer" aria-label="LinkedIn de Samuel Mickael"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>LinkedIn</a> · <button type="button" id="botaoTour" class="link-rodape">Tour rápido</button>
         <div class="selo-brilho"><span class="selo-ponto" aria-hidden="true"></span><img class="selo-visitas" src="https://visitor-badge.laobi.icu/badge?page_id=samueldevmi.github.io.portfolio&color=8b1a1a&text_color=f6f6f6&left_text=visitas" alt="Contador de visitas do portfólio" loading="lazy" width="94" height="20"></div>
     </footer>
-    <a class="orcamento-fixo" href="#orcamento">Pedir orçamento</a>
+    <a class="orcamento-fixo" href="#orcamento">Quero meu orçamento</a>
     <a class="voltar-topo" href="#inicio" aria-label="Voltar ao topo"><span class="voltar-topo-seta" aria-hidden="true">↑</span></a>
 
     <div class="paleta-overlay" id="paletaOverlay" hidden>
@@ -676,13 +676,13 @@
     </div>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-    <script src="script.js?v=20260926merge"></script>
-<script src="acabamento.js?v=20260926merge" defer></script>
+    <script src="script.js?v=20260929ganchos2"></script>
+<script src="acabamento.js?v=20260929ganchos2" defer></script>
 <script>
     /* Scripts que a página não precisa pra aparecer: o mobile.js só baixa em tela de toque (no computador
        ele não faz nada) e a música só depois que a página terminou de carregar. */
     (function () {
-        var versao = "?v=20260926merge";
+        var versao = "?v=20260929ganchos2";
         function carregar(arquivo) { var s = document.createElement("script"); s.src = arquivo + versao; document.body.appendChild(s); }
         if (matchMedia("(pointer: coarse)").matches) {
             // o pedido de "instalar app" pode chegar antes do mobile.js: fica guardado pra ele usar
