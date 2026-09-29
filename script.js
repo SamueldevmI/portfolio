@@ -167,22 +167,22 @@ document.querySelectorAll(".botao").forEach((botao) => {
     const NEGOCIOS = {
         pizzaria: { emoji: "🍕", exemplo: "Sua Pizzaria", busca: "pizzaria", extra: "pedidos", ticket: 60, mensagens: 60,
             concorrentes: ["Pizzaria Bella Massa · ⭐ 4,8 · cardápio · WhatsApp", "Forno & Cia · ⭐ 4,6 · pedir online"],
-            perguntas: [["que horas abre?", "Terça a domingo, 18h às 23h30 🍕"], ["tem entrega no centro?", "Entregamos! Frete grátis até 5 km"], ["qual o sabor do dia??", ""]] },
+            perguntas: [["que horas abre?", "Terça a domingo, 18h às 23h30 🍕"], ["tem entrega no centro?", "Entregamos! Frete grátis até 5 km"], ["tem pizza de brigadeiro com bacon?", ""]] },
         barbearia: { emoji: "💈", exemplo: "Sua Barbearia", busca: "barbearia", extra: "agenda", ticket: 40, mensagens: 40,
             concorrentes: ["Barbearia Navalha · ⭐ 4,9 · agenda online", "Corte Fino · ⭐ 4,7 · WhatsApp"],
-            perguntas: [["tem horário sábado?", "Sábado das 8h às 18h, escolhe o horário no site 💈"], ["quanto é o corte?", "Corte R$ 35 · barba R$ 25"], ["aceita pix?", ""]] },
+            perguntas: [["tem horário sábado?", "Sábado das 8h às 18h, escolhe o horário no site 💈"], ["quanto é o corte?", "Corte R$ 35 · barba R$ 25"], ["faz o corte do Neymar?", ""]] },
         "loja de roupa": { emoji: "👕", exemplo: "Sua Loja", busca: "loja de roupa", extra: "loja", ticket: 150, mensagens: 50,
             concorrentes: ["Estilo Urbano · ⭐ 4,8 · loja online", "Vitrine Store · ⭐ 4,6 · entrega"],
-            perguntas: [["tem M?", "Tem P, M e G, é só escolher no site"], ["quanto tá o moletom?", "R$ 189, com foto de todos os ângulos"], ["entrega?", ""]] },
+            perguntas: [["tem M?", "Tem P, M e G, é só escolher no site"], ["quanto tá o moletom?", "R$ 189, com foto de todos os ângulos"], ["tem esse mas em outra cor, outro tamanho e mais barato?", ""]] },
         "salão": { emoji: "💇", exemplo: "Seu Salão", busca: "salão de beleza", extra: "agenda", ticket: 90, mensagens: 40,
             concorrentes: ["Studio Bella · ⭐ 4,9 · agenda online", "Espaço Glamour · ⭐ 4,7 · WhatsApp"],
-            perguntas: [["tem horário pra escova amanhã?", "Amanhã às 10h, 14h ou 16h, escolhe no site 💇"], ["quanto é a progressiva?", "A partir de R$ 180"], ["aceita cartão?", ""]] },
+            perguntas: [["tem horário pra escova amanhã?", "Amanhã às 10h, 14h ou 16h, escolhe no site 💇"], ["quanto é a progressiva?", "A partir de R$ 180"], ["dá pra fazer luzes em 20 minutos?", ""]] },
         academia: { emoji: "💪", exemplo: "Sua Academia", busca: "academia", extra: "agenda", ticket: 100, mensagens: 30,
             concorrentes: ["Academia Força Total · ⭐ 4,8 · planos online", "Fit Center · ⭐ 4,6 · aula experimental"],
-            perguntas: [["quanto é a mensalidade?", "Planos a partir de R$ 89/mês"], ["abre domingo?", "Domingo das 8h às 12h"], ["tem aula experimental?", ""]] },
+            perguntas: [["quanto é a mensalidade?", "Planos a partir de R$ 89/mês"], ["abre domingo?", "Domingo das 8h às 12h"], ["dá pra ficar monstro até sexta?", ""]] },
         "clínica": { emoji: "🩺", exemplo: "Sua Clínica", busca: "clínica", extra: "agenda", ticket: 200, mensagens: 30,
             concorrentes: ["Clínica Vida · ⭐ 4,9 · agendamento online", "Centro Médico Saúde · ⭐ 4,7 · convênios"],
-            perguntas: [["atende convênio?", "Unimed, Bradesco Saúde e particular"], ["tem horário essa semana?", "Quinta 9h ou sexta 15h, marca no site 🩺"], ["onde fica?", ""]] },
+            perguntas: [["atende convênio?", "Unimed, Bradesco Saúde e particular"], ["tem horário essa semana?", "Quinta 9h ou sexta 15h, marca no site 🩺"], ["o doutor atende por áudio?", ""]] },
     };
 
     // demos que servem de "testar" (se o card existir na página)
@@ -202,35 +202,35 @@ document.querySelectorAll(".botao").forEach((botao) => {
             {
                 aba: "Google", tipoOrc: "site", cta: "quero aparecer no Google →", testar: { href: "#projetos", texto: "ver sites que eu fiz ↓" },
                 sem: nome
-                    ? [["busca", nome], ["resultado", "Nenhum resultado. Você quis dizer: concorrente?"], ["msg", "“será que fechou?” 🤔"], ["alerta", "fechou nada, só não tem site 🥲"]]
+                    ? [["busca", nome], ["resultado", "Nenhum resultado. Você quis dizer: concorrente?"], ["msg", "“será que fechou?” 🤔"], ["msg", "“deve ser golpe” 🧐"], ["alerta", "fechou nada, só não tem site 🥲"]]
                     : [["busca", `${n.busca} perto de mim`], ["resultado", n.concorrentes[0]], ["resultado", n.concorrentes[1]], ["resultado", "…página 7 do Google: nem sinal de você 👻"], ["alerta", "cliente foi no concorrente. o concorrente agradece 🙏"]],
-                com: [["busca", nome || `${n.busca} perto de mim`], ["ok", `${marca} · horário · endereço · WhatsApp`, "apareceu bonitão"], ["ok", "cliente tocou em “Chamar no WhatsApp”", "sem ligar, sem sofrer"], ["fim", "cliente novo chegando e você nem fez nada 😎"]],
-                metricas: [["No Google", "fantasma 👻", "aparece"], ["Horário e preço", "só perguntando", "na tela, 24h"], ["Cliente novo", "vai pro vizinho", "chama você"]],
+                com: [["busca", nome || `${n.busca} perto de mim`], ["ok", `${marca} · horário · endereço · WhatsApp`, "apareceu bonitão"], ["ok", "cliente tocou em “Chamar no WhatsApp”", "sem ligar, sem sofrer"], ["fim", "cliente novo chegando e você nem penteou o cabelo 😎"]],
+                metricas: [["No Google", "fantasma 👻", "aparece ✨"], ["Horário e preço", "segredo de Estado", "na tela, 24h"], ["Cliente novo", "vai pro vizinho", "chama você"]],
             },
             {
                 aba: "WhatsApp", tipoOrc: "automacao", cta: "quero parar de responder a mesma coisa →", testar: demo("Fatia Nobre", "testar um atendimento automático ↗"),
-                sem: [...n.perguntas.map(([p]) => ["msg", p]), ["msg", "oi??"], ["msg", "OI???"], ["alerta", "você respondendo às 23h47 de chinelo 🩴 e ele já comprou em outro lugar"]],
-                com: [...n.perguntas.filter(([, r]) => r).slice(0, 2).map(([p, r]) => ["ok", `“${p}” → ${r}`, "na hora"]), ["fim", "e você? dormindo 😴 o site respondeu tudo"]],
-                metricas: [["Tempo de resposta", "quando der", "na hora"], ["Mesma pergunta", "47ª vez hoje", "respondida sozinha"], ["Seu celular", "não para de apitar", "em paz"]],
+                sem: [...n.perguntas.map(([p]) => ["msg", p]), ["msg", "oi??"], ["msg", "vou ali no concorrente então 👋"], ["alerta", "você respondendo às 23h47 de chinelo 🩴 e ele já comprou em outro lugar"]],
+                com: [...n.perguntas.filter(([, r]) => r).slice(0, 2).map(([p, r]) => ["ok", `“${p}” → ${r}`, "na hora"]), ["ok", "47ª pergunta igual do dia", "mesma paciência da 1ª"], ["fim", "e você? dormindo 😴 o site respondeu tudo e nem pediu hora extra"]],
+                metricas: [["Tempo de resposta", "quando der 🐢", "na hora ⚡"], ["Mesma pergunta", "47ª vez hoje", "respondida sozinha"], ["Seu celular", "não para de apitar 📳", "em paz 🧘"]],
             },
         ];
         if (n.extra === "pedidos") lista.push({
             aba: "pedidos", tipoOrc: "site", cta: "quero receber pedido pronto →", testar: demo("Glitch District", "testar uma loja com pedido no WhatsApp ↗"),
-            sem: [["msg", "quero uma calabresa grande"], ["msg", "não, média"], ["msg", "meia calabresa meia frango"], ["msg", "e uma coca... não, guaraná"], ["alerta", "📝 anotou errado. de novo. 🤡"]],
-            com: [["ok", "🍕 Média · meia calabresa, meia frango", "R$ 52"], ["ok", "🥤 Guaraná 2L", "R$ 12"], ["fim", "pedido chegou certinho no WhatsApp. sem telefone sem fio ✓"]],
-            metricas: [["Pra fechar um pedido", "15 mensagens", "1 toque"], ["Erro no pedido", "toda sexta", "zero"], ["O pedido chega", "picado", "pronto"]],
+            sem: [["msg", "quero uma calabresa grande"], ["msg", "não, média"], ["msg", "meia calabresa meia frango"], ["msg", "e uma coca... não, guaraná"], ["msg", "ah, sem cebola. na metade de frango. acho"], ["alerta", "📝 anotou errado. de novo. 🤡"]],
+            com: [["ok", "🍕 Média · ½ calabresa, ½ frango sem cebola", "R$ 52"], ["ok", "🥤 Guaraná 2L", "R$ 12"], ["ok", "✏️ obs: sem cebola na metade de frango", "anotado certinho"], ["fim", "pedido chegou certinho, sem telefone sem fio ✓"]],
+            metricas: [["Pra fechar um pedido", "15 mensagens", "1 toque"], ["Pedido errado", "toda sexta 🤡", "zero"], ["Paciência do cliente", "no limite", "intacta"]],
         });
         if (n.extra === "loja") lista.push({
             aba: "loja", tipoOrc: "site", cta: "quero uma loja que vende sozinha →", testar: demo("Glitch District", "testar a loja ↗"),
-            sem: [["msg", "manda foto do moletom preto"], ["msg", "agora de costas"], ["msg", "e vestido?"], ["msg", "tem M?"], ["alerta", "📸 você virou modelo, fotógrafo e vendedor no mesmo dia"]],
-            com: [["ok", "🛒 Moletom preto · M", "R$ 189"], ["ok", "🛒 Boné preto", "R$ 79"], ["fim", "pedido de R$ 268 no WhatsApp e você nem tirou foto ✓"]],
-            metricas: [["Pra fechar um pedido", "20 mensagens", "1 toque"], ["Fotos no direct", "o dia todo", "nenhuma"], ["O pedido chega", "picado", "pronto"]],
+            sem: [["msg", "manda foto do moletom preto"], ["msg", "agora de costas"], ["msg", "e com luz natural?"], ["msg", "tem M?"], ["msg", "vou pensar 🙃"], ["alerta", "📸 você virou modelo, fotógrafo e vendedor… e ele vai pensar"]],
+            com: [["ok", "🛒 Moletom preto · M", "R$ 189"], ["ok", "🛒 Boné preto", "R$ 79"], ["ok", "📏 tabela de medidas na tela", "zero “tem M?”"], ["fim", "pedido de R$ 268 no WhatsApp e você nem tirou foto ✓"]],
+            metricas: [["Pra fechar um pedido", "20 mensagens", "1 toque"], ["Fotos no direct", "o dia todo", "nenhuma"], ["“Vou pensar” 🙃", "toda hora", "raridade"]],
         });
         if (n.extra === "agenda") lista.push({
             aba: "agenda", tipoOrc: "sistema", cta: "quero uma agenda que se preenche sozinha →", testar: { href: "#projetos", texto: "ver sistemas que eu fiz ↓" },
             sem: [["msg", n.perguntas[0][0]], ["msg", "e às 15h?"], ["msg", "vou ver aqui e te falo"], ["msg", "e aí??"], ["alerta", "📅 dois clientes no mesmo horário. vai ser um encontro constrangedor 😬"]],
-            com: [["ok", "cliente escolheu sábado, 15h", "sozinho"], ["ok", "lembrete no WhatsApp um dia antes", "automático"], ["fim", "agenda cheia e zero “e aí??” ✓"]],
-            metricas: [["Pra marcar horário", "10 mensagens", "2 toques"], ["Horário duplicado", "acontece", "impossível"], ["A agenda fica", "no caderno", "no celular"]],
+            com: [["ok", "cliente escolheu sábado, 15h", "sozinho"], ["ok", "lembrete no WhatsApp um dia antes", "automático"], ["ok", "cliente remarcou sozinho", "sem drama"], ["fim", "agenda cheia e zero “e aí??” ✓"]],
+            metricas: [["Pra marcar horário", "10 mensagens", "2 toques"], ["Horário duplicado", "acontece 😬", "impossível"], ["A agenda fica", "no caderno (molhado)", "no celular"]],
         });
         return lista;
     }
