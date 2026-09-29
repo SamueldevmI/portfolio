@@ -22,6 +22,9 @@
     <title>404 | Samuel Mickael</title>
     <style>
         .pagina-404 { min-height:90vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:24px; }
+        /* caixinha de terminal (as regras dela saíram do style.css junto com o terminal da página inicial) */
+        .terminal-interativo { position:relative; z-index:1; border:1px solid var(--line); border-radius:6px; overflow:hidden; background:#101010; box-shadow:var(--shadow); }
+        .terminal-titulo { margin-left:8px; color:var(--muted); font:.78rem "DM Mono",monospace; }
         .pagina-404 .terminal-interativo { width:min(560px,100%); margin:0 0 28px; text-align:left; animation:none; }
         .pagina-404 .terminal-corpo p { color:var(--text); }
         .pagina-404 .terminal-corpo p.erro-404 { color:var(--acento-texto); }
