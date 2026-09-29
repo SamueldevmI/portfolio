@@ -1572,3 +1572,13 @@ h1 span { text-shadow: none; }
     animation: girar-borda 7s linear infinite;
 }
 @media (prefers-reduced-motion: reduce) { .hero-foto-pulso { animation: none; opacity: .4; } }
+
+/* ---------- Leveza: mesma aparência, menos trabalho pro navegador ---------- */
+/* Seção fora da tela pausa as animações infinitas dela (ninguém está vendo); volta de onde parou ao reaparecer.
+   A classe é posta pelo acabamento.js com folga de 300px, então tudo já está rodando antes de entrar na tela. */
+.fora-de-vista, .fora-de-vista::before, .fora-de-vista::after,
+.fora-de-vista *, .fora-de-vista *::before, .fora-de-vista *::after { animation-play-state: paused !important; }
+
+/* Brilho que passa na etiqueta de visitas: anda com transform (placa de vídeo) em vez de "left" (que refazia o layout
+   a cada quadro). 500% da própria largura (38%) = os mesmos 190% que o "left" andava, de -60% até 130%. */
+@keyframes selo-passa { 0%, 55% { transform: translateX(0) skewX(-20deg); } 100% { transform: translateX(500%) skewX(-20deg); } }

@@ -1176,3 +1176,15 @@
         if (!isNaN(fim) && agora <= fim) el.hidden = false;
     });
 })();
+
+/* Leveza: seção que saiu da tela pausa as animações infinitas dela (brilhos, fumaça, bordas girando…).
+   Quem está olhando não percebe diferença: a folga de 300px faz tudo voltar a rodar antes de aparecer. */
+(function () {
+    "use strict";
+    if (!("IntersectionObserver" in window)) return;
+    const blocos = document.querySelectorAll("header.hero, main > section, body > footer");
+    const observador = new IntersectionObserver(function (entradas) {
+        entradas.forEach(function (entrada) { entrada.target.classList.toggle("fora-de-vista", !entrada.isIntersecting); });
+    }, { rootMargin: "300px 0px" });
+    blocos.forEach(function (bloco) { observador.observe(bloco); });
+})();

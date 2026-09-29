@@ -341,15 +341,14 @@ function atualizarBarraProgresso() {
     barraProgresso.style.width = progresso + "%";
 }
 
-/* Nav vira camada de vidro flutuante ao rolar + fundo com parallax mais lento que o conteúdo */
+/* Nav vira camada de vidro flutuante ao rolar.
+   (Aqui também se escrevia --scroll-parallax no <body> a cada quadro, mas o fundo atual (aurora-a/aurora-b no
+   acabamento.css) não lê essa variável: não mexia em nada na tela e fazia a página inteira recalcular estilo.) */
 const navEl = document.querySelector(".nav");
 
 function atualizarCamadasScroll() {
     atualizarBarraProgresso();
     if (navEl) navEl.classList.toggle("nav-flutuante", window.scrollY > 40);
-    if (!prefereMenosMovimento && !document.documentElement.classList.contains("modo-leve")) {
-        document.body.style.setProperty("--scroll-parallax", Math.min(window.scrollY * 0.04, 40) + "px");
-    }
 }
 
 /* Pontinhos do fundo: sem grade, cada um nasce num lugar aleatório, anda numa direção própria
@@ -405,6 +404,22 @@ if (!prefereMenosMovimento) {
         secoesFundo.forEach((secao) => obsFundo.observe(secao));
     }
 
+    /* Escrever a intensidade no <body> fazia o navegador recalcular o estilo da página inteira (~1200 elementos)
+       a cada mudança. Uma animação parada direto nas duas camadas do fundo muda só a opacidade delas: é a mesma conta
+       do acabamento.css (.78→1 no ::before, .7→.9 no ::after), sem tocar no resto. Navegador que não sabe animar
+       pseudo-elemento continua pelo caminho antigo. */
+    const camadasFundo = [["::before", .78, 1], ["::after", .7, .9]].map(([pseudo, de, ate]) => {
+        try {
+            const anim = document.body.animate([{ opacity: de }, { opacity: ate }], { duration: 1000, fill: "both", pseudoElement: pseudo });
+            if (anim.effect.pseudoElement !== pseudo) { anim.cancel(); return null; }
+            anim.pause();
+            anim.currentTime = nivelBaseFundo * 1000;
+            return anim;
+        } catch (e) { return null; }
+    });
+    const fundoPorAnimacao = camadasFundo.every(Boolean);
+    if (!fundoPorAnimacao) camadasFundo.forEach((anim) => anim && anim.cancel());
+
     let velocSuaveFundo = 0, ultimoYFundo = window.scrollY, ultimoTempoFundo = performance.now(), ultimaIntensidade = -1;
     setInterval(() => {
         const agora = performance.now();
@@ -416,7 +431,8 @@ if (!prefereMenosMovimento) {
         const intensidade = Math.min(1, nivelBaseFundo + velocSuaveFundo * .4);
         const arredondado = Math.round(intensidade * 50) / 50; // passos de 0.02: suave o bastante, sem escrever à toa
         if (arredondado !== ultimaIntensidade) {
-            document.body.style.setProperty("--fundo-intensidade", arredondado.toFixed(3));
+            if (fundoPorAnimacao) camadasFundo.forEach((anim) => { anim.currentTime = arredondado * 1000; });
+            else document.body.style.setProperty("--fundo-intensidade", arredondado.toFixed(3));
             ultimaIntensidade = arredondado;
         }
     }, 150);
@@ -697,9 +713,18 @@ const suportaHover = window.matchMedia("(hover: hover) and (pointer: fine)").mat
 /* Parallax sutil no círculo do hero (scroll + mouse) */
 const heroConteudo = document.querySelector(".hero-conteudo");
 if (heroConteudo && !prefereMenosMovimento) {
+    // um cálculo por quadro, e só escreve quando o valor muda (passou de ~1070px de rolagem ele trava em 160px e para de escrever)
+    let quadroParallax = 0, ultimoParallax = -1;
     window.addEventListener("scroll", () => {
-        heroConteudo.style.setProperty("--parallax", Math.min(window.scrollY * 0.15, 160) + "px");
-    });
+        if (quadroParallax) return;
+        quadroParallax = requestAnimationFrame(() => {
+            quadroParallax = 0;
+            const valor = Math.min(window.scrollY * 0.15, 160);
+            if (valor === ultimoParallax) return;
+            ultimoParallax = valor;
+            heroConteudo.style.setProperty("--parallax", valor + "px");
+        });
+    }, { passive: true });
     heroConteudo.addEventListener("mousemove", (evento) => {
         const relativoX = evento.clientX / window.innerWidth - 0.5;
         heroConteudo.style.setProperty("--parallax-x", relativoX * -28 + "px");

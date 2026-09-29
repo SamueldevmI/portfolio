@@ -772,6 +772,7 @@
         document.addEventListener("mousemove", (e) => {
             andou += Math.hypot(e.clientX - alvoX, e.clientY - alvoY);
             alvoX = e.clientX; alvoY = e.clientY;
+            acordarCursor();
             if (!visivel) { visivel = true; x = alvoX; y = alvoY; ponto.classList.add("visivel"); }
             sobreClicavel = !!e.target.closest(INTERATIVO);
             ponto.classList.toggle("sobre-clicavel", sobreClicavel);
@@ -790,9 +791,16 @@
                 document.body.append(n);
             }
         }, { passive: true });
-        document.addEventListener("mouseleave", () => { visivel = false; ponto.classList.remove("visivel"); });
+        document.addEventListener("mouseleave", () => { visivel = false; ponto.classList.remove("visivel"); acordarCursor(); });
 
-        (function seguir() {
+        // O laço só roda enquanto o ponto ainda está chegando no mouse ou a música está tocando (pulso na batida).
+        // Mouse parado e sem música: dorme, em vez de redesenhar o mesmo lugar 60 vezes por segundo.
+        let cursorRodando = false;
+        function acordarCursor() { if (!cursorRodando) { cursorRodando = true; requestAnimationFrame(seguir); } }
+        const ligarSemCursor = ligar;
+        ligar = function () { ligarSemCursor(); acordarCursor(); };
+
+        function seguir() {
             x += (alvoX - x) * (semMovimento ? 1 : 0.28);
             y += (alvoY - y) * (semMovimento ? 1 : 0.28);
             let pulso = 0;
@@ -805,8 +813,11 @@
             const escala = 1 + (sobreClicavel ? 0.15 : 0.6) * pulso;
             ponto.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%) scale(${escala.toFixed(3)})`;
             ponto.style.opacity = visivel ? "1" : "0";
+            const chegou = Math.abs(alvoX - x) < 0.1 && Math.abs(alvoY - y) < 0.1;
+            if (chegou && !(tocando && !semMovimento)) { cursorRodando = false; return; }
             requestAnimationFrame(seguir);
-        })();
+        }
+        acordarCursor();
     }
 
     // Conforme a pessoa rola, a música vai se misturando entre o clima de uma seção e o da próxima.
