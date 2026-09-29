@@ -1007,6 +1007,10 @@ html.sem-animacoes, html.sem-animacoes *, html.sem-animacoes *::before, html.sem
 .promo-faixa { position: relative; z-index: 1; display: inline-flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; margin: 0 0 16px; padding: 7px 14px 7px 7px; border: 1px solid rgba(var(--cyan-rgb), .7); border-radius: 999px; background: rgba(var(--cyan-rgb), .14); color: var(--text); font-size: .88rem; text-decoration: none; box-shadow: 0 0 18px rgba(var(--cyan-rgb), .35); animation: brilho-promo 2.2s ease-in-out infinite; transition: background .25s ease, border-color .25s ease, box-shadow .25s ease; }
 .promo-faixa b { padding: 3px 9px; border-radius: 999px; background: var(--cyan); color: #161616; font: 600 .72rem "DM Mono", monospace; letter-spacing: .06em; text-shadow: 0 0 8px rgba(255,255,255,.4); }
 .promo-faixa span { color: var(--cyan); transition: transform .25s ease; }
+.promo-prazo[hidden] { display: none; }
+.promo-prazo { padding: 2px 9px; border-radius: 999px; background: #ffffff; color: #161616; font: 700 .7rem "DM Mono", monospace; font-style: normal; letter-spacing: .04em; text-transform: uppercase; text-shadow: none; animation: prazo-pisca 1.6s ease-in-out infinite; }
+@keyframes prazo-pisca { 50% { opacity: .55; } }
+@media (prefers-reduced-motion: reduce) { .promo-prazo { animation: none; } }
 @media (hover: hover) { .promo-faixa:hover { background: rgba(var(--cyan-rgb), .22); border-color: var(--cyan); box-shadow: 0 0 26px rgba(var(--cyan-rgb), .55); } .promo-faixa:hover span { transform: translateX(3px); } }
 @keyframes brilho-promo { 0%, 100% { box-shadow: 0 0 18px rgba(var(--cyan-rgb), .35); } 50% { box-shadow: 0 0 30px rgba(var(--cyan-rgb), .65); } }
 @media (prefers-reduced-motion: reduce) { .promo-faixa { animation: none; } }

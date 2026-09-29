@@ -1175,4 +1175,13 @@
         const fim = new Date(el.getAttribute("data-promo-ate") + "T23:59:59");
         if (!isNaN(fim) && agora <= fim) el.hidden = false;
     });
+    // Gancho de urgência de verdade: conta os dias que faltam (só aparece na reta final, até 5 dias)
+    document.querySelectorAll("[data-prazo]").forEach(function (el) {
+        const fim = new Date(el.getAttribute("data-prazo") + "T00:00:00");
+        const hoje = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate());
+        const dias = Math.round((fim - hoje) / 86400000);
+        if (isNaN(dias) || dias < 0 || dias > 5) return;
+        el.textContent = dias === 0 ? "Último dia!" : dias === 1 ? "Termina amanhã" : "Só mais " + dias + " dias";
+        el.hidden = false;
+    });
 })();
