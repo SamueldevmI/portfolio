@@ -1155,8 +1155,14 @@
         if (salvar) { try { nome ? localStorage.setItem(CHAVE, nome) : localStorage.removeItem(CHAVE); } catch (e) { /* sem armazenamento: só não lembra */ } }
     }
 
-    try { campo.value = localStorage.getItem(CHAVE) || ""; } catch (e) { /* segue vazio */ }
-    if (campo.value) aplicar(false);
+    // Veio por um link com ?nome= (script.js): esse nome vale e fica guardado; senão, o que a pessoa digitou antes
+    if (window.nomeNegocioLink) {
+        campo.value = window.nomeNegocioLink;
+        aplicar(true);
+    } else {
+        try { campo.value = localStorage.getItem(CHAVE) || ""; } catch (e) { /* segue vazio */ }
+        if (campo.value) aplicar(false);
+    }
     let espera = 0;
     campo.addEventListener("input", function () { clearTimeout(espera); espera = setTimeout(function () { aplicar(true); }, 250); });
 })();

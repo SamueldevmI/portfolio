@@ -148,6 +148,49 @@ if (heroTexto && !prefereMenosMovimento) {
     }, 320);
 }
 
+/* Link com o nome de um negócio (?nome=Pizzaria+do+Zé): pra mandar o portfólio direto pra alguém.
+   O site cumprimenta pelo nome, a loja e o chat abrem com esse nome (acabamento.js) e a mensagem do
+   WhatsApp avisa de qual link a pessoa veio. O nome só entra como texto, nunca como HTML. */
+const nomeNegocioLink = (new URLSearchParams(location.search).get("nome") || "").replace(/\s+/g, " ").trim().slice(0, 40);
+window.nomeNegocioLink = nomeNegocioLink;
+if (nomeNegocioLink) {
+    document.title = nomeNegocioLink + " · " + document.title;
+
+    // "Olá! Me chamo Samuel" vira "Olá, Pizzaria do Zé! Me chamo Samuel" (o acabamento.js ainda troca o "Olá" pelo horário)
+    const linhaOla = document.querySelector(".hero-ola");
+    const inicioOla = linhaOla ? linhaOla.firstChild : null;
+    if (inicioOla && inicioOla.nodeType === Node.TEXT_NODE && inicioOla.textContent.startsWith("Olá!")) {
+        const visitante = document.createElement("span");
+        visitante.className = "hero-visitante";
+        visitante.textContent = nomeNegocioLink;
+        inicioOla.textContent = "Olá, ";
+        inicioOla.after(visitante, "! Me chamo ");
+    }
+
+    // logo depois da saudação: no celular fica na primeira tela, sem precisar rolar
+    if (linhaOla) {
+        const convite = document.createElement("a");
+        convite.className = "hero-convite";
+        convite.href = "#demo-com-seu-nome";
+        const destaque = document.createElement("b");
+        destaque.textContent = nomeNegocioLink;
+        const seta = document.createElement("span");
+        seta.setAttribute("aria-hidden", "true");
+        seta.textContent = "→";
+        convite.append("Montei a loja e o atendimento por chat com o nome ", destaque, ". Testa aí ", seta);
+        linhaOla.after(convite);
+    }
+
+    // Links diretos pro WhatsApp: "Vi seu portfólio" vira "Vi o portfólio que você me mandou (Pizzaria do Zé)"
+    document.querySelectorAll('a[href^="https://wa.me/"]').forEach((link) => {
+        const url = new URL(link.href);
+        const texto = url.searchParams.get("text");
+        if (!texto || !texto.includes("Vi seu portfólio")) return;
+        const novo = texto.replace("Vi seu portfólio", `Vi o portfólio que você me mandou (${nomeNegocioLink})`);
+        link.href = url.origin + url.pathname + "?text=" + encodeURIComponent(novo); // %20, não "+": alguns WhatsApp mostram o "+"
+    });
+}
+
 const numerosContaveis = document.querySelectorAll("[data-contar]");
 
 if (!prefereMenosMovimento) {
@@ -1109,7 +1152,8 @@ if (paletaOverlay) {
     function compor() {
         const tipo = tipoAtual();
         const nome = typeof resp.nome === "string" ? resp.nome.trim() : "";
-        const abertura = `Oi, Samuel! ${nome ? `Me chamo ${nome}. ` : ""}${ORIGEM ? `Vim pelo ${ORIGEM}` : "Vi seu portfólio"} e quero pedir um orçamento.`;
+        const deOnde = nomeNegocioLink ? `Vi o portfólio que você me mandou (${nomeNegocioLink})` : ORIGEM ? `Vim pelo ${ORIGEM}` : "Vi seu portfólio";
+        const abertura = `Oi, Samuel! ${nome ? `Me chamo ${nome}. ` : ""}${deOnde} e quero pedir um orçamento.`;
         const linhas = [abertura, ""];
         if (tipo) linhas.push(`Projeto: ${tipo.rotulo}`);
         if (resp.ref) linhas.push(`Referência: projeto ${resp.ref}`);

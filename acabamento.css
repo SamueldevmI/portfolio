@@ -1582,3 +1582,12 @@ h1 span { text-shadow: none; }
 /* Brilho que passa na etiqueta de visitas: anda com transform (placa de vídeo) em vez de "left" (que refazia o layout
    a cada quadro). 500% da própria largura (38%) = os mesmos 190% que o "left" andava, de -60% até 130%. */
 @keyframes selo-passa { 0%, 55% { transform: translateX(0) skewX(-20deg); } 100% { transform: translateX(500%) skewX(-20deg); } }
+
+/* ---------- Link com ?nome= (script.js): o portfólio chega falando com o negócio da pessoa ---------- */
+.hero-ola .hero-visitante { color: var(--text); font-weight: 700; }
+.hero-conteudo .hero-convite { animation-delay: .15s; }
+.hero-convite { position: relative; z-index: 1; display: block; width: fit-content; max-width: 100%; margin: -4px 0 20px; padding: 10px 16px; border: 1px dashed rgba(var(--cyan-rgb), .7); border-radius: 10px; background: rgba(var(--cyan-rgb), .1); color: var(--text); font-size: .92rem; line-height: 1.45; text-decoration: none; transition: background .25s ease, border-color .25s ease; }
+.hero-convite b { color: var(--cyan); }
+.hero-convite span { display: inline-block; color: var(--cyan); transition: transform .25s ease; }
+@media (hover: hover) { .hero-convite:hover { background: rgba(var(--cyan-rgb), .18); border-color: var(--cyan); } .hero-convite:hover span { transform: translateX(3px); } }
+#demo-com-seu-nome { scroll-margin-top: 96px; }
