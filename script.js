@@ -139,12 +139,22 @@ if (prefereMenosMovimento || !("IntersectionObserver" in window)) {
 const heroTexto = document.querySelector(".hero-texto");
 if (heroTexto && !prefereMenosMovimento) {
     const textoCompletoHero = heroTexto.textContent;
+    // O que ainda falta digitar fica na página, invisível: o parágrafo já nasce com a altura final.
+    // Antes ele crescia uma linha no meio da digitação e quem clicava num botão logo no começo parava fora do lugar.
+    const digitado = document.createTextNode("");
+    const resto = document.createElement("span");
+    resto.className = "hero-texto-resto";
+    resto.setAttribute("aria-hidden", "true");
+    resto.textContent = textoCompletoHero;
     heroTexto.textContent = "";
+    heroTexto.append(digitado, resto);
     let indiceCharHero = 0;
     setTimeout(function digitarHero() {
-        heroTexto.textContent = textoCompletoHero.slice(0, indiceCharHero);
+        digitado.data = textoCompletoHero.slice(0, indiceCharHero);
+        resto.textContent = textoCompletoHero.slice(indiceCharHero);
         indiceCharHero++;
         if (indiceCharHero <= textoCompletoHero.length) setTimeout(digitarHero, 18);
+        else heroTexto.textContent = textoCompletoHero;
     }, 320);
 }
 
@@ -155,6 +165,15 @@ const nomeNegocioLink = (new URLSearchParams(location.search).get("nome") || "")
 window.nomeNegocioLink = nomeNegocioLink;
 // &ramo=beleza (quando o nome não diz o ramo, ex.: "Studio Ana") segue junto pro atendimento por chat
 window.ramoNegocioLink = nomeNegocioLink ? (new URLSearchParams(location.search).get("ramo") || "").toLowerCase().replace(/[^a-z]/g, "").slice(0, 20) : "";
+/* A loja de demonstração vende roupa: com o nome de uma barbearia ou clínica ela não faz sentido. Ela só ganha o nome
+   quando o negócio é loja (mesmas palavras do ramo "loja" em fatia-nobre/script.js) ou veio &ramo=loja.
+   Os outros ramos ganham só o atendimento por chat, que muda as respostas conforme o ramo. */
+const PALAVRAS_LOJA = ["loja", "lojas", "store", "shop", "moda", "boutique", "roupas", "roupa", "calcados", "sapatos", "otica", "presentes", "acessorios", "bijuterias", "semijoias", "joias", "papelaria", "cosmeticos", "perfumaria", "variedades", "magazine", "modas", "brecho", "outlet", "kids", "fitwear"];
+window.nomeEhDeLoja = (nome, ramo) => {
+    if (ramo) return ramo === "loja";
+    const palavras = nome.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().split(/[^a-z0-9]+/);
+    return palavras.some((p) => PALAVRAS_LOJA.includes(p));
+};
 if (nomeNegocioLink) {
     document.title = nomeNegocioLink + " · " + document.title;
 
@@ -179,7 +198,18 @@ if (nomeNegocioLink) {
         const seta = document.createElement("span");
         seta.setAttribute("aria-hidden", "true");
         seta.textContent = "→";
-        convite.append("Montei a loja e o atendimento por chat com o nome ", destaque, ". Testa aí ", seta);
+        const comLoja = window.nomeEhDeLoja(nomeNegocioLink, window.ramoNegocioLink);
+        if (comLoja) convite.append("Montei a loja e o atendimento por chat com o nome ", destaque, ". Testa aí ", seta);
+        else {
+            convite.append("Montei um atendimento por chat com o nome ", destaque, ", que responde seus clientes na hora. Testa aí ", seta);
+            // abre o chat direto na janelinha de demonstração, em vez de mandar procurar o cartão no carrossel
+            convite.addEventListener("click", (evento) => {
+                const abrirChat = document.querySelector('.card-projeto [data-demo*="fatia-nobre/"]');
+                if (!abrirChat || !document.getElementById("modalOverlay")) return;
+                evento.preventDefault();
+                abrirChat.click();
+            });
+        }
         linhaOla.after(convite);
     }
 
@@ -311,7 +341,13 @@ if (modalOverlay) {
         botao.addEventListener("click", () => {
             const src = botao.getAttribute("data-demo");
             const titulo = botao.getAttribute("data-demo-titulo") || "Demonstração";
-            abrirModal(titulo, `<iframe src="${src}" title="Demonstração — ${titulo}" loading="lazy"></iframe>`);
+            // iframe montado pelo DOM, não por HTML: o título e o endereço podem trazer o nome vindo do link (?nome=)
+            abrirModal(titulo, "");
+            const quadro = document.createElement("iframe");
+            quadro.src = src;
+            quadro.title = "Demonstração — " + titulo;
+            quadro.loading = "lazy";
+            modalCorpo.appendChild(quadro);
         });
     });
 
