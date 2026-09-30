@@ -320,7 +320,7 @@
             b.addEventListener("click", () => abrirStory(i));
             faixa.append(b);
         });
-        document.querySelector(".hero-acoes")?.after(faixa);
+        (document.querySelector(".hero-cliente") || document.querySelector(".hero-acoes"))?.after(faixa); // depois da oferta e do cliente real
 
         const ov = el("div", "stories-overlay", `
             <div class="st-barras"></div>

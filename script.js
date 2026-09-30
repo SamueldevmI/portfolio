@@ -38,7 +38,7 @@ const LINK_PERSONALIZADO = (function () {
         ver.textContent = "ver como ficaria o seu site →";
         ver.addEventListener("click", () => window.abrirPreviaSite && window.abrirPreviaSite(ramo || undefined, para));
         convite.append(oi, ver);
-        linha?.before(convite);
+        (linha?.closest(".hero-quem") || linha)?.before(convite);
     }
     return { para, ramo, previa: p.get("previa") === "1" };
 })();
@@ -1879,7 +1879,7 @@ if (paletaOverlay) {
    Abre pelo comparador, pelo convite do link personalizado ou direto com ?previa=1. */
 (function previaDoSite() {
     const RAMOS = {
-        pizzaria: { rotulo: "pizzaria", exemplo: "Sua Pizzaria", cor: "#e4572e", fundo: "#1c1311", texto: "#fff4ee", suave: "#c9a99c",
+        pizzaria: { rotulo: "pizzaria", exemplo: "Sua Pizzaria", cor: "#f08a24", fundo: "#1c1311", texto: "#fff4ee", suave: "#c9a99c",
             chamada: "A pizza que chega quentinha 🍕", sub: "Forno a lenha · entrega em Campo Grande", secao: "Cardápio",
             itens: [["Calabresa", "R$ 45"], ["Frango com catupiry", "R$ 49"], ["Portuguesa", "R$ 52"]],
             info: "Ter a dom · 18h às 23h30", chips: ["Borda recheada", "Entrega grátis até 5 km"], botao: "Pedir pelo WhatsApp" },
@@ -1909,12 +1909,10 @@ if (paletaOverlay) {
     const iniciais = (nome) => nome.split(/\s+/).filter((p) => p.length > 2 || /^[A-Z]/.test(p)).slice(0, 2).map((p) => p[0]).join("").toUpperCase() || nome[0].toUpperCase();
     const ler = (k) => { try { return localStorage.getItem(k) || ""; } catch (e) { return ""; } };
 
-    function montar(ramo, nome) {
+    // o celular com o mini-site (usado na prévia e na vitrine do topo)
+    function celular(ramo, marca) {
         const r = RAMOS[ramo];
-        const marca = nome || r.exemplo;
         return `
-            <div class="previa">
-                <div class="previa-ramos" role="group" aria-label="Trocar o ramo da prévia">${Object.keys(RAMOS).map((k) => `<button type="button" data-ramo="${esc(k)}" aria-pressed="${k === ramo}">${esc(RAMOS[k].rotulo)}</button>`).join("")}</div>
                 <div class="previa-celular" style="--p-cor:${r.cor};--p-fundo:${r.fundo};--p-texto:${r.texto};--p-suave:${r.suave}">
                     <div class="previa-status"><span>9:41</span><span>📶 🔋</span></div>
                     <div class="previa-url">🔒 ${esc(endereco(marca))}</div>
@@ -1927,7 +1925,16 @@ if (paletaOverlay) {
                         <a class="previa-whats" aria-hidden="true">💬</a>
                     </div>
                     <p class="previa-aviso" role="status"></p>
-                </div>
+                </div>`;
+    }
+
+    function montar(ramo, nome) {
+        const r = RAMOS[ramo];
+        const marca = nome || r.exemplo;
+        return `
+            <div class="previa">
+                <div class="previa-ramos" role="group" aria-label="Trocar o ramo da prévia">${Object.keys(RAMOS).map((k) => `<button type="button" data-ramo="${esc(k)}" aria-pressed="${k === ramo}">${esc(RAMOS[k].rotulo)}</button>`).join("")}</div>
+${celular(ramo, marca)}
                 <div class="previa-lado">
                     <p class="previa-titulo">Esse poderia ser o site da <b>${esc(marca)}</b>.</p>
                     <p>Isso é uma prévia rápida. O seu vem com a sua cara: suas fotos, seus preços, seu jeito de falar. Funciona no celular, aparece no Google e o botão cai direto no seu WhatsApp.</p>
@@ -1987,6 +1994,50 @@ if (paletaOverlay) {
         });
     }
     window.abrirPreviaSite = abrir;
+
+    // Vitrine do topo: o mesmo celular, trocando de ramo sozinho (pizzaria → barbearia → loja...). Rola devagar
+    // pelo mini-site pra mostrar que tem conteúdo, pausa com o mouse em cima e fora da tela; clicar abre a prévia.
+    (function vitrine() {
+        const caixa = document.querySelector(".hero-vitrine");
+        if (!caixa) return;
+        const ordem = Object.keys(RAMOS);
+        const salvo = ler("portfolio-tipo-negocio");
+        let i = Math.max(0, ordem.indexOf(salvo)), pausado = false, visivel = true, relogio = 0, rolagem = 0;
+        caixa.innerHTML = `
+            <div class="vitrine-ramos" role="group" aria-label="Ver exemplo de outro ramo">${ordem.map((k) => `<button type="button" data-ramo="${esc(k)}">${esc(RAMOS[k].rotulo)}</button>`).join("")}</div>
+            <div class="vitrine-palco" role="button" tabindex="0" aria-label="Abrir a prévia do site deste exemplo"></div>
+            <p class="vitrine-legenda">toca no celular pra ver com o nome do <b>seu</b> negócio 👆</p>`;
+        const palco = caixa.querySelector(".vitrine-palco");
+        const botoes = [...caixa.querySelectorAll(".vitrine-ramos button")];
+        function mostrar(n, animar) {
+            i = (n + ordem.length) % ordem.length;
+            const ramo = ordem[i];
+            const nome = ler("portfolio-nome-negocio").trim().slice(0, 40);
+            palco.innerHTML = celular(ramo, nome || RAMOS[ramo].exemplo);
+            palco.dataset.ramo = ramo;
+            if (animar && !prefereMenosMovimento) { palco.classList.remove("trocou"); void palco.offsetWidth; palco.classList.add("trocou"); }
+            botoes.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.ramo === ramo)));
+            // desce devagar pelo mini-site e volta, pra mostrar que tem cardápio/serviços lá embaixo
+            clearTimeout(rolagem);
+            const site = palco.querySelector(".previa-site");
+            if (site && !prefereMenosMovimento) rolagem = setTimeout(() => site.scrollTo({ top: 170, behavior: "smooth" }), 1600);
+        }
+        function agendar() {
+            clearTimeout(relogio);
+            if (prefereMenosMovimento) return;
+            relogio = setTimeout(() => { if (!pausado && visivel && !document.hidden) mostrar(i + 1, true); agendar(); }, 4600);
+        }
+        botoes.forEach((b) => b.addEventListener("click", () => { mostrar(ordem.indexOf(b.dataset.ramo), true); agendar(); }));
+        palco.addEventListener("click", () => abrir(palco.dataset.ramo));
+        palco.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); abrir(palco.dataset.ramo); } });
+        caixa.addEventListener("mouseenter", () => { pausado = true; });
+        caixa.addEventListener("mouseleave", () => { pausado = false; });
+        caixa.addEventListener("focusin", () => { pausado = true; });
+        caixa.addEventListener("focusout", () => { pausado = false; });
+        if ("IntersectionObserver" in window) new IntersectionObserver((e) => { visivel = e.some((x) => x.isIntersecting); }).observe(caixa);
+        mostrar(i, false);
+        agendar();
+    })();
 
     // o modal é compartilhado com as demos: tira a marca da prévia quando fecha
     modalOverlay?.addEventListener("click", () => { if (modalOverlay.hidden) document.querySelector(".modal-caixa")?.classList.remove("modal-previa"); });
