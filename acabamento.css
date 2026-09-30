@@ -1598,3 +1598,11 @@ h1 span { text-shadow: none; }
 @keyframes gh-carregando { from { opacity: .45; } to { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .gh-provisorio .gh-dia { animation: none; opacity: .6; } }
 .hero-texto-resto { visibility: hidden; } /* texto do hero ainda por digitar: ocupa o lugar sem aparecer (script.js) */
+
+/* Convite pra ativar o som (musica.js): mesmo cartão do aviso do WhatsApp */
+.convite-som p b { color: var(--cyan); }
+/* no computador vai pro canto, como uma notificação, em vez de cobrir o hero */
+@media (min-width: 900px) {
+    .convite-som { left: auto; right: 24px; bottom: 96px; transform: translate(0, 14px); }
+    .convite-som.mostrar { transform: none; }
+}

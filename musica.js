@@ -671,22 +671,79 @@
         if (ctx && ctx.state !== "running" && !pausadoPorFora && !document.hidden) retomar();
     }, true));
 
-    // Começa sozinha no primeiro clique/toque/tecla, se a pessoa não tiver desligado antes.
-    // Com a música desligada, o primeiro gesto só libera o áudio, pros efeitos funcionarem.
+    const avisarQueTocando = function () {
+        if (!ler(CHAVE_AVISO) && typeof window.mostrarToast === "function") {
+            window.mostrarToast("♪ Tocando “Meia-noite”, trilha feita pro site. Pra desligar ou mudar o volume, é o ícone de som lá em cima.");
+            gravar(CHAVE_AVISO, "1");
+        }
+    };
+
+    // A música só volta sozinha (no primeiro clique/toque/tecla) pra quem já ligou antes. Quem nunca
+    // escolheu não leva susto: recebe o convite abaixo. Sem música, o primeiro gesto só libera o áudio
+    // pros efeitos funcionarem.
     const preferencia = ler(CHAVE);
     {
         const primeiraInteracao = function (evento) {
-            if (evento.target.closest && evento.target.closest("#botaoSom")) return remover(); // o próprio botão resolve
+            // o próprio botão de som e o convite resolvem sozinhos
+            if (evento.target.closest && evento.target.closest("#botaoSom, .convite-som")) return remover();
             remover();
-            if (preferencia === "off") { destravar(); return; }
+            if (preferencia !== "on") { destravar(); return; }
             ligar();
-            if (!ler(CHAVE_AVISO) && typeof window.mostrarToast === "function") {
-                window.mostrarToast("♪ Tocando “Meia-noite”, trilha feita pro site. Pra desligar ou mudar o volume, é o ícone de som lá em cima.");
-                gravar(CHAVE_AVISO, "1");
-            }
+            avisarQueTocando();
         };
         const remover = function () { GESTOS.forEach((tipo) => document.removeEventListener(tipo, primeiraInteracao, true)); };
         GESTOS.forEach((tipo) => document.addEventListener(tipo, primeiraInteracao, true));
+    }
+
+    // Convite pra ligar o som, pra quem ainda não escolheu. Aparece uma vez: fechou (ou ignorou), não volta.
+    const CHAVE_CONVITE = "portfolio-musica-convite";
+    if (preferencia === null && !ler(CHAVE_CONVITE)) {
+        const convite = document.createElement("div");
+        convite.className = "aviso-whats convite-som";
+        convite.setAttribute("role", "dialog");
+        convite.setAttribute("aria-label", "Convite pra ativar o som");
+        const texto = document.createElement("p");
+        texto.innerHTML = "<b>🔊 Dica: ative o som!</b> O portfólio tem trilha própria e efeitos que respondem ao que você faz. Com som, dá pra ver melhor como tudo funciona.";
+        const acoes = document.createElement("div");
+        acoes.className = "aviso-whats-acoes";
+        const ativar = document.createElement("button");
+        ativar.type = "button";
+        ativar.className = "botao botao-principal";
+        ativar.textContent = "Ativar som";
+        const agoraNao = document.createElement("button");
+        agoraNao.type = "button";
+        agoraNao.className = "botao botao-secundario";
+        agoraNao.textContent = "Agora não";
+        const fechar = document.createElement("button");
+        fechar.type = "button";
+        fechar.className = "aviso-whats-fechar";
+        fechar.setAttribute("aria-label", "Fechar");
+        fechar.textContent = "✕";
+        acoes.append(ativar, agoraNao);
+        convite.append(fechar, texto, acoes);
+
+        let sumir = 0;
+        const esconder = function () {
+            clearTimeout(sumir);
+            gravar(CHAVE_CONVITE, "visto");
+            convite.classList.remove("mostrar");
+            setTimeout(() => convite.remove(), 300);
+        };
+        ativar.addEventListener("click", function () {
+            esconder();
+            ligar();
+            gravar(CHAVE, "on");
+            avisarQueTocando();
+        });
+        agoraNao.addEventListener("click", esconder);
+        fechar.addEventListener("click", esconder);
+        botao.addEventListener("click", esconder, { once: true }); // resolveu pelo ícone lá em cima
+
+        setTimeout(function () {
+            document.body.append(convite);
+            requestAnimationFrame(() => convite.classList.add("mostrar"));
+            sumir = setTimeout(esconder, 25000); // ignorou: sai de cena sozinho, sem insistir
+        }, 1500);
     }
 
     // Sons que o mobile.js usa (gestos do celular). Só tocam com o áudio liberado.
