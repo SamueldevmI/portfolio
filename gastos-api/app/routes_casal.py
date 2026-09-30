@@ -1,9 +1,9 @@
-import random
-import string
+import secrets
 from datetime import date, datetime, timedelta
 
 from flask import Blueprint, jsonify, request
 
+from . import validacao
 from .database import db
 from .models_casal import MAX_INTEGRANTES_POR_CASAL, Casal, GastoCasal, Integrante
 
@@ -16,7 +16,8 @@ _MAX_CASAIS = 500
 
 def _gerar_codigo() -> str:
     for _ in range(20):
-        codigo = "".join(random.choice(_ALFABETO_CODIGO) for _ in range(6))
+        # secrets, não random: o código é a única "senha" do casal e random é previsível
+        codigo = "".join(secrets.choice(_ALFABETO_CODIGO) for _ in range(6))
         if not Casal.query.filter_by(codigo=codigo).first():
             return codigo
     raise RuntimeError("Não foi possível gerar um código único.")
@@ -68,23 +69,9 @@ def _validar_gasto(dados: dict, casal: Casal) -> dict:
             erros.append("Esse 'integrante_id' não pertence a esse casal.")
     resultado["integrante_id"] = integrante_id
 
-    descricao = str(dados.get("descricao", "")).strip()
-    if not descricao:
-        erros.append("O campo 'descricao' é obrigatório.")
-    resultado["descricao"] = descricao
-
-    try:
-        valor = float(dados.get("valor"))
-        if valor <= 0:
-            erros.append("O campo 'valor' deve ser maior que zero.")
-        resultado["valor"] = valor
-    except (TypeError, ValueError):
-        erros.append("O campo 'valor' deve ser um número.")
-
-    categoria = str(dados.get("categoria", "")).strip()
-    if not categoria:
-        erros.append("O campo 'categoria' é obrigatório.")
-    resultado["categoria"] = categoria
+    resultado["descricao"] = validacao.texto(dados, "descricao", validacao.MAX_DESCRICAO, erros)
+    resultado["valor"] = validacao.valor_positivo(dados, erros)
+    resultado["categoria"] = validacao.texto(dados, "categoria", validacao.MAX_CATEGORIA, erros)
 
     try:
         resultado["data"] = _parse_data(dados.get("data"))

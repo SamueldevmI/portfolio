@@ -134,17 +134,23 @@
                 } else {
                     statusEl.hidden = true;
                     for (const gasto of gastos) {
+                        // Tudo que vem da API entra como texto, nunca como HTML: a API é pública e qualquer
+                        // pessoa pode gravar um gasto com "<img onerror=...>" na descrição.
                         const item = document.createElement("li");
                         item.className = "demo-item";
                         item.innerHTML = `
                             <div>
-                                ${gasto.descricao}
-                                <small>${gasto.categoria} · ${formatarData(gasto.data)}</small>
+                                <span class="demo-descricao"></span>
+                                <small></small>
                             </div>
                             <div style="display:flex;align-items:center;gap:10px;">
-                                <b>${formatarMoeda(gasto.valor)}</b>
-                                <button class="demo-remover" title="Remover" data-id="${gasto.id}">✕</button>
+                                <b></b>
+                                <button class="demo-remover" title="Remover">✕</button>
                             </div>`;
+                        item.querySelector(".demo-descricao").textContent = gasto.descricao;
+                        item.querySelector("small").textContent = `${gasto.categoria} · ${formatarData(String(gasto.data))}`;
+                        item.querySelector("b").textContent = formatarMoeda(Number(gasto.valor));
+                        item.querySelector(".demo-remover").dataset.id = String(Number(gasto.id));
                         listaEl.appendChild(item);
                     }
                 }

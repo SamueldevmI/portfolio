@@ -96,6 +96,8 @@ def create_app(database_uri: str = "sqlite:///gastos.db") -> Flask:
     app = Flask(__name__)
     app.config["SQLALCHEMY_DATABASE_URI"] = database_uri
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    # um gasto tem poucos campos curtos; sem limite, um pedido de centenas de MB ocuparia a memória do servidor
+    app.config["MAX_CONTENT_LENGTH"] = 16 * 1024
 
     CORS(app, origins=ORIGENS_PERMITIDAS)
     db.init_app(app)
@@ -111,6 +113,16 @@ def create_app(database_uri: str = "sqlite:///gastos.db") -> Flask:
     with app.app_context():
         db.create_all()
         _migrar_coluna_tipo()
+
+    @app.errorhandler(413)
+    def corpo_grande_demais(_erro):
+        return {"erro": "Pedido grande demais."}, 413
+
+    @app.after_request
+    def cabecalhos_de_seguranca(resposta):
+        # o navegador não tenta "adivinhar" que um JSON é HTML ou script
+        resposta.headers.setdefault("X-Content-Type-Options", "nosniff")
+        return resposta
 
     @app.get("/")
     def raiz():

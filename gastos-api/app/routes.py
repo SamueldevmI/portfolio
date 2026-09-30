@@ -2,6 +2,7 @@ from datetime import date, datetime
 
 from flask import Blueprint, jsonify, request
 
+from . import validacao
 from .database import db
 from .models import Gasto
 
@@ -22,25 +23,13 @@ def _validar_payload(dados: dict, exigir_todos: bool = True) -> dict:
     resultado = {}
 
     if "descricao" in dados or exigir_todos:
-        descricao = str(dados.get("descricao", "")).strip()
-        if not descricao:
-            erros.append("O campo 'descricao' é obrigatório.")
-        resultado["descricao"] = descricao
+        resultado["descricao"] = validacao.texto(dados, "descricao", validacao.MAX_DESCRICAO, erros)
 
     if "valor" in dados or exigir_todos:
-        try:
-            valor = float(dados.get("valor"))
-            if valor <= 0:
-                erros.append("O campo 'valor' deve ser maior que zero.")
-            resultado["valor"] = valor
-        except (TypeError, ValueError):
-            erros.append("O campo 'valor' deve ser um número.")
+        resultado["valor"] = validacao.valor_positivo(dados, erros)
 
     if "categoria" in dados or exigir_todos:
-        categoria = str(dados.get("categoria", "")).strip()
-        if not categoria:
-            erros.append("O campo 'categoria' é obrigatório.")
-        resultado["categoria"] = categoria
+        resultado["categoria"] = validacao.texto(dados, "categoria", validacao.MAX_CATEGORIA, erros)
 
     if "data" in dados or exigir_todos:
         try:

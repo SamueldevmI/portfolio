@@ -163,9 +163,16 @@
             fetch("https://github-contributions-api.jogruber.de/v4/" + USUARIO + "?y=last")
                 .then(function (resposta) { return resposta.ok ? resposta.json() : Promise.reject(new Error("sem dados")); })
                 .then(function (dados) {
-                    const dias = dados && dados.contributions;
-                    if (!Array.isArray(dias) || dias.length < 30) { mostrarImagemReserva(); return; }
-                    const soma = (dados.total && dados.total.lastYear) || dias.reduce(function (s, d) { return s + d.count; }, 0);
+                    const brutos = dados && dados.contributions;
+                    if (!Array.isArray(brutos) || brutos.length < 30) { mostrarImagemReserva(); return; }
+                    // Serviço de terceiros: só aceita o formato esperado (data AAAA-MM-DD, números de verdade).
+                    // Os números vão pro HTML do quadro, então texto no lugar de número nunca pode passar.
+                    const inteiro = function (v, max) { const n = Math.floor(Number(v)); return n >= 0 && n <= max ? n : 0; };
+                    const dias = brutos
+                        .filter(function (d) { return d && /^\d{4}-\d{2}-\d{2}$/.test(d.date); })
+                        .map(function (d) { return { date: d.date, count: inteiro(d.count, 100000), level: inteiro(d.level, 4) }; });
+                    if (dias.length < 30) { mostrarImagemReserva(); return; }
+                    const soma = inteiro(dados.total && dados.total.lastYear, 10000000) || dias.reduce(function (s, d) { return s + d.count; }, 0);
                     desenhar(dias, soma);
                 })
                 .catch(mostrarImagemReserva);
