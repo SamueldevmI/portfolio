@@ -27,7 +27,9 @@ html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 body {
     margin: 0;
     min-height: 100vh;
-    background: var(--bg);
+    background:
+        radial-gradient(1100px 760px at 50% 100%, rgba(255, 140, 60, .2), transparent 70%),
+        linear-gradient(180deg, #150c1f 0%, #170d22 30%, #1d0e25 55%, #28101f 78%, #34121a 100%);
     color: var(--texto);
     font: 500 1rem/1.6 var(--fonte);
 }
@@ -45,9 +47,33 @@ body::before {
         radial-gradient(1.2px 1.2px at 150px 60px, rgba(233, 196, 106, .4), transparent) 0 0 / 263px 239px,
         radial-gradient(46% 34% at 8% 6%, rgba(160, 110, 230, .24), transparent 70%),
         radial-gradient(40% 30% at 96% 22%, rgba(255, 184, 217, .13), transparent 70%),
-        radial-gradient(55% 38% at 50% 106%, rgba(255, 170, 80, .12), transparent 70%),
-        var(--bg);
+        radial-gradient(40% 30% at 50% 110%, rgba(255, 170, 80, .08), transparent 70%);
 }
+/* 4. granulado de filme antigo: textura pequena repetida, só desliza (transform, leve pra GPU) */
+body::after {
+    content: "";
+    position: fixed;
+    inset: -128px;
+    z-index: 55;
+    pointer-events: none;
+    background: url("grao.png") 0 0 / 128px 128px;
+    opacity: .055;
+    animation: grao 1s steps(1) infinite;
+}
+@keyframes grao {
+    0% { transform: translate(0, 0); }
+    20% { transform: translate(-37px, 21px); }
+    40% { transform: translate(53px, -44px); }
+    60% { transform: translate(-18px, 61px); }
+    80% { transform: translate(29px, -9px); }
+}
+
+/* 1. olhos de gato no escuro */
+.olhos-noite { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+.olhos { position: absolute; display: flex; gap: calc(var(--t) * 1.25); opacity: 0; animation: olhos-surgem var(--dur) ease-in-out forwards; }
+.olhos b { width: var(--t); height: var(--t); border-radius: 50%; background: radial-gradient(circle, #fffbe6 0 22%, var(--cor) 48%, transparent 72%); box-shadow: 0 0 calc(var(--t) * 1.2) calc(var(--t) * .2) var(--brilho); animation: olho-pisca var(--dur) ease-in-out forwards; transition: translate .5s ease-out; }
+@keyframes olhos-surgem { 0% { opacity: 0; } 18%, 78% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes olho-pisca { 0%, 38%, 44%, 62%, 66%, 100% { scale: 1 1; } 41% { scale: 1 .08; } 64% { scale: 1 .08; } }
 body:has(dialog[open]) { overflow: hidden; }
 h1, h2, h3, p { margin-top: 0; }
 a { color: var(--rosa); }
@@ -149,8 +175,8 @@ a { color: var(--rosa); }
 @keyframes piscar { 0%, 100% { opacity: 0; scale: .4; } 50% { opacity: .9; scale: 1; } }
 
 /* barrado de renda entre as seções */
-.renda { height: 22px; background: radial-gradient(circle at 50% 0, var(--lilas) 0 9px, transparent 9.5px) 0 0 / 22px 22px repeat-x, radial-gradient(circle at 50% 0, var(--bg) 0 4px, transparent 4.5px) 0 0 / 22px 22px repeat-x; opacity: .85; }
-.renda + .vantagens { margin-top: -22px; padding-top: 22px; }
+.cera { position: relative; z-index: 1; height: 40px; margin-bottom: -40px; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 52'%3E%3Cg fill='%23f1e4cc'%3E%3Crect width='180' height='8'/%3E%3Cpath d='M10 6h8v16a4 4 0 0 1-8 0z'/%3E%3Cpath d='M37 6h6v8a3 3 0 0 1-6 0z'/%3E%3Cpath d='M60 6h11v28a5.5 5.5 0 0 1-11 0z'/%3E%3Cpath d='M92 6h6v11a3 3 0 0 1-6 0z'/%3E%3Cpath d='M117 6h9v21a4.5 4.5 0 0 1-9 0z'/%3E%3Cpath d='M147 6h5v6a2.5 2.5 0 0 1-5 0z'/%3E%3Cpath d='M164 6h8v14a4 4 0 0 1-8 0z'/%3E%3Ccircle cx='65.5' cy='46' r='3'/%3E%3Ccircle cx='121.5' cy='38' r='2.2'/%3E%3Ccircle cx='24' cy='8' r='5'/%3E%3Ccircle cx='80' cy='8' r='6'/%3E%3Ccircle cx='136' cy='8' r='5'/%3E%3C/g%3E%3Cg fill='%23fffaf0' opacity='.7'%3E%3Crect x='62' y='10' width='2' height='20' rx='1'/%3E%3Crect x='119' y='10' width='2' height='14' rx='1'/%3E%3Crect x='12' y='10' width='1.6' height='10' rx='.8'/%3E%3C/g%3E%3C/svg%3E") 0 0 / 138px 40px repeat-x; filter: drop-shadow(0 3px 5px rgba(0, 0, 0, .45)); pointer-events: none; }
+.cera + .vantagens { padding-top: 22px; }
 
 /* ===== vantagens ===== */
 .vantagens { background: rgba(205, 180, 255, .07); border-bottom: 1px solid var(--linha); }
@@ -372,7 +398,7 @@ dialog::backdrop { background: rgba(15, 9, 24, .78); -webkit-backdrop-filter: bl
 .recorte-legenda { margin: 16px 0 0; padding-top: 10px; border-top: 1px solid rgba(58, 43, 31, .4); font: italic 600 .98rem/1.4 var(--serifa); }
 
 /* ===== medidas e dúvidas ===== */
-.duvidas { padding: 56px 0; border-top: 1px solid var(--linha); background: rgba(31, 22, 48, .6); }
+.duvidas { padding: 56px 0; border-top: 1px solid var(--linha); background: rgba(31, 18, 40, .45); }
 .duvidas-in { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
 .tabela-rolagem { overflow-x: auto; border: 2px solid var(--linha-forte); border-radius: var(--raio); }
 .medidas { width: 100%; border-collapse: collapse; text-align: center; }
@@ -388,7 +414,7 @@ dialog::backdrop { background: rgba(15, 9, 24, .78); -webkit-backdrop-filter: bl
 .duvidas details p { margin: 0 0 16px; color: var(--mudo); }
 
 /* ===== rodapé ===== */
-.rodape { padding: 40px 0 28px; border-top: 2px solid var(--linha-forte); background: var(--bg2); color: var(--mudo); font-size: .92rem; }
+.rodape { padding: 40px 0 28px; border-top: 2px solid var(--linha-forte); background: rgba(22, 8, 16, .45); color: var(--mudo); font-size: .92rem; }
 .rodape-grade { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 24px; }
 .rodape-grade p { margin: 0 0 6px; }
 .rodape-grade a { display: block; margin-bottom: 4px; color: var(--mudo); text-decoration: none; }
@@ -452,5 +478,5 @@ dialog::backdrop { background: rgba(15, 9, 24, .78); -webkit-backdrop-filter: bl
 
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
-    .brilhos { display: none; }
+    .brilhos, .olhos-noite { display: none; }
 }

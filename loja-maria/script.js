@@ -807,6 +807,44 @@ enviarEl.addEventListener("click", () => {
     setTimeout(() => { notaEl.textContent = NOTA_PADRAO; }, 4000);
 });
 
+/* ===== Olhos de gato no escuro: surgem em lugares aleatórios, piscam e somem ===== */
+(function olhosNoEscuro() {
+    const palco = document.querySelector(".olhos-noite");
+    if (!palco || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const MAX = matchMedia("(pointer: coarse)").matches ? 2 : 3;
+    const CORES = [["#ffd86b", "rgba(255, 200, 90, .45)"], ["#ffcf4d", "rgba(255, 190, 70, .4)"], ["#c9f5a8", "rgba(190, 240, 150, .35)"]];
+    const sorteio = (min, max) => min + Math.random() * (max - min);
+
+    function surgir() {
+        setTimeout(surgir, sorteio(2200, 5200));
+        if (document.hidden || palco.childElementCount >= MAX) return;
+        const [cor, brilho] = CORES[Math.floor(Math.random() * CORES.length)];
+        const par = document.createElement("i");
+        par.className = "olhos";
+        par.innerHTML = "<b></b><b></b>";
+        par.style.cssText = `left:${sorteio(3, 94)}%;top:${sorteio(8, 90)}%;--t:${sorteio(5, 10).toFixed(1)}px;--dur:${sorteio(4.5, 7).toFixed(1)}s;--cor:${cor};--brilho:${brilho}`;
+        par.addEventListener("animationend", (e) => { if (e.target === par) par.remove(); });
+        palco.appendChild(par);
+    }
+    setTimeout(surgir, 1500);
+
+    /* no computador, os olhos acompanham o mouse de leve */
+    if (!matchMedia("(pointer: fine)").matches) return;
+    let alvo = null;
+    addEventListener("pointermove", (e) => {
+        if (!alvo) requestAnimationFrame(() => {
+            palco.querySelectorAll(".olhos").forEach((par) => {
+                const r = par.getBoundingClientRect();
+                const dx = alvo.x - (r.left + r.width / 2), dy = alvo.y - (r.top + r.height / 2);
+                const d = Math.hypot(dx, dy) || 1;
+                par.querySelectorAll("b").forEach((b) => { b.style.translate = `${(dx / d * 2).toFixed(1)}px ${(dy / d * 2).toFixed(1)}px`; });
+            });
+            alvo = null;
+        });
+        alvo = { x: e.clientX, y: e.clientY };
+    }, { passive: true });
+})();
+
 /* ===== Início ===== */
 document.querySelectorAll("svg[data-arte]").forEach((svg) => { svg.innerHTML = ARTE[svg.dataset.arte]; });
 renderChips();
