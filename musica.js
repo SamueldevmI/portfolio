@@ -343,8 +343,18 @@
             if (pos % 2) acordeRhodes(ns, t + sw(7), 0.5, BATIDA * 0.5, grupo.marimba);
         }
         if (ativo("fraco")) [[5, 3], [6, 2]].forEach(([k, i]) => rhodes(ns[i] + 12, t + sw(k), 0.45, grupo.fraco, 0.6));
-        // viradinha do piano a cada 4 compassos: três notas subindo, tipo "ó o pai"
-        if (ativo("fraco") && pos % 4 === 3) [0, 1, 2].forEach((i) => rhodes(ns[i + 1] + 12, t + BATIDA * (3.25 + i * 0.25), 0.55, grupo.fraco, 0.35));
+        // viradinha do piano: só no fim de cada volta (8 compassos, ~20 s) e diferente a cada volta,
+        // pra fechar a frase sem virar um relógio. Antes era a mesma "tarandan" a cada 4 compassos (~10 s).
+        if (ativo("fraco") && pos === 7) {
+            const VIRADAS = [
+                [1, 2, 3],   // sobe (a original, tipo "ó o pai")
+                null,        // descansa: o silêncio também fecha a frase
+                [3, 2, 1],   // desce
+                [2, 3],      // só duas notinhas
+            ];
+            const virada = VIRADAS[ciclo % VIRADAS.length];
+            if (virada) virada.forEach((i, k) => rhodes(ns[i] + 12, t + BATIDA * (3.25 + k * 0.25), 0.4, grupo.fraco, 0.35));
+        }
 
         // grave com gingado: tônica, "pulinho" na oitava, repique no "e" do 3, oitava e volta
         const b = acorde.baixo;
