@@ -1174,7 +1174,8 @@
 
     function aplicar(salvar) {
         const nome = campo.value.trim().slice(0, 40);
-        links.forEach(function (l) { l.el.setAttribute(l.attr, nome ? l.base + "?nome=" + encodeURIComponent(nome) : l.base); });
+        const ramo = window.ramoNegocioLink && nome === window.nomeNegocioLink ? "&ramo=" + window.ramoNegocioLink : "";
+        links.forEach(function (l) { l.el.setAttribute(l.attr, nome ? l.base + "?nome=" + encodeURIComponent(nome) + ramo : l.base); });
         rotulos.forEach(function (r) { r.el.textContent = nome ? (r.maiusculo ? nome.toUpperCase() : nome) : r.original; });
         if (status) status.textContent = nome ? "Pronto! A loja e o atendimento por chat agora abrem como “" + nome + "”. Toque em Testar agora." : TEXTO_INICIAL;
         if (salvar) { try { nome ? localStorage.setItem(CHAVE, nome) : localStorage.removeItem(CHAVE); } catch (e) { /* sem armazenamento: só não lembra */ } }

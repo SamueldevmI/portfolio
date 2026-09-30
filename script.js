@@ -153,6 +153,8 @@ if (heroTexto && !prefereMenosMovimento) {
    WhatsApp avisa de qual link a pessoa veio. O nome só entra como texto, nunca como HTML. */
 const nomeNegocioLink = (new URLSearchParams(location.search).get("nome") || "").replace(/\s+/g, " ").trim().slice(0, 40);
 window.nomeNegocioLink = nomeNegocioLink;
+// &ramo=beleza (quando o nome não diz o ramo, ex.: "Studio Ana") segue junto pro atendimento por chat
+window.ramoNegocioLink = nomeNegocioLink ? (new URLSearchParams(location.search).get("ramo") || "").toLowerCase().replace(/[^a-z]/g, "").slice(0, 20) : "";
 if (nomeNegocioLink) {
     document.title = nomeNegocioLink + " · " + document.title;
 
