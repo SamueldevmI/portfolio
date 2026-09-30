@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Gerar link pra cliente | Samuel Mickael</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+    <script>
+        /* Mesmo tema escolhido no portfólio (vermelho ou azul) */
+        (function () {
+            var azul = false;
+            try { azul = localStorage.getItem("portfolio-tema") === "azul"; } catch (e) { /* sem armazenamento */ }
+            document.documentElement.dataset.tema = azul ? "azul" : "vermelho";
+            document.write('<link rel="stylesheet" href="' + (azul ? "style-azul.css" : "style.css") + '">');
+        })();
+    </script>
+    <noscript><link rel="stylesheet" href="style.css"></noscript>
+    <style>
+        .gl { width: min(720px, calc(100% - 32px)); margin: 48px auto 80px; }
+        .gl h1 { margin: 6px 0 8px; font-size: clamp(1.8rem, 5vw, 2.6rem); letter-spacing: -.03em; }
+        .gl > p { color: var(--muted); }
+        .gl .eyebrow::before { content: none; }
+        .gl-caixa { display: grid; gap: 16px; margin-top: 24px; padding: 22px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); }
+        .gl label { display: grid; gap: 6px; color: var(--muted); font-size: .85rem; }
+        .gl input[type=text], .gl input[type=tel], .gl select, .gl textarea { width: 100%; padding: 11px 13px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--text); font: 500 1rem "Space Grotesk", Arial, sans-serif; }
+        .gl textarea { min-height: 120px; resize: vertical; line-height: 1.45; }
+        .gl input:focus, .gl select:focus, .gl textarea:focus { outline: none; border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(var(--cyan-rgb), .2); }
+        .gl-linha { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .gl-check { display: flex !important; align-items: center; gap: 8px; color: var(--text) !important; }
+        .gl-link { padding: 10px 13px; border: 1px dashed rgba(var(--cyan-rgb), .6); border-radius: 10px; background: rgba(var(--cyan-rgb), .08); color: var(--acento-texto); font: .82rem "DM Mono", monospace; word-break: break-all; }
+        .gl-acoes { display: flex; flex-wrap: wrap; gap: 10px; }
+        .gl-acoes .botao { cursor: var(--cursor-mao); }
+        .gl-historico { margin-top: 28px; }
+        .gl-historico h2 { font-size: 1.1rem; }
+        .gl-historico ol { margin: 0; padding: 0; list-style: none; }
+        .gl-historico li { display: flex; justify-content: space-between; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--line); color: var(--muted); font-size: .85rem; }
+        .gl-historico li b { color: var(--text); }
+        .gl-historico a { color: var(--acento-texto); }
+        @media (max-width: 560px) { .gl-linha { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <main class="gl">
+        <p class="eyebrow">SÓ PRA VOCÊ · NÃO APARECE NO SITE</p>
+        <h1>Gerar link pra cliente</h1>
+        <p>O cliente abre e vê o portfólio feito pra ele: o nome dele no topo, o comparador no ramo dele e a prévia de como ficaria o site dele.</p>
+
+        <form class="gl-caixa" id="gerador" autocomplete="off">
+            <div class="gl-linha">
+                <label>Nome do negócio<input type="text" id="glNome" maxlength="40" placeholder="Ex.: Pizzaria do João" required></label>
+                <label>Ramo
+                    <select id="glRamo">
+                        <option value="pizzaria">🍕 Pizzaria / lanchonete</option>
+                        <option value="barbearia">💈 Barbearia</option>
+                        <option value="loja">👕 Loja de roupa</option>
+                        <option value="salao">💇 Salão de beleza</option>
+                        <option value="academia">💪 Academia</option>
+                        <option value="clinica">🩺 Clínica / consultório</option>
+                    </select>
+                </label>
+            </div>
+            <div class="gl-linha">
+                <label>WhatsApp do cliente (opcional)<input type="tel" id="glTel" placeholder="(67) 99999-9999"></label>
+                <label class="gl-check"><input type="checkbox" id="glPrevia" checked> Abrir direto na prévia do site</label>
+            </div>
+            <label>Link<span class="gl-link" id="glLink">preencha o nome…</span></label>
+            <label>Mensagem (dá pra editar)<textarea id="glMsg"></textarea></label>
+            <div class="gl-acoes">
+                <button type="button" class="botao botao-principal" id="glWhats">Enviar no WhatsApp</button>
+                <button type="button" class="botao botao-secundario" id="glCopiarMsg">Copiar mensagem</button>
+                <button type="button" class="botao botao-secundario" id="glCopiarLink">Copiar só o link</button>
+                <a class="botao botao-secundario" id="glTestar" href="./" target="_blank" rel="noopener">Testar ↗</a>
+            </div>
+        </form>
+
+        <section class="gl-historico" id="glHistorico" hidden>
+            <h2>Links que você já mandou (neste aparelho)</h2>
+            <ol id="glLista"></ol>
+        </section>
+    </main>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script>
+        (function () {
+            "use strict";
+            const $ = (id) => document.getElementById(id);
+            const nome = $("glNome"), ramo = $("glRamo"), tel = $("glTel"), previa = $("glPrevia"), msg = $("glMsg"), saidaLink = $("glLink");
+            const GANCHOS = {
+                pizzaria: "pra parar de responder “ainda tá aberto?” a noite toda 🍕",
+                barbearia: "pra agenda se preencher sozinha, sem “tem horário hoje?” o dia inteiro 💈",
+                loja: "pra vender sem mandar 23 fotos no direct 🖤",
+                salao: "pra cliente marcar horário sozinha, sem você largar a escova ✨",
+                academia: "pra quem pergunta a mensalidade já ver tudo na tela 💪",
+                clinica: "pra paciente marcar consulta sem precisar ligar 🩺",
+            };
+            const CHAVE = "prospeccao-historico";
+            const base = new URL("./", location.href).toString();
+            let msgEditada = false;
+
+            function link() {
+                const u = new URL(base);
+                const n = nome.value.trim();
+                if (n) u.searchParams.set("para", n);
+                u.searchParams.set("ramo", ramo.value);
+                if (previa.checked) u.searchParams.set("previa", "1");
+                u.searchParams.set("origem", "link");
+                return u.toString();
+            }
+            function atualizar() {
+                const n = nome.value.trim();
+                const l = link();
+                saidaLink.textContent = n ? l : "preencha o nome…";
+                $("glTestar").href = l;
+                if (!msgEditada) msg.value = n ? `Oi, ${n}! Tudo bem? Aqui é o Samuel, faço sites aqui em Campo Grande. Montei uma prévia de como ficaria o site de vocês, ${GANCHOS[ramo.value]}\n\nDá uma olhada: ${l}` : "";
+            }
+            function toast(t) { const e = $("toast"); e.textContent = t; e.classList.add("mostrar"); setTimeout(() => e.classList.remove("mostrar"), 2400); }
+            async function copiar(texto, aviso) { try { await navigator.clipboard.writeText(texto); toast(aviso); } catch (e) { prompt("Copie:", texto); } }
+            function ler() { try { return JSON.parse(localStorage.getItem(CHAVE)) || []; } catch (e) { return []; } }
+            function registrar() {
+                const n = nome.value.trim(); if (!n) return;
+                const lista = ler().filter((x) => x.link !== link());
+                lista.unshift({ nome: n, ramo: ramo.options[ramo.selectedIndex].text, link: link(), em: Date.now() });
+                try { localStorage.setItem(CHAVE, JSON.stringify(lista.slice(0, 30))); } catch (e) { /* sem armazenamento */ }
+                desenharHistorico();
+            }
+            function desenharHistorico() {
+                const lista = ler();
+                $("glHistorico").hidden = !lista.length;
+                $("glLista").replaceChildren(...lista.map((x) => {
+                    const li = document.createElement("li");
+                    const esq = document.createElement("span");
+                    const b = document.createElement("b"); b.textContent = x.nome;
+                    esq.append(b, ` · ${x.ramo} · ${new Date(x.em).toLocaleDateString("pt-BR")}`);
+                    const a = document.createElement("a"); a.href = x.link; a.target = "_blank"; a.rel = "noopener"; a.textContent = "abrir ↗";
+                    li.append(esq, a);
+                    return li;
+                }));
+            }
+
+            [nome, ramo, previa].forEach((el) => el.addEventListener("input", atualizar));
+            ramo.addEventListener("change", atualizar);
+            msg.addEventListener("input", () => { msgEditada = msg.value.trim() !== ""; });
+            $("glCopiarLink").addEventListener("click", () => { if (!nome.value.trim()) return nome.focus(); copiar(link(), "Link copiado!"); registrar(); });
+            $("glCopiarMsg").addEventListener("click", () => { if (!nome.value.trim()) return nome.focus(); copiar(msg.value, "Mensagem copiada! É só colar no WhatsApp."); registrar(); });
+            $("glWhats").addEventListener("click", () => {
+                if (!nome.value.trim()) return nome.focus();
+                let numero = tel.value.replace(/\D/g, "");
+                if (numero && numero.length <= 11) numero = "55" + numero;
+                window.open(`https://wa.me/${numero}?text=${encodeURIComponent(msg.value)}`, "_blank", "noopener");
+                registrar();
+            });
+            $("gerador").addEventListener("submit", (e) => e.preventDefault());
+            atualizar();
+            desenharHistorico();
+        })();
+    </script>
+</body>
+</html>

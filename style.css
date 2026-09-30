@@ -2299,3 +2299,64 @@ html { cursor: var(--cursor-seta); }
 :is(input:not([type="checkbox"], [type="radio"], [type="range"], [type="submit"], [type="button"]), textarea, [contenteditable="true"]) { cursor: text; }
 :is(button, input, select):disabled { cursor: not-allowed; }
 
+
+/* ---------- Link personalizado: convite no topo ---------- */
+.link-convite { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; width: fit-content; max-width: 100%; margin: 0 0 14px; padding: 8px 10px 8px 14px; border: 1px solid rgba(var(--cyan-rgb), .5); border-radius: 12px; background: rgba(var(--cyan-rgb), .1); font-size: .9rem; animation: cmp-entrar .5s cubic-bezier(.2,.9,.3,1.3) both; }
+.link-convite b { color: var(--acento-texto); }
+.link-convite button { padding: 6px 12px; border: 0; border-radius: 8px; background: var(--cyan); color: #ffffff; font: 700 .8rem "Space Grotesk", Arial, sans-serif; cursor: var(--cursor-mao); text-shadow: none; }
+@media (hover: hover) { .link-convite button:hover { box-shadow: 0 0 16px rgba(var(--cyan-rgb), .6); } }
+
+/* ---------- Botão da prévia no comparador ---------- */
+.cmp-previa { display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; margin-top: 14px; padding: 12px 16px; border: 1px dashed rgba(var(--cyan-rgb), .6); border-radius: 12px; background: rgba(var(--cyan-rgb), .08); color: var(--text); font: 600 .95rem "Space Grotesk", Arial, sans-serif; cursor: var(--cursor-mao); transition: background-color .2s ease, box-shadow .2s ease, transform .2s ease; }
+.cmp-previa b { color: var(--acento-texto); }
+@media (hover: hover) { .cmp-previa:hover { border-style: solid; background: rgba(var(--cyan-rgb), .16); box-shadow: 0 0 20px -4px rgba(var(--cyan-rgb), .6); transform: translateY(-1px); } }
+.cmp-previa:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+
+/* ---------- Prévia do site do cliente (dentro do modal) ----------
+   As cores do mini-site vêm do ramo (--p-cor, --p-fundo...), setadas pelo script.js. */
+.modal-caixa.modal-previa { width: min(820px, 100%); }
+.previa { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 16px 28px; align-items: start; padding: 20px 22px 24px; }
+.previa-ramos { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px; }
+.previa-ramos button { padding: 5px 11px; border: 1px solid rgba(255,255,255,.14); border-radius: 999px; background: transparent; color: var(--muted); font: 500 .76rem "Space Grotesk", Arial, sans-serif; cursor: var(--cursor-mao); }
+.previa-ramos button[aria-pressed="true"] { border-color: var(--cyan); background: rgba(var(--cyan-rgb), .14); color: var(--text); }
+.previa-celular { position: relative; width: 290px; padding: 10px 10px 14px; border: 2px solid #3a3a3a; border-radius: 34px; background: #0a0a0a; box-shadow: 0 30px 60px -20px rgba(0,0,0,.8), 0 0 0 6px #1a1a1a; text-shadow: none; animation: previa-entra .45s cubic-bezier(.2,.9,.3,1.2) both; }
+@keyframes previa-entra { from { opacity: 0; transform: translateY(16px) rotate(-2deg); } }
+.previa-status { display: flex; justify-content: space-between; padding: 2px 14px 6px; color: #d8d8d8; font: 600 .66rem "Space Grotesk", Arial, sans-serif; }
+.previa-url { margin: 0 6px 8px; padding: 5px 10px; border-radius: 999px; background: #1e1e1e; color: #bdbdbd; font: .68rem "DM Mono", monospace; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.previa-site { position: relative; height: 430px; overflow: auto; border-radius: 20px; background: var(--p-fundo); color: var(--p-texto); font-family: "Space Grotesk", Arial, sans-serif; scrollbar-width: none; }
+.previa-site::-webkit-scrollbar { display: none; }
+.previa-topo { position: sticky; top: 0; z-index: 1; display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: var(--p-fundo); border-bottom: 1px solid color-mix(in srgb, var(--p-texto) 10%, transparent); font-size: .82rem; }
+.previa-logo { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--p-cor); color: var(--p-fundo); font: 800 .64rem "Space Grotesk", Arial, sans-serif; }
+.previa-topo b { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.previa-menu { color: var(--p-suave); }
+.previa-hero { padding: 22px 16px 18px; background: radial-gradient(circle at 85% 0%, color-mix(in srgb, var(--p-cor) 35%, transparent), transparent 60%); }
+.previa-hero h4 { margin: 0 0 6px; font-size: 1.25rem; line-height: 1.15; letter-spacing: -.02em; }
+.previa-hero p { margin: 0 0 14px; color: var(--p-suave); font-size: .78rem; }
+.previa-botao { width: 100%; padding: 10px; border: 0; border-radius: 10px; background: var(--p-cor); color: var(--p-fundo); font: 700 .82rem "Space Grotesk", Arial, sans-serif; cursor: var(--cursor-mao); }
+.previa-secao { padding: 12px 16px; }
+.previa-secao h5 { margin: 0 0 8px; color: var(--p-cor); font: 700 .7rem "DM Mono", monospace; letter-spacing: .12em; text-transform: uppercase; }
+.previa-item { display: flex; justify-content: space-between; gap: 10px; padding: 8px 0; border-bottom: 1px dashed color-mix(in srgb, var(--p-texto) 14%, transparent); font-size: .8rem; }
+.previa-item b { color: var(--p-cor); white-space: nowrap; }
+.previa-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.previa-chips button { padding: 5px 10px; border: 1px solid color-mix(in srgb, var(--p-cor) 60%, transparent); border-radius: 999px; background: transparent; color: var(--p-texto); font: 600 .72rem "Space Grotesk", Arial, sans-serif; cursor: var(--cursor-mao); }
+.previa-rodape { padding: 14px 16px 60px; color: var(--p-suave); font-size: .7rem; }
+.previa-whats { position: sticky; bottom: 10px; left: 100%; display: grid; place-items: center; width: 42px; height: 42px; margin: -52px 10px 10px auto; border-radius: 50%; background: #25d366; font-size: 1.1rem; box-shadow: 0 6px 16px rgba(0,0,0,.4); cursor: var(--cursor-mao); }
+.previa-site .apertou { animation: previa-aperta .3s ease; }
+@keyframes previa-aperta { 50% { transform: scale(.94); filter: brightness(1.2); } }
+.previa-aviso { position: absolute; left: 18px; right: 18px; bottom: 26px; z-index: 2; margin: 0; padding: 8px 10px; border-radius: 10px; background: rgba(10,10,10,.92); color: #ffffff; font: 600 .72rem "Space Grotesk", Arial, sans-serif; text-align: center; opacity: 0; transform: translateY(6px); transition: opacity .2s ease, transform .2s ease; pointer-events: none; }
+.previa-aviso.visivel { opacity: 1; transform: none; }
+.previa-lado { display: flex; flex-direction: column; gap: 12px; padding-top: 10px; }
+.previa-lado p { margin: 0; color: var(--muted); font-size: .92rem; line-height: 1.55; }
+.previa-lado .previa-titulo { color: var(--text); font: 700 clamp(1.2rem, 2.4vw, 1.5rem)/1.2 "Space Grotesk", Arial, sans-serif; }
+.previa-lado .previa-titulo b { color: var(--acento-texto); }
+.previa-quero { align-self: flex-start; }
+.previa-mandar { align-self: flex-start; padding: 6px 0; border: 0; background: none; color: var(--muted); font: 500 .84rem "Space Grotesk", Arial, sans-serif; text-decoration: underline; text-underline-offset: 3px; cursor: var(--cursor-mao); }
+@media (hover: hover) { .previa-mandar:hover { color: var(--acento-texto); } }
+@media (max-width: 720px) {
+    .previa { grid-template-columns: minmax(0, 1fr); justify-items: center; padding: 16px 14px 20px; }
+    .previa-ramos { justify-content: center; }
+    .previa-lado { align-items: stretch; text-align: left; }
+    .previa-quero, .previa-mandar { align-self: stretch; text-align: center; }
+    .previa-site { height: 380px; }
+}
+@media (prefers-reduced-motion: reduce) { .previa-celular, .link-convite, .previa-site .apertou { animation: none; } }

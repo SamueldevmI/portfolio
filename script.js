@@ -5,6 +5,44 @@ document.documentElement.classList.remove("dark-mode");
 
 document.getElementById("ano").textContent = new Date().getFullYear();
 
+/* Link personalizado de prospecção: ?para=Pizzaria do João&ramo=pizzaria (&previa=1 abre a prévia do site).
+   Gerado em prospeccao.html. O nome e o ramo vão pro comparador, pra calculadora e pras demos (ficam
+   guardados como se a pessoa tivesse digitado), a saudação do topo chama pelo nome e aparece um convite pra
+   ver a prévia do site dela. O nome só entra na página como texto (nunca como HTML). */
+const LINK_PERSONALIZADO = (function () {
+    const p = new URLSearchParams(location.search);
+    const para = (p.get("para") || "").replace(/\s+/g, " ").trim().slice(0, 40);
+    const RAMOS = { pizzaria: "pizzaria", barbearia: "barbearia", loja: "loja de roupa", "loja de roupa": "loja de roupa", salao: "salão", "salão": "salão", academia: "academia", clinica: "clínica", "clínica": "clínica" };
+    const ramo = RAMOS[(p.get("ramo") || "").trim().toLowerCase()] || "";
+    if (!para && !ramo) return null;
+    try {
+        if (para) localStorage.setItem("portfolio-nome-negocio", para);
+        if (ramo) localStorage.setItem("portfolio-tipo-negocio", ramo);
+    } catch (e) { /* sem armazenamento: vale só nesta visita */ }
+    const campoProjetos = document.getElementById("nomeNegocio");
+    if (campoProjetos && para) campoProjetos.value = para;
+    if (para) {
+        // "Olá! Me chamo…" vira "Olá, Pizzaria do João! Me chamo…" (o acabamento.js depois troca o "Olá" por "Bom dia")
+        const linha = document.querySelector(".hero-ola");
+        const texto = linha && linha.firstChild;
+        if (texto && texto.nodeType === Node.TEXT_NODE) texto.textContent = texto.textContent.replace("Olá!", `Olá, ${para}!`);
+        document.title = `${para} × Samuel Mickael | Sites e sistemas`;
+        // convite logo acima da saudação
+        const convite = document.createElement("p");
+        convite.className = "link-convite";
+        const oi = document.createElement("span");
+        oi.append("👋 Preparei essa página pra ");
+        const b = document.createElement("b"); b.textContent = para; oi.append(b, ".");
+        const ver = document.createElement("button");
+        ver.type = "button";
+        ver.textContent = "ver como ficaria o seu site →";
+        ver.addEventListener("click", () => window.abrirPreviaSite && window.abrirPreviaSite(ramo || undefined, para));
+        convite.append(oi, ver);
+        linha?.before(convite);
+    }
+    return { para, ramo, previa: p.get("previa") === "1" };
+})();
+
 /* ---------- Ícones próprios (em vez de emoji nativo, que muda de cara em cada aparelho) ----------
    Cada um é um <path> só, no mesmo traço fino das tech badges (.ic-linha): assim o mesmo desenho
    serve tanto pra HTML (svgIcone) quanto pra dentro do <canvas> do cartão-resumo (mobile.js lê
@@ -343,7 +381,10 @@ document.querySelectorAll(".botao").forEach((botao) => {
         }
     }
 
+    const botaoPrevia = $(".cmp-previa");
+    botaoPrevia?.addEventListener("click", () => { pararAuto(); window.abrirPreviaSite && window.abrirPreviaSite(tipo, nome()); });
     function acertarRodape(c) {
+        if (botaoPrevia) botaoPrevia.querySelector("b").textContent = nome() || NEGOCIOS[tipo].exemplo;
         querer.textContent = c.cta;
         querer.dataset.orcamentoTipo = c.tipoOrc;
         querer.dataset.orcamentoRef = `${nome() || tipo} — ${c.cta.replace(" →", "")}`.slice(0, 80);
@@ -1213,7 +1254,7 @@ if (paletaOverlay) {
     document.body.append(impresso);
 
     // Links com ?origem=instagram e ?tipo=app (só valores conhecidos entram na mensagem)
-    const ORIGENS = { instagram: "Instagram", whatsapp: "WhatsApp", linkedin: "LinkedIn", github: "GitHub", facebook: "Facebook", google: "Google" };
+    const ORIGENS = { link: "link que você me mandou", instagram: "Instagram", whatsapp: "WhatsApp", linkedin: "LinkedIn", github: "GitHub", facebook: "Facebook", google: "Google" };
     const PARAMETROS = new URLSearchParams(location.search);
     const ORIGEM = ORIGENS[(PARAMETROS.get("origem") || "").toLowerCase()] || "";
 
@@ -1829,4 +1870,131 @@ if (paletaOverlay) {
         nova.onerror = () => { nova.remove(); trocando = false; mostrarToast("Não deu pra trocar o tema agora. Tente de novo."); };
         atual.after(nova);
     });
+})();
+
+/* ---------- Prévia do site do cliente ----------
+   "Veja como ficaria o SEU site": um celular com um mini-site montado na hora, com o nome do negócio e
+   o conteúdo do ramo (cardápio, serviços, produtos, planos...). As cores ficam aqui no JS de propósito:
+   são as do ramo do cliente, não as do tema do portfólio (o gerador do tema azul não mexe nelas).
+   Abre pelo comparador, pelo convite do link personalizado ou direto com ?previa=1. */
+(function previaDoSite() {
+    const RAMOS = {
+        pizzaria: { rotulo: "pizzaria", exemplo: "Sua Pizzaria", cor: "#e4572e", fundo: "#1c1311", texto: "#fff4ee", suave: "#c9a99c",
+            chamada: "A pizza que chega quentinha 🍕", sub: "Forno a lenha · entrega em Campo Grande", secao: "Cardápio",
+            itens: [["Calabresa", "R$ 45"], ["Frango com catupiry", "R$ 49"], ["Portuguesa", "R$ 52"]],
+            info: "Ter a dom · 18h às 23h30", chips: ["Borda recheada", "Entrega grátis até 5 km"], botao: "Pedir pelo WhatsApp" },
+        barbearia: { rotulo: "barbearia", exemplo: "Sua Barbearia", cor: "#c8a15a", fundo: "#121212", texto: "#f5efe3", suave: "#a39a88",
+            chamada: "Corte na régua, sem fila ✂️", sub: "Escolha o horário em 2 toques", secao: "Serviços",
+            itens: [["Corte", "R$ 35"], ["Barba", "R$ 25"], ["Corte + barba", "R$ 55"]],
+            info: "Horários livres hoje", chips: ["16h30", "18h", "19h30"], botao: "Agendar horário" },
+        "loja de roupa": { rotulo: "loja", exemplo: "Sua Loja", cor: "#ff5c8a", fundo: "#141014", texto: "#fdf0f4", suave: "#b89aa4",
+            chamada: "Nova coleção chegou 🖤", sub: "Enviamos pra todo o MS", secao: "Destaques",
+            itens: [["Vestido midi", "R$ 129"], ["Moletom oversized", "R$ 189"], ["Boné bordado", "R$ 79"]],
+            info: "Tamanhos", chips: ["P", "M", "G", "GG"], botao: "Comprar pelo WhatsApp" },
+        "salão": { rotulo: "salão", exemplo: "Seu Salão", cor: "#e58fb4", fundo: "#1a1216", texto: "#fdeff5", suave: "#bf9fae",
+            chamada: "Seu cabelo do jeito que você sonhou ✨", sub: "Agende sem precisar mandar mensagem", secao: "Serviços",
+            itens: [["Escova", "R$ 50"], ["Progressiva", "a partir de R$ 180"], ["Unhas", "R$ 35"]],
+            info: "Horários livres amanhã", chips: ["10h", "14h", "16h"], botao: "Agendar horário" },
+        academia: { rotulo: "academia", exemplo: "Sua Academia", cor: "#f5c518", fundo: "#0f0f0f", texto: "#fbf7e6", suave: "#a8a28a",
+            chamada: "Bora treinar? 💪", sub: "Aula experimental grátis", secao: "Planos",
+            itens: [["Mensal", "R$ 99"], ["Trimestral", "R$ 89/mês"], ["Anual", "R$ 79/mês"]],
+            info: "Seg a sex 5h às 23h · sáb e dom 8h às 12h", chips: ["Musculação", "Funcional", "Spinning"], botao: "Agendar aula experimental" },
+        "clínica": { rotulo: "clínica", exemplo: "Sua Clínica", cor: "#1f9e8f", fundo: "#f3faf9", texto: "#12302c", suave: "#5b7a76",
+            chamada: "Cuidado de verdade, perto de você 🩺", sub: "Agende sua consulta online", secao: "Especialidades",
+            itens: [["Clínico geral", "seg a sex"], ["Pediatria", "ter e qui"], ["Dermatologia", "qua"]],
+            info: "Convênios", chips: ["Unimed", "Bradesco Saúde", "Particular"], botao: "Agendar consulta" },
+    };
+    const esc = (t) => String(t).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    const endereco = (nome) => (nome.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "") || "seunegocio") + ".com.br";
+    const iniciais = (nome) => nome.split(/\s+/).filter((p) => p.length > 2 || /^[A-Z]/.test(p)).slice(0, 2).map((p) => p[0]).join("").toUpperCase() || nome[0].toUpperCase();
+    const ler = (k) => { try { return localStorage.getItem(k) || ""; } catch (e) { return ""; } };
+
+    function montar(ramo, nome) {
+        const r = RAMOS[ramo];
+        const marca = nome || r.exemplo;
+        return `
+            <div class="previa">
+                <div class="previa-ramos" role="group" aria-label="Trocar o ramo da prévia">${Object.keys(RAMOS).map((k) => `<button type="button" data-ramo="${esc(k)}" aria-pressed="${k === ramo}">${esc(RAMOS[k].rotulo)}</button>`).join("")}</div>
+                <div class="previa-celular" style="--p-cor:${r.cor};--p-fundo:${r.fundo};--p-texto:${r.texto};--p-suave:${r.suave}">
+                    <div class="previa-status"><span>9:41</span><span>📶 🔋</span></div>
+                    <div class="previa-url">🔒 ${esc(endereco(marca))}</div>
+                    <div class="previa-site">
+                        <header class="previa-topo"><span class="previa-logo">${esc(iniciais(marca))}</span><b>${esc(marca)}</b><span class="previa-menu">☰</span></header>
+                        <section class="previa-hero"><h4>${esc(r.chamada)}</h4><p>${esc(r.sub)}</p><button type="button" class="previa-botao">${esc(r.botao)}</button></section>
+                        <section class="previa-secao"><h5>${esc(r.secao)}</h5>${r.itens.map(([n, v]) => `<div class="previa-item"><span>${esc(n)}</span><b>${esc(v)}</b></div>`).join("")}</section>
+                        <section class="previa-secao"><h5>${esc(r.info)}</h5><div class="previa-chips">${r.chips.map((c) => `<button type="button">${esc(c)}</button>`).join("")}</div></section>
+                        <footer class="previa-rodape">📍 Campo Grande - MS · ⭐ 4,9 no Google</footer>
+                        <a class="previa-whats" aria-hidden="true">💬</a>
+                    </div>
+                    <p class="previa-aviso" role="status"></p>
+                </div>
+                <div class="previa-lado">
+                    <p class="previa-titulo">Esse poderia ser o site da <b>${esc(marca)}</b>.</p>
+                    <p>Isso é uma prévia rápida. O seu vem com a sua cara: suas fotos, seus preços, seu jeito de falar. Funciona no celular, aparece no Google e o botão cai direto no seu WhatsApp.</p>
+                    <button type="button" class="botao botao-principal previa-quero" data-orcamento-tipo="site" data-orcamento-ref="${esc(`Prévia do site: ${marca} (${r.rotulo})`.slice(0, 80))}">quero esse site →</button>
+                    <button type="button" class="previa-mandar">mandar essa prévia pro sócio 📲</button>
+                </div>
+            </div>`;
+    }
+
+    function abrir(ramo, nome) {
+        ramo = RAMOS[ramo] ? ramo : (RAMOS[ler("portfolio-tipo-negocio")] ? ler("portfolio-tipo-negocio") : "pizzaria");
+        nome = (nome ?? ler("portfolio-nome-negocio")).trim().slice(0, 40);
+        const marca = nome || RAMOS[ramo].exemplo;
+        abrirModal(`👀 Prévia: o site da ${marca}`, montar(ramo, nome));
+        document.querySelector(".modal-caixa")?.classList.add("modal-previa");
+        const raiz = modalCorpo.querySelector(".previa");
+        const aviso = raiz.querySelector(".previa-aviso");
+        let tempoAviso = 0;
+        // tocar em qualquer coisa do mini-site mostra o que aconteceria no site de verdade
+        raiz.querySelector(".previa-site").addEventListener("click", (e) => {
+            const alvo = e.target.closest("button, .previa-whats");
+            if (!alvo) return;
+            alvo.classList.remove("apertou"); void alvo.offsetWidth; alvo.classList.add("apertou");
+            aviso.textContent = alvo.closest(".previa-chips") ? "✓ no site de verdade, isso já marca/escolhe sozinho" : `✓ no site de verdade, isso abre o WhatsApp da ${marca}`;
+            aviso.classList.add("visivel");
+            clearTimeout(tempoAviso); tempoAviso = setTimeout(() => aviso.classList.remove("visivel"), 2200);
+            if (window.musicaSite && window.musicaSite.pode()) window.musicaSite.curtir();
+        });
+        raiz.querySelectorAll(".previa-ramos button").forEach((b) => b.addEventListener("click", () => abrir(b.dataset.ramo, nome)));
+        // "quero esse site": fecha a prévia e só DEPOIS manda pro orçamento. Fechar o modal devolve a entrada do
+        // histórico (acabamento.js, botão voltar do celular) e o navegador restaura a posição antiga da página,
+        // o que desfazia a rolagem até o formulário; por isso espera esse "voltar" terminar.
+        const quero = raiz.querySelector(".previa-quero");
+        quero.addEventListener("click", (e) => {
+            e.stopPropagation();
+            const gatilho = document.createElement("button");
+            gatilho.type = "button"; gatilho.hidden = true;
+            gatilho.dataset.orcamentoTipo = quero.dataset.orcamentoTipo;
+            gatilho.dataset.orcamentoRef = quero.dataset.orcamentoRef;
+            focoAntesDoModal = null;
+            let foi = false;
+            const seguir = () => { if (foi) return; foi = true; document.body.append(gatilho); gatilho.click(); gatilho.remove(); };
+            window.addEventListener("popstate", () => setTimeout(seguir, 30), { once: true });
+            setTimeout(seguir, 450); // se não houver "voltar" nenhum
+            fecharModal();
+        });
+        raiz.querySelector(".previa-mandar").addEventListener("click", async () => {
+            const url = new URL(location.href.split("?")[0].split("#")[0]);
+            if (nome) url.searchParams.set("para", nome);
+            url.searchParams.set("ramo", ramo);
+            url.searchParams.set("previa", "1");
+            const texto = `Olha como ficaria o site da ${marca}: ${url.toString()}`;
+            try {
+                if (navigator.share) await navigator.share({ title: `Prévia: o site da ${marca}`, text: texto });
+                else { await navigator.clipboard.writeText(texto); mostrarToast("Link da prévia copiado! É só colar no WhatsApp."); }
+            } catch (e) { /* a pessoa cancelou o compartilhamento */ }
+        });
+    }
+    window.abrirPreviaSite = abrir;
+
+    // o modal é compartilhado com as demos: tira a marca da prévia quando fecha
+    modalOverlay?.addEventListener("click", () => { if (modalOverlay.hidden) document.querySelector(".modal-caixa")?.classList.remove("modal-previa"); });
+    new MutationObserver(() => { if (modalOverlay.hidden) document.querySelector(".modal-caixa")?.classList.remove("modal-previa"); }).observe(modalOverlay, { attributes: true, attributeFilter: ["hidden"] });
+
+    // link personalizado com &previa=1: abre sozinha depois que a página aparece
+    if (typeof LINK_PERSONALIZADO !== "undefined" && LINK_PERSONALIZADO && LINK_PERSONALIZADO.previa) {
+        const abrirDepois = () => setTimeout(() => abrir(LINK_PERSONALIZADO.ramo || undefined, LINK_PERSONALIZADO.para), 900);
+        if (document.readyState === "complete") abrirDepois(); else window.addEventListener("load", abrirDepois, { once: true });
+    }
 })();
