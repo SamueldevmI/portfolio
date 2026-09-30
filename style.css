@@ -1582,16 +1582,17 @@ html.sem-animacoes, html.sem-animacoes *, html.sem-animacoes *::before, html.sem
 @media (min-width: 1200px) {
     .hero-conteudo h1 { max-width: 700px; }
     .hero-telas { display: block; position: absolute; z-index: 0; right: calc(3% + var(--parallax-x, 0px) * .6); top: calc(118px + var(--parallax, 0px) * .6); width: 440px; height: 400px; pointer-events: none; }
-    .ht { position: absolute; margin: 0; overflow: hidden; border: 1px solid rgba(var(--cyan-rgb), .3); border-radius: 12px; background: #181818; box-shadow: 0 30px 60px -24px rgba(0,0,0,.8); }
+    .ht { position: absolute; margin: 0; overflow: hidden; border: 1px solid rgba(var(--cyan-rgb), .35); border-radius: 12px; background: #181818; box-shadow: 0 30px 60px -24px rgba(0,0,0,.8), 0 0 34px -8px rgba(var(--cyan-rgb), .3); }
     .ht img { display: block; width: 100%; height: auto; }
     .ht-barra { display: flex; gap: 5px; padding: 7px 10px; border-bottom: 1px solid rgba(255,255,255,.08); background: rgba(255,255,255,.04); }
     .ht-barra i { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,.25); }
     .ht-a { right: 0; top: 0; width: 360px; }
     .ht-b { left: 0; top: 170px; width: 310px; }
-    .ht-cel { position: absolute; right: 12px; top: 150px; width: 108px; overflow: hidden; border: 4px solid #232323; border-radius: 20px; box-shadow: 0 30px 60px -12px rgba(0,0,0,.9); }
+    .ht-cel { position: absolute; right: 12px; top: 150px; width: 108px; overflow: hidden; border: 4px solid #232323; border-radius: 20px; box-shadow: 0 30px 60px -12px rgba(0,0,0,.9), 0 0 30px -6px rgba(var(--cyan-rgb), .35); }
     .ht-cel img { display: block; width: 100%; height: auto; }
     /* a foto fica menor, sobreposta no canto de baixo da colagem */
-    .hero-foto-anel { z-index: 2; width: 128px; height: 128px; top: calc(118px + 316px + var(--parallax, 0px)); right: calc(3% + 340px + var(--parallax-x, 0px)); }
+    /* a foto fica menor, abaixo de toda a colagem, num respiro próprio (sem cobrir nenhuma tela) */
+    .hero-foto-anel { z-index: 2; width: 128px; height: 128px; top: calc(118px + 424px + var(--parallax, 0px)); right: calc(3% + var(--parallax-x, 0px)); }
 }
 
 /* A bolha de brilho da Jornada ficava 70px pra fora e fazia a página rolar pro lado em telas de 1000 a ~1340px */
