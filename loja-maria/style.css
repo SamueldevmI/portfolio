@@ -480,3 +480,7 @@ dialog::backdrop { background: rgba(15, 9, 24, .78); -webkit-backdrop-filter: bl
     *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
     .brilhos, .olhos-noite { display: none; }
 }
+
+/* Os itens da grade de dúvidas podem encolher com a tela: sem isso a tabela de medidas (que já tem rolagem
+   própria) esticava a coluna e a página inteira ficava ~392px, arrastando pro lado nos celulares menores. */
+.duvidas-in > * { min-width: 0; }
