@@ -46,7 +46,7 @@
             return { soma: soma, ativos: ativos, atual: atual, recorde: recorde };
         }
 
-        function desenhar(todos, somaAno) {
+        function desenhar(todos, somaAno, provisorio) {
             const dias = janelaRecente(todos);
             const n = numeros(dias);
             const semanas = Math.round(dias.length / 7);
@@ -67,7 +67,7 @@
                 celula.className = "gh-dia";
                 celula.dataset.n = d.level;
                 const dia = data.toLocaleDateString("pt-BR", { day: "numeric", month: "long", year: "numeric" });
-                celula.title = (d.count === 0 ? "Nenhuma contribuição" : d.count + (d.count === 1 ? " contribuição" : " contribuições")) + " em " + dia;
+                if (!provisorio) celula.title = (d.count === 0 ? "Nenhuma contribuição" : d.count + (d.count === 1 ? " contribuição" : " contribuições")) + " em " + dia;
                 if (i === 0) celula.style.gridRowStart = primeiro + 1;
                 grade.appendChild(celula);
 
@@ -99,10 +99,12 @@
 
             const painel = document.createElement("div");
             painel.className = "gh-numeros";
+            // no esqueleto os números são "00" transparentes com brilho: ocupam o mesmo lugar que os de verdade
+            const num = function (v) { return provisorio ? "<b class='esqueleto-valor'>00</b>" : "<b>" + v + "</b>"; };
             painel.innerHTML =
-                "<div><b>" + n.soma + "</b><span>contribuições em " + semanas + " semanas</span></div>" +
-                "<div><b>" + n.ativos + "</b><span>dias com atividade</span></div>" +
-                "<div><b>" + n.atual + "</b><span>" + (n.atual === 1 ? "dia seguido" : "dias seguidos") + " (recorde " + n.recorde + ")</span></div>";
+                "<div>" + num(n.soma) + "<span>contribuições em " + semanas + " semanas</span></div>" +
+                "<div>" + num(n.ativos) + "<span>dias com atividade</span></div>" +
+                "<div>" + num(n.atual) + "<span>" + (n.atual === 1 ? "dia seguido" : "dias seguidos") + " (recorde " + (provisorio ? "<span class='esqueleto-valor'>00</span>" : n.recorde) + ")</span></div>";
             const mapa = document.createElement("div");
             mapa.className = "gh-mapa";
             mapa.appendChild(rolagem);
@@ -113,21 +115,42 @@
             corpo.appendChild(mapa);
 
             desenho.textContent = "";
+            desenho.classList.toggle("gh-provisorio", !!provisorio);
             desenho.setAttribute("role", "img");
-            desenho.setAttribute("aria-label", "Contribuições no GitHub de " + USUARIO + " nas últimas " + semanas + " semanas: " + n.soma + " em " + n.ativos + " dias com atividade");
+            desenho.setAttribute("aria-label", provisorio ? "Carregando a atividade no GitHub de " + USUARIO : "Contribuições no GitHub de " + USUARIO + " nas últimas " + semanas + " semanas: " + n.soma + " em " + n.ativos + " dias com atividade");
+            desenho.setAttribute("aria-busy", provisorio ? "true" : "false");
             desenho.appendChild(corpo);
             desenho.hidden = false;
             if (imagemAntiga) imagemAntiga.hidden = true;
             if (total) {
-                total.innerHTML = "<b>" + somaAno + "</b> contribuições no último ano";
+                total.innerHTML = (provisorio ? "<b class='esqueleto-valor'>000</b>" : "<b>" + somaAno + "</b>") + " contribuições no último ano";
                 total.hidden = false;
             }
             ajustar();
             rolagem.scrollLeft = rolagem.scrollWidth; // no celular começa pelo mais recente
         }
 
+        /* Esqueleto: a mesma grade (mesmas semanas, mesmos meses) já na abertura, sem os números, pra o quadro
+           nascer com a altura final. Antes ele começava vazio e crescia ~300px quando os dados chegavam: quem
+           clicava em "Projetos" no menu parava centenas de pixels depois do lugar certo.
+           Quantas semanas aparecem depende do primeiro dia com atividade (janelaRecente), por isso a data aqui. */
+        const PRIMEIRA_ATIVIDADE = "2026-08-05";
+        function esqueleto() {
+            const dois = function (x) { return String(x).padStart(2, "0"); };
+            const hoje = new Date();
+            const dias = [];
+            for (let i = 364; i >= 0; i--) {
+                const d = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate() - i, 12);
+                const data = d.getFullYear() + "-" + dois(d.getMonth() + 1) + "-" + dois(d.getDate());
+                dias.push({ date: data, count: data >= PRIMEIRA_ATIVIDADE ? 1 : 0, level: 0 });
+            }
+            desenhar(dias, 0, true);
+        }
+
         function mostrarImagemReserva() {
             // O gráfico novo não veio (sem rede, serviço fora do ar): só agora baixa a imagem de antes.
+            desenho.hidden = true;
+            if (total) total.hidden = true;
             if (imagemAntiga && imagemAntiga.dataset.src && !imagemAntiga.getAttribute("src")) {
                 // Se a reserva também falhar, esconde o quadro inteiro em vez de mostrar imagem quebrada.
                 imagemAntiga.addEventListener("error", function () { desenho.parentElement.style.display = "none"; }, { once: true });
@@ -147,6 +170,8 @@
                 })
                 .catch(mostrarImagemReserva);
         }
+
+        esqueleto();
 
         // Só busca quando o gráfico está perto de aparecer: no celular poupa uma conexão e dados na abertura da página.
         const caixa = desenho.parentElement;

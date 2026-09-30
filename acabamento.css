@@ -1591,3 +1591,9 @@ h1 span { text-shadow: none; }
 .hero-convite span { display: inline-block; color: var(--cyan); transition: transform .25s ease; }
 @media (hover: hover) { .hero-convite:hover { background: rgba(var(--cyan-rgb), .18); border-color: var(--cyan); } .hero-convite:hover span { transform: translateX(3px); } }
 #demo-com-seu-nome { scroll-margin-top: 96px; }
+
+/* ---------- Quadro do GitHub carregando (acabamento.js): mesma grade, quadradinhos piscando de leve ---------- */
+.gh-provisorio .gh-dia { animation: gh-carregando 1.2s ease-in-out infinite alternate; }
+.gh-provisorio .gh-dia:hover { transform: none; box-shadow: none; }
+@keyframes gh-carregando { from { opacity: .45; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .gh-provisorio .gh-dia { animation: none; opacity: .6; } }
