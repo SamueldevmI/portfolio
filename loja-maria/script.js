@@ -1,10 +1,11 @@
 "use strict";
 
-/* ===== Configuração da loja: troque aqui quando a Maria mandar os dados dela ===== */
+/* ===== Configuração da loja ===== */
 const LOJA = {
     nome: "Eclipse Studio",
-    whatsapp: "", // só números: 55 + DDD + número. Vazio = o WhatsApp abre pra escolher o contato
-    demo: true,   // true = a mensagem avisa que é um pedido de teste
+    whatsapp: "5567999750866", // só números: 55 + DDD + número
+    freteGratis: 15000,        // em centavos: frete grátis a partir de R$ 150
+    demo: true,                // true = a mensagem avisa que é pedido de teste; vira false quando a vitrine tiver as peças reais
 };
 
 /* Prévia com outro nome: loja-maria/?nome=Outro Nome */
@@ -150,18 +151,48 @@ Object.assign(ARTE, {
 
 /* Com foto de verdade, ela entra no lugar da ilustração: ponha o arquivo em loja-maria/fotos/
    e escreva na peça foto: "fotos/nome-do-arquivo.webp" (e, se quiser, pos: "50% 30%" pra enquadrar) */
+Object.assign(ARTE, {
+    camiseta: `<path class="p" d="M36 18L23 23L11 37L21 47L30 41V86H70V41L79 47L89 37L77 23L64 18Q50 29 36 18Z"/>`
+        + `<path class="n f fl" d="M38 20Q50 30 62 20"/>`
+        + `<circle class="o s" cx="50" cy="56" r="11"/><circle class="p s" cx="53.5" cy="52.5" r="10.5"/>`
+        + brilho(40, 66, .35, "c s") + brilho(62, 68, .25, "r s") + brilho(84, 20, .55, "o s"),
+    perfume: `<rect class="p" x="40" y="14" width="20" height="16" rx="3"/>`
+        + `<rect class="o" x="44" y="29" width="12" height="9"/>`
+        + `<rect class="l" x="27" y="37" width="46" height="50" rx="10"/>`
+        + `<rect class="c" x="36" y="50" width="28" height="24" rx="4"/>`
+        + `<path class="r" transform="translate(50 62) scale(.55)" d="${CORACAO}"/>`
+        + `<path class="n f" d="M33 44Q31 60 33 78" stroke="#fff4fb"/>` + brilho(80, 26, .6, "o s") + brilho(18, 70, .4),
+});
+
 const arte = (p, classe = "") => p.foto
     ? `<img class="foto ${classe}" src="${p.foto}" alt="" width="400" height="400" loading="lazy" decoding="async" style="object-position:${p.pos || "50% 50%"}">`
     : `<svg class="arte ${classe}" viewBox="0 0 100 100" aria-hidden="true" focusable="false">${ARTE[p.arte]}</svg>`;
 
-/* ===== Catálogo (preço em centavos). Tudo provisório até a Maria mandar as peças dela ===== */
+/* ===== Catálogo (preço em centavos; preco: null = "sob consulta") =====
+   Camisetas e perfumes são da Eclipse; o resto ainda é peça de exemplo até chegarem as fotos.
+   Quase tudo é tamanho único (tam: null). Se uma peça tiver tamanhos, use tam: ROUPA. */
 const ROUPA = ["PP", "P", "M", "G", "GG"];
-const CALCADO = ["34", "35", "36", "37", "38", "39", "40"];
-const CATEGORIAS = ["Roupas", "Joias", "Meias e calçados", "Acessórios"];
+const CATEGORIAS = ["Roupas", "Joias e bijuterias", "Bolsas", "Maquiagem e perfumes"];
 
 const PRODUTOS = [
     {
-        id: "espartilho", nome: "Espartilho Rosa Seca", cat: "Roupas", preco: 18990, tam: ROUPA, arte: "espartilho", tom: "l", novo: true,
+        id: "camiseta", nome: "Camiseta Estampada", cat: "Roupas", preco: 3000, tam: null, arte: "camiseta", tom: "m", novo: true,
+        alt: "Ilustração de camiseta preta com estampa de eclipse dourado e estrelinhas",
+        resumo: "Estampas sortidas · tamanho único",
+        desc: "Camisetas com estampas alternativas sortidas. Cada uma é diferente: pergunte no WhatsApp quais estampas estão disponíveis, ou escreva na observação do pedido a que você quer.",
+        itens: ["Estampas sortidas", "Tamanho único", "Pergunte as estampas disponíveis", "Pode encomendar"],
+        busca: "camiseta blusa tshirt estampa estampada",
+    },
+    {
+        id: "perfume", nome: "Perfumes", cat: "Maquiagem e perfumes", preco: null, tam: null, arte: "perfume", tom: "r", novo: true,
+        alt: "Ilustração de frasco de perfume lilás com tampa preta e coração rosa no rótulo",
+        resumo: "Fragrâncias variadas",
+        desc: "Perfumes variados. As fragrâncias e os preços mudam conforme o estoque: ponha na sacola e a gente te conta no WhatsApp quais tem agora.",
+        itens: ["Fragrâncias variadas", "Preço conforme a fragrância", "Consulte o estoque no WhatsApp"],
+        busca: "perfume fragrancia cheiro colonia",
+    },
+    {
+        id: "espartilho", nome: "Espartilho Rosa Seca", cat: "Roupas", preco: 18990, tam: null, arte: "espartilho", tom: "l", novo: true,
         alt: "Ilustração de espartilho rosa com amarração no meio e renda no decote",
         resumo: "Amarração · renda no decote",
         desc: "Espartilho vitoriano em rosa seca, com amarração na frente que ajusta a cintura e renda creme no decote. Vai por cima de blusa ou sozinho.",
@@ -169,7 +200,7 @@ const PRODUTOS = [
         busca: "corset corpete espartilho vitoriano rosa",
     },
     {
-        id: "saia", nome: "Saia de Renda Midnight", cat: "Roupas", preco: 12990, tam: ROUPA, arte: "saia", tom: "r",
+        id: "saia", nome: "Saia de Renda Midnight", cat: "Roupas", preco: 12990, tam: null, arte: "saia", tom: "r",
         alt: "Ilustração de saia lilás rodada com barra dupla de renda creme e preta",
         resumo: "Rodada · barra dupla de renda",
         desc: "Saia rodada lilás com cós alto e duas camadas de renda na barra, uma creme e uma preta. Gira bonito e fica ótima com meia listrada.",
@@ -177,7 +208,7 @@ const PRODUTOS = [
         busca: "saia renda rodada lilas midi",
     },
     {
-        id: "vestido", nome: "Vestido Boneca Lilás", cat: "Roupas", preco: 21990, tam: ROUPA, arte: "vestido", tom: "m",
+        id: "vestido", nome: "Vestido Boneca Lilás", cat: "Roupas", preco: 21990, tam: null, arte: "vestido", tom: "m",
         alt: "Ilustração de vestido lilás com manga bufante, gola boneca creme e laço preto na cintura",
         resumo: "Manga bufante · gola boneca",
         desc: "Vestido lilás de manga bufante, gola boneca creme e laço preto marcando a cintura. Doce na medida, com barra de renda.",
@@ -185,7 +216,7 @@ const PRODUTOS = [
         busca: "vestido boneca lolita lilas manga bufante",
     },
     {
-        id: "blusa", nome: "Blusa Vitoriana Creme", cat: "Roupas", preco: 11990, tam: ROUPA, arte: "blusa", tom: "l",
+        id: "blusa", nome: "Blusa Vitoriana Creme", cat: "Roupas", preco: 11990, tam: null, arte: "blusa", tom: "l",
         alt: "Ilustração de blusa creme de manga bufante com gola alta de babado e fita preta",
         resumo: "Gola alta · manga bufante",
         desc: "Blusa creme de gola alta com babado lilás, fita preta no pescoço e manga bufante com punho de renda. Base perfeita pro espartilho.",
@@ -193,7 +224,7 @@ const PRODUTOS = [
         busca: "blusa camisa vitoriana gola alta manga bufante creme",
     },
     {
-        id: "capa", nome: "Capa de Veludo Lua Cheia", cat: "Roupas", preco: 22990, tam: ["P/M", "G/GG"], arte: "capa", tom: "l", novo: true,
+        id: "capa", nome: "Capa de Veludo Lua Cheia", cat: "Roupas", preco: 22990, tam: null, arte: "capa", tom: "l", novo: true,
         alt: "Ilustração de capa preta de veludo com forro lilás e fecho dourado",
         resumo: "Veludo · forro lilás · fecho dourado",
         desc: "Capa de veludo preto com forro lilás e fecho dourado de correntinha. Por cima de vestido ou de moletom, vira feitiço na hora.",
@@ -201,7 +232,7 @@ const PRODUTOS = [
         busca: "capa manto veludo bruxa preta",
     },
     {
-        id: "choker", nome: "Choker Lua de Renda", cat: "Joias", preco: 3990, tam: null, arte: "choker", tom: "r",
+        id: "choker", nome: "Choker Lua de Renda", cat: "Joias e bijuterias", preco: 3990, tam: null, arte: "choker", tom: "r",
         alt: "Ilustração de choker preto com renda creme e pingente de lua lilás",
         resumo: "Veludo · renda · lua",
         desc: "Choker de veludo preto com renda creme por baixo e um pingente de lua lilás. Fecho ajustável com correntinha extensora.",
@@ -209,7 +240,7 @@ const PRODUTOS = [
         busca: "choker gargantilha colar lua renda veludo",
     },
     {
-        id: "colarCruz", nome: "Colar Cruz Lilás", cat: "Joias", preco: 4990, tam: null, arte: "colarCruz", tom: "m",
+        id: "colarCruz", nome: "Colar Cruz Lilás", cat: "Joias e bijuterias", preco: 4990, tam: null, arte: "colarCruz", tom: "m",
         alt: "Ilustração de colar de bolinhas com pingente de cruz lilás e pedra rosa",
         resumo: "Cruz esmaltada · pedra rosa",
         desc: "Corrente de bolinhas com cruz gótica esmaltada em lilás e uma pedrinha rosa no centro. Comprimento de 45 cm.",
@@ -217,7 +248,7 @@ const PRODUTOS = [
         busca: "colar cruz crucifixo lilas pingente",
     },
     {
-        id: "brincoMorcego", nome: "Brinco Morceguinho", cat: "Joias", preco: 2990, tam: null, arte: "brincoMorcego", tom: "l", novo: true,
+        id: "brincoMorcego", nome: "Brinco Morceguinho", cat: "Joias e bijuterias", preco: 2990, tam: null, arte: "brincoMorcego", tom: "l", novo: true,
         alt: "Ilustração de par de brincos de morceguinho preto com olhos rosa",
         resumo: "Par · olhinhos rosa",
         desc: "Par de brincos de morceguinho preto com olhinhos rosa. Levinhos, dá pra usar o dia inteiro sem pesar a orelha.",
@@ -225,7 +256,7 @@ const PRODUTOS = [
         busca: "brinco morcego bat par",
     },
     {
-        id: "brincoCruz", nome: "Brinco Argola Cruz", cat: "Joias", preco: 3490, tam: null, arte: "brincoCruz", tom: "r",
+        id: "brincoCruz", nome: "Brinco Argola Cruz", cat: "Joias e bijuterias", preco: 3490, tam: null, arte: "brincoCruz", tom: "r",
         alt: "Ilustração de par de argolas com cruzes pendentes, uma rosa e uma menta",
         resumo: "Par desigual · rosa e menta",
         desc: "Argolinhas com cruzes pendentes, uma rosa e uma menta, de propósito. O par desigual que chama atenção.",
@@ -233,7 +264,7 @@ const PRODUTOS = [
         busca: "brinco argola cruz rosa menta par",
     },
     {
-        id: "anel", nome: "Anel Olho Místico", cat: "Joias", preco: 3990, tam: null, arte: "anel", tom: "m",
+        id: "anel", nome: "Anel Olho Místico", cat: "Joias e bijuterias", preco: 3990, tam: null, arte: "anel", tom: "m",
         alt: "Ilustração de anel lilás com um olho de íris menta e cílios no topo",
         resumo: "Ajustável · olho com cílios",
         desc: "Anel ajustável com um olho de íris menta e cílios de metal. Fofo e esquisito na medida certa.",
@@ -241,7 +272,7 @@ const PRODUTOS = [
         busca: "anel olho mistico ajustavel",
     },
     {
-        id: "colarBola", nome: "Colar Bola de Cristal", cat: "Joias", preco: 5490, tam: null, arte: "colarBola", tom: "l",
+        id: "colarBola", nome: "Colar Bola de Cristal", cat: "Joias e bijuterias", preco: 5490, tam: null, arte: "colarBola", tom: "l",
         alt: "Ilustração de colar com pingente de bola de cristal com uma lua lilás dentro",
         resumo: "Bola de vidro · lua por dentro",
         desc: "Pingente de bola de vidro com uma luazinha lilás lá dentro e tampinha dourada. Pra ler o futuro de pertinho.",
@@ -249,76 +280,12 @@ const PRODUTOS = [
         busca: "colar bola cristal vidro lua bruxa pingente",
     },
     {
-        id: "meiaListrada", nome: "Meia 7/8 Listrada Menta", cat: "Meias e calçados", preco: 3990, tam: null, arte: "meiaListrada", tom: "r",
-        alt: "Ilustração de meia alta creme com listras menta e renda lilás no topo",
-        resumo: "Acima do joelho · listras menta",
-        desc: "Meia 7/8 creme com listras menta e barrado de renda lilás. Tem silicone por dentro pra não escorregar.",
-        itens: ["Acima do joelho", "Silicone antiderrapante", "Barrado de renda", "Tamanho único (34 ao 40)"],
-        busca: "meia 7/8 listrada menta alta coxa",
-    },
-    {
-        id: "soquete", nome: "Soquete de Babado", cat: "Meias e calçados", preco: 2490, tam: null, arte: "soquete", tom: "l",
-        alt: "Ilustração de meia soquete creme com babado rosa e coraçãozinho preto",
-        resumo: "Babado rosa · coraçãozinho",
-        desc: "Soquete creme de babado rosa com um coraçãozinho preto bordado. Nasceu pra usar com a Mary Jane.",
-        itens: ["Babado duplo", "Coração bordado", "Algodão macio", "Tamanho único (34 ao 40)"],
-        busca: "meia soquete babado rosa coracao",
-    },
-    {
-        id: "maryJane", nome: "Mary Jane Plataforma", cat: "Meias e calçados", preco: 24990, tam: CALCADO, arte: "maryJane", tom: "m",
-        alt: "Ilustração de sapato boneca rosa com plataforma preta, fivela e lacinho",
-        resumo: "Plataforma de 6 cm · fivela",
-        desc: "Sapato boneca rosa com plataforma preta de 6 cm, tira com fivela e lacinho na ponta. Confortável pra andar o dia todo.",
-        itens: ["Plataforma de 6 cm", "Tira com fivela", "Palmilha acolchoada", "Sola antiderrapante"],
-        busca: "sapato boneca mary jane plataforma rosa calcado",
-    },
-    {
-        id: "chapeu", nome: "Chapéu de Bruxa Veludo", cat: "Acessórios", preco: 9990, tam: null, arte: "chapeu", tom: "m", novo: true,
-        alt: "Ilustração de chapéu de bruxa preto com faixa lilás e fivela dourada",
-        resumo: "Ponta torta · fivela dourada",
-        desc: "Chapéu de bruxa de veludo preto, com a ponta caidinha, faixa lilás e fivela dourada. Aba firme que não desmonta.",
-        itens: ["Veludo preto", "Faixa lilás com fivela dourada", "Aba de 12 cm", "Arame na ponta pra moldar"],
-        busca: "chapeu bruxa witch veludo halloween",
-    },
-    {
-        id: "mascara", nome: "Máscara Morcego Vintage", cat: "Acessórios", preco: 6990, tam: null, arte: "mascara", tom: "r",
-        alt: "Ilustração de máscara preta em forma de morcego com asas abertas e haste de segurar",
-        resumo: "Asas abertas · haste de mão",
-        desc: "Máscara de baile em forma de morcego, inspirada nas festas dos anos 40. Vem com haste pra segurar e elástico escondido.",
-        itens: ["Feltro rígido", "Asas com nervuras lilás", "Haste removível", "Elástico ajustável"],
-        busca: "mascara morcego baile vintage halloween",
-    },
-    {
-        id: "tiara", nome: "Tiara de Rosas Negras", cat: "Acessórios", preco: 5990, tam: null, arte: "tiara", tom: "r", novo: true,
-        alt: "Ilustração de tiara com três rosas negras, folhas menta e pérolas",
-        resumo: "3 rosas · folhas menta",
-        desc: "Tiara com três rosas negras, folhinhas menta e pérolas nas pontas. Deixa qualquer look com cara de chá da tarde assombrado.",
-        itens: ["Rosas de tecido", "Folhas menta", "Pérolas nas pontas", "Aro forrado que não aperta"],
-        busca: "tiara rosa negra cabelo arco flores",
-    },
-    {
-        id: "laco", nome: "Laço de Cabelo Lilás", cat: "Acessórios", preco: 2990, tam: null, arte: "laco", tom: "m",
-        alt: "Ilustração de laço grande lilás com nó preto",
-        resumo: "Grande · presilha de metal",
-        desc: "Laço grande lilás com nó preto e presilha de metal. Fica lindo no meio do cabelo ou na ponta da trança.",
-        itens: ["Tecido acetinado", "Presilha de metal", "12 cm de largura", "Nó de veludo preto"],
-        busca: "laco cabelo presilha lilas",
-    },
-    {
-        id: "bolsaCaixao", nome: "Bolsa Caixão", cat: "Acessórios", preco: 14990, tam: null, arte: "bolsaCaixao", tom: "l",
+        id: "bolsaCaixao", nome: "Bolsa Caixão", cat: "Bolsas", preco: 14990, tam: null, arte: "bolsaCaixao", tom: "l",
         alt: "Ilustração de bolsa preta em formato de caixão com cruz lilás e costura rosa",
         resumo: "Formato caixão · alça de mão",
         desc: "Bolsa preta em formato de caixão, com cruz lilás na frente e costura rosa aparente. Cabe celular, carteira e maquiagem.",
         itens: ["Couro sintético", "Cruz lilás aplicada", "Alça de mão e alça longa", "Forro de cetim rosa"],
         busca: "bolsa caixao coffin preta cruz",
-    },
-    {
-        id: "sombrinha", nome: "Sombrinha de Renda", cat: "Acessórios", preco: 8990, tam: null, arte: "sombrinha", tom: "r",
-        alt: "Ilustração de sombrinha lilás com barra de renda creme e cabo curvo",
-        resumo: "Vitoriana · barra de renda",
-        desc: "Sombrinha lilás com barra de renda e cabo curvo, igual às de antigamente. Protege do sol e rende foto.",
-        itens: ["Tecido com proteção UV", "Barra de renda", "Cabo curvo", "Abre e fecha manual"],
-        busca: "sombrinha guarda chuva renda vitoriana parasol",
     },
 ];
 
@@ -327,17 +294,17 @@ const LOOKS = [
     {
         id: "boneca", nome: "Look Boneca Assombrada",
         desc: "Vestido, meia listrada e Mary Jane: doce com um pé nas trevas.",
-        itens: [{ id: "vestido", tam: "M" }, { id: "meiaListrada", tam: "" }, { id: "maryJane", tam: "36" }],
+        itens: [{ id: "vestido", tam: "" }, { id: "choker", tam: "" }, { id: "bolsaCaixao", tam: "" }],
     },
     {
         id: "cha", nome: "Look Chá da Meia-Noite",
         desc: "Blusa vitoriana, espartilho e tiara de rosas.",
-        itens: [{ id: "blusa", tam: "M" }, { id: "espartilho", tam: "M" }, { id: "tiara", tam: "" }],
+        itens: [{ id: "blusa", tam: "" }, { id: "espartilho", tam: "" }, { id: "colarCruz", tam: "" }],
     },
     {
         id: "lua", nome: "Kit Noite de Lua Cheia",
         desc: "Capa de veludo, chapéu de bruxa e o colar de bola de cristal.",
-        itens: [{ id: "capa", tam: "P/M" }, { id: "chapeu", tam: "" }, { id: "colarBola", tam: "" }],
+        itens: [{ id: "capa", tam: "" }, { id: "colarBola", tam: "" }, { id: "brincoMorcego", tam: "" }],
     },
 ];
 
@@ -347,6 +314,7 @@ const produto = (id) => PRODUTOS.find((p) => p.id === id);
 const esc = (texto) => String(texto).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const brl = (centavos) => (centavos / 100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }).replace(/ /g, " ");
 const normalizar = (texto) => String(texto).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+const precoTexto = (p, qtd = 1) => (p.preco == null ? "Sob consulta" : brl(p.preco * qtd));
 const codigo = (id) => "ES-" + String(PRODUTOS.findIndex((p) => p.id === id) + 1).padStart(2, "0");
 
 function ler(chave, padrao) {
@@ -398,6 +366,7 @@ const itensEl = $("#itens");
 const sacolaVaziaEl = $("#sacolaVazia");
 const sacolaRodapeEl = $("#sacolaRodape");
 const totalEl = $("#total");
+const freteEl = $("#frete");
 const botaoSacola = $("#abrirSacola");
 const contadorEl = $("#contadorSacola");
 const campoNome = $("#campoNome");
@@ -429,7 +398,7 @@ function cardHtml(p, indice) {
             <p class="card-cat">${esc(p.cat)}</p>
             <h3 class="card-nome"><button type="button" class="card-nome-botao" data-abrir="${p.id}">${esc(p.nome)}</button></h3>
             <p class="card-resumo">${esc(p.resumo)}</p>
-            <p class="card-preco">${brl(p.preco)}</p>
+            <p class="card-preco">${precoTexto(p)}</p>
             ${tamanhosHtml(p, "tam")}
             <button class="botao botao-cheio" type="button" data-add="${p.id}">Pôr na sacola</button>
         </div>
@@ -442,8 +411,8 @@ function produtosVisiveis() {
         if (filtro.cat === "favoritos" ? !ehFavorito(p.id) : filtro.cat !== "todos" && p.cat !== filtro.cat) return false;
         return !q || normalizar(`${p.nome} ${p.cat} ${p.resumo} ${p.busca}`).includes(q);
     });
-    if (filtro.ordem === "menor") lista.sort((a, b) => a.preco - b.preco);
-    if (filtro.ordem === "maior") lista.sort((a, b) => b.preco - a.preco);
+    if (filtro.ordem === "menor") lista.sort((a, b) => (a.preco ?? Infinity) - (b.preco ?? Infinity));
+    if (filtro.ordem === "maior") lista.sort((a, b) => (b.preco ?? -1) - (a.preco ?? -1));
     if (filtro.ordem === "nome") lista.sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR"));
     return lista;
 }
@@ -468,7 +437,7 @@ function renderGrade() {
 }
 
 /* ===== Looks prontos na tela ===== */
-const lookPrecoTotal = (look) => look.itens.reduce((soma, i) => soma + produto(i.id).preco, 0);
+const lookPrecoTotal = (look) => look.itens.reduce((soma, i) => soma + (produto(i.id).preco ?? 0), 0);
 
 function lookHtml(look) {
     const imagens = look.itens.map((i) => `<span class="look-arte tom-${produto(i.id).tom}">${arte(produto(i.id))}</span>`).join("");
@@ -524,7 +493,7 @@ function abrirProduto(id) {
         <div class="dp-info" data-escopo>
             <p class="card-cat">${esc(p.cat)} · ${codigo(p.id)}</p>
             <h2 id="produtoTitulo">${esc(p.nome)}</h2>
-            <p class="card-preco">${brl(p.preco)}</p>
+            <p class="card-preco">${precoTexto(p)}</p>
             <p class="dp-desc">${esc(p.desc)}</p>
             <ul class="dp-itens">${p.itens.map((t) => `<li>${esc(t)}</li>`).join("")}</ul>
             ${tamanhosHtml(p, "dlg")}
@@ -551,7 +520,7 @@ async function compartilhar(id) {
     const p = produto(id);
     const url = linkDaPeca(id);
     if (navigator.share) {
-        try { await navigator.share({ title: `${p.nome} · ${LOJA.nome}`, text: `${p.nome} por ${brl(p.preco)} na ${LOJA.nome}`, url }); return; }
+        try { await navigator.share({ title: `${p.nome} · ${LOJA.nome}`, text: p.preco == null ? `${p.nome} na ${LOJA.nome}` : `${p.nome} por ${brl(p.preco)} na ${LOJA.nome}`, url }); return; }
         catch (erro) { if (erro.name === "AbortError") return; }
     }
     try {
@@ -584,7 +553,8 @@ function verFavoritos() {
 
 /* ===== Sacola ===== */
 const chaveDe = (i) => i.id + "|" + i.tam;
-const totalCentavos = () => sacola.reduce((soma, i) => soma + produto(i.id).preco * i.qtd, 0);
+const totalCentavos = () => sacola.reduce((soma, i) => soma + (produto(i.id).preco ?? 0) * i.qtd, 0);
+const temSobConsulta = () => sacola.some((i) => produto(i.id).preco == null);
 const totalItens = () => sacola.reduce((soma, i) => soma + i.qtd, 0);
 const rotuloTam = (i) => (i.tam ? "Tamanho " + i.tam : "Tamanho único");
 
@@ -592,14 +562,14 @@ function montarMensagem() {
     const linhas = [`Oi! Quero fazer este pedido na ${LOJA.nome} 🖤`, ""];
     sacola.forEach((i) => {
         const p = produto(i.id);
-        linhas.push(`• ${i.qtd}x ${p.nome}${i.tam ? " (" + i.tam + ")" : ""} — ${brl(p.preco * i.qtd)}`);
+        linhas.push(`• ${i.qtd}x ${p.nome}${i.tam ? " (" + i.tam + ")" : ""} — ${p.preco == null ? "valor a combinar" : brl(p.preco * i.qtd)}`);
     });
-    linhas.push("", `*Total estimado: ${brl(totalCentavos())}*`);
+    linhas.push("", `*Total estimado: ${brl(totalCentavos())}*${temSobConsulta() ? " + itens a combinar" : ""}`);
     const nome = campoNome.value.trim();
     const obs = campoObs.value.trim();
     if (nome) linhas.push(`Nome: ${nome}`);
     if (obs) linhas.push(`Obs.: ${obs}`);
-    linhas.push("", "Podemos combinar o frete e o pagamento por aqui?");
+    linhas.push("", "Podemos combinar a entrega e o pagamento por aqui?");
     if (LOJA.demo) linhas.push("", "_(Pedido de teste da prévia do site)_");
     return linhas.join("\n");
 }
@@ -611,7 +581,7 @@ function itemHtml(i) {
         <span class="item-arte tom-${p.tom}">${arte(p)}</span>
         <div class="item-info">
             <p class="item-nome">${esc(p.nome)}</p>
-            <p class="item-tam">${rotuloTam(i)} · ${brl(p.preco)}</p>
+            <p class="item-tam">${rotuloTam(i)} · ${precoTexto(p)}</p>
             <div class="qtd">
                 <button type="button" data-menos aria-label="Diminuir a quantidade: ${esc(nomeCompleto)}"${i.qtd <= 1 ? " disabled" : ""}>−</button>
                 <span class="qtd-valor" aria-label="Quantidade">${i.qtd}</span>
@@ -619,7 +589,7 @@ function itemHtml(i) {
             </div>
         </div>
         <div class="item-lado">
-            <strong>${brl(p.preco * i.qtd)}</strong>
+            <strong>${precoTexto(p, i.qtd)}</strong>
             <button type="button" class="item-remover" data-remover aria-label="Tirar da sacola: ${esc(nomeCompleto)}">Tirar</button>
         </div>
     </li>`;
@@ -640,6 +610,9 @@ function renderSacola() {
     sacolaVaziaEl.hidden = !vazia;
     sacolaRodapeEl.hidden = vazia;
     totalEl.textContent = brl(totalCentavos());
+    if (temSobConsulta()) totalEl.insertAdjacentHTML("beforeend", "<small>+ itens a combinar</small>");
+    const falta = LOJA.freteGratis - totalCentavos();
+    freteEl.textContent = falta > 0 ? `Faltam ${brl(falta)} pro frete grátis ✦` : "✦ Frete grátis na entrega em Campo Grande";
     contadorEl.hidden = vazia;
     contadorEl.textContent = quantidade;
     botaoSacola.setAttribute("aria-label", vazia ? "Abrir sacola, vazia" : `Abrir sacola, ${quantidade} ${quantidade === 1 ? "peça" : "peças"}`);
