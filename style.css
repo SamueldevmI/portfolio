@@ -1592,7 +1592,8 @@ html.sem-animacoes, html.sem-animacoes *, html.sem-animacoes *::before, html.sem
     .ht-cel img { display: block; width: 100%; height: auto; }
     /* a foto fica menor, sobreposta no canto de baixo da colagem */
     /* a foto fica menor, abaixo de toda a colagem, num respiro próprio (sem cobrir nenhuma tela) */
-    .hero-foto-anel { z-index: 2; width: 128px; height: 128px; top: calc(118px + 424px + var(--parallax, 0px)); right: calc(3% + var(--parallax-x, 0px)); }
+    /* selo no cantinho de cima da tela do Conta a Dois, ali onde tem aqueles 3 pontinhos verde-água */
+    .hero-foto-anel { z-index: 2; width: 88px; height: 88px; top: calc(118px - 52px + var(--parallax, 0px)); right: calc(3% + 316px + var(--parallax-x, 0px)); }
 }
 
 /* A bolha de brilho da Jornada ficava 70px pra fora e fazia a página rolar pro lado em telas de 1000 a ~1340px */
