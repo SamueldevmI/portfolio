@@ -37,10 +37,37 @@
         .gl-historico { margin-top: 28px; }
         .gl-historico h2 { font-size: 1.1rem; }
         .gl-historico ol { margin: 0; padding: 0; list-style: none; }
-        .gl-historico li { display: flex; justify-content: space-between; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--line); color: var(--muted); font-size: .85rem; }
-        .gl-historico li b { color: var(--text); }
         .gl-historico a { color: var(--acento-texto); }
-        @media (max-width: 560px) { .gl-linha { grid-template-columns: 1fr; } }
+        /* mini-CRM */
+        .crm-resumo { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 14px; }
+        .crm-resumo span { padding: 6px 12px; border: 1px solid var(--line); border-radius: 999px; font-size: .82rem; }
+        .crm-resumo .urgente { border-color: var(--cyan); background: rgba(var(--cyan-rgb), .12); color: var(--text); }
+        .crm-filtros { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+        .crm-filtros button { padding: 5px 12px; border: 1px solid var(--line); border-radius: 999px; background: transparent; color: var(--muted); font: 500 .8rem "Space Grotesk", Arial, sans-serif; cursor: var(--cursor-mao); }
+        .crm-filtros button[aria-pressed="true"] { border-color: var(--cyan); background: rgba(var(--cyan-rgb), .14); color: var(--text); }
+        .crm-lista { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+        .crm-card { display: grid; gap: 10px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+        .crm-card.pra-hoje { border-color: var(--cyan); box-shadow: 0 0 16px -6px rgba(var(--cyan-rgb), .6); }
+        .crm-card.encerrado { opacity: .6; }
+        .crm-topo { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 12px; }
+        .crm-topo b { font-size: 1.02rem; }
+        .crm-topo small { color: var(--muted); }
+        .crm-sinais { display: flex; flex-wrap: wrap; gap: 6px; font-size: .78rem; }
+        .crm-sinais span { padding: 3px 9px; border-radius: 999px; background: rgba(255,255,255,.06); color: var(--muted); }
+        .crm-sinais .quente { background: rgba(var(--cyan-rgb), .16); color: var(--text); }
+        .crm-campos { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .crm-campos label { font-size: .76rem; }
+        .crm-campos select, .crm-campos input { padding: 8px 10px !important; font-size: .9rem !important; }
+        .crm-nota { grid-column: 1 / -1; }
+        .crm-acoes { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; font-size: .85rem; }
+        .crm-acoes button { padding: 7px 12px; border: 1px solid var(--line); border-radius: 8px; background: transparent; color: var(--text); font: 600 .82rem "Space Grotesk", Arial, sans-serif; cursor: var(--cursor-mao); }
+        .crm-acoes .crm-cobrar { border-color: var(--cyan); background: rgba(var(--cyan-rgb), .12); }
+        .crm-acoes .crm-apagar { margin-left: auto; border-color: transparent; color: var(--muted); }
+        .crm-aviso { margin-top: 12px; padding: 12px 14px; border-left: 3px solid var(--cyan); border-radius: 0 10px 10px 0; background: rgba(var(--cyan-rgb), .07); color: var(--muted); font-size: .84rem; }
+        .crm-aviso b { color: var(--text); }
+        .crm-cabeca { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px; }
+        .crm-cabeca button { padding: 6px 12px; border: 1px solid var(--line); border-radius: 8px; background: transparent; color: var(--muted); font: 500 .8rem "Space Grotesk", Arial, sans-serif; cursor: var(--cursor-mao); }
+        @media (max-width: 560px) { .gl-linha, .crm-campos { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -78,11 +105,20 @@
         </form>
 
         <section class="gl-historico" id="glHistorico" hidden>
-            <h2>Links que você já mandou (neste aparelho)</h2>
-            <ol id="glLista"></ol>
+            <div class="crm-cabeca"><h2>Seus contatos (neste aparelho)</h2><button type="button" id="crmPlanilha">baixar planilha ⬇</button></div>
+            <div class="crm-resumo" id="crmResumo"></div>
+            <div class="crm-filtros" role="group" aria-label="Filtrar contatos">
+                <button type="button" data-filtro="todos" aria-pressed="true">todos</button>
+                <button type="button" data-filtro="hoje">pra chamar hoje</button>
+                <button type="button" data-filtro="abertos">em andamento</button>
+                <button type="button" data-filtro="fechados">fechados</button>
+            </div>
+            <ol class="crm-lista" id="glLista"></ol>
+            <p class="crm-aviso" id="crmAviso" hidden></p>
         </section>
     </main>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="estatisticas.js"></script>
     <script>
         (function () {
             "use strict";
@@ -113,32 +149,159 @@
                 const n = nome.value.trim();
                 const l = link();
                 saidaLink.textContent = n ? l : "preencha o nome…";
-                $("glTestar").href = l;
+                $("glTestar").href = l + "&teste=1"; // o seu teste não conta como "abriu"
                 if (!msgEditada) msg.value = n ? `Oi, ${n}! Tudo bem? Aqui é o Samuel, faço sites aqui em Campo Grande. Montei uma prévia de como ficaria o site de vocês, ${GANCHOS[ramo.value]}\n\nDá uma olhada: ${l}` : "";
             }
             function toast(t) { const e = $("toast"); e.textContent = t; e.classList.add("mostrar"); setTimeout(() => e.classList.remove("mostrar"), 2400); }
             async function copiar(texto, aviso) { try { await navigator.clipboard.writeText(texto); toast(aviso); } catch (e) { prompt("Copie:", texto); } }
-            function ler() { try { return JSON.parse(localStorage.getItem(CHAVE)) || []; } catch (e) { return []; } }
+            /* ---------- mini-CRM ---------- */
+            const DIA = 24 * 60 * 60 * 1000;
+            const STATUS = {
+                enviado: "📤 enviado", abriu: "👀 abriu", respondeu: "💬 respondeu", negociando: "🤝 negociando", fechou: "✅ fechou", "nao-rolou": "❌ não rolou",
+            };
+            const ENCERRADOS = ["fechou", "nao-rolou"];
+            const est = window.ESTATISTICAS;
+            let filtro = "todos";
+            const sinais = {}; // id -> { abriu, previa, whats }
+
+            function ler() {
+                let lista;
+                try { lista = JSON.parse(localStorage.getItem(CHAVE)) || []; } catch (e) { lista = []; }
+                // contatos da versão antiga (só nome/ramo/link/data) ganham os campos novos
+                return lista.map((x) => ({ id: x.id || String(x.em), status: "enviado", proximo: x.em + 3 * DIA, nota: "", tel: "", ...x }));
+            }
+            function gravar(lista) { try { localStorage.setItem(CHAVE, JSON.stringify(lista.slice(0, 100))); } catch (e) { /* sem armazenamento */ } }
+            function atualizarContato(id, mudancas) { const lista = ler(); const c = lista.find((x) => x.id === id); if (!c) return; Object.assign(c, mudancas); gravar(lista); desenharHistorico(); }
+            const slugDoLink = (l) => { try { return est ? est.slug(new URL(l).searchParams.get("para")) : ""; } catch (e) { return ""; } };
+            const hojeFim = () => { const d = new Date(); d.setHours(23, 59, 59, 999); return d.getTime(); };
+            const praHoje = (c) => !ENCERRADOS.includes(c.status) && c.proximo && c.proximo <= hojeFim();
+            const dataCurta = (t) => new Date(t).toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" });
+            const paraInput = (t) => { const d = new Date(t); d.setMinutes(d.getMinutes() - d.getTimezoneOffset()); return d.toISOString().slice(0, 10); };
+
             function registrar() {
                 const n = nome.value.trim(); if (!n) return;
-                const lista = ler().filter((x) => x.link !== link());
-                lista.unshift({ nome: n, ramo: ramo.options[ramo.selectedIndex].text, link: link(), em: Date.now() });
-                try { localStorage.setItem(CHAVE, JSON.stringify(lista.slice(0, 30))); } catch (e) { /* sem armazenamento */ }
+                const l = link();
+                const lista = ler().filter((x) => x.link !== l);
+                const agora = Date.now();
+                lista.unshift({ id: String(agora), nome: n, ramo: ramo.options[ramo.selectedIndex].text, link: l, tel: tel.value.trim(), em: agora, status: "enviado", proximo: agora + 3 * DIA, nota: "" });
+                gravar(lista);
                 desenharHistorico();
             }
+
+            // mensagem de acompanhamento, conforme onde a conversa parou
+            function msgCobrar(c) {
+                const primeiro = c.nome;
+                if (c.status === "negociando") return `Oi, ${primeiro}! Passando pra saber se ficou alguma dúvida sobre a proposta. Se quiser, a gente ajusta o que precisar 😉`;
+                if (c.status === "respondeu") return `Oi, ${primeiro}! Consegui separar um horário essa semana pra gente conversar sobre o site. Qual dia fica melhor pra você?`;
+                return `Oi, ${primeiro}! Tudo bem? Conseguiu dar uma olhada na prévia do site que eu montei pra vocês? Se quiser, faço uns ajustes com a cara de vocês, sem compromisso 😉\n\n${c.link}`;
+            }
+
             function desenharHistorico() {
                 const lista = ler();
                 $("glHistorico").hidden = !lista.length;
-                $("glLista").replaceChildren(...lista.map((x) => {
-                    const li = document.createElement("li");
-                    const esq = document.createElement("span");
-                    const b = document.createElement("b"); b.textContent = x.nome;
-                    esq.append(b, ` · ${x.ramo} · ${new Date(x.em).toLocaleDateString("pt-BR")}`);
-                    const a = document.createElement("a"); a.href = x.link; a.target = "_blank"; a.rel = "noopener"; a.textContent = "abrir ↗";
-                    li.append(esq, a);
-                    return li;
-                }));
+                // resumo
+                const hoje = lista.filter(praHoje).length;
+                const andamento = lista.filter((c) => !ENCERRADOS.includes(c.status)).length;
+                const fechados = lista.filter((c) => c.status === "fechou").length;
+                const abriram = lista.filter((c) => sinais[c.id]?.abriu > 0 || ["abriu", "respondeu", "negociando", "fechou"].includes(c.status)).length;
+                $("crmResumo").innerHTML = "";
+                [[`📞 ${hoje} pra chamar hoje`, hoje > 0], [`📤 ${lista.length} enviados`], [`👀 ${abriram} abriram`], [`🔄 ${andamento} em andamento`], [`✅ ${fechados} fechados`]].forEach(([t, u]) => {
+                    const s = document.createElement("span"); s.textContent = t; if (u) s.className = "urgente"; $("crmResumo").append(s);
+                });
+                // filtros
+                const visiveis = lista.filter((c) => filtro === "todos" || (filtro === "hoje" && praHoje(c)) || (filtro === "abertos" && !ENCERRADOS.includes(c.status)) || (filtro === "fechados" && c.status === "fechou"));
+                visiveis.sort((a, b) => (praHoje(b) - praHoje(a)) || (b.em - a.em));
+                $("glLista").replaceChildren(...visiveis.map(cartao));
+                // aviso de configuração do GoatCounter
+                const aviso = $("crmAviso");
+                aviso.hidden = Boolean(est && est.configurado);
+                if (!aviso.hidden) aviso.innerHTML = "🔌 <b>Pra ver quem abriu o link</b> (abriu, viu a prévia, tocou no WhatsApp): crie a conta grátis em goatcounter.com, marque <b>“Allow adding visitor counts on your website”</b> nas configurações e coloque o código da conta no arquivo <b>estatisticas.js</b>.";
             }
+
+            function cartao(c) {
+                const li = document.createElement("li");
+                li.className = "crm-card" + (praHoje(c) ? " pra-hoje" : "") + (ENCERRADOS.includes(c.status) ? " encerrado" : "");
+                // topo
+                const topo = document.createElement("div"); topo.className = "crm-topo";
+                const nomeEl = document.createElement("b"); nomeEl.textContent = c.nome;
+                const info = document.createElement("small"); info.textContent = `${c.ramo} · enviado ${dataCurta(c.em)}${praHoje(c) ? " · 📞 chamar hoje" : ""}`;
+                topo.append(nomeEl, info);
+                // sinais do GoatCounter
+                const s = document.createElement("div"); s.className = "crm-sinais";
+                const sn = sinais[c.id];
+                if (est && est.configurado) {
+                    if (!sn) s.innerHTML = "<span>checando se abriu…</span>";
+                    else if (sn.abriu === null) s.innerHTML = "<span>não deu pra checar agora</span>";
+                    else {
+                        const add = (t, q) => { const e = document.createElement("span"); e.textContent = t; if (q) e.className = "quente"; s.append(e); };
+                        add(sn.abriu ? `👀 abriu ${sn.abriu}x` : "ainda não abriu", sn.abriu > 0);
+                        if (sn.previa) add("📱 viu a prévia", true);
+                        if (sn.whats) add("💬 tocou no WhatsApp/orçamento", true);
+                    }
+                }
+                // campos
+                const campos = document.createElement("div"); campos.className = "crm-campos";
+                const lStatus = document.createElement("label"); lStatus.textContent = "Status";
+                const sel = document.createElement("select");
+                Object.entries(STATUS).forEach(([k, t]) => { const o = document.createElement("option"); o.value = k; o.textContent = t; if (k === c.status) o.selected = true; sel.append(o); });
+                sel.addEventListener("change", () => atualizarContato(c.id, { status: sel.value, proximo: ENCERRADOS.includes(sel.value) ? 0 : Date.now() + 3 * DIA }));
+                lStatus.append(sel);
+                const lProx = document.createElement("label"); lProx.textContent = "Chamar de novo em";
+                const data = document.createElement("input"); data.type = "date"; if (c.proximo) data.value = paraInput(c.proximo);
+                data.addEventListener("change", () => atualizarContato(c.id, { proximo: data.value ? new Date(data.value + "T09:00").getTime() : 0 }));
+                lProx.append(data);
+                const lNota = document.createElement("label"); lNota.className = "crm-nota"; lNota.textContent = "Anotação";
+                const nota = document.createElement("input"); nota.type = "text"; nota.maxLength = 200; nota.value = c.nota || ""; nota.placeholder = "ex.: pediu orçamento de cardápio, falar com o sócio sexta";
+                nota.addEventListener("change", () => atualizarContato(c.id, { nota: nota.value.trim() }));
+                lNota.append(nota);
+                campos.append(lStatus, lProx, lNota);
+                // ações
+                const acoes = document.createElement("div"); acoes.className = "crm-acoes";
+                const cobrar = document.createElement("button"); cobrar.type = "button"; cobrar.className = "crm-cobrar"; cobrar.textContent = "cobrar no WhatsApp 📲";
+                cobrar.addEventListener("click", () => {
+                    let numero = (c.tel || "").replace(/\D/g, ""); if (numero && numero.length <= 11) numero = "55" + numero;
+                    window.open(`https://wa.me/${numero}?text=${encodeURIComponent(msgCobrar(c))}`, "_blank", "noopener");
+                    atualizarContato(c.id, { proximo: Date.now() + 3 * DIA });
+                });
+                const abrir = document.createElement("a"); abrir.href = c.link + (c.link.includes("?") ? "&" : "?") + "teste=1"; abrir.target = "_blank"; abrir.rel = "noopener"; abrir.textContent = "abrir o link ↗";
+                const copiarL = document.createElement("button"); copiarL.type = "button"; copiarL.textContent = "copiar link"; copiarL.addEventListener("click", () => copiar(c.link, "Link copiado!"));
+                const apagar = document.createElement("button"); apagar.type = "button"; apagar.className = "crm-apagar"; apagar.textContent = "apagar";
+                apagar.addEventListener("click", () => { if (confirm(`Apagar ${c.nome} da lista?`)) { gravar(ler().filter((x) => x.id !== c.id)); desenharHistorico(); } });
+                acoes.append(cobrar, copiarL, abrir, apagar);
+                li.append(topo, ...(s.childNodes.length || (est && est.configurado) ? [s] : []), campos, acoes);
+                return li;
+            }
+
+            // pergunta ao GoatCounter quem abriu (só os contatos em andamento)
+            async function checarSinais() {
+                if (!est || !est.configurado) return;
+                const lista = ler().filter((c) => !ENCERRADOS.includes(c.status));
+                await Promise.all(lista.map(async (c) => {
+                    const sl = slugDoLink(c.link);
+                    const [abriu, previa, whats] = await Promise.all([est.quantos(`/link/${sl}`), est.quantos(`/link/${sl}/previa`), est.quantos(`/link/${sl}/whatsapp`)]);
+                    sinais[c.id] = { abriu, previa, whats };
+                    // abriu o link e ainda estava como "enviado": sobe o status sozinho
+                    if (abriu > 0 && c.status === "enviado") atualizarContato(c.id, { status: "abriu" });
+                }));
+                desenharHistorico();
+            }
+
+            function baixarPlanilha() {
+                const linhas = [["Negócio", "Ramo", "WhatsApp", "Enviado em", "Status", "Chamar de novo em", "Anotação", "Link"]];
+                ler().forEach((c) => linhas.push([c.nome, c.ramo, c.tel || "", new Date(c.em).toLocaleDateString("pt-BR"), STATUS[c.status] || c.status, c.proximo ? new Date(c.proximo).toLocaleDateString("pt-BR") : "", c.nota || "", c.link]));
+                const csv = "﻿" + linhas.map((l) => l.map((v) => `"${String(v).replace(/"/g, '""')}"`).join(";")).join("\n");
+                const a = document.createElement("a");
+                a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
+                a.download = `contatos-${new Date().toISOString().slice(0, 10)}.csv`;
+                a.click();
+                setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+            }
+            document.querySelectorAll(".crm-filtros button").forEach((b) => b.addEventListener("click", () => {
+                filtro = b.dataset.filtro;
+                document.querySelectorAll(".crm-filtros button").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+                desenharHistorico();
+            }));
+            $("crmPlanilha").addEventListener("click", baixarPlanilha);
 
             [nome, ramo, previa].forEach((el) => el.addEventListener("input", atualizar));
             ramo.addEventListener("change", atualizar);
@@ -155,6 +318,7 @@
             $("gerador").addEventListener("submit", (e) => e.preventDefault());
             atualizar();
             desenharHistorico();
+            checarSinais();
         })();
     </script>
 </body>

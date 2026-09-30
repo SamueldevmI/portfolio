@@ -40,8 +40,16 @@ const LINK_PERSONALIZADO = (function () {
         convite.append(oi, ver);
         (linha?.closest(".hero-quem") || linha)?.before(convite);
     }
-    return { para, ramo, previa: p.get("previa") === "1" };
+    if (para) window.ESTATISTICAS?.contar(`/link/${window.ESTATISTICAS.slug(para)}`, `abriu o link: ${para}`, true);
+    return { para, ramo, previa: p.get("previa") === "1", slug: para && window.ESTATISTICAS ? window.ESTATISTICAS.slug(para) : "" };
 })();
+window.ESTATISTICAS?.contar(location.pathname || "/", "Portfólio", true);
+// quem veio pelo link personalizado e tocou em WhatsApp ou orçamento (o sinal mais quente pra prospecção)
+if (LINK_PERSONALIZADO && LINK_PERSONALIZADO.slug) document.addEventListener("click", (evento) => {
+    if (evento.target.closest('a[href*="wa.me/"], [data-orcamento-tipo], .cmp-querer, .previa-quero, .botao-principal')) {
+        window.ESTATISTICAS?.contar(`/link/${LINK_PERSONALIZADO.slug}/whatsapp`, `chamou/pediu orçamento: ${LINK_PERSONALIZADO.para}`, true);
+    }
+}, true);
 
 /* ---------- Ícones próprios (em vez de emoji nativo, que muda de cara em cada aparelho) ----------
    Cada um é um <path> só, no mesmo traço fino das tech badges (.ic-linha): assim o mesmo desenho
@@ -338,7 +346,7 @@ document.querySelectorAll(".botao").forEach((botao) => {
     Object.entries(NEGOCIOS).forEach(([chaveTipo, n]) => {
         const b = document.createElement("button");
         b.type = "button"; b.dataset.tipo = chaveTipo; b.textContent = `${n.emoji} ${chaveTipo}`;
-        b.addEventListener("click", () => { tipo = chaveTipo; gravar("portfolio-tipo-negocio", tipo); pararAuto(); montar(); mostrar(0); calcular(true); });
+        b.addEventListener("click", () => { tipo = chaveTipo; gravar("portfolio-tipo-negocio", tipo); pararAuto(); montar(); mostrar(0); calcular(true); window.ESTATISTICAS?.contar(`/evento/ramo-${window.ESTATISTICAS.slug(tipo)}`, `ramo escolhido: ${tipo}`, true); });
         tiposEl.appendChild(b);
     });
 
@@ -1948,6 +1956,8 @@ ${celular(ramo, marca)}
         ramo = RAMOS[ramo] ? ramo : (RAMOS[ler("portfolio-tipo-negocio")] ? ler("portfolio-tipo-negocio") : "pizzaria");
         nome = (nome ?? ler("portfolio-nome-negocio")).trim().slice(0, 40);
         const marca = nome || RAMOS[ramo].exemplo;
+        window.ESTATISTICAS?.contar(`/evento/previa-${window.ESTATISTICAS.slug(ramo)}`, `prévia aberta: ${RAMOS[ramo].rotulo}`, true);
+        if (typeof LINK_PERSONALIZADO !== "undefined" && LINK_PERSONALIZADO && LINK_PERSONALIZADO.slug) window.ESTATISTICAS?.contar(`/link/${LINK_PERSONALIZADO.slug}/previa`, `viu a prévia: ${LINK_PERSONALIZADO.para}`, true);
         abrirModal(`👀 Prévia: o site da ${marca}`, montar(ramo, nome));
         document.querySelector(".modal-caixa")?.classList.add("modal-previa");
         const raiz = modalCorpo.querySelector(".previa");
