@@ -1,4 +1,4 @@
-/* Maria Macabra — loja pastel goth */
+/* Eclipse Studio — loja pastel goth */
 :root {
     --bg: #150c1f;
     --bg2: #1e1230;
@@ -99,8 +99,11 @@ a { color: var(--rosa); }
 .topo-in { display: flex; align-items: center; gap: 20px; }
 .logo { display: flex; align-items: center; gap: 10px; color: var(--texto); text-decoration: none; font: 400 1.7rem/1 var(--gotica); }
 .logo-icone { width: 32px; height: 32px; }
-.logo-icone path:first-child { fill: var(--rosa); stroke: var(--lilas); stroke-width: 1.5; }
-.logo-icone path:last-child { fill: none; stroke: var(--tinta); stroke-width: 2.2; stroke-linecap: round; }
+.logo-icone { overflow: visible; }
+.logo-icone .coroa { fill: var(--ouro); filter: drop-shadow(0 0 5px rgba(233, 196, 106, .8)); }
+.logo-icone .disco { fill: var(--bg); }
+.logo-icone .faisca { fill: var(--creme); }
+.eclipse { filter: drop-shadow(0 0 10px rgba(255, 214, 120, .95)); }
 .topo nav { display: flex; gap: 24px; margin-left: auto; }
 .topo nav a { color: var(--mudo); text-decoration: none; font-weight: 600; font-size: .92rem; }
 .topo nav a:hover { color: var(--rosa); }

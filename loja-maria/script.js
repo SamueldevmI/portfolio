@@ -2,7 +2,7 @@
 
 /* ===== Configuração da loja: troque aqui quando a Maria mandar os dados dela ===== */
 const LOJA = {
-    nome: "Maria Macabra",
+    nome: "Eclipse Studio",
     whatsapp: "", // só números: 55 + DDD + número. Vazio = o WhatsApp abre pra escolher o contato
     demo: true,   // true = a mensagem avisa que é um pedido de teste
 };
@@ -343,7 +343,7 @@ const produto = (id) => PRODUTOS.find((p) => p.id === id);
 const esc = (texto) => String(texto).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const brl = (centavos) => (centavos / 100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }).replace(/ /g, " ");
 const normalizar = (texto) => String(texto).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
-const codigo = (id) => "MM-" + String(PRODUTOS.findIndex((p) => p.id === id) + 1).padStart(2, "0");
+const codigo = (id) => "ES-" + String(PRODUTOS.findIndex((p) => p.id === id) + 1).padStart(2, "0");
 
 function ler(chave, padrao) {
     try {
@@ -358,8 +358,8 @@ function guardar(chave, valor) {
 }
 
 /* ===== Estado ===== */
-const CHAVE_SACOLA = "mm-sacola-v1";
-const CHAVE_NOME = "mm-nome";
+const CHAVE_SACOLA = "es-sacola-v1";
+const CHAVE_NOME = "es-nome";
 const MAX_POR_ITEM = 9;
 
 const itemValido = (i) => {
