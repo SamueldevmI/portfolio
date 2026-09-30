@@ -411,6 +411,16 @@ dialog::backdrop { background: rgba(15, 9, 24, .78); -webkit-backdrop-filter: bl
 .sacola-acoes { display: flex; justify-content: space-between; }
 .nota { min-height: 1.5em; margin: 0; color: var(--mudo); font-size: .8rem; }
 
+/* ===== botão flutuante do WhatsApp ===== */
+.zap-flutuante { position: fixed; right: 18px; bottom: 18px; z-index: 50; display: flex; align-items: center; gap: 8px; min-height: 52px; padding: 0 18px 0 14px; border: 2px solid var(--tinta); border-radius: 999px; background: var(--menta); box-shadow: 0 4px 0 var(--tinta), 0 10px 26px rgba(0, 0, 0, .45); color: var(--tinta); font: 700 .92rem var(--fonte); text-decoration: none; transition: transform .15s; animation: zap-chega .5s .8s both; }
+.zap-flutuante:hover { transform: translateY(-2px) rotate(-2deg); }
+.zap-flutuante svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+@keyframes zap-chega { from { opacity: 0; transform: translateY(20px) scale(.8); } }
+@media (max-width: 640px) {
+    .zap-flutuante { right: 14px; bottom: 14px; width: 54px; height: 54px; padding: 0; justify-content: center; }
+    .zap-flutuante span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+}
+
 /* ===== avisos ===== */
 .avisos { position: fixed; left: 50%; bottom: 20px; z-index: 60; display: grid; gap: 8px; width: min(430px, calc(100% - 24px)); transform: translateX(-50%); pointer-events: none; }
 .aviso { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 12px 16px; border: 2px solid var(--tinta); border-radius: 16px; background: var(--creme); box-shadow: 0 10px 30px rgba(0, 0, 0, .45); color: var(--tinta); font-size: .92rem; font-weight: 600; pointer-events: auto; animation: sobe .25s; }
@@ -459,7 +469,8 @@ dialog::backdrop { background: rgba(15, 9, 24, .78); -webkit-backdrop-filter: bl
 .duvidas details p { margin: 0 0 16px; color: var(--mudo); }
 
 /* ===== rodapé ===== */
-.rodape { padding: 40px 0 28px; border-top: 2px solid var(--linha-forte); background: rgba(22, 8, 16, .45); color: var(--mudo); font-size: .92rem; }
+/* 90px embaixo: espaço pro botão do WhatsApp não cobrir o texto */
+.rodape { padding: 40px 0 90px; border-top: 2px solid var(--linha-forte); background: rgba(22, 8, 16, .45); color: var(--mudo); font-size: .92rem; }
 .rodape-grade { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 24px; }
 .rodape-grade p { margin: 0 0 6px; }
 .rodape-grade a { display: block; margin-bottom: 4px; color: var(--mudo); text-decoration: none; }
