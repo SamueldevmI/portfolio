@@ -1569,11 +1569,11 @@ html.sem-animacoes, html.sem-animacoes *, html.sem-animacoes *::before, html.sem
 
 /* ---------- Serviços como pacotes: preço de partida e o que inclui ---------- */
 #servicos .servico-preco { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; margin: 16px 0 0; padding-top: 14px; border-top: 1px solid var(--line); color: var(--muted); }
-#servicos .servico-preco strong { color: var(--cyan); font-size: 1.35rem; font-weight: 700; letter-spacing: -.02em; text-shadow: 0 0 10px rgba(var(--cyan-rgb), .35); }
+#servicos .servico-preco strong { color: var(--ouro); font-size: 1.35rem; font-weight: 700; letter-spacing: -.02em; text-shadow: 0 0 10px rgba(var(--ouro-rgb), .35); }
 #servicos .servico-preco small { font: .72rem "DM Mono", monospace; letter-spacing: .04em; }
 #servicos .servico-inclui { display: grid; gap: 6px; margin: 12px 0 4px; padding: 0; list-style: none; color: var(--muted); font-size: .88rem; }
 #servicos .servico-inclui li { position: relative; padding-left: 20px; }
-#servicos .servico-inclui li::before { content: ""; position: absolute; left: 2px; top: .42em; width: 9px; height: 5px; border-left: 2px solid var(--cyan); border-bottom: 2px solid var(--cyan); transform: rotate(-45deg); }
+#servicos .servico-inclui li::before { content: ""; position: absolute; left: 2px; top: .42em; width: 9px; height: 5px; border-left: 2px solid var(--sucesso); border-bottom: 2px solid var(--sucesso); transform: rotate(-45deg); }
 #servicos .lista-servicos article { display: flex; flex-direction: column; }
 #servicos .lista-servicos .link-servico { align-self: flex-start; margin-top: auto; padding-top: 12px; }
 
@@ -1601,18 +1601,18 @@ html.sem-animacoes, html.sem-animacoes *, html.sem-animacoes *::before, html.sem
 
 /* ---------- Promoção de lançamento (some sozinha depois do prazo, ver acabamento.js) ---------- */
 .promo-faixa[hidden], .promo-servicos[hidden], .promo-faq[hidden] { display: none; }
-.promo-faixa { position: relative; z-index: 1; display: inline-flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; margin: 0 0 16px; padding: 7px 14px 7px 7px; border: 1px solid rgba(var(--cyan-rgb), .7); border-radius: 999px; background: rgba(var(--cyan-rgb), .14); color: var(--text); font-size: .88rem; text-decoration: none; box-shadow: 0 0 18px rgba(var(--cyan-rgb), .35); animation: brilho-promo 2.2s ease-in-out infinite; transition: background .25s ease, border-color .25s ease, box-shadow .25s ease; }
-.promo-faixa b { padding: 3px 9px; border-radius: 999px; background: var(--cyan); color: #161616; font: 600 .72rem "DM Mono", monospace; letter-spacing: .06em; text-shadow: 0 0 8px rgba(255,255,255,.4); }
-.promo-faixa span { color: var(--cyan); transition: transform .25s ease; }
-@media (hover: hover) { .promo-faixa:hover { background: rgba(var(--cyan-rgb), .22); border-color: var(--cyan); box-shadow: 0 0 26px rgba(var(--cyan-rgb), .55); } .promo-faixa:hover span { transform: translateX(3px); } }
+.promo-faixa { position: relative; z-index: 1; display: inline-flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; margin: 0 0 16px; padding: 7px 14px 7px 7px; border: 1px solid rgba(var(--urgencia-rgb), .7); border-radius: 999px; background: rgba(var(--urgencia-rgb), .14); color: var(--text); font-size: .88rem; text-decoration: none; box-shadow: 0 0 18px rgba(var(--urgencia-rgb), .35); animation: brilho-promo 2.2s ease-in-out infinite; transition: background .25s ease, border-color .25s ease, box-shadow .25s ease; }
+.promo-faixa b { padding: 3px 9px; border-radius: 999px; background: var(--urgencia); color: #161616; font: 600 .72rem "DM Mono", monospace; letter-spacing: .06em; text-shadow: 0 0 8px rgba(255,255,255,.4); }
+.promo-faixa span { color: var(--urgencia); transition: transform .25s ease; }
+@media (hover: hover) { .promo-faixa:hover { background: rgba(var(--urgencia-rgb), .22); border-color: var(--urgencia); box-shadow: 0 0 26px rgba(var(--urgencia-rgb), .55); } .promo-faixa:hover span { transform: translateX(3px); } }
 @keyframes brilho-promo { 0%, 100% { box-shadow: 0 0 18px rgba(var(--cyan-rgb), .35); } 50% { box-shadow: 0 0 30px rgba(var(--cyan-rgb), .65); } }
 @media (prefers-reduced-motion: reduce) { .promo-faixa { animation: none; } }
 .hero-conteudo .promo-faixa { animation-delay: .08s; }
-.promo-servicos { margin-top: 14px; padding: 12px 16px; border-left: 3px solid var(--cyan); border-radius: 0 10px 10px 0; background: rgba(var(--cyan-rgb), .1); color: var(--text) !important; }
+.promo-servicos { margin-top: 14px; padding: 12px 16px; border-left: 3px solid var(--urgencia); border-radius: 0 10px 10px 0; background: rgba(var(--urgencia-rgb), .1); color: var(--text) !important; }
 .promo-servicos b { color: var(--cyan); text-shadow: 0 0 10px rgba(var(--cyan-rgb), .4); }
 .meta-preco { border-color: rgba(var(--cyan-rgb), .5) !important; color: var(--text) !important; }
 #servicos .titulo-secao > h2 + p { color: var(--muted); }
-.desconto-depoimento { margin-top: 10px; padding: 12px 16px; border-left: 3px solid var(--cyan); border-radius: 0 10px 10px 0; background: rgba(var(--cyan-rgb), .08); color: var(--text) !important; }
+.desconto-depoimento { margin-top: 10px; padding: 12px 16px; border-left: 3px solid var(--urgencia); border-radius: 0 10px 10px 0; background: rgba(var(--urgencia-rgb), .08); color: var(--text) !important; }
 .desconto-depoimento b { color: var(--cyan); }
 @media (max-width: 720px) { .promo-faixa { gap: 6px 8px; padding: 8px 12px 8px 8px; border-radius: 14px; font-size: .82rem; } .promo-faixa span { display: none; } }
 [data-promo-ate][hidden] { display: none; }
@@ -1679,10 +1679,10 @@ html.sem-animacoes, html.sem-animacoes *, html.sem-animacoes *::before, html.sem
 /* ---------- Preço de cada projeto, com o desconto em destaque ---------- */
 .projeto-preco, .mini-projeto-preco { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; margin: 2px 0 12px; color: var(--muted); font-size: .9rem; }
 .mini-projeto-preco { margin: 10px 0 0; font-size: .84rem; }
-.projeto-preco b, .mini-projeto-preco b { color: var(--cyan); font-size: 1.1rem; font-weight: 700; text-shadow: 0 0 10px rgba(var(--cyan-rgb), .35); }
+.projeto-preco b, .mini-projeto-preco b { color: var(--ouro); font-size: 1.1rem; font-weight: 700; text-shadow: 0 0 10px rgba(var(--ouro-rgb), .35); }
 .pp-promo[hidden] { display: none; }
-.pp-promo { padding: 4px 10px; border-radius: 10px; background: rgba(var(--cyan-rgb), .14); border: 1px solid rgba(var(--cyan-rgb), .5); color: var(--text); font-size: .82rem; }
-.pp-promo b { color: var(--cyan); font-size: 1rem; text-shadow: 0 0 10px rgba(var(--cyan-rgb), .4); }
+.pp-promo { padding: 4px 10px; border-radius: 10px; background: rgba(var(--urgencia-rgb), .16); border: 1px solid rgba(var(--urgencia-rgb), .55); color: var(--text); font-size: .82rem; }
+.pp-promo b { color: var(--ouro); font-size: 1rem; text-shadow: 0 0 10px rgba(var(--ouro-rgb), .4); }
 /* com desconto valendo, o preço cheio aparece riscado */
 :is(.projeto-preco, .mini-projeto-preco):has(.pp-promo:not([hidden])) .pp-base b { text-decoration: line-through; text-decoration-thickness: 2px; opacity: .65; font-size: .95rem; }
 
@@ -1891,12 +1891,15 @@ html.tem-barra-app .fim-elastico { bottom: calc(62px + env(safe-area-inset-botto
    Paleta: #161616 / #1e1e1e / #262626 (carvão), #8b1a1a e #8b2525 (sangue), #ff2a3d (neon, só em brilho). */
 :root {
     --bg: #161616; --surface: #1e1e1e; --surface-2: #262626;
-    --text: #ffffff; --muted: #ffffff; --line: rgba(255,255,255,.1);
-    --cyan: #ff2a3d;  --cyan-rgb: 255, 42, 61;    /* neon vermelho: destaques, links, brilhos */
-    --pink: #ff3860;  --pink-rgb: 255, 56, 96;    /* vermelho-sangue, agora vivo o bastante pra virar texto */
+    --text: #ffffff; --muted: rgba(255,255,255,.86); --line: rgba(255,255,255,.1);
+    --cyan: #ff2a3d;  --cyan-rgb: 255, 42, 61;    /* neon vermelho: destaques principais, botões, links */
+    --pink: #ff2d8f;  --pink-rgb: 255, 45, 143;   /* magenta: acentos secundários (foco, hover, decoração) */
     --violet: #ffffff; --violet-rgb: 255, 255, 255;
     --sangue: #8b1a1a;
     --acento-texto: #ff6b78; /* vermelho mais claro, pra texto pequeno ficar legível em cima de fundo avermelhado */
+    --sucesso: #3ddc84; --sucesso-rgb: 61, 220, 132; /* verde: só pra "incluso/disponível" (mesmo tom do selo do topo) */
+    --ouro: #f5b942;   --ouro-rgb: 245, 185, 66;     /* dourado: só pros preços, pra separar de botão/ação */
+    --urgencia: #ff7a1f; --urgencia-rgb: 255, 122, 31; /* laranja: só pra prazo/promoção, pra separar de ação normal */
 }
 html { background: #161616; }
 ::selection { background: #8b1a1a; color: #ffffff; }
@@ -2258,9 +2261,12 @@ h1 span { text-shadow: none; }
 
 /* ---------- Legibilidade e toque (caça aos bugs de 2026-09-25) ---------- */
 /* Texto pequeno na cor de destaque: o neon puro some em cima dos fundos avermelhados (contraste < 4,5) */
-.eyebrow, .eyebrow-mini, .tag, .pp-promo b, .projeto-preco b, .mini-projeto-preco b, .promo-servicos b, .desconto-depoimento b,
+.eyebrow, .eyebrow-mini, .tag,
 .linha-tempo .lt-tags li, .barra-app a.ativo, .cmp-calc-site b, .cmp-calc-abrir, .chip-surpresa, .calc-resultado b { color: var(--acento-texto); }
 main .eyebrow::before { color: var(--acento-texto); }
+/* preço (dourado) e prazo/promoção (laranja) têm cor própria — ver bloco "cores com papel" mais acima */
+.pp-promo b, .projeto-preco b, .mini-projeto-preco b { color: var(--ouro); }
+.promo-servicos b, .desconto-depoimento b { color: var(--urgencia); }
 .contato .eyebrow, .contato .eyebrow::before { color: rgba(255,255,255,.88); }
 /* preço antigo riscado: branco apagado com o risco na cor de destaque (antes era vermelho a 65% e sumia) */
 :is(.projeto-preco, .mini-projeto-preco):has(.pp-promo:not([hidden])) .pp-base b { color: var(--text); opacity: .6; text-shadow: none; text-decoration-color: var(--cyan); }
