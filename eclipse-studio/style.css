@@ -153,7 +153,15 @@ a { color: var(--rosa); }
 @keyframes bater { 0%, 60%, 100% { transform: none; } 68% { transform: scale(1.05); } 76% { transform: scale(.98); } 84% { transform: scale(1.03); } }
 @keyframes flutuar { 50% { transform: translateY(-10px); } }
 .bola { transform-origin: 200px 264px; animation: bola-brilho 5s ease-in-out infinite; }
-@keyframes bola-brilho { 50% { transform: scale(1.03); } }
+@keyframes bola-brilho { 50% { transform: scale(1.03); filter: drop-shadow(0 0 14px rgba(174, 240, 214, .75)); } }
+/* oráculo: a íris "respira" (verde mais forte/fraco), a pupila pisca de vez em quando e os raios giram devagar */
+.bola-iris { transform-origin: 200px 264px; animation: iris-pulsa 3.4s ease-in-out infinite; }
+@keyframes iris-pulsa { 50% { fill: #7fe0b8; } }
+.bola-pupila { transform-origin: 200px 264px; animation: pupila-pisca 5.2s ease-in-out infinite; }
+@keyframes pupila-pisca { 0%, 92%, 100% { transform: scaleY(1); } 95% { transform: scaleY(.12); } 98% { transform: scaleY(1); } }
+.bola-raios { transform-origin: 200px 264px; animation: raios-giram 9s linear infinite; }
+@keyframes raios-giram { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .bola-iris, .bola-pupila, .bola-raios { animation: none; } }
 .vela { position: absolute; bottom: 2%; width: 13%; overflow: visible; }
 .vela-e { left: -6%; }
 .vela-d { right: -6%; bottom: 7%; width: 11%; }
@@ -530,3 +538,12 @@ dialog::backdrop { background: rgba(15, 9, 24, .78); -webkit-backdrop-filter: bl
 /* Os itens da grade de dúvidas podem encolher com a tela: sem isso a tabela de medidas (que já tem rolagem
    própria) esticava a coluna e a página inteira ficava ~392px, arrastando pro lado nos celulares menores. */
 .duvidas-in > * { min-width: 0; }
+
+/* gatinho: cauda balança, corpo respira e os olhinhos piscam de vez em quando */
+.gato-cauda { transform-origin: 42px 42px; animation: cauda-balanca 3.6s ease-in-out infinite; }
+@keyframes cauda-balanca { 0%, 100% { transform: rotate(0deg); } 30% { transform: rotate(10deg); } 65% { transform: rotate(-6deg); } }
+.gato-corpo { transform-origin: 24px 25px; animation: gato-respira 4.4s ease-in-out infinite; }
+@keyframes gato-respira { 50% { transform: scale(1.015, .985); } }
+.gato-olhos { transform-origin: 25px 10px; animation: gato-pisca 6.4s ease-in-out infinite; }
+@keyframes gato-pisca { 0%, 94%, 100% { transform: scaleY(1); } 97% { transform: scaleY(.1); } }
+@media (prefers-reduced-motion: reduce) { .gato-cauda, .gato-corpo, .gato-olhos { animation: none; } }

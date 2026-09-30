@@ -101,17 +101,19 @@
                         <g class="bola">
                             <circle cx="200" cy="264" r="62" fill="url(#vidro)" stroke="#241a33" stroke-width="4"/>
                             <path d="M166 264Q200 238 234 264Q200 290 166 264Z" fill="#fff4fb" stroke="#241a33" stroke-width="3.5"/>
-                            <circle cx="200" cy="264" r="12" fill="#aef0d6" stroke="#241a33" stroke-width="3"/>
-                            <circle cx="200" cy="264" r="5.5" fill="#241a33"/>
-                            <circle cx="204" cy="260" r="2.4" fill="#fff"/>
-                            <path d="M174 254l-5 -8M187 247l-2 -9M200 245v-9M213 247l2 -9M226 254l5 -8" stroke="#241a33" stroke-width="3" stroke-linecap="round"/>
+                            <circle class="bola-iris" cx="200" cy="264" r="12" fill="#aef0d6" stroke="#241a33" stroke-width="3"/>
+                            <g class="bola-pupila">
+                                <circle cx="200" cy="264" r="5.5" fill="#241a33"/>
+                                <circle cx="204" cy="260" r="2.4" fill="#fff"/>
+                            </g>
+                            <path class="bola-raios" d="M174 254l-5 -8M187 247l-2 -9M200 245v-9M213 247l2 -9M226 254l5 -8" stroke="#241a33" stroke-width="3" stroke-linecap="round"/>
                             <path d="M158 244Q164 222 184 212" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".8"/>
                         </g>
                         <!-- gato preto -->
-                        <g transform="translate(236 302) scale(.95)" fill="#241a33" stroke="#241a33" stroke-width="2" stroke-linejoin="round">
-                            <path d="M42 42C60 44 66 28 58 18" fill="none" stroke-width="6" stroke-linecap="round"/>
-                            <path d="M6 50C-2 34 0 12 10 1L7 -16L18 -7C22 -8 27 -8 31 -7L42 -16L39 1C48 12 50 34 44 50Z"/>
-                            <path d="M14 9l6 3M36 9l-6 3" stroke="#e9c46a" stroke-width="3" stroke-linecap="round"/>
+                        <g class="gato" transform="translate(236 302) scale(.95)" fill="#241a33" stroke="#241a33" stroke-width="2" stroke-linejoin="round">
+                            <path class="gato-cauda" d="M42 42C60 44 66 28 58 18" fill="none" stroke-width="6" stroke-linecap="round"/>
+                            <path class="gato-corpo" d="M6 50C-2 34 0 12 10 1L7 -16L18 -7C22 -8 27 -8 31 -7L42 -16L39 1C48 12 50 34 44 50Z"/>
+                            <path class="gato-olhos" d="M14 9l6 3M36 9l-6 3" stroke="#e9c46a" stroke-width="3" stroke-linecap="round"/>
                         </g>
                     </g>
                     <ellipse cx="200" cy="245" rx="122" ry="168" fill="none" stroke="#241a33" stroke-width="4"/>
