@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Cartão com QR — Eclipse Studio</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23150c1f'/%3E%3Ccircle cx='16' cy='16' r='10' fill='%23e9c46a'/%3E%3Ccircle cx='18' cy='14.5' r='9.2' fill='%23150c1f'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,600&family=Quicksand:wght@500;700&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
+<style>
+:root { --tinta: #241a33; --ouro: #e9c46a; --creme: #fff4fb; --marfim: #f4ead6; --lilas: #cdb4ff; --rosa: #ffb8d9; --vinho: #a3203f; }
+* { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body { margin: 0; background: #0e0816; color: #f6eeff; font: 500 16px/1.5 "Quicksand", system-ui, sans-serif; }
+.barra { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px 16px; padding: 18px 16px; text-align: center; }
+.barra p { margin: 0; max-width: 60ch; color: #cfc0e6; font-size: .92rem; }
+.barra button { min-height: 42px; padding: 0 18px; border: 2px solid var(--tinta); border-radius: 999px; background: linear-gradient(135deg, var(--rosa), var(--lilas)); color: var(--tinta); font: 700 .9rem "Quicksand", sans-serif; cursor: pointer; }
+.barra button.claro { border-color: var(--lilas); background: transparent; color: var(--lilas); }
+/* folha A4 com 10 cartões de 85 × 55 mm e linha de corte */
+.folha { width: 210mm; height: 297mm; margin: 0 auto 40px; padding: 11mm 20mm; display: grid; grid-template-columns: repeat(2, 85mm); grid-auto-rows: 55mm; background: #fff; }
+.cartao { position: relative; display: grid; grid-template-columns: 1fr 27mm; gap: 3mm; align-items: center; padding: 5mm 5mm 5mm 6mm; overflow: hidden; outline: .2mm dashed #bbb; outline-offset: -.1mm;
+    background: radial-gradient(60% 80% at 10% 0%, rgba(160, 110, 230, .45), transparent 70%), radial-gradient(50% 70% at 100% 100%, rgba(255, 150, 70, .22), transparent 70%), #150c1f; color: #f6eeff; }
+.marca { display: flex; align-items: center; gap: 2mm; margin: 0; font: 400 6.4mm/1 "UnifrakturMaguntia", serif; white-space: nowrap; }
+.eclipse { width: 6.5mm; height: 6.5mm; flex: none; }
+.coroa { fill: var(--ouro); }
+.disco { fill: #150c1f; }
+.frase { margin: 1.5mm 0 3mm; color: var(--rosa); font: italic 600 3.6mm/1.1 "Cormorant Garamond", serif; }
+.cartao ul { margin: 0; padding: 0; list-style: none; font-size: 2.55mm; line-height: 1.55; color: #e6dcf5; }
+.insta { margin-top: .8mm; color: var(--ouro); font-weight: 700; font-size: 3mm; }
+.cartao-qr { text-align: center; }
+.cartao-qr .qr { display: block; width: 100%; padding: 2mm; border-radius: 2.5mm; background: var(--creme); }
+.cartao-qr p { margin: 1.2mm 0 0; color: #cfc0e6; font-size: 2.1mm; white-space: nowrap; }
+/* versão clara: gasta pouca tinta */
+.folha.clara .cartao { background: var(--marfim); color: var(--tinta); }
+.folha.clara .disco { fill: var(--marfim); }
+.folha.clara .frase { color: var(--vinho); }
+.folha.clara .cartao ul { color: #4a3a5a; }
+.folha.clara .insta { color: #8a5a2b; }
+.folha.clara .cartao-qr .qr { background: #fff; outline: .3mm solid #d9cbb0; }
+.folha.clara .cartao-qr p { color: #6b5a7a; }
+@media screen and (max-width: 860px) { .folha { zoom: .45; } }
+@page { size: A4; margin: 0; }
+@media print { body { background: #fff; } .barra { display: none; } .folha { margin: 0; zoom: 1; } }
+</style>
+</head>
+<body>
+<div class="barra">
+    <p>Folha A4 com 10 cartões de 85 × 55 mm (tamanho de cartão de visita). Imprima em papel mais grosso e corte na linha tracejada. O QR abre a loja.</p>
+    <button type="button" onclick="print()">Imprimir</button>
+    <button type="button" class="claro" id="trocar">Versão clara (gasta menos tinta)</button>
+</div>
+<main class="folha" id="folha">
+        <article class="cartao">
+            <div class="cartao-texto">
+                <p class="marca"><svg class="eclipse" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="11" class="coroa"/><circle cx="18" cy="14.5" r="10" class="disco"/></svg>Eclipse Studio</p>
+                <p class="frase">doce por fora, bruxa por dentro</p>
+                <ul>
+                    <li>✦ loja online, pedido pelo WhatsApp</li>
+                    <li>✦ entrega em Campo Grande - MS</li>
+                    <li class="insta">@eclipse_studiocg</li>
+                </ul>
+            </div>
+            <div class="cartao-qr">
+                <svg class="qr" role="img" aria-label="QR code da loja Eclipse Studio" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 33 33" shape-rendering="crispEdges"><path stroke="#241a33" d="M0 0.5h7m3 0h2m5 0h5m1 0h1m2 0h7M0 1.5h1m5 0h1m4 0h2m2 0h2m1 0h1m1 0h2m4 0h1m5 0h1M0 2.5h1m1 0h3m1 0h1m1 0h1m1 0h2m2 0h1m1 0h1m2 0h3m4 0h1m1 0h3m1 0h1M0 3.5h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h1m4 0h1m4 0h1m3 0h1m1 0h3m1 0h1M0 4.5h1m1 0h3m1 0h1m1 0h1m1 0h11m1 0h2m2 0h1m1 0h3m1 0h1M0 5.5h1m5 0h1m1 0h3m2 0h2m3 0h1m2 0h2m3 0h1m5 0h1M0 6.5h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7M8 7.5h1m2 0h1m2 0h1m1 0h1m3 0h2m2 0h1M0 8.5h1m1 0h5m2 0h2m2 0h2m2 0h1m4 0h3m1 0h5M0 9.5h1m1 0h1m2 0h1m1 0h1m1 0h2m1 0h3m1 0h2m1 0h3m1 0h1m2 0h2m1 0h4M0 10.5h8m1 0h2m2 0h5m7 0h2m1 0h1m1 0h2M1 11.5h1m1 0h2m3 0h1m2 0h3m1 0h1m3 0h4m2 0h2m1 0h3m1 0h1M0 12.5h2m2 0h1m1 0h1m3 0h1m3 0h1m1 0h4m2 0h1m1 0h1m2 0h3M0 13.5h1m1 0h1m5 0h2m1 0h1m1 0h1m1 0h1m2 0h4m1 0h1m2 0h1m2 0h4M0 14.5h4m2 0h2m1 0h2m1 0h2m1 0h2m3 0h3m1 0h3m3 0h2M3 15.5h1m1 0h1m1 0h1m2 0h1m4 0h1m2 0h1m1 0h2m3 0h6M0 16.5h4m2 0h1m1 0h1m2 0h3m1 0h1m1 0h1m4 0h2m1 0h1m1 0h2m3 0h1M0 17.5h1m1 0h4m1 0h2m2 0h1m1 0h2m1 0h4m1 0h1m1 0h1m1 0h3m1 0h4M0 18.5h4m2 0h1m1 0h1m6 0h1m1 0h1m2 0h3m2 0h4m1 0h2M0 19.5h4m1 0h1m2 0h1m1 0h3m1 0h1m1 0h1m4 0h2m2 0h8M0 20.5h1m2 0h2m1 0h1m3 0h1m1 0h1m5 0h3m2 0h3m1 0h3m1 0h2M0 21.5h2m1 0h1m4 0h6m1 0h7m1 0h1m2 0h1m2 0h2m1 0h1M0 22.5h1m2 0h4m1 0h2m3 0h1m4 0h1m2 0h2m4 0h1m3 0h1M0 23.5h1m2 0h1m3 0h1m1 0h1m1 0h1m1 0h2m1 0h1m1 0h1m1 0h7m1 0h5M0 24.5h1m1 0h2m2 0h1m1 0h1m1 0h3m4 0h1m4 0h1m1 0h5m2 0h1M8 25.5h1m2 0h1m1 0h1m3 0h1m1 0h2m1 0h1m1 0h1m3 0h1m1 0h1m1 0h1M0 26.5h7m4 0h3m1 0h1m1 0h1m2 0h5m1 0h1m1 0h1m1 0h2M0 27.5h1m5 0h1m1 0h1m3 0h1m4 0h2m1 0h5m3 0h3M0 28.5h1m1 0h3m1 0h1m1 0h3m3 0h3m2 0h2m1 0h1m1 0h6M0 29.5h1m1 0h3m1 0h1m1 0h1m1 0h2m1 0h3m2 0h8m2 0h2m1 0h2M0 30.5h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h5m3 0h1m1 0h1m1 0h1m1 0h2m1 0h1M0 31.5h1m5 0h1m2 0h1m3 0h1m1 0h1m3 0h1m1 0h1m3 0h1m2 0h3M0 32.5h7m1 0h1m3 0h4m1 0h1m4 0h4m1 0h1m3 0h1"/></svg>
+
+                <p>aponte a câmera ✦</p>
+            </div>
+        </article>
+        <article class="cartao">
+            <div class="cartao-texto">
+                <p class="marca"><svg class="eclipse" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="11" class="coroa"/><circle cx="18" cy="14.5" r="10" class="disco"/></svg>Eclipse Studio</p>
+                <p class="frase">doce por fora, bruxa por dentro</p>
+                <ul>
+                    <li>✦ loja online, pedido pelo WhatsApp</li>
+                    <li>✦ entrega em Campo Grande - MS</li>
+                    <li class="insta">@eclipse_studiocg</li>
+                </ul>
+            </div>
+            <div class="cartao-qr">
+                <svg class="qr" role="img" aria-label="QR code da loja Eclipse Studio" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 33 33" shape-rendering="crispEdges"><path stroke="#241a33" d="M0 0.5h7m3 0h2m5 0h5m1 0h1m2 0h7M0 1.5h1m5 0h1m4 0h2m2 0h2m1 0h1m1 0h2m4 0h1m5 0h1M0 2.5h1m1 0h3m1 0h1m1 0h1m1 0h2m2 0h1m1 0h1m2 0h3m4 0h1m1 0h3m1 0h1M0 3.5h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h1m4 0h1m4 0h1m3 0h1m1 0h3m1 0h1M0 4.5h1m1 0h3m1 0h1m1 0h1m1 0h11m1 0h2m2 0h1m1 0h3m1 0h1M0 5.5h1m5 0h1m1 0h3m2 0h2m3 0h1m2 0h2m3 0h1m5 0h1M0 6.5h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7M8 7.5h1m2 0h1m2 0h1m1 0h1m3 0h2m2 0h1M0 8.5h1m1 0h5m2 0h2m2 0h2m2 0h1m4 0h3m1 0h5M0 9.5h1m1 0h1m2 0h1m1 0h1m1 0h2m1 0h3m1 0h2m1 0h3m1 0h1m2 0h2m1 0h4M0 10.5h8m1 0h2m2 0h5m7 0h2m1 0h1m1 0h2M1 11.5h1m1 0h2m3 0h1m2 0h3m1 0h1m3 0h4m2 0h2m1 0h3m1 0h1M0 12.5h2m2 0h1m1 0h1m3 0h1m3 0h1m1 0h4m2 0h1m1 0h1m2 0h3M0 13.5h1m1 0h1m5 0h2m1 0h1m1 0h1m1 0h1m2 0h4m1 0h1m2 0h1m2 0h4M0 14.5h4m2 0h2m1 0h2m1 0h2m1 0h2m3 0h3m1 0h3m3 0h2M3 15.5h1m1 0h1m1 0h1m2 0h1m4 0h1m2 0h1m1 0h2m3 0h6M0 16.5h4m2 0h1m1 0h1m2 0h3m1 0h1m1 0h1m4 0h2m1 0h1m1 0h2m3 0h1M0 17.5h1m1 0h4m1 0h2m2 0h1m1 0h2m1 0h4m1 0h1m1 0h1m1 0h3m1 0h4M0 18.5h4m2 0h1m1 0h1m6 0h1m1 0h1m2 0h3m2 0h4m1 0h2M0 19.5h4m1 0h1m2 0h1m1 0h3m1 0h1m1 0h1m4 0h2m2 0h8M0 20.5h1m2 0h2m1 0h1m3 0h1m1 0h1m5 0h3m2 0h3m1 0h3m1 0h2M0 21.5h2m1 0h1m4 0h6m1 0h7m1 0h1m2 0h1m2 0h2m1 0h1M0 22.5h1m2 0h4m1 0h2m3 0h1m4 0h1m2 0h2m4 0h1m3 0h1M0 23.5h1m2 0h1m3 0h1m1 0h1m1 0h1m1 0h2m1 0h1m1 0h1m1 0h7m1 0h5M0 24.5h1m1 0h2m2 0h1m1 0h1m1 0h3m4 0h1m4 0h1m1 0h5m2 0h1M8 25.5h1m2 0h1m1 0h1m3 0h1m1 0h2m1 0h1m1 0h1m3 0h1m1 0h1m1 0h1M0 26.5h7m4 0h3m1 0h1m1 0h1m2 0h5m1 0h1m1 0h1m1 0h2M0 27.5h1m5 0h1m1 0h1m3 0h1m4 0h2m1 0h5m3 0h3M0 28.5h1m1 0h3m1 0h1m1 0h3m3 0h3m2 0h2m1 0h1m1 0h6M0 29.5h1m1 0h3m1 0h1m1 0h1m1 0h2m1 0h3m2 0h8m2 0h2m1 0h2M0 30.5h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h5m3 0h1m1 0h1m1 0h1m1 0h2m1 0h1M0 31.5h1m5 0h1m2 0h1m3 0h1m1 0h1m3 0h1m1 0h1m3 0h1m2 0h3M0 32.5h7m1 0h1m3 0h4m1 0h1m4 0h4m1 0h1m3 0h1"/></svg>
+
+                <p>aponte a câmera ✦</p>
+            </div>
+        </article>
+        <article class="cartao">
+            <div class="cartao-texto">
+                <p class="marca"><svg class="eclipse" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="11" class="coroa"/><circle cx="18" cy="14.5" r="10" class="disco"/></svg>Eclipse Studio</p>
+                <p class="frase">doce por fora, bruxa por dentro</p>
+                <ul>
+                    <li>✦ loja online, pedido pelo WhatsApp</li>
+                    <li>✦ entrega em Campo Grande - MS</li>
+                    <li class="insta">@eclipse_studiocg</li>
+                </ul>
+            </div>
+            <div class="cartao-qr">
+                <svg class="qr" role="img" aria-label="QR code da loja Eclipse Studio" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 33 33" shape-rendering="crispEdges"><path stroke="#241a33" d="M0 0.5h7m3 0h2m5 0h5m1 0h1m2 0h7M0 1.5h1m5 0h1m4 0h2m2 0h2m1 0h1m1 0h2m4 0h1m5 0h1M0 2.5h1m1 0h3m1 0h1m1 0h1m1 0h2m2 0h1m1 0h1m2 0h3m4 0h1m1 0h3m1 0h1M0 3.5h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h1m4 0h1m4 0h1m3 0h1m1 0h3m1 0h1M0 4.5h1m1 0h3m1 0h1m1 0h1m1 0h11m1 0h2m2 0h1m1 0h3m1 0h1M0 5.5h1m5 0h1m1 0h3m2 0h2m3 0h1m2 0h2m3 0h1m5 0h1M0 6.5h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7M8 7.5h1m2 0h1m2 0h1m1 0h1m3 0h2m2 0h1M0 8.5h1m1 0h5m2 0h2m2 0h2m2 0h1m4 0h3m1 0h5M0 9.5h1m1 0h1m2 0h1m1 0h1m1 0h2m1 0h3m1 0h2m1 0h3m1 0h1m2 0h2m1 0h4M0 10.5h8m1 0h2m2 0h5m7 0h2m1 0h1m1 0h2M1 11.5h1m1 0h2m3 0h1m2 0h3m1 0h1m3 0h4m2 0h2m1 0h3m1 0h1M0 12.5h2m2 0h1m1 0h1m3 0h1m3 0h1m1 0h4m2 0h1m1 0h1m2 0h3M0 13.5h1m1 0h1m5 0h2m1 0h1m1 0h1m1 0h1m2 0h4m1 0h1m2 0h1m2 0h4M0 14.5h4m2 0h2m1 0h2m1 0h2m1 0h2m3 0h3m1 0h3m3 0h2M3 15.5h1m1 0h1m1 0h1m2 0h1m4 0h1m2 0h1m1 0h2m3 0h6M0 16.5h4m2 0h1m1 0h1m2 0h3m1 0h1m1 0h1m4 0h2m1 0h1m1 0h2m3 0h1M0 17.5h1m1 0h4m1 0h2m2 0h1m1 0h2m1 0h4m1 0h1m1 0h1m1 0h3m1 0h4M0 18.5h4m2 0h1m1 0h1m6 0h1m1 0h1m2 0h3m2 0h4m1 0h2M0 19.5h4m1 0h1m2 0h1m1 0h3m1 0h1m1 0h1m4 0h2m2 0h8M0 20.5h1m2 0h2m1 0h1m3 0h1m1 0h1m5 0h3m2 0h3m1 0h3m1 0h2M0 21.5h2m1 0h1m4 0h6m1 0h7m1 0h1m2 0h1m2 0h2m1 0h1M0 22.5h1m2 0h4m1 0h2m3 0h1m4 0h1m2 0h2m4 0h1m3 0h1M0 23.5h1m2 0h1m3 0h1m1 0h1m1 0h1m1 0h2m1 0h1m1 0h1m1 0h7m1 0h5M0 24.5h1m1 0h2m2 0h1m1 0h1m1 0h3m4 0h1m4 0h1m1 0h5m2 0h1M8 25.5h1m2 0h1m1 0h1m3 0h1m1 0h2m1 0h1m1 0h1m3 0h1m1 0h1m1 0h1M0 26.5h7m4 0h3m1 0h1m1 0h1m2 0h5m1 0h1m1 0h1m1 0h2M0 27.5h1m5 0h1m1 0h1m3 0h1m4 0h2m1 0h5m3 0h3M0 28.5h1m1 0h3m1 0h1m1 0h3m3 0h3m2 0h2m1 0h1m1 0h6M0 29.5h1m1 0h3m1 0h1m1 0h1m1 0h2m1 0h3m2 0h8m2 0h2m1 0h2M0 30.5h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h5m3 0h1m1 0h1m1 0h1m1 0h2m1 0h1M0 31.5h1m5 0h1m2 0h1m3 0h1m1 0h1m3 0h1m1 0h1m3 0h1m2 0h3M0 32.5h7m1 0h1m3 0h4m1 0h1m4 0h4m1 0h1m3 0h1"/></svg>
+
+                <p>aponte a câmera ✦</p>
+            </div>
+        </article>
+        <article class="cartao">
+            <div class="cartao-texto">
+                <p class="marca"><svg class="eclipse" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="11" class="coroa"/><circle cx="18" cy="14.5" r="10" class="disco"/></svg>Eclipse Studio</p>
+                <p class="frase">doce por fora, bruxa por dentro</p>
+                <ul>
+                    <li>✦ loja online, pedido pelo WhatsApp</li>
+                    <li>✦ entrega em Campo Grande - MS</li>
+                    <li class="insta">@eclipse_studiocg</li>
+                </ul>
+            </div>
+            <div class="cartao-qr">
+                <svg class="qr" role="img" aria-label="QR code da loja Eclipse Studio" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 33 33" shape-rendering="crispEdges"><path stroke="#241a33" d="M0 0.5h7m3 0h2m5 0h5m1 0h1m2 0h7M0 1.5h1m5 0h1m4 0h2m2 0h2m1 0h1m1 0h2m4 0h1m5 0h1M0 2.5h1m1 0h3m1 0h1m1 0h1m1 0h2m2 0h1m1 0h1m2 0h3m4 0h1m1 0h3m1 0h1M0 3.5h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h1m4 0h1m4 0h1m3 0h1m1 0h3m1 0h1M0 4.5h1m1 0h3m1 0h1m1 0h1m1 0h11m1 0h2m2 0h1m1 0h3m1 0h1M0 5.5h1m5 0h1m1 0h3m2 0h2m3 0h1m2 0h2m3 0h1m5 0h1M0 6.5h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7M8 7.5h1m2 0h1m2 0h1m1 0h1m3 0h2m2 0h1M0 8.5h1m1 0h5m2 0h2m2 0h2m2 0h1m4 0h3m1 0h5M0 9.5h1m1 0h1m2 0h1m1 0h1m1 0h2m1 0h3m1 0h2m1 0h3m1 0h1m2 0h2m1 0h4M0 10.5h8m1 0h2m2 0h5m7 0h2m1 0h1m1 0h2M1 11.5h1m1 0h2m3 0h1m2 0h3m1 0h1m3 0h4m2 0h2m1 0h3m1 0h1M0 12.5h2m2 0h1m1 0h1m3 0h1m3 0h1m1 0h4m2 0h1m1 0h1m2 0h3M0 13.5h1m1 0h1m5 0h2m1 0h1m1 0h1m1 0h1m2 0h4m1 0h1m2 0h1m2 0h4M0 14.5h4m2 0h2m1 0h2m1 0h2m1 0h2m3 0h3m1 0h3m3 0h2M3 15.5h1m1 0h1m1 0h1m2 0h1m4 0h1m2 0h1m1 0h2m3 0h6M0 16.5h4m2 0h1m1 0h1m2 0h3m1 0h1m1 0h1m4 0h2m1 0h1m1 0h2m3 0h1M0 17.5h1m1 0h4m1 0h2m2 0h1m1 0h2m1 0h4m1 0h1m1 0h1m1 0h3m1 0h4M0 18.5h4m2 0h1m1 0h1m6 0h1m1 0h1m2 0h3m2 0h4m1 0h2M0 19.5h4m1 0h1m2 0h1m1 0h3m1 0h1m1 0h1m4 0h2m2 0h8M0 20.5h1m2 0h2m1 0h1m3 0h1m1 0h1m5 0h3m2 0h3m1 0h3m1 0h2M0 21.5h2m1 0h1m4 0h6m1 0h7m1 0h1m2 0h1m2 0h2m1 0h1M0 22.5h1m2 0h4m1 0h2m3 0h1m4 0h1m2 0h2m4 0h1m3 0h1M0 23.5h1m2 0h1m3 0h1m1 0h1m1 0h1m1 0h2m1 0h1m1 0h1m1 0h7m1 0h5M0 24.5h1m1 0h2m2 0h1m1 0h1m1 0h3m4 0h1m4 0h1m1 0h5m2 0h1M8 25.5h1m2 0h1m1 0h1m3 0h1m1 0h2m1 0h1m1 0h1m3 0h1m1 0h1m1 0h1M0 26.5h7m4 0h3m1 0h1m1 0h1m2 0h5m1 0h1m1 0h1m1 0h2M0 27.5h1m5 0h1m1 0h1m3 0h1m4 0h2m1 0h5m3 0h3M0 28.5h1m1 0h3m1 0h1m1 0h3m3 0h3m2 0h2m1 0h1m1 0h6M0 29.5h1m1 0h3m1 0h1m1 0h1m1 0h2m1 0h3m2 0h8m2 0h2m1 0h2M0 30.5h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h5m3 0h1m1 0h1m1 0h1m1 0h2m1 0h1M0 31.5h1m5 0h1m2 0h1m3 0h1m1 0h1m3 0h1m1 0h1m3 0h1m2 0h3M0 32.5h7m1 0h1m3 0h4m1 0h1m4 0h4m1 0h1m3 0h1"/></svg>
+
+                <p>aponte a câmera ✦</p>
+            </div>
+        </article>
+        <article class="cartao">
+            <div class="cartao-texto">
+                <p class="marca"><svg class="eclipse" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="11" class="coroa"/><circle cx="18" cy="14.5" r="10" class="disco"/></svg>Eclipse Studio</p>
+                <p class="frase">doce por fora, bruxa por dentro</p>
+                <ul>
+                    <li>✦ loja online, pedido pelo WhatsApp</li>
+                    <li>✦ entrega em Campo Grande - MS</li>
+                    <li class="insta">@eclipse_studiocg</li>
+                </ul>
+            </div>
+            <div class="cartao-qr">
+                <svg class="qr" role="img" aria-label="QR code da loja Eclipse Studio" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 33 33" shape-rendering="crispEdges"><path stroke="#241a33" d="M0 0.5h7m3 0h2m5 0h5m1 0h1m2 0h7M0 1.5h1m5 0h1m4 0h2m2 0h2m1 0h1m1 0h2m4 0h1m5 0h1M0 2.5h1m1 0h3m1 0h1m1 0h1m1 0h2m2 0h1m1 0h1m2 0h3m4 0h1m1 0h3m1 0h1M0 3.5h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h1m4 0h1m4 0h1m3 0h1m1 0h3m1 0h1M0 4.5h1m1 0h3m1 0h1m1 0h1m1 0h11m1 0h2m2 0h1m1 0h3m1 0h1M0 5.5h1m5 0h1m1 0h3m2 0h2m3 0h1m2 0h2m3 0h1m5 0h1M0 6.5h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7M8 7.5h1m2 0h1m2 0h1m1 0h1m3 0h2m2 0h1M0 8.5h1m1 0h5m2 0h2m2 0h2m2 0h1m4 0h3m1 0h5M0 9.5h1m1 0h1m2 0h1m1 0h1m1 0h2m1 0h3m1 0h2m1 0h3m1 0h1m2 0h2m1 0h4M0 10.5h8m1 0h2m2 0h5m7 0h2m1 0h1m1 0h2M1 11.5h1m1 0h2m3 0h1m2 0h3m1 0h1m3 0h4m2 0h2m1 0h3m1 0h1M0 12.5h2m2 0h1m1 0h1m3 0h1m3 0h1m1 0h4m2 0h1m1 0h1m2 0h3M0 13.5h1m1 0h1m5 0h2m1 0h1m1 0h1m1 0h1m2 0h4m1 0h1m2 0h1m2 0h4M0 14.5h4m2 0h2m1 0h2m1 0h2m1 0h2m3 0h3m1 0h3m3 0h2M3 15.5h1m1 0h1m1 0h1m2 0h1m4 0h1m2 0h1m1 0h2m3 0h6M0 16.5h4m2 0h1m1 0h1m2 0h3m1 0h1m1 0h1m4 0h2m1 0h1m1 0h2m3 0h1M0 17.5h1m1 0h4m1 0h2m2 0h1m1 0h2m1 0h4m1 0h1m1 0h1m1 0h3m1 0h4M0 18.5h4m2 0h1m1 0h1m6 0h1m1 0h1m2 0h3m2 0h4m1 0h2M0 19.5h4m1 0h1m2 0h1m1 0h3m1 0h1m1 0h1m4 0h2m2 0h8M0 20.5h1m2 0h2m1 0h1m3 0h1m1 0h1m5 0h3m2 0h3m1 0h3m1 0h2M0 21.5h2m1 0h1m4 0h6m1 0h7m1 0h1m2 0h1m2 0h2m1 0h1M0 22.5h1m2 0h4m1 0h2m3 0h1m4 0h1m2 0h2m4 0h1m3 0h1M0 23.5h1m2 0h1m3 0h1m1 0h1m1 0h1m1 0h2m1 0h1m1 0h1m1 0h7m1 0h5M0 24.5h1m1 0h2m2 0h1m1 0h1m1 0h3m4 0h1m4 0h1m1 0h5m2 0h1M8 25.5h1m2 0h1m1 0h1m3 0h1m1 0h2m1 0h1m1 0h1m3 0h1m1 0h1m1 0h1M0 26.5h7m4 0h3m1 0h1m1 0h1m2 0h5m1 0h1m1 0h1m1 0h2M0 27.5h1m5 0h1m1 0h1m3 0h1m4 0h2m1 0h5m3 0h3M0 28.5h1m1 0h3m1 0h1m1 0h3m3 0h3m2 0h2m1 0h1m1 0h6M0 29.5h1m1 0h3m1 0h1m1 0h1m1 0h2m1 0h3m2 0h8m2 0h2m1 0h2M0 30.5h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h5m3 0h1m1 0h1m1 0h1m1 0h2m1 0h1M0 31.5h1m5 0h1m2 0h1m3 0h1m1 0h1m3 0h1m1 0h1m3 0h1m2 0h3M0 32.5h7m1 0h1m3 0h4m1 0h1m4 0h4m1 0h1m3 0h1"/></svg>
+
+                <p>aponte a câmera ✦</p>
+            </div>
+        </article>
+        <article class="cartao">
+            <div class="cartao-texto">
+                <p class="marca"><svg class="eclipse" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="11" class="coroa"/><circle cx="18" cy="14.5" r="10" class="disco"/></svg>Eclipse Studio</p>
+                <p class="frase">doce por fora, bruxa por dentro</p>
+                <ul>
+                    <li>✦ loja online, pedido pelo WhatsApp</li>
+                    <li>✦ entrega em Campo Grande - MS</li>
+                    <li class="insta">@eclipse_studiocg</li>
+                </ul>
+            </div>
+            <div class="cartao-qr">
+                <svg class="qr" role="img" aria-label="QR code da loja Eclipse Studio" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 33 33" shape-rendering="crispEdges"><path stroke="#241a33" d="M0 0.5h7m3 0h2m5 0h5m1 0h1m2 0h7M0 1.5h1m5 0h1m4 0h2m2 0h2m1 0h1m1 0h2m4 0h1m5 0h1M0 2.5h1m1 0h3m1 0h1m1 0h1m1 0h2m2 0h1m1 0h1m2 0h3m4 0h1m1 0h3m1 0h1M0 3.5h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h1m4 0h1m4 0h1m3 0h1m1 0h3m1 0h1M0 4.5h1m1 0h3m1 0h1m1 0h1m1 0h11m1 0h2m2 0h1m1 0h3m1 0h1M0 5.5h1m5 0h1m1 0h3m2 0h2m3 0h1m2 0h2m3 0h1m5 0h1M0 6.5h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7M8 7.5h1m2 0h1m2 0h1m1 0h1m3 0h2m2 0h1M0 8.5h1m1 0h5m2 0h2m2 0h2m2 0h1m4 0h3m1 0h5M0 9.5h1m1 0h1m2 0h1m1 0h1m1 0h2m1 0h3m1 0h2m1 0h3m1 0h1m2 0h2m1 0h4M0 10.5h8m1 0h2m2 0h5m7 0h2m1 0h1m1 0h2M1 11.5h1m1 0h2m3 0h1m2 0h3m1 0h1m3 0h4m2 0h2m1 0h3m1 0h1M0 12.5h2m2 0h1m1 0h1m3 0h1m3 0h1m1 0h4m2 0h1m1 0h1m2 0h3M0 13.5h1m1 0h1m5 0h2m1 0h1m1 0h1m1 0h1m2 0h4m1 0h1m2 0h1m2 0h4M0 14.5h4m2 0h2m1 0h2m1 0h2m1 0h2m3 0h3m1 0h3m3 0h2M3 15.5h1m1 0h1m1 0h1m2 0h1m4 0h1m2 0h1m1 0h2m3 0h6M0 16.5h4m2 0h1m1 0h1m2 0h3m1 0h1m1 0h1m4 0h2m1 0h1m1 0h2m3 0h1M0 17.5h1m1 0h4m1 0h2m2 0h1m1 0h2m1 0h4m1 0h1m1 0h1m1 0h3m1 0h4M0 18.5h4m2 0h1m1 0h1m6 0h1m1 0h1m2 0h3m2 0h4m1 0h2M0 19.5h4m1 0h1m2 0h1m1 0h3m1 0h1m1 0h1m4 0h2m2 0h8M0 20.5h1m2 0h2m1 0h1m3 0h1m1 0h1m5 0h3m2 0h3m1 0h3m1 0h2M0 21.5h2m1 0h1m4 0h6m1 0h7m1 0h1m2 0h1m2 0h2m1 0h1M0 22.5h1m2 0h4m1 0h2m3 0h1m4 0h1m2 0h2m4 0h1m3 0h1M0 23.5h1m2 0h1m3 0h1m1 0h1m1 0h1m1 0h2m1 0h1m1 0h1m1 0h7m1 0h5M0 24.5h1m1 0h2m2 0h1m1 0h1m1 0h3m4 0h1m4 0h1m1 0h5m2 0h1M8 25.5h1m2 0h1m1 0h1m3 0h1m1 0h2m1 0h1m1 0h1m3 0h1m1 0h1m1 0h1M0 26.5h7m4 0h3m1 0h1m1 0h1m2 0h5m1 0h1m1 0h1m1 0h2M0 27.5h1m5 0h1m1 0h1m3 0h1m4 0h2m1 0h5m3 0h3M0 28.5h1m1 0h3m1 0h1m1 0h3m3 0h3m2 0h2m1 0h1m1 0h6M0 29.5h1m1 0h3m1 0h1m1 0h1m1 0h2m1 0h3m2 0h8m2 0h2m1 0h2M0 30.5h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h5m3 0h1m1 0h1m1 0h1m1 0h2m1 0h1M0 31.5h1m5 0h1m2 0h1m3 0h1m1 0h1m3 0h1m1 0h1m3 0h1m2 0h3M0 32.5h7m1 0h1m3 0h4m1 0h1m4 0h4m1 0h1m3 0h1"/></svg>
+
+                <p>aponte a câmera ✦</p>
+            </div>
+        </article>
+        <article class="cartao">
+            <div class="cartao-texto">
+                <p class="marca"><svg class="eclipse" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="11" class="coroa"/><circle cx="18" cy="14.5" r="10" class="disco"/></svg>Eclipse Studio</p>
+                <p class="frase">doce por fora, bruxa por dentro</p>
+                <ul>
+                    <li>✦ loja online, pedido pelo WhatsApp</li>
+                    <li>✦ entrega em Campo Grande - MS</li>
+                    <li class="insta">@eclipse_studiocg</li>
+                </ul>
+            </div>
+            <div class="cartao-qr">
+                <svg class="qr" role="img" aria-label="QR code da loja Eclipse Studio" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 33 33" shape-rendering="crispEdges"><path stroke="#241a33" d="M0 0.5h7m3 0h2m5 0h5m1 0h1m2 0h7M0 1.5h1m5 0h1m4 0h2m2 0h2m1 0h1m1 0h2m4 0h1m5 0h1M0 2.5h1m1 0h3m1 0h1m1 0h1m1 0h2m2 0h1m1 0h1m2 0h3m4 0h1m1 0h3m1 0h1M0 3.5h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h1m4 0h1m4 0h1m3 0h1m1 0h3m1 0h1M0 4.5h1m1 0h3m1 0h1m1 0h1m1 0h11m1 0h2m2 0h1m1 0h3m1 0h1M0 5.5h1m5 0h1m1 0h3m2 0h2m3 0h1m2 0h2m3 0h1m5 0h1M0 6.5h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7M8 7.5h1m2 0h1m2 0h1m1 0h1m3 0h2m2 0h1M0 8.5h1m1 0h5m2 0h2m2 0h2m2 0h1m4 0h3m1 0h5M0 9.5h1m1 0h1m2 0h1m1 0h1m1 0h2m1 0h3m1 0h2m1 0h3m1 0h1m2 0h2m1 0h4M0 10.5h8m1 0h2m2 0h5m7 0h2m1 0h1m1 0h2M1 11.5h1m1 0h2m3 0h1m2 0h3m1 0h1m3 0h4m2 0h2m1 0h3m1 0h1M0 12.5h2m2 0h1m1 0h1m3 0h1m3 0h1m1 0h4m2 0h1m1 0h1m2 0h3M0 13.5h1m1 0h1m5 0h2m1 0h1m1 0h1m1 0h1m2 0h4m1 0h1m2 0h1m2 0h4M0 14.5h4m2 0h2m1 0h2m1 0h2m1 0h2m3 0h3m1 0h3m3 0h2M3 15.5h1m1 0h1m1 0h1m2 0h1m4 0h1m2 0h1m1 0h2m3 0h6M0 16.5h4m2 0h1m1 0h1m2 0h3m1 0h1m1 0h1m4 0h2m1 0h1m1 0h2m3 0h1M0 17.5h1m1 0h4m1 0h2m2 0h1m1 0h2m1 0h4m1 0h1m1 0h1m1 0h3m1 0h4M0 18.5h4m2 0h1m1 0h1m6 0h1m1 0h1m2 0h3m2 0h4m1 0h2M0 19.5h4m1 0h1m2 0h1m1 0h3m1 0h1m1 0h1m4 0h2m2 0h8M0 20.5h1m2 0h2m1 0h1m3 0h1m1 0h1m5 0h3m2 0h3m1 0h3m1 0h2M0 21.5h2m1 0h1m4 0h6m1 0h7m1 0h1m2 0h1m2 0h2m1 0h1M0 22.5h1m2 0h4m1 0h2m3 0h1m4 0h1m2 0h2m4 0h1m3 0h1M0 23.5h1m2 0h1m3 0h1m1 0h1m1 0h1m1 0h2m1 0h1m1 0h1m1 0h7m1 0h5M0 24.5h1m1 0h2m2 0h1m1 0h1m1 0h3m4 0h1m4 0h1m1 0h5m2 0h1M8 25.5h1m2 0h1m1 0h1m3 0h1m1 0h2m1 0h1m1 0h1m3 0h1m1 0h1m1 0h1M0 26.5h7m4 0h3m1 0h1m1 0h1m2 0h5m1 0h1m1 0h1m1 0h2M0 27.5h1m5 0h1m1 0h1m3 0h1m4 0h2m1 0h5m3 0h3M0 28.5h1m1 0h3m1 0h1m1 0h3m3 0h3m2 0h2m1 0h1m1 0h6M0 29.5h1m1 0h3m1 0h1m1 0h1m1 0h2m1 0h3m2 0h8m2 0h2m1 0h2M0 30.5h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h5m3 0h1m1 0h1m1 0h1m1 0h2m1 0h1M0 31.5h1m5 0h1m2 0h1m3 0h1m1 0h1m3 0h1m1 0h1m3 0h1m2 0h3M0 32.5h7m1 0h1m3 0h4m1 0h1m4 0h4m1 0h1m3 0h1"/></svg>
+
+                <p>aponte a câmera ✦</p>
+            </div>
+        </article>
+        <article class="cartao">
+            <div class="cartao-texto">
+                <p class="marca"><svg class="eclipse" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="11" class="coroa"/><circle cx="18" cy="14.5" r="10" class="disco"/></svg>Eclipse Studio</p>
+                <p class="frase">doce por fora, bruxa por dentro</p>
+                <ul>
+                    <li>✦ loja online, pedido pelo WhatsApp</li>
+                    <li>✦ entrega em Campo Grande - MS</li>
+                    <li class="insta">@eclipse_studiocg</li>
+                </ul>
+            </div>
+            <div class="cartao-qr">
+                <svg class="qr" role="img" aria-label="QR code da loja Eclipse Studio" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 33 33" shape-rendering="crispEdges"><path stroke="#241a33" d="M0 0.5h7m3 0h2m5 0h5m1 0h1m2 0h7M0 1.5h1m5 0h1m4 0h2m2 0h2m1 0h1m1 0h2m4 0h1m5 0h1M0 2.5h1m1 0h3m1 0h1m1 0h1m1 0h2m2 0h1m1 0h1m2 0h3m4 0h1m1 0h3m1 0h1M0 3.5h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h1m4 0h1m4 0h1m3 0h1m1 0h3m1 0h1M0 4.5h1m1 0h3m1 0h1m1 0h1m1 0h11m1 0h2m2 0h1m1 0h3m1 0h1M0 5.5h1m5 0h1m1 0h3m2 0h2m3 0h1m2 0h2m3 0h1m5 0h1M0 6.5h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7M8 7.5h1m2 0h1m2 0h1m1 0h1m3 0h2m2 0h1M0 8.5h1m1 0h5m2 0h2m2 0h2m2 0h1m4 0h3m1 0h5M0 9.5h1m1 0h1m2 0h1m1 0h1m1 0h2m1 0h3m1 0h2m1 0h3m1 0h1m2 0h2m1 0h4M0 10.5h8m1 0h2m2 0h5m7 0h2m1 0h1m1 0h2M1 11.5h1m1 0h2m3 0h1m2 0h3m1 0h1m3 0h4m2 0h2m1 0h3m1 0h1M0 12.5h2m2 0h1m1 0h1m3 0h1m3 0h1m1 0h4m2 0h1m1 0h1m2 0h3M0 13.5h1m1 0h1m5 0h2m1 0h1m1 0h1m1 0h1m2 0h4m1 0h1m2 0h1m2 0h4M0 14.5h4m2 0h2m1 0h2m1 0h2m1 0h2m3 0h3m1 0h3m3 0h2M3 15.5h1m1 0h1m1 0h1m2 0h1m4 0h1m2 0h1m1 0h2m3 0h6M0 16.5h4m2 0h1m1 0h1m2 0h3m1 0h1m1 0h1m4 0h2m1 0h1m1 0h2m3 0h1M0 17.5h1m1 0h4m1 0h2m2 0h1m1 0h2m1 0h4m1 0h1m1 0h1m1 0h3m1 0h4M0 18.5h4m2 0h1m1 0h1m6 0h1m1 0h1m2 0h3m2 0h4m1 0h2M0 19.5h4m1 0h1m2 0h1m1 0h3m1 0h1m1 0h1m4 0h2m2 0h8M0 20.5h1m2 0h2m1 0h1m3 0h1m1 0h1m5 0h3m2 0h3m1 0h3m1 0h2M0 21.5h2m1 0h1m4 0h6m1 0h7m1 0h1m2 0h1m2 0h2m1 0h1M0 22.5h1m2 0h4m1 0h2m3 0h1m4 0h1m2 0h2m4 0h1m3 0h1M0 23.5h1m2 0h1m3 0h1m1 0h1m1 0h1m1 0h2m1 0h1m1 0h1m1 0h7m1 0h5M0 24.5h1m1 0h2m2 0h1m1 0h1m1 0h3m4 0h1m4 0h1m1 0h5m2 0h1M8 25.5h1m2 0h1m1 0h1m3 0h1m1 0h2m1 0h1m1 0h1m3 0h1m1 0h1m1 0h1M0 26.5h7m4 0h3m1 0h1m1 0h1m2 0h5m1 0h1m1 0h1m1 0h2M0 27.5h1m5 0h1m1 0h1m3 0h1m4 0h2m1 0h5m3 0h3M0 28.5h1m1 0h3m1 0h1m1 0h3m3 0h3m2 0h2m1 0h1m1 0h6M0 29.5h1m1 0h3m1 0h1m1 0h1m1 0h2m1 0h3m2 0h8m2 0h2m1 0h2M0 30.5h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h5m3 0h1m1 0h1m1 0h1m1 0h2m1 0h1M0 31.5h1m5 0h1m2 0h1m3 0h1m1 0h1m3 0h1m1 0h1m3 0h1m2 0h3M0 32.5h7m1 0h1m3 0h4m1 0h1m4 0h4m1 0h1m3 0h1"/></svg>
+
+                <p>aponte a câmera ✦</p>
+            </div>
+        </article>
+        <article class="cartao">
+            <div class="cartao-texto">
+                <p class="marca"><svg class="eclipse" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="11" class="coroa"/><circle cx="18" cy="14.5" r="10" class="disco"/></svg>Eclipse Studio</p>
+                <p class="frase">doce por fora, bruxa por dentro</p>
+                <ul>
+                    <li>✦ loja online, pedido pelo WhatsApp</li>
+                    <li>✦ entrega em Campo Grande - MS</li>
+                    <li class="insta">@eclipse_studiocg</li>
+                </ul>
+            </div>
+            <div class="cartao-qr">
+                <svg class="qr" role="img" aria-label="QR code da loja Eclipse Studio" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 33 33" shape-rendering="crispEdges"><path stroke="#241a33" d="M0 0.5h7m3 0h2m5 0h5m1 0h1m2 0h7M0 1.5h1m5 0h1m4 0h2m2 0h2m1 0h1m1 0h2m4 0h1m5 0h1M0 2.5h1m1 0h3m1 0h1m1 0h1m1 0h2m2 0h1m1 0h1m2 0h3m4 0h1m1 0h3m1 0h1M0 3.5h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h1m4 0h1m4 0h1m3 0h1m1 0h3m1 0h1M0 4.5h1m1 0h3m1 0h1m1 0h1m1 0h11m1 0h2m2 0h1m1 0h3m1 0h1M0 5.5h1m5 0h1m1 0h3m2 0h2m3 0h1m2 0h2m3 0h1m5 0h1M0 6.5h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7M8 7.5h1m2 0h1m2 0h1m1 0h1m3 0h2m2 0h1M0 8.5h1m1 0h5m2 0h2m2 0h2m2 0h1m4 0h3m1 0h5M0 9.5h1m1 0h1m2 0h1m1 0h1m1 0h2m1 0h3m1 0h2m1 0h3m1 0h1m2 0h2m1 0h4M0 10.5h8m1 0h2m2 0h5m7 0h2m1 0h1m1 0h2M1 11.5h1m1 0h2m3 0h1m2 0h3m1 0h1m3 0h4m2 0h2m1 0h3m1 0h1M0 12.5h2m2 0h1m1 0h1m3 0h1m3 0h1m1 0h4m2 0h1m1 0h1m2 0h3M0 13.5h1m1 0h1m5 0h2m1 0h1m1 0h1m1 0h1m2 0h4m1 0h1m2 0h1m2 0h4M0 14.5h4m2 0h2m1 0h2m1 0h2m1 0h2m3 0h3m1 0h3m3 0h2M3 15.5h1m1 0h1m1 0h1m2 0h1m4 0h1m2 0h1m1 0h2m3 0h6M0 16.5h4m2 0h1m1 0h1m2 0h3m1 0h1m1 0h1m4 0h2m1 0h1m1 0h2m3 0h1M0 17.5h1m1 0h4m1 0h2m2 0h1m1 0h2m1 0h4m1 0h1m1 0h1m1 0h3m1 0h4M0 18.5h4m2 0h1m1 0h1m6 0h1m1 0h1m2 0h3m2 0h4m1 0h2M0 19.5h4m1 0h1m2 0h1m1 0h3m1 0h1m1 0h1m4 0h2m2 0h8M0 20.5h1m2 0h2m1 0h1m3 0h1m1 0h1m5 0h3m2 0h3m1 0h3m1 0h2M0 21.5h2m1 0h1m4 0h6m1 0h7m1 0h1m2 0h1m2 0h2m1 0h1M0 22.5h1m2 0h4m1 0h2m3 0h1m4 0h1m2 0h2m4 0h1m3 0h1M0 23.5h1m2 0h1m3 0h1m1 0h1m1 0h1m1 0h2m1 0h1m1 0h1m1 0h7m1 0h5M0 24.5h1m1 0h2m2 0h1m1 0h1m1 0h3m4 0h1m4 0h1m1 0h5m2 0h1M8 25.5h1m2 0h1m1 0h1m3 0h1m1 0h2m1 0h1m1 0h1m3 0h1m1 0h1m1 0h1M0 26.5h7m4 0h3m1 0h1m1 0h1m2 0h5m1 0h1m1 0h1m1 0h2M0 27.5h1m5 0h1m1 0h1m3 0h1m4 0h2m1 0h5m3 0h3M0 28.5h1m1 0h3m1 0h1m1 0h3m3 0h3m2 0h2m1 0h1m1 0h6M0 29.5h1m1 0h3m1 0h1m1 0h1m1 0h2m1 0h3m2 0h8m2 0h2m1 0h2M0 30.5h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h5m3 0h1m1 0h1m1 0h1m1 0h2m1 0h1M0 31.5h1m5 0h1m2 0h1m3 0h1m1 0h1m3 0h1m1 0h1m3 0h1m2 0h3M0 32.5h7m1 0h1m3 0h4m1 0h1m4 0h4m1 0h1m3 0h1"/></svg>
+
+                <p>aponte a câmera ✦</p>
+            </div>
+        </article>
+        <article class="cartao">
+            <div class="cartao-texto">
+                <p class="marca"><svg class="eclipse" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="11" class="coroa"/><circle cx="18" cy="14.5" r="10" class="disco"/></svg>Eclipse Studio</p>
+                <p class="frase">doce por fora, bruxa por dentro</p>
+                <ul>
+                    <li>✦ loja online, pedido pelo WhatsApp</li>
+                    <li>✦ entrega em Campo Grande - MS</li>
+                    <li class="insta">@eclipse_studiocg</li>
+                </ul>
+            </div>
+            <div class="cartao-qr">
+                <svg class="qr" role="img" aria-label="QR code da loja Eclipse Studio" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 33 33" shape-rendering="crispEdges"><path stroke="#241a33" d="M0 0.5h7m3 0h2m5 0h5m1 0h1m2 0h7M0 1.5h1m5 0h1m4 0h2m2 0h2m1 0h1m1 0h2m4 0h1m5 0h1M0 2.5h1m1 0h3m1 0h1m1 0h1m1 0h2m2 0h1m1 0h1m2 0h3m4 0h1m1 0h3m1 0h1M0 3.5h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h1m4 0h1m4 0h1m3 0h1m1 0h3m1 0h1M0 4.5h1m1 0h3m1 0h1m1 0h1m1 0h11m1 0h2m2 0h1m1 0h3m1 0h1M0 5.5h1m5 0h1m1 0h3m2 0h2m3 0h1m2 0h2m3 0h1m5 0h1M0 6.5h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7M8 7.5h1m2 0h1m2 0h1m1 0h1m3 0h2m2 0h1M0 8.5h1m1 0h5m2 0h2m2 0h2m2 0h1m4 0h3m1 0h5M0 9.5h1m1 0h1m2 0h1m1 0h1m1 0h2m1 0h3m1 0h2m1 0h3m1 0h1m2 0h2m1 0h4M0 10.5h8m1 0h2m2 0h5m7 0h2m1 0h1m1 0h2M1 11.5h1m1 0h2m3 0h1m2 0h3m1 0h1m3 0h4m2 0h2m1 0h3m1 0h1M0 12.5h2m2 0h1m1 0h1m3 0h1m3 0h1m1 0h4m2 0h1m1 0h1m2 0h3M0 13.5h1m1 0h1m5 0h2m1 0h1m1 0h1m1 0h1m2 0h4m1 0h1m2 0h1m2 0h4M0 14.5h4m2 0h2m1 0h2m1 0h2m1 0h2m3 0h3m1 0h3m3 0h2M3 15.5h1m1 0h1m1 0h1m2 0h1m4 0h1m2 0h1m1 0h2m3 0h6M0 16.5h4m2 0h1m1 0h1m2 0h3m1 0h1m1 0h1m4 0h2m1 0h1m1 0h2m3 0h1M0 17.5h1m1 0h4m1 0h2m2 0h1m1 0h2m1 0h4m1 0h1m1 0h1m1 0h3m1 0h4M0 18.5h4m2 0h1m1 0h1m6 0h1m1 0h1m2 0h3m2 0h4m1 0h2M0 19.5h4m1 0h1m2 0h1m1 0h3m1 0h1m1 0h1m4 0h2m2 0h8M0 20.5h1m2 0h2m1 0h1m3 0h1m1 0h1m5 0h3m2 0h3m1 0h3m1 0h2M0 21.5h2m1 0h1m4 0h6m1 0h7m1 0h1m2 0h1m2 0h2m1 0h1M0 22.5h1m2 0h4m1 0h2m3 0h1m4 0h1m2 0h2m4 0h1m3 0h1M0 23.5h1m2 0h1m3 0h1m1 0h1m1 0h1m1 0h2m1 0h1m1 0h1m1 0h7m1 0h5M0 24.5h1m1 0h2m2 0h1m1 0h1m1 0h3m4 0h1m4 0h1m1 0h5m2 0h1M8 25.5h1m2 0h1m1 0h1m3 0h1m1 0h2m1 0h1m1 0h1m3 0h1m1 0h1m1 0h1M0 26.5h7m4 0h3m1 0h1m1 0h1m2 0h5m1 0h1m1 0h1m1 0h2M0 27.5h1m5 0h1m1 0h1m3 0h1m4 0h2m1 0h5m3 0h3M0 28.5h1m1 0h3m1 0h1m1 0h3m3 0h3m2 0h2m1 0h1m1 0h6M0 29.5h1m1 0h3m1 0h1m1 0h1m1 0h2m1 0h3m2 0h8m2 0h2m1 0h2M0 30.5h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h5m3 0h1m1 0h1m1 0h1m1 0h2m1 0h1M0 31.5h1m5 0h1m2 0h1m3 0h1m1 0h1m3 0h1m1 0h1m3 0h1m2 0h3M0 32.5h7m1 0h1m3 0h4m1 0h1m4 0h4m1 0h1m3 0h1"/></svg>
+
+                <p>aponte a câmera ✦</p>
+            </div>
+        </article>
+</main>
+<script>
+    const folha = document.getElementById("folha"), botao = document.getElementById("trocar");
+    botao.addEventListener("click", () => {
+        const clara = folha.classList.toggle("clara");
+        botao.textContent = clara ? "Versão escura" : "Versão clara (gasta menos tinta)";
+    });
+    if (location.hash === "#clara") botao.click();
+</script>
+</body>
+</html>
