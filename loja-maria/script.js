@@ -148,7 +148,11 @@ Object.assign(ARTE, {
         + `<circle class="n" cx="50" cy="64" r="15"/>` + brilho(76, 44, .6, "o s") + brilho(24, 76, .4, "r s"),
 });
 
-const arte = (p, classe = "") => `<svg class="arte ${classe}" viewBox="0 0 100 100" aria-hidden="true" focusable="false">${ARTE[p.arte]}</svg>`;
+/* Com foto de verdade, ela entra no lugar da ilustração: ponha o arquivo em loja-maria/fotos/
+   e escreva na peça foto: "fotos/nome-do-arquivo.webp" (e, se quiser, pos: "50% 30%" pra enquadrar) */
+const arte = (p, classe = "") => p.foto
+    ? `<img class="foto ${classe}" src="${p.foto}" alt="" width="400" height="400" loading="lazy" decoding="async" style="object-position:${p.pos || "50% 50%"}">`
+    : `<svg class="arte ${classe}" viewBox="0 0 100 100" aria-hidden="true" focusable="false">${ARTE[p.arte]}</svg>`;
 
 /* ===== Catálogo (preço em centavos). Tudo provisório até a Maria mandar as peças dela ===== */
 const ROUPA = ["PP", "P", "M", "G", "GG"];
@@ -360,6 +364,7 @@ function guardar(chave, valor) {
 /* ===== Estado ===== */
 const CHAVE_SACOLA = "es-sacola-v1";
 const CHAVE_NOME = "es-nome";
+const CHAVE_FAVORITOS = "es-favoritos";
 const MAX_POR_ITEM = 9;
 
 const itemValido = (i) => {
@@ -372,6 +377,12 @@ let sacola = ler(CHAVE_SACOLA, []);
 sacola = Array.isArray(sacola) ? sacola.filter(itemValido) : [];
 
 const filtro = { cat: "todos", q: "", ordem: "padrao" };
+
+let favoritos = ler(CHAVE_FAVORITOS, []);
+favoritos = Array.isArray(favoritos) ? favoritos.filter((id) => produto(id)) : [];
+const ehFavorito = (id) => favoritos.includes(id);
+const CORACAO_ICONE = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5C4 15 2.5 10.6 3.7 7.6 5 4.4 9.3 3.8 12 7c2.7-3.2 7-2.6 8.3.6 1.2 3-.3 7.4-8.3 12.9z"/></svg>`;
+const favBotao = (p, classe = "") => `<button class="fav ${classe}" type="button" data-fav="${p.id}" aria-pressed="${ehFavorito(p.id)}" aria-label="Favoritar ${esc(p.nome)}">${CORACAO_ICONE}</button>`;
 
 /* ===== Elementos ===== */
 const looksEl = $("#looks");
@@ -413,6 +424,7 @@ function cardHtml(p, indice) {
             ${arte(p)}
             ${p.novo ? '<span class="selo-novo">Novidade</span>' : ""}
         </button>
+        ${favBotao(p)}
         <div class="card-corpo">
             <p class="card-cat">${esc(p.cat)}</p>
             <h3 class="card-nome"><button type="button" class="card-nome-botao" data-abrir="${p.id}">${esc(p.nome)}</button></h3>
@@ -427,7 +439,7 @@ function cardHtml(p, indice) {
 function produtosVisiveis() {
     const q = normalizar(filtro.q.trim());
     const lista = PRODUTOS.filter((p) => {
-        if (filtro.cat !== "todos" && p.cat !== filtro.cat) return false;
+        if (filtro.cat === "favoritos" ? !ehFavorito(p.id) : filtro.cat !== "todos" && p.cat !== filtro.cat) return false;
         return !q || normalizar(`${p.nome} ${p.cat} ${p.resumo} ${p.busca}`).includes(q);
     });
     if (filtro.ordem === "menor") lista.sort((a, b) => a.preco - b.preco);
@@ -442,7 +454,9 @@ function renderChips() {
         const total = nome === "todos" ? PRODUTOS.length : PRODUTOS.filter((p) => p.cat === nome).length;
         const rotulo = nome === "todos" ? "Tudo" : nome;
         return `<button type="button" class="chip" data-cat="${nome}" aria-pressed="${filtro.cat === nome}">${rotulo}<small>${total}</small></button>`;
-    }).join("");
+    }).join("") + (favoritos.length || filtro.cat === "favoritos"
+        ? `<button type="button" class="chip chip-fav" data-cat="favoritos" aria-pressed="${filtro.cat === "favoritos"}">${CORACAO_ICONE}Favoritos<small>${favoritos.length}</small></button>`
+        : "");
 }
 
 function renderGrade() {
@@ -515,9 +529,57 @@ function abrirProduto(id) {
             <ul class="dp-itens">${p.itens.map((t) => `<li>${esc(t)}</li>`).join("")}</ul>
             ${tamanhosHtml(p, "dlg")}
             <button class="botao botao-cheio" type="button" data-add="${p.id}">Pôr na sacola</button>
+            <div class="dp-extras">
+                ${favBotao(p, "fav-texto")}
+                <button class="link-fraco" type="button" data-compartilhar="${p.id}">Compartilhar esta peça</button>
+            </div>
         </div>
     </div>`;
-    dlgProduto.showModal();
+    if (!dlgProduto.open) dlgProduto.showModal();
+    history.replaceState(null, "", "#peca-" + p.id);
+}
+
+/* ===== Link de cada peça: loja-maria/#peca-espartilho abre a peça direto ===== */
+const linkDaPeca = (id) => location.href.split("#")[0] + "#peca-" + id;
+
+function abrirPecaDoLink() {
+    const id = location.hash.startsWith("#peca-") ? decodeURIComponent(location.hash.slice(6)) : "";
+    if (produto(id)) abrirProduto(id);
+}
+
+async function compartilhar(id) {
+    const p = produto(id);
+    const url = linkDaPeca(id);
+    if (navigator.share) {
+        try { await navigator.share({ title: `${p.nome} · ${LOJA.nome}`, text: `${p.nome} por ${brl(p.preco)} na ${LOJA.nome}`, url }); return; }
+        catch (erro) { if (erro.name === "AbortError") return; }
+    }
+    try {
+        await navigator.clipboard.writeText(url);
+        avisar("Link da peça copiado. É só colar na conversa.");
+    } catch (erro) {
+        prompt("Copie o link da peça:", url);
+    }
+}
+
+/* ===== Favoritos: ficam salvos neste aparelho ===== */
+function alternarFavorito(id) {
+    const agora = !ehFavorito(id);
+    favoritos = agora ? [...favoritos, id] : favoritos.filter((f) => f !== id);
+    guardar(CHAVE_FAVORITOS, favoritos);
+    document.querySelectorAll(`[data-fav="${id}"]`).forEach((b) => b.setAttribute("aria-pressed", agora));
+    const naVitrineDeFavoritos = filtro.cat === "favoritos";
+    if (naVitrineDeFavoritos && !favoritos.length) filtro.cat = "todos";
+    renderChips();
+    if (naVitrineDeFavoritos) renderGrade();
+    if (agora) avisar(`♥ ${produto(id).nome} nos favoritos`, dlgProduto.open ? null : { rotulo: "Ver favoritos", fazer: verFavoritos });
+}
+
+function verFavoritos() {
+    filtro.cat = "favoritos";
+    renderChips();
+    renderGrade();
+    document.getElementById("colecao").scrollIntoView({ behavior: "smooth" });
 }
 
 /* ===== Sacola ===== */
@@ -653,6 +715,12 @@ function removerItem(chave) {
 
 /* ===== Eventos ===== */
 document.addEventListener("click", (e) => {
+    const fav = e.target.closest("[data-fav]");
+    if (fav) { alternarFavorito(fav.dataset.fav); return; }
+
+    const partilha = e.target.closest("[data-compartilhar]");
+    if (partilha) { compartilhar(partilha.dataset.compartilhar); return; }
+
     const abrir = e.target.closest("[data-abrir]");
     if (abrir) { abrirProduto(abrir.dataset.abrir); return; }
 
@@ -676,6 +744,11 @@ document.addEventListener("change", (e) => {
     const dica = escopo && escopo.querySelector(".dica");
     if (dica) dica.hidden = true;
 });
+
+dlgProduto.addEventListener("close", () => {
+    if (location.hash.startsWith("#peca-")) history.replaceState(null, "", location.pathname + location.search);
+});
+window.addEventListener("hashchange", abrirPecaDoLink);
 
 [dlgProduto, dlgSacola].forEach((dialogo) => {
     dialogo.addEventListener("click", (e) => { if (e.target === dialogo) dialogo.close(); });
@@ -740,3 +813,4 @@ renderChips();
 renderGrade();
 renderSacola();
 renderLooks();
+abrirPecaDoLink();
