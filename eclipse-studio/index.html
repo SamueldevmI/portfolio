@@ -46,7 +46,7 @@
                 <a href="#duvidas">Dúvidas</a>
             </nav>
             <button class="botao-sacola" id="abrirSacola" type="button" aria-label="Abrir sacola, vazia">
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1.2 12.2a1 1 0 0 1-1 .8H7.2a1 1 0 0 1-1-.8z"/><path d="M9 10V7a3 3 0 0 1 6 0v3"/></svg>
+                <span class="caldeirao-icone" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10h18"/><path d="M5 10c0 5.5 2.8 9 7 9s7-3.5 7-9"/><path d="M7.5 18.5 6.5 21M16.5 18.5l1 2.5"/></svg><i></i><i></i><i></i></span>
                 <span class="sacola-rotulo">Sacola</span>
                 <span class="sacola-contador" id="contadorSacola" hidden>0</span>
             </button>
@@ -64,6 +64,11 @@
                     <a class="botao" href="#colecao">Ver a coleção</a>
                     <a class="botao botao-linha" href="#como">Como comprar</a>
                 </div>
+                <div class="hero-magia">
+                    <a class="lua-hoje" id="luaHoje" href="#ritual"></a>
+                    <button class="apagar-velas" id="apagarVelas" type="button"><span aria-hidden="true">🕯</span> Apague as velas <small>tem segredo no escuro</small></button>
+                </div>
+                <p class="segredo segredo-topo">psiu… tem um gato preto escondido nesta página. Procure dois olhinhos que não somem.</p>
             </div>
             <div class="hero-arte" aria-hidden="true">
                 <svg viewBox="0 0 400 480">
@@ -173,7 +178,7 @@
     <section class="estilos" aria-labelledby="estilosTitulo">
         <div class="miolo">
             <h2 id="estilosTitulo" class="titulo">Qual é a sua vibe?</h2>
-            <p class="sub">Escolha um estilo e a vitrine mostra só as peças dele. Ainda descobrindo o seu? Passeia por todos.</p>
+            <p class="sub">Escolha um estilo e a vitrine mostra só as peças dele. Ainda descobrindo o seu? <a href="#taro">Tire o tarô do look</a> ✦</p>
             <ul class="estilos-grade" id="estilos"></ul>
         </div>
     </section>
@@ -224,10 +229,38 @@
         </div>
     </main>
 
+    <section class="taro" id="taro" aria-labelledby="taroTitulo">
+        <div class="miolo">
+            <h2 id="taroTitulo" class="titulo">Tarô do look</h2>
+            <p class="sub">Embaralhe e tire três cartas: a sua essência, a peça e o feitiço. As cartas montam o look, e a tiragem vira imagem pro seu story.</p>
+            <div class="taro-mesa">
+                <ol class="taro-cartas" id="taroCartas" aria-live="polite"></ol>
+                <div class="taro-leitura" id="taroLeitura" hidden></div>
+                <div class="taro-acoes">
+                    <button class="botao" id="taroTirar" type="button">Embaralhar e tirar as cartas</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="ritual" id="ritual" aria-labelledby="ritualTitulo">
+        <div class="miolo ritual-in">
+            <div class="ritual-lua" id="ritualLua" aria-hidden="true"></div>
+            <div>
+                <p class="eyebrow">Ritual da lua cheia</p>
+                <h2 id="ritualTitulo" class="titulo">Peça nova chega na lua cheia</h2>
+                <p class="sub" id="ritualQuando"></p>
+                <div class="contagem-lua" id="contagemLua"></div>
+                <a class="botao botao-linha" href="https://www.instagram.com/eclipse_studiocg/" target="_blank" rel="noopener noreferrer">Seguir pra ver o próximo drop</a>
+            </div>
+        </div>
+    </section>
+
     <div class="cera" aria-hidden="true"></div>
 
     <section class="sobre" id="sobre" aria-labelledby="sobreTitulo">
         <div class="miolo sobre-in">
+            <button class="gato-escondido" id="gatoEscondido" type="button" aria-label="Um gato preto escondido! Clique nele"><svg viewBox="-4 -20 70 76" aria-hidden="true"><path class="esc-corpo" d="M6 50C-2 34 0 12 10 1L7 -16L18 -7C22 -8 27 -8 31 -7L42 -16L39 1C48 12 50 34 44 50Z"/><path class="esc-rabo" d="M42 44C60 46 66 30 58 20"/><path class="esc-olho" d="M14 9l6 3M36 9l-6 3"/></svg></button>
             <div class="sobre-arte" aria-hidden="true">
                 <div class="moldura tom-r"><svg viewBox="0 0 100 100" class="arte" data-arte="colarBola"></svg></div>
                 <div class="moldura tom-m"><svg viewBox="0 0 100 100" class="arte" data-arte="brincoMorcego"></svg></div>
@@ -242,6 +275,7 @@
                 <p>São peças pra meninxs alternativas e pro dia a dia, tudo focado no estilo alt: umas feitas à mão, outras garimpadas em brechó e outras escolhidas a dedo pra revenda.</p>
                 <p class="sobre-assinatura">com carinho, Elizabeth 🖤</p>
                 <p><a class="insta" href="https://www.instagram.com/eclipse_studiocg/" target="_blank" rel="noopener noreferrer">@eclipse_studiocg no Instagram →</a></p>
+                <p class="segredo segredo-recorte">escrito com tinta de lua: a próxima peça chega na lua cheia 🌕</p>
                 <p class="recorte-legenda">Na foto: o colar bola de cristal, o brinco morceguinho e o espartilho rosa seca, flagrados às vésperas da lua cheia.</p>
             </div>
         </div>
@@ -340,8 +374,21 @@
         <span>Dúvidas?</span>
     </a>
 
+    <dialog id="dialogoGato" class="dialogo-gato" aria-labelledby="gatoTitulo">
+        <button class="fechar" type="button" data-fechar aria-label="Fechar">×</button>
+        <svg class="gato-achado" viewBox="-4 -20 70 76" aria-hidden="true"><path d="M6 50C-2 34 0 12 10 1L7 -16L18 -7C22 -8 27 -8 31 -7L42 -16L39 1C48 12 50 34 44 50Z"/><path class="rabo" d="M42 44C60 46 66 30 58 20"/><path class="olho" d="M14 9l6 3M36 9l-6 3"/></svg>
+        <h2 id="gatoTitulo">Você achou o gato preto!</h2>
+        <p id="gatoTexto"></p>
+        <p class="gato-codigo" id="gatoCodigo"></p>
+        <button class="botao botao-cheio" id="gatoUsar" type="button">Pôr o código no meu pedido</button>
+    </dialog>
+
+    <div class="escuridao" id="escuridao" aria-hidden="true"><div class="luz-vela" id="luzVela"></div></div>
+    <button class="acender-velas" id="acenderVelas" type="button" hidden><span aria-hidden="true">🕯</span> Acender as velas</button>
+
     <div class="avisos" id="avisos" role="status" aria-live="polite"></div>
 
     <script src="script.js"></script>
+    <script src="magia.js"></script>
 </body>
 </html>

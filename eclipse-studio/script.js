@@ -6,6 +6,8 @@ const LOJA = {
     whatsapp: "5567999750866", // só números: 55 + DDD + número
     freteGratis: 15000,        // em centavos: frete grátis a partir de R$ 150
     demo: true,                // true = a mensagem avisa que é pedido de teste; vira false quando a vitrine tiver as peças reais
+    /* quem acha o gato preto no escuro ganha este código. O prêmio é a Elizabeth quem decide: troque o texto aqui */
+    segredo: { codigo: "GATOPRETO", premio: "a Elizabeth manda um mimo surpresa junto com o pedido" },
 };
 
 /* Prévia com outro nome: eclipse-studio/?nome=Outro Nome */
@@ -416,6 +418,7 @@ function guardar(chave, valor) {
 const CHAVE_SACOLA = "es-sacola-v1";
 const CHAVE_NOME = "es-nome";
 const CHAVE_FAVORITOS = "es-favoritos";
+const CHAVE_GATO = "es-gato";
 const MAX_POR_ITEM = 9;
 
 const itemValido = (i) => {
@@ -570,15 +573,20 @@ function renderLooks() {
     looksEl.innerHTML = LOOKS.map(lookHtml).join("");
 }
 
+function caiuNoCaldeirao(ids, origem) {
+    document.dispatchEvent(new CustomEvent("sacola:caiu", { detail: { ids, origem } }));
+}
+
 function balancarSacola() {
     botaoSacola.classList.remove("bump");
     void botaoSacola.offsetWidth;
     botaoSacola.classList.add("bump");
 }
 
-function adicionarLook(lookId) {
+function adicionarLook(lookId, origem) {
     const look = LOOKS.find((l) => l.id === lookId);
     if (!look) return;
+    caiuNoCaldeirao(look.itens.map((i) => i.id), origem);
     let algumNoMaximo = false;
     look.itens.forEach((i) => {
         const existente = sacola.find((x) => x.id === i.id && x.tam === i.tam);
@@ -590,7 +598,7 @@ function adicionarLook(lookId) {
     });
     renderSacola();
     balancarSacola();
-    const rotulo = `Look na sacola: ${look.itens.length} peças${algumNoMaximo ? " (uma já estava no máximo)" : ""}`;
+    const rotulo = `✦ Look no caldeirão: ${look.itens.length} peças${algumNoMaximo ? " (uma já estava no máximo)" : ""}`;
     avisar(rotulo, { rotulo: "Ver sacola", fazer: () => dlgSacola.showModal() });
 }
 
@@ -670,7 +678,7 @@ const totalItens = () => sacola.reduce((soma, i) => soma + i.qtd, 0);
 const rotuloTam = (i) => (i.tam ? "Tamanho " + i.tam : "Tamanho único");
 
 function montarMensagem() {
-    const linhas = [`Oi! Quero fazer este pedido na ${LOJA.nome} 🖤`, ""];
+    const linhas = [`Oi! 🔮 Quero encomendar esta poção na ${LOJA.nome} 🖤`, "", "*Ingredientes:*"];
     sacola.forEach((i) => {
         const p = produto(i.id);
         linhas.push(`• ${i.qtd}x ${p.nome}${i.tam ? " (" + i.tam + ")" : ""} — ${p.preco == null ? "valor a combinar" : brl(p.preco * i.qtd)}`);
@@ -680,6 +688,7 @@ function montarMensagem() {
     const obs = campoObs.value.trim();
     if (nome) linhas.push(`Nome: ${nome}`);
     if (obs) linhas.push(`Obs.: ${obs}`);
+    if (ler(CHAVE_GATO, false)) linhas.push(`🐈‍⬛ Achei o gato preto no site: código ${LOJA.segredo.codigo}`);
     linhas.push("", "Podemos combinar a entrega e o pagamento por aqui?");
     if (LOJA.demo) linhas.push("", "_(Pedido de teste da prévia do site)_");
     return linhas.join("\n");
@@ -774,10 +783,12 @@ function adicionar(id, escopo) {
         return;
     }
     if (existente) existente.qtd += 1; else sacola.push({ id, tam, qtd: 1 });
+    const foto = escopo.closest(".card, .dp")?.querySelector(".card-imagem, .dp-imagem");
+    caiuNoCaldeirao([id], foto && foto.getBoundingClientRect());
     if (dlgProduto.open) dlgProduto.close();
     renderSacola();
     balancarSacola();
-    avisar(`Na sacola: ${p.nome}${tam ? " (" + tam + ")" : ""}`, { rotulo: "Ver sacola", fazer: () => dlgSacola.showModal() });
+    avisar(`✦ ${p.nome}${tam ? " (" + tam + ")" : ""} caiu no caldeirão`, { rotulo: "Ver sacola", fazer: () => dlgSacola.showModal() });
 }
 
 function mudarQuantidade(chave, delta) {
@@ -812,7 +823,7 @@ document.addEventListener("click", (e) => {
     if (abrir) { abrirProduto(abrir.dataset.abrir); return; }
 
     const addLook = e.target.closest("[data-look-add]");
-    if (addLook) { adicionarLook(addLook.dataset.lookAdd); return; }
+    if (addLook) { adicionarLook(addLook.dataset.lookAdd, addLook.closest(".look-card")?.querySelector(".look-imagens")?.getBoundingClientRect()); return; }
 
     const add = e.target.closest("[data-add]");
     if (add) {
