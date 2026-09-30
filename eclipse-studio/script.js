@@ -8,7 +8,7 @@ const LOJA = {
     demo: true,                // true = a mensagem avisa que é pedido de teste; vira false quando a vitrine tiver as peças reais
 };
 
-/* Prévia com outro nome: loja-maria/?nome=Outro Nome */
+/* Prévia com outro nome: eclipse-studio/?nome=Outro Nome */
 const NOME_VISITANTE = (new URLSearchParams(location.search).get("nome") || "").trim().slice(0, 40);
 if (NOME_VISITANTE) {
     LOJA.nome = NOME_VISITANTE;
@@ -149,7 +149,7 @@ Object.assign(ARTE, {
         + `<circle class="n" cx="50" cy="64" r="15"/>` + brilho(76, 44, .6, "o s") + brilho(24, 76, .4, "r s"),
 });
 
-/* Com foto de verdade, ela entra no lugar da ilustração: ponha o arquivo em loja-maria/fotos/
+/* Com foto de verdade, ela entra no lugar da ilustração: ponha o arquivo em eclipse-studio/fotos/
    e escreva na peça foto: "fotos/nome-do-arquivo.webp" (e, se quiser, pos: "50% 30%" pra enquadrar) */
 Object.assign(ARTE, {
     camiseta: `<path class="p" d="M36 18L23 23L11 37L21 47L30 41V86H70V41L79 47L89 37L77 23L64 18Q50 29 36 18Z"/>`
@@ -508,7 +508,7 @@ function abrirProduto(id) {
     history.replaceState(null, "", "#peca-" + p.id);
 }
 
-/* ===== Link de cada peça: loja-maria/#peca-espartilho abre a peça direto ===== */
+/* ===== Link de cada peça: eclipse-studio/#peca-espartilho abre a peça direto ===== */
 const linkDaPeca = (id) => location.href.split("#")[0] + "#peca-" + id;
 
 function abrirPecaDoLink() {
