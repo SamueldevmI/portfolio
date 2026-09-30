@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Proposta | Samuel Mickael</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+    <script>
+        /* Mesmo tema escolhido no portfólio (vermelho ou azul) */
+        (function () {
+            var azul = false;
+            try { azul = localStorage.getItem("portfolio-tema") === "azul"; } catch (e) { /* sem armazenamento */ }
+            document.documentElement.dataset.tema = azul ? "azul" : "vermelho";
+            document.write('<link rel="stylesheet" href="' + (azul ? "style-azul.css" : "style.css") + '">');
+        })();
+    </script>
+    <noscript><link rel="stylesheet" href="style.css"></noscript>
+    <style>
+        .pp { width: min(720px, calc(100% - 32px)); margin: 36px auto 80px; }
+        .pp .eyebrow::before { content: none; }
+        .pp h1 { margin: 8px 0 10px; font-size: clamp(1.9rem, 6vw, 2.8rem); line-height: 1.08; letter-spacing: -.03em; }
+        .pp h2 { margin: 0 0 12px; font-size: 1.1rem; }
+        .pp p { color: var(--muted); line-height: 1.6; }
+        .pp-de { display: flex; align-items: center; gap: 12px; margin-bottom: 22px; }
+        .pp-de img { width: 46px; height: 46px; border-radius: 50%; object-fit: cover; border: 2px solid var(--cyan); }
+        .pp-de span { color: var(--muted); font-size: .9rem; line-height: 1.35; }
+        .pp-de b { color: var(--text); }
+        .pp-caixa { margin-top: 18px; padding: 22px; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); }
+        .pp-pacote { color: var(--acento-texto); font: 600 .78rem "DM Mono", monospace; letter-spacing: .08em; text-transform: uppercase; }
+        .pp-lista { display: grid; gap: 10px; margin: 14px 0 0; padding: 0; list-style: none; }
+        .pp-lista li { display: grid; grid-template-columns: 22px 1fr; gap: 8px; color: var(--text); line-height: 1.45; }
+        .pp-lista li::before { content: "✓"; color: var(--sucesso); font-weight: 700; }
+        .pp-lista small { display: block; color: var(--muted); font-size: .86rem; }
+        .pp-lista .extra::before { content: "+"; color: var(--ouro); }
+        .pp-numeros { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 12px; margin-top: 18px; }
+        .pp-numeros div { padding: 16px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); }
+        .pp-numeros small { display: block; color: var(--muted); font-size: .8rem; }
+        .pp-numeros b { display: block; margin-top: 4px; color: var(--text); font-size: 1.25rem; letter-spacing: -.02em; }
+        .pp-numeros .pp-valor b { color: var(--ouro); font-size: 1.8rem; }
+        .pp-numeros .pp-valor span { color: var(--muted); font-size: .82rem; }
+        .pp-obs { white-space: pre-line; }
+        .pp-passos { counter-reset: passo; display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+        .pp-passos li { counter-increment: passo; display: grid; grid-template-columns: 30px 1fr; gap: 10px; align-items: start; color: var(--muted); line-height: 1.5; }
+        .pp-passos li::before { content: counter(passo); display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: rgba(var(--cyan-rgb), .16); color: var(--text); font-weight: 700; font-size: .85rem; }
+        .pp-passos b { color: var(--text); }
+        .pp-exemplo { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+        .pp-exemplo p { margin: 0; }
+        .pp-exemplo a { color: var(--acento-texto); font-weight: 600; }
+        .pp-acoes { position: sticky; bottom: 0; display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; padding: 14px 0 max(14px, env(safe-area-inset-bottom)); background: linear-gradient(transparent, var(--bg) 28%); }
+        .pp-acoes .botao { flex: 1 1 150px; justify-content: center; text-align: center; cursor: var(--cursor-mao); }
+        .pp-validade { margin-top: 6px; font-size: .86rem; text-align: center; }
+        .pp-validade.vencida { color: var(--urgencia); }
+        .pp-vazio { margin-top: 40px; text-align: center; }
+        @media (max-width: 560px) {
+            .pp-numeros { grid-template-columns: 1fr 1fr; }
+            .pp-numeros .pp-valor { grid-column: 1 / -1; }
+            .pp-caixa { padding: 18px; }
+        }
+    </style>
+</head>
+<body>
+    <main class="pp" id="proposta">
+        <div class="pp-vazio" id="ppVazio" hidden>
+            <p class="eyebrow">PROPOSTA</p>
+            <h1>Essa proposta não abriu direito</h1>
+            <p>O link pode ter sido cortado no meio. Me chama no WhatsApp que eu te mando de novo.</p>
+            <p><a class="botao botao-principal" href="https://wa.me/5567996034205" target="_blank" rel="noopener noreferrer">Chamar o Samuel</a> <a class="botao botao-secundario" href="./">Ver o portfólio</a></p>
+        </div>
+        <div id="ppConteudo" hidden>
+            <div class="pp-de">
+                <img src="imagem/samuel-rosto-320.webp" width="46" height="46" alt="">
+                <span><b>Samuel Mickael</b><br>desenvolvedor · Campo Grande - MS</span>
+            </div>
+            <p class="eyebrow" id="ppData">PROPOSTA</p>
+            <h1 id="ppTitulo">Proposta</h1>
+            <p id="ppIntro"></p>
+
+            <section class="pp-caixa" aria-labelledby="ppPacote">
+                <p class="pp-pacote" id="ppPacote"></p>
+                <h2 id="ppPacoteNome"></h2>
+                <ul class="pp-lista" id="ppItens"></ul>
+            </section>
+
+            <div class="pp-numeros">
+                <div class="pp-valor"><small>Investimento</small><b id="ppValor"></b><span>pagamento único, sem mensalidade</span></div>
+                <div><small>Prazo</small><b id="ppPrazo"></b></div>
+                <div><small>Pagamento</small><b id="ppPagamento" style="font-size:1rem"></b></div>
+            </div>
+
+            <section class="pp-caixa" id="ppObsCaixa" hidden aria-label="Observações">
+                <h2>Observações</h2>
+                <p class="pp-obs" id="ppObs"></p>
+            </section>
+
+            <section class="pp-caixa" aria-labelledby="ppComo">
+                <h2 id="ppComo">Como funciona</h2>
+                <ol class="pp-passos">
+                    <li><span><b>Você aceita</b> e me manda as fotos, os preços e o que quiser no site.</span></li>
+                    <li><span><b>Eu monto</b> e te mando uma prévia pra você ver no celular e pedir ajustes.</span></li>
+                    <li><span><b>Coloco no ar</b> e te ensino a divulgar o link no Instagram e no WhatsApp.</span></li>
+                </ol>
+            </section>
+
+            <section class="pp-caixa pp-exemplo" aria-label="Exemplo real">
+                <p>🖤 Quer ver um que já tá no ar?</p>
+                <a href="./case-eclipse.html" target="_blank" rel="noopener">Case da loja Eclipse Studio ↗</a>
+            </section>
+
+            <div class="pp-acoes">
+                <a class="botao botao-principal" id="ppAceito" href="#" target="_blank" rel="noopener noreferrer">Aceito, bora começar ✅</a>
+                <a class="botao botao-secundario" id="ppAjustar" href="#" target="_blank" rel="noopener noreferrer">Quero ajustar algo</a>
+            </div>
+            <p class="pp-validade" id="ppValidade"></p>
+        </div>
+    </main>
+    <script src="estatisticas.js"></script>
+    <script>
+        (function () {
+            "use strict";
+            const WHATS = "5567996034205";
+            /* Os pacotes ficam aqui (e não no link) pra o link ficar curto. Mesmas chaves do gerador na prospeccao.html. */
+            const PACOTES = {
+                site: { nome: "Site de apresentação", itens: [
+                    ["Site com a cara do seu negócio", "logo, cores, fotos e textos seus"],
+                    ["Funciona no celular e no computador", "a maioria dos clientes vai abrir pelo celular"],
+                    ["Botão direto pro seu WhatsApp", "o cliente chama já sabendo do que se trata"],
+                    ["Endereço, mapa e horário de funcionamento", "chega de “onde fica?” e “tá aberto?”"],
+                    ["Coloco no ar pra você", "com um link pronto pra divulgar"],
+                ] },
+                pedidos: { nome: "Site + cardápio com pedido no WhatsApp", itens: [
+                    ["Tudo do site de apresentação", "cara do negócio, celular, WhatsApp, mapa e horário"],
+                    ["Cardápio/catálogo com fotos e preços", "fácil de trocar quando mudar algo"],
+                    ["Carrinho que manda o pedido pronto", "itens, quantidades, total e observação direto no seu WhatsApp"],
+                    ["Coloco no ar pra você", "com um link pronto pra divulgar"],
+                ] },
+                agenda: { nome: "Site + agendamento pelo WhatsApp", itens: [
+                    ["Tudo do site de apresentação", "cara do negócio, celular, WhatsApp, mapa e horário"],
+                    ["Lista de serviços com preço e duração", "o cliente já sabe quanto custa antes de chamar"],
+                    ["Pedido de horário pronto", "o cliente escolhe serviço, dia e horário e te manda tudo no WhatsApp"],
+                    ["Coloco no ar pra você", "com um link pronto pra divulgar"],
+                ] },
+                loja: { nome: "Loja online com pedido no WhatsApp", itens: [
+                    ["Tudo do site de apresentação", "cara da marca, celular, WhatsApp e informações"],
+                    ["Vitrine com filtro por categoria e busca", "a cliente acha a peça rapidinho"],
+                    ["Sacola que vira pedido no WhatsApp", "peças, tamanhos, total e observação, sem taxa por venda"],
+                    ["Favoritos e link por peça", "pra cliente salvar e mandar pra amiga"],
+                    ["Tabela de tamanhos e dúvidas frequentes", "menos pergunta repetida no direct"],
+                    ["Coloco no ar pra você", "com um link pronto pra divulgar"],
+                ] },
+            };
+            const EXTRAS = {
+                dominio: ["Endereço próprio (.com.br)", "configuro o domínio; o registro fica no seu nome (cerca de R$ 40/ano, pago direto no Registro.br)"],
+                google: ["Perfil no Google Meu Negócio", "pra aparecer no Google Maps quando procurarem seu ramo na região"],
+                kit: ["Kit de lançamento pro Instagram", "post e story anunciando o site"],
+                ajustes: ["30 dias de ajustes depois de entregar", "mudou preço, trocou foto? eu arrumo sem custo"],
+            };
+            const $ = (id) => document.getElementById(id);
+            const q = new URLSearchParams(location.search);
+            const para = (q.get("para") || "").trim().slice(0, 40);
+            const pacote = PACOTES[q.get("p")];
+            const valor = Number(String(q.get("v") || "").replace(",", "."));
+            if (!para || !pacote || !(valor > 0)) { $("ppVazio").hidden = false; return; }
+
+            const reais = (n) => n.toLocaleString("pt-BR", { style: "currency", currency: "BRL", minimumFractionDigits: n % 1 ? 2 : 0 });
+            const prazo = Math.max(1, Math.min(90, parseInt(q.get("d"), 10) || 7));
+            const pagamento = (q.get("pg") || "50% pra começar e 50% na entrega").slice(0, 80);
+            const obs = (q.get("obs") || "").slice(0, 600);
+            const extras = (q.get("x") || "").split(",").filter((k) => EXTRAS[k]);
+            const ate = /^\d{4}-\d{2}-\d{2}$/.test(q.get("ate") || "") ? new Date(q.get("ate") + "T23:59:59") : null;
+            const feita = /^\d{4}-\d{2}-\d{2}$/.test(q.get("em") || "") ? new Date(q.get("em") + "T12:00:00") : null;
+
+            document.title = `Proposta pra ${para} | Samuel Mickael`;
+            $("ppData").textContent = "PROPOSTA" + (feita ? ` · ${feita.toLocaleDateString("pt-BR")}` : "");
+            $("ppTitulo").textContent = `Proposta pra ${para}`;
+            $("ppIntro").textContent = `Oi, ${para}! Aqui está tudo o que combinamos, num lugar só. Se estiver tudo certo, é só tocar em “Aceito” lá embaixo.`;
+            $("ppPacote").textContent = "O que você recebe";
+            $("ppPacoteNome").textContent = pacote.nome;
+            const itens = pacote.itens.map(([t, d]) => ({ t, d, extra: false })).concat(extras.map((k) => ({ t: EXTRAS[k][0], d: EXTRAS[k][1], extra: true })));
+            $("ppItens").replaceChildren(...itens.map((i) => {
+                const li = document.createElement("li"); if (i.extra) li.className = "extra";
+                const s = document.createElement("span"); s.textContent = i.t;
+                const small = document.createElement("small"); small.textContent = i.d; s.append(small);
+                li.append(s); return li;
+            }));
+            $("ppValor").textContent = reais(valor);
+            $("ppPrazo").textContent = `${prazo} ${prazo === 1 ? "dia" : "dias"}`;
+            $("ppPagamento").textContent = pagamento;
+            if (obs) { $("ppObs").textContent = obs; $("ppObsCaixa").hidden = false; }
+
+            const vencida = ate && ate < new Date();
+            $("ppValidade").textContent = ate ? (vencida ? `Essa proposta venceu em ${ate.toLocaleDateString("pt-BR")}, mas me chama que eu vejo se ainda dá pra manter o valor.` : `Valor garantido até ${ate.toLocaleDateString("pt-BR")}.`) : "";
+            if (vencida) $("ppValidade").classList.add("vencida");
+
+            const whats = (texto) => `https://wa.me/${WHATS}?text=${encodeURIComponent(texto)}`;
+            $("ppAceito").href = whats(`Oi, Samuel! Aqui é da ${para}. Aceito a proposta: ${pacote.nome}, ${reais(valor)}. Como a gente começa? ✅`);
+            $("ppAjustar").href = whats(`Oi, Samuel! Aqui é da ${para}. Vi a proposta (${pacote.nome}) e queria ajustar uma coisa: `);
+            $("ppConteudo").hidden = false;
+
+            const est = window.ESTATISTICAS;
+            if (est) {
+                const slug = est.slug(para);
+                est.contar(`/link/${slug}/proposta`, `Proposta: ${para}`, true);
+                $("ppAceito").addEventListener("click", () => est.contar(`/link/${slug}/aceitou`, `Aceitou: ${para}`, true));
+                $("ppAjustar").addEventListener("click", () => est.contar(`/link/${slug}/ajustar`, `Ajustar: ${para}`, true));
+            }
+        })();
+    </script>
+</body>
+</html>

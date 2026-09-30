@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Eclipse Studio | Samuel Mickael</title>
+    <meta name="description" content="Como fiz a loja online da Eclipse Studio, moda alternativa em Campo Grande - MS: coleção, sacola que vira pedido no WhatsApp e muita personalidade.">
+    <link rel="canonical" href="https://samueldevmi.github.io/portfolio/case-eclipse.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Case: a loja da Eclipse Studio">
+    <meta property="og:description" content="Do Instagram pra uma loja onde a cliente monta a sacola e manda o pedido pronto no WhatsApp.">
+    <meta property="og:url" content="https://samueldevmi.github.io/portfolio/case-eclipse.html">
+    <meta property="og:image" content="https://samueldevmi.github.io/portfolio/eclipse-studio/compartilhar.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+    <script>
+        /* Mesmo tema escolhido no portfólio (vermelho ou azul) */
+        (function () {
+            var azul = false;
+            try { azul = localStorage.getItem("portfolio-tema") === "azul"; } catch (e) { /* sem armazenamento */ }
+            document.documentElement.dataset.tema = azul ? "azul" : "vermelho";
+            document.write('<link rel="stylesheet" href="' + (azul ? "style-azul.css" : "style.css") + '">');
+        })();
+    </script>
+    <noscript><link rel="stylesheet" href="style.css"></noscript>
+    <style>
+        .case { width: min(1060px, calc(100% - 32px)); margin: 28px auto 80px; }
+        .case-voltar { display: inline-block; margin-bottom: 26px; color: var(--muted); font-size: .9rem; text-decoration: none; }
+        .case-voltar:hover { color: var(--text); }
+        .case .eyebrow::before { content: none; }
+        .case h1 { margin: 8px 0 14px; font-size: clamp(2rem, 6vw, 3.4rem); line-height: 1.05; letter-spacing: -.035em; }
+        .case h1 em { color: #c9a7ff; font-style: normal; } /* manter-cor: lilás da Eclipse */
+        .case h2 { margin: 0 0 12px; font-size: clamp(1.4rem, 3.6vw, 2rem); letter-spacing: -.02em; }
+        .case p { color: var(--muted); line-height: 1.6; }
+        .case-topo { display: grid; grid-template-columns: 1.05fr 1fr; gap: 36px; align-items: center; }
+        .case-lead { font-size: 1.08rem; max-width: 52ch; }
+        .case-acoes { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+        .case-tela { margin: 0; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: #171022; /* manter-cor */ box-shadow: var(--shadow); }
+        .case-tela img { display: block; width: 100%; height: auto; }
+        .case-numeros { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 44px 0 0; padding: 0; list-style: none; }
+        .case-numeros li { padding: 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+        .case-numeros b { display: block; color: var(--text); font-size: 1.7rem; letter-spacing: -.03em; }
+        .case-numeros span { color: var(--muted); font-size: .86rem; }
+        .case-bloco { margin-top: 64px; }
+        .case-dois { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .case-cartao { padding: 20px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); }
+        .case-cartao h3 { margin: 0 0 8px; font-size: 1.05rem; }
+        .case-cartao p { margin: 0; font-size: .95rem; }
+        .case-cartao.antes { border-style: dashed; }
+        .case-cartao.depois { border-color: rgba(var(--cyan-rgb), .55); box-shadow: 0 0 22px -10px rgba(var(--cyan-rgb), .8); }
+        .case-celulares { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 22px; }
+        .case-celulares figure { margin: 0; }
+        .case-celulares .case-tela { border-radius: 26px; border-width: 6px; border-color: #2a2a2a; } /* manter-cor: moldura de celular */
+        .case-celulares figcaption { margin-top: 10px; color: var(--muted); font-size: .88rem; text-align: center; }
+        .case-recursos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 22px 0 0; padding: 0; list-style: none; }
+        .case-recursos li { padding: 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+        .case-recursos b { display: block; margin-bottom: 4px; color: var(--text); }
+        .case-recursos span { color: var(--muted); font-size: .9rem; line-height: 1.5; }
+        .case-depo { margin: 0; padding: 22px 24px; border-left: 3px solid var(--cyan); border-radius: 0 14px 14px 0; background: rgba(var(--cyan-rgb), .07); }
+        .case-depo p { margin: 0; color: var(--text); font-size: 1.15rem; line-height: 1.5; }
+        .case-depo footer { margin-top: 10px; color: var(--muted); font-size: .9rem; }
+        .case-nota { margin-top: 14px; font-size: .86rem; }
+        .case-fim { margin-top: 64px; padding: 30px; border: 1px solid rgba(var(--cyan-rgb), .5); border-radius: 18px; background: linear-gradient(135deg, rgba(var(--cyan-rgb), .12), transparent 60%), var(--surface); text-align: center; }
+        .case-fim p { max-width: 54ch; margin: 0 auto; }
+        .case-fim .case-acoes { justify-content: center; }
+        .case .botao { cursor: var(--cursor-mao); }
+        @media (max-width: 860px) {
+            .case-topo { grid-template-columns: 1fr; }
+            .case-numeros { grid-template-columns: repeat(2, 1fr); }
+            .case-recursos { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 600px) {
+            .case-dois, .case-recursos { grid-template-columns: 1fr; }
+            .case-celulares { grid-template-columns: repeat(3, 72%); overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 8px; }
+            .case-celulares figure { scroll-snap-align: center; }
+            .case-fim { padding: 22px 18px; }
+        }
+    </style>
+</head>
+<body>
+    <main class="case">
+        <a class="case-voltar" href="./">← voltar pro portfólio</a>
+
+        <header class="case-topo">
+            <div>
+                <p class="eyebrow">CASE · MODA ALTERNATIVA · CAMPO GRANDE - MS</p>
+                <h1>A loja da <em>Eclipse Studio</em>, do direct pro pedido pronto</h1>
+                <p class="case-lead">A Eclipse Studio vende moda alt pelo Instagram e pelo WhatsApp. A missão: um lugar só com a coleção inteira, a cara da marca, e onde a cliente monta a sacola e já manda o pedido pronto, sem aquele vai e volta de “tem no M?” e “quanto é?”.</p>
+                <div class="case-acoes">
+                    <a class="botao botao-principal" href="./eclipse-studio/" target="_blank" rel="noopener">Ver a loja no ar ↗</a>
+                    <a class="botao botao-secundario" id="caseQuero" href="https://wa.me/5567996034205?text=Oi%2C%20Samuel%21%20Vi%20o%20case%20da%20Eclipse%20Studio%20e%20quero%20um%20site%20assim%20pro%20meu%20neg%C3%B3cio." target="_blank" rel="noopener noreferrer">Quero um assim</a>
+                </div>
+            </div>
+            <figure class="case-tela"><img src="imagem/case-eclipse/desktop.jpg" width="1280" height="760" alt="Página inicial da Eclipse Studio no computador: “Doce por fora, bruxa por dentro”, com um espelho mágico, bola de cristal e gato preto."></figure>
+        </header>
+
+        <ul class="case-numeros" aria-label="Em números">
+            <li><b>2 dias</b><span>do primeiro rascunho à loja no ar</span></li>
+            <li><b>9 extras</b><span>além do básico, pra cliente ficar e voltar</span></li>
+            <li><b>1 toque</b><span>pra mandar o pedido inteiro no WhatsApp</span></li>
+            <li><b>R$ 0</b><span>de mensalidade de plataforma ou taxa por venda</span></li>
+        </ul>
+
+        <section class="case-bloco" aria-labelledby="casoAntesDepois">
+            <h2 id="casoAntesDepois">O que mudou pra cliente</h2>
+            <div class="case-dois">
+                <article class="case-cartao antes">
+                    <h3>😩 Só com o Instagram</h3>
+                    <p>A cliente vê uma peça no feed, chama no direct, pergunta preço, tamanho, se tem outra cor… e a dona da loja responde tudo, uma por uma, peça por peça.</p>
+                </article>
+                <article class="case-cartao depois">
+                    <h3>🖤 Com a loja</h3>
+                    <p>A cliente vê a coleção inteira com preço e tamanho, monta a sacola, e o WhatsApp abre com o pedido já escrito: peças, quantidades, total e observação. É só confirmar o estoque e combinar o pagamento.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="case-bloco" aria-labelledby="casoTelas">
+            <h2 id="casoTelas">No celular, que é onde a cliente compra</h2>
+            <div class="case-celulares">
+                <figure><div class="case-tela"><img src="imagem/case-eclipse/celular-inicio.jpg" width="780" height="1560" loading="lazy" alt="Início da loja no celular, com a chamada “Doce por fora, bruxa por dentro”."></div><figcaption>A marca com cara própria</figcaption></figure>
+                <figure><div class="case-tela"><img src="imagem/case-eclipse/celular-colecao.jpg" width="780" height="1560" loading="lazy" alt="Coleção no celular com filtros por categoria, busca e cartões de peças com preço e botão “Pôr na sacola”."></div><figcaption>Coleção com filtro, busca e preço</figcaption></figure>
+                <figure><div class="case-tela"><img src="imagem/case-eclipse/celular-sacola.jpg" width="780" height="1560" loading="lazy" alt="Sacola no celular com as peças escolhidas, total estimado e botão “Enviar pedido pelo WhatsApp”."></div><figcaption>A sacola que vira pedido no WhatsApp</figcaption></figure>
+            </div>
+        </section>
+
+        <section class="case-bloco" aria-labelledby="casoRecursos">
+            <h2 id="casoRecursos">O que tem na loja</h2>
+            <p>Além do básico bem feito, detalhes que fazem a cliente ficar mais tempo e voltar:</p>
+            <ul class="case-recursos">
+                <li><b>🛍️ Sacola → WhatsApp</b><span>O pedido chega pronto e organizado. Nada de site pedindo cartão: o pagamento é combinado na conversa.</span></li>
+                <li><b>🔮 Qual é a sua vibe?</b><span>A cliente escolhe o estilo dela e a vitrine mostra as peças que combinam.</span></li>
+                <li><b>👗 Looks prontos</b><span>Combinações montadas que vão pra sacola de uma vez.</span></li>
+                <li><b>🃏 Tarô do look</b><span>Três cartas sorteiam um look. Brincadeira que vira venda (e print pro story).</span></li>
+                <li><b>🌕 Drop na lua cheia</b><span>Contagem pra próxima leva de peças novas, com a fase da lua de verdade.</span></li>
+                <li><b>🤍 Favoritos e link por peça</b><span>Dá pra salvar o que gostou e mandar uma peça específica pra amiga.</span></li>
+                <li><b>📏 Tamanhos e dúvidas</b><span>Tabela de medidas e respostas prontas pras perguntas de sempre.</span></li>
+                <li><b>🐈‍⬛ Segredos escondidos</b><span>Apague as velas, ache o gato preto… a loja tem easter eggs com a cara da marca.</span></li>
+                <li><b>📦 Kit de lançamento</b><span>Posts e stories pro Instagram, cartões de visita pra imprimir e uma ficha simples pra cadastrar peças novas.</span></li>
+            </ul>
+        </section>
+
+        <section class="case-bloco" id="casoDepoimento" aria-labelledby="casoDepoTitulo" hidden>
+            <h2 id="casoDepoTitulo">Quem usa, conta</h2>
+            <blockquote class="case-depo"><p id="casoDepoTexto"></p><footer id="casoDepoAutor"></footer></blockquote>
+        </section>
+
+        <p class="case-nota">A vitrine ainda mostra peças e preços de exemplo enquanto chegam as fotos da coleção nova. O resto já está pronto.</p>
+
+        <section class="case-fim" aria-labelledby="casoFim">
+            <h2 id="casoFim">Quer uma loja assim pro seu negócio?</h2>
+            <p>Loja, cardápio, agenda de horários… Me conta como você vende hoje que eu te mando o orçamento em até 24h, sem compromisso.</p>
+            <div class="case-acoes">
+                <a class="botao botao-principal" href="https://wa.me/5567996034205?text=Oi%2C%20Samuel%21%20Vi%20o%20case%20da%20Eclipse%20Studio%20e%20quero%20um%20site%20assim%20pro%20meu%20neg%C3%B3cio." target="_blank" rel="noopener noreferrer">Pedir orçamento no WhatsApp</a>
+                <a class="botao botao-secundario" href="./#projetos">Ver outros projetos</a>
+            </div>
+        </section>
+    </main>
+    <script src="estatisticas.js"></script>
+    <script>
+        (function () {
+            "use strict";
+            /* Depoimento: quando a dona da Eclipse mandar, é só preencher aqui que a seção aparece. */
+            const DEPOIMENTO = { texto: "", autor: "" }; // ex.: { texto: "…", autor: "Elizabeth, Eclipse Studio" }
+            if (DEPOIMENTO.texto) {
+                document.getElementById("casoDepoTexto").textContent = `“${DEPOIMENTO.texto}”`;
+                document.getElementById("casoDepoAutor").textContent = `— ${DEPOIMENTO.autor}`;
+                document.getElementById("casoDepoimento").hidden = false;
+            }
+            const est = window.ESTATISTICAS;
+            if (est) {
+                est.contar("/case-eclipse", "Case Eclipse Studio", true);
+                document.addEventListener("click", (e) => { if (e.target.closest('a[href*="wa.me/"]')) est.contar("/evento/case-eclipse-whatsapp", "Case Eclipse: WhatsApp", true); }, true);
+            }
+        })();
+    </script>
+</body>
+</html>

@@ -67,7 +67,17 @@
         .crm-aviso b { color: var(--text); }
         .crm-cabeca { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px; }
         .crm-cabeca button { padding: 6px 12px; border: 1px solid var(--line); border-radius: 8px; background: transparent; color: var(--muted); font: 500 .8rem "Space Grotesk", Arial, sans-serif; cursor: var(--cursor-mao); }
-        @media (max-width: 560px) { .gl-linha, .crm-campos { grid-template-columns: 1fr; } }
+        .gl-proposta { margin-top: 36px; }
+        .gl-proposta h2 { margin: 0; font-size: 1.3rem; }
+        .gl-proposta > p { margin: 6px 0 0; color: var(--muted); }
+        .gl-tres { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+        .gl input[type=number], .gl input[type=date] { width: 100%; padding: 11px 13px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--text); font: 500 1rem "Space Grotesk", Arial, sans-serif; }
+        .gl-extras { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 14px; margin: 0; padding: 0; border: 0; }
+        .gl-extras legend { margin-bottom: 6px; padding: 0; color: var(--muted); font-size: .85rem; }
+        .gl-extras .gl-check { font-size: .9rem; }
+        .gl .gl-obs { min-height: 70px; }
+        .crm-acoes .crm-proposta { border-color: var(--ouro); }
+        @media (max-width: 560px) { .gl-linha, .crm-campos, .gl-tres, .gl-extras { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -103,6 +113,45 @@
                 <a class="botao botao-secundario" id="glTestar" href="./" target="_blank" rel="noopener">Testar ↗</a>
             </div>
         </form>
+
+        <section class="gl-proposta" id="glProposta" aria-labelledby="gpTitulo">
+            <h2 id="gpTitulo">📄 Fazer proposta</h2>
+            <p>Gera uma página com o nome do cliente, o que ele leva, prazo, valor e o botão “Aceito” que cai no seu WhatsApp.</p>
+            <form class="gl-caixa" id="gpForm" autocomplete="off">
+                <div class="gl-linha">
+                    <label>Nome do negócio<input type="text" id="gpNome" maxlength="40" placeholder="Ex.: Pizzaria do João" required></label>
+                    <label>WhatsApp do cliente (opcional)<input type="tel" id="gpTel" placeholder="(67) 99999-9999"></label>
+                </div>
+                <label>Pacote
+                    <select id="gpPacote">
+                        <option value="site">Site de apresentação</option>
+                        <option value="pedidos">Site + cardápio com pedido no WhatsApp</option>
+                        <option value="agenda">Site + agendamento pelo WhatsApp</option>
+                        <option value="loja">Loja online com pedido no WhatsApp</option>
+                    </select>
+                </label>
+                <div class="gl-tres">
+                    <label>Valor (R$)<input type="number" id="gpValor" min="1" step="1" inputmode="numeric" required></label>
+                    <label>Prazo (dias)<input type="number" id="gpPrazo" min="1" max="90" step="1" inputmode="numeric"></label>
+                    <label>Valor vale até<input type="date" id="gpAte"></label>
+                </div>
+                <label>Pagamento<input type="text" id="gpPagamento" maxlength="80" value="50% pra começar e 50% na entrega"></label>
+                <fieldset class="gl-extras">
+                    <legend>Incluir também</legend>
+                    <label class="gl-check"><input type="checkbox" value="ajustes"> 30 dias de ajustes</label>
+                    <label class="gl-check"><input type="checkbox" value="google"> Google Meu Negócio</label>
+                    <label class="gl-check"><input type="checkbox" value="kit"> Kit de posts pro Instagram</label>
+                    <label class="gl-check"><input type="checkbox" value="dominio"> Endereço próprio (.com.br)</label>
+                </fieldset>
+                <label>Observação (opcional, aparece na proposta)<textarea id="gpObs" class="gl-obs" maxlength="600" placeholder="Ex.: fotos dos produtos por conta de vocês; cardápio com até 40 itens"></textarea></label>
+                <label>Link da proposta<span class="gl-link" id="gpLink">preencha o nome e o valor…</span></label>
+                <div class="gl-acoes">
+                    <button type="button" class="botao botao-principal" id="gpWhats">Enviar no WhatsApp</button>
+                    <button type="button" class="botao botao-secundario" id="gpCopiar">Copiar link</button>
+                    <a class="botao botao-secundario" id="gpVer" href="proposta.html" target="_blank" rel="noopener">Ver como fica ↗</a>
+                </div>
+            </form>
+        </section>
 
         <section class="gl-historico" id="glHistorico" hidden>
             <div class="crm-cabeca"><h2>Seus contatos (neste aparelho)</h2><button type="button" id="crmPlanilha">baixar planilha ⬇</button></div>
@@ -183,7 +232,7 @@
                 const l = link();
                 const lista = ler().filter((x) => x.link !== l);
                 const agora = Date.now();
-                lista.unshift({ id: String(agora), nome: n, ramo: ramo.options[ramo.selectedIndex].text, link: l, tel: tel.value.trim(), em: agora, status: "enviado", proximo: agora + 3 * DIA, nota: "" });
+                lista.unshift({ id: String(agora), nome: n, ramo: ramo.options[ramo.selectedIndex].text, ramoChave: ramo.value, link: l, tel: tel.value.trim(), em: agora, status: "enviado", proximo: agora + 3 * DIA, nota: "" });
                 gravar(lista);
                 desenharHistorico();
             }
@@ -191,7 +240,7 @@
             // mensagem de acompanhamento, conforme onde a conversa parou
             function msgCobrar(c) {
                 const primeiro = c.nome;
-                if (c.status === "negociando") return `Oi, ${primeiro}! Passando pra saber se ficou alguma dúvida sobre a proposta. Se quiser, a gente ajusta o que precisar 😉`;
+                if (c.status === "negociando") return `Oi, ${primeiro}! Passando pra saber se ficou alguma dúvida sobre a proposta. Se quiser, a gente ajusta o que precisar 😉${c.proposta ? `\n\n${c.proposta}` : ""}`;
                 if (c.status === "respondeu") return `Oi, ${primeiro}! Consegui separar um horário essa semana pra gente conversar sobre o site. Qual dia fica melhor pra você?`;
                 return `Oi, ${primeiro}! Tudo bem? Conseguiu dar uma olhada na prévia do site que eu montei pra vocês? Se quiser, faço uns ajustes com a cara de vocês, sem compromisso 😉\n\n${c.link}`;
             }
@@ -224,7 +273,7 @@
                 // topo
                 const topo = document.createElement("div"); topo.className = "crm-topo";
                 const nomeEl = document.createElement("b"); nomeEl.textContent = c.nome;
-                const info = document.createElement("small"); info.textContent = `${c.ramo} · enviado ${dataCurta(c.em)}${praHoje(c) ? " · 📞 chamar hoje" : ""}`;
+                const info = document.createElement("small"); info.textContent = `${c.ramo} · enviado ${dataCurta(c.em)}${c.valor ? ` · proposta R$ ${c.valor}` : ""}${praHoje(c) ? " · 📞 chamar hoje" : ""}`;
                 topo.append(nomeEl, info);
                 // sinais do GoatCounter
                 const s = document.createElement("div"); s.className = "crm-sinais";
@@ -237,6 +286,9 @@
                         add(sn.abriu ? `👀 abriu ${sn.abriu}x` : "ainda não abriu", sn.abriu > 0);
                         if (sn.previa) add("📱 viu a prévia", true);
                         if (sn.whats) add("💬 tocou no WhatsApp/orçamento", true);
+                        if (sn.proposta) add(`📄 viu a proposta ${sn.proposta}x`, true);
+                        if (sn.aceitou) add("🎉 tocou em “Aceito”", true);
+                        else if (sn.ajustar) add("✏️ quer ajustar a proposta", true);
                     }
                 }
                 // campos
@@ -263,11 +315,13 @@
                     window.open(`https://wa.me/${numero}?text=${encodeURIComponent(msgCobrar(c))}`, "_blank", "noopener");
                     atualizarContato(c.id, { proximo: Date.now() + 3 * DIA });
                 });
+                const fazer = document.createElement("button"); fazer.type = "button"; fazer.className = "crm-proposta"; fazer.textContent = c.proposta ? "refazer proposta 📄" : "fazer proposta 📄";
+                fazer.addEventListener("click", () => prepararProposta(c));
                 const abrir = document.createElement("a"); abrir.href = c.link + (c.link.includes("?") ? "&" : "?") + "teste=1"; abrir.target = "_blank"; abrir.rel = "noopener"; abrir.textContent = "abrir o link ↗";
                 const copiarL = document.createElement("button"); copiarL.type = "button"; copiarL.textContent = "copiar link"; copiarL.addEventListener("click", () => copiar(c.link, "Link copiado!"));
                 const apagar = document.createElement("button"); apagar.type = "button"; apagar.className = "crm-apagar"; apagar.textContent = "apagar";
                 apagar.addEventListener("click", () => { if (confirm(`Apagar ${c.nome} da lista?`)) { gravar(ler().filter((x) => x.id !== c.id)); desenharHistorico(); } });
-                acoes.append(cobrar, copiarL, abrir, apagar);
+                acoes.append(cobrar, fazer, copiarL, abrir, apagar);
                 li.append(topo, ...(s.childNodes.length || (est && est.configurado) ? [s] : []), campos, acoes);
                 return li;
             }
@@ -278,8 +332,8 @@
                 const lista = ler().filter((c) => !ENCERRADOS.includes(c.status));
                 await Promise.all(lista.map(async (c) => {
                     const sl = slugDoLink(c.link);
-                    const [abriu, previa, whats] = await Promise.all([est.quantos(`/link/${sl}`), est.quantos(`/link/${sl}/previa`), est.quantos(`/link/${sl}/whatsapp`)]);
-                    sinais[c.id] = { abriu, previa, whats };
+                    const [abriu, previa, whats, proposta, aceitou, ajustar] = await Promise.all(["", "/previa", "/whatsapp", "/proposta", "/aceitou", "/ajustar"].map((f) => est.quantos(`/link/${sl}${f}`)));
+                    sinais[c.id] = { abriu, previa, whats, proposta, aceitou, ajustar };
                     // abriu o link e ainda estava como "enviado": sobe o status sozinho
                     if (abriu > 0 && c.status === "enviado") atualizarContato(c.id, { status: "abriu" });
                 }));
@@ -287,8 +341,8 @@
             }
 
             function baixarPlanilha() {
-                const linhas = [["Negócio", "Ramo", "WhatsApp", "Enviado em", "Status", "Chamar de novo em", "Anotação", "Link"]];
-                ler().forEach((c) => linhas.push([c.nome, c.ramo, c.tel || "", new Date(c.em).toLocaleDateString("pt-BR"), STATUS[c.status] || c.status, c.proximo ? new Date(c.proximo).toLocaleDateString("pt-BR") : "", c.nota || "", c.link]));
+                const linhas = [["Negócio", "Ramo", "WhatsApp", "Enviado em", "Status", "Chamar de novo em", "Anotação", "Valor da proposta", "Link", "Proposta"]];
+                ler().forEach((c) => linhas.push([c.nome, c.ramo, c.tel || "", new Date(c.em).toLocaleDateString("pt-BR"), STATUS[c.status] || c.status, c.proximo ? new Date(c.proximo).toLocaleDateString("pt-BR") : "", c.nota || "", c.valor || "", c.link, c.proposta || ""]));
                 const csv = "﻿" + linhas.map((l) => l.map((v) => `"${String(v).replace(/"/g, '""')}"`).join(";")).join("\n");
                 const a = document.createElement("a");
                 a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
@@ -302,6 +356,71 @@
                 desenharHistorico();
             }));
             $("crmPlanilha").addEventListener("click", baixarPlanilha);
+
+            /* ---------- proposta ---------- */
+            const gp = { nome: $("gpNome"), tel: $("gpTel"), pacote: $("gpPacote"), valor: $("gpValor"), prazo: $("gpPrazo"), ate: $("gpAte"), pagamento: $("gpPagamento"), obs: $("gpObs") };
+            const PACOTE_PADRAO = { site: [250, 5], pedidos: [450, 7], agenda: [450, 7], loja: [600, 10] }; // valor sugerido, prazo em dias
+            const PACOTE_DO_RAMO = { pizzaria: "pedidos", barbearia: "agenda", loja: "loja", salao: "agenda", academia: "site", clinica: "agenda" };
+            const extrasMarcados = () => [...document.querySelectorAll(".gl-extras input:checked")].map((i) => i.value);
+            function sugerirPacote() { const [v, d] = PACOTE_PADRAO[gp.pacote.value]; gp.valor.value = v; gp.prazo.value = d; }
+            function linkProposta() {
+                const u = new URL("proposta.html", base);
+                u.searchParams.set("para", gp.nome.value.trim());
+                u.searchParams.set("p", gp.pacote.value);
+                u.searchParams.set("v", gp.valor.value);
+                if (gp.prazo.value) u.searchParams.set("d", gp.prazo.value);
+                const x = extrasMarcados(); if (x.length) u.searchParams.set("x", x.join(","));
+                if (gp.pagamento.value.trim() && gp.pagamento.value.trim() !== gp.pagamento.defaultValue) u.searchParams.set("pg", gp.pagamento.value.trim());
+                if (gp.ate.value) u.searchParams.set("ate", gp.ate.value);
+                u.searchParams.set("em", paraInput(Date.now()));
+                if (gp.obs.value.trim()) u.searchParams.set("obs", gp.obs.value.trim());
+                return u.toString();
+            }
+            const propostaPronta = () => gp.nome.value.trim() && Number(gp.valor.value) > 0;
+            function atualizarProposta() {
+                const l = linkProposta();
+                $("gpLink").textContent = propostaPronta() ? l : "preencha o nome e o valor…";
+                $("gpVer").href = l + "&teste=1";
+            }
+            // vindo de um card do CRM: preenche e rola até o formulário
+            function prepararProposta(c) {
+                gp.nome.value = c.nome; gp.tel.value = c.tel || "";
+                const chave = c.ramoChave || [...ramo.options].find((o) => o.text === c.ramo)?.value;
+                gp.pacote.value = PACOTE_DO_RAMO[chave] || "site";
+                sugerirPacote();
+                atualizarProposta();
+                $("glProposta").scrollIntoView({ behavior: "smooth", block: "start" });
+                setTimeout(() => gp.valor.focus({ preventScroll: true }), 500);
+            }
+            // guarda no CRM: acha o contato pelo nome (ou cria) e passa pra "negociando"
+            function registrarProposta(l) {
+                const n = gp.nome.value.trim();
+                const lista = ler();
+                const chave = est ? est.slug(n) : n.toLowerCase();
+                let c = lista.find((x) => (est ? est.slug(x.nome) : x.nome.toLowerCase()) === chave);
+                const agora = Date.now();
+                if (!c) { c = { id: String(agora), nome: n, ramo: gp.pacote.options[gp.pacote.selectedIndex].text, link: l, tel: "", em: agora, nota: "" }; lista.unshift(c); }
+                Object.assign(c, { proposta: l, valor: gp.valor.value, tel: gp.tel.value.trim() || c.tel, status: c.status === "fechou" ? "fechou" : "negociando", proximo: agora + 2 * DIA });
+                gravar(lista);
+                desenharHistorico();
+            }
+            gp.pacote.addEventListener("change", () => { sugerirPacote(); atualizarProposta(); });
+            $("gpForm").addEventListener("input", atualizarProposta);
+            $("gpForm").addEventListener("change", atualizarProposta);
+            $("gpForm").addEventListener("submit", (e) => e.preventDefault());
+            $("gpCopiar").addEventListener("click", () => { if (!propostaPronta()) return (gp.nome.value.trim() ? gp.valor : gp.nome).focus(); const l = linkProposta(); copiar(l, "Link da proposta copiado!"); registrarProposta(l); });
+            $("gpWhats").addEventListener("click", () => {
+                if (!propostaPronta()) return (gp.nome.value.trim() ? gp.valor : gp.nome).focus();
+                const l = linkProposta();
+                let numero = gp.tel.value.replace(/\D/g, "");
+                if (numero && numero.length <= 11) numero = "55" + numero;
+                const texto = `Oi, ${gp.nome.value.trim()}! Como combinamos, montei a proposta do site de vocês, com tudo num lugar só: o que vocês recebem, prazo e valor 👇\n\n${l}\n\nQualquer coisa que quiserem mudar, é só me falar!`;
+                window.open(`https://wa.me/${numero}?text=${encodeURIComponent(texto)}`, "_blank", "noopener");
+                registrarProposta(l);
+            });
+            gp.ate.value = paraInput(Date.now() + 7 * DIA);
+            sugerirPacote();
+            atualizarProposta();
 
             [nome, ramo, previa].forEach((el) => el.addEventListener("input", atualizar));
             ramo.addEventListener("change", atualizar);
