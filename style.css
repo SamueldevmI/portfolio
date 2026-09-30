@@ -2368,3 +2368,58 @@ html { cursor: var(--cursor-seta); }
     .previa-site { height: 380px; }
 }
 @media (prefers-reduced-motion: reduce) { .previa-celular, .link-convite, .previa-site .apertou { animation: none; } }
+
+/* ---------- Topo enxuto: texto + vitrine (tudo que importa na primeira tela) ---------- */
+.hero-conteudo { padding-top: 44px; }
+.hero-grade { display: grid; grid-template-columns: minmax(0, 1fr); gap: 36px; align-items: center; }
+@media (min-width: 1000px) { .hero-grade { grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); gap: 48px; } }
+.hero-topo { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin: 0 0 18px; }
+.hero-topo .status-disponivel { margin: 0; }
+.hero-cargo { color: var(--muted); font: 500 .74rem "DM Mono", monospace; letter-spacing: .12em; text-transform: uppercase; opacity: .85; }
+.hero-quem { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.hero-quem .hero-ola { margin: 0; }
+.hero-avatar { flex-shrink: 0; width: 56px; height: 56px; border-radius: 50%; object-fit: cover; object-position: 50% 30%; border: 2px solid var(--cyan); box-shadow: 0 0 0 4px rgba(var(--cyan-rgb), .15), 0 0 18px rgba(var(--cyan-rgb), .45); }
+.hero-principal h1 { font-size: clamp(2.5rem, 5.6vw, 5rem); margin-bottom: 18px; }
+.hero-principal .hero-texto { max-width: 520px; font-size: 1.08rem; }
+.hero-principal .hero-acoes { align-items: center; gap: 12px 22px; margin-top: 24px; }
+.hero-link { color: var(--text); font-weight: 600; text-decoration: underline; text-decoration-color: rgba(var(--cyan-rgb), .6); text-underline-offset: 5px; }
+@media (hover: hover) { .hero-link:hover { color: var(--acento-texto); } }
+.hero-oferta { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; margin: 18px 0 0; font-size: .9rem; }
+.hero-oferta b { color: var(--acento-texto); }
+.hero-oferta span { color: var(--muted); }
+.hero-cliente { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; padding: 6px 12px; border: 1px solid var(--line); border-radius: 999px; color: var(--text); font-size: .84rem; text-decoration: none; transition: border-color .2s ease, background-color .2s ease; }
+.hero-cliente b { color: var(--acento-texto); }
+@media (hover: hover) { .hero-cliente:hover { border-color: var(--cyan); background: rgba(var(--cyan-rgb), .08); } }
+.hero-link:focus-visible, .hero-cliente:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
+
+/* vitrine: o celular da prévia trocando de ramo */
+.hero-vitrine { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.vitrine-ramos { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+.vitrine-ramos button { padding: 4px 10px; border: 1px solid rgba(255,255,255,.14); border-radius: 999px; background: transparent; color: var(--muted); font: 500 .72rem "Space Grotesk", Arial, sans-serif; cursor: var(--cursor-mao); transition: border-color .2s ease, color .2s ease, background-color .2s ease; }
+.vitrine-ramos button[aria-pressed="true"] { border-color: var(--cyan); background: rgba(var(--cyan-rgb), .14); color: var(--text); }
+@media (hover: hover) { .vitrine-ramos button:hover { border-color: var(--cyan); color: var(--text); } }
+.vitrine-palco { display: block; padding: 0; border: 0; background: none; cursor: var(--cursor-mao); border-radius: 36px; transition: transform .3s ease; }
+.vitrine-palco .previa-celular { animation: none; }
+.vitrine-palco .previa-site { height: 400px; pointer-events: none; }
+.vitrine-palco.trocou .previa-celular { animation: vitrine-troca .5s cubic-bezier(.2,.9,.3,1.2); }
+@keyframes vitrine-troca { 0% { opacity: 0; transform: translateY(10px) scale(.97) rotate(-1.5deg); } }
+@media (hover: hover) { .vitrine-palco:hover { transform: translateY(-4px) rotate(-1deg); } }
+.vitrine-palco:focus-visible { outline: 2px solid var(--cyan); outline-offset: 6px; }
+.vitrine-legenda { margin: 0; color: var(--muted); font-size: .82rem; }
+.vitrine-legenda b { color: var(--acento-texto); }
+@media (max-width: 999px) {
+    .hero-vitrine { margin-top: 8px; }
+    .vitrine-palco .previa-celular { width: 260px; }
+    .vitrine-palco .previa-site { height: 340px; }
+}
+@media (max-width: 720px) {
+    .hero-conteudo { padding-top: 22px; }
+    .hero-topo { margin-bottom: 14px; }
+    .hero-cargo { font-size: .66rem; }
+    .hero-avatar { width: 46px; height: 46px; }
+    .hero-principal h1 { font-size: clamp(2.3rem, 11vw, 3rem); }
+    .hero-principal .hero-texto { font-size: 1rem; }
+    .hero-principal .hero-acoes { margin-top: 20px; }
+    .hero-principal .hero-acoes .botao-principal { flex: 1 1 100%; text-align: center; }
+}
+@media (prefers-reduced-motion: reduce) { .vitrine-palco.trocou .previa-celular { animation: none; } .vitrine-palco { transition: none; } }
