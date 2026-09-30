@@ -164,6 +164,41 @@ Object.assign(ARTE, {
         + `<path class="n f" d="M33 44Q31 60 33 78" stroke="#fff4fb"/>` + brilho(80, 26, .6, "o s") + brilho(18, 70, .4),
 });
 
+/* contas ao redor de uma elipse (camafeu, rosário) */
+function contas(cx, cy, rx, ry, n, r, cls, de = 0, ate = 360) {
+    let s = "";
+    for (let k = 0; k < n; k++) {
+        const a = (de + (ate - de) * (n === 1 ? .5 : k / (ate - de === 360 ? n : n - 1))) * Math.PI / 180;
+        s += `<circle class="${typeof cls === "function" ? cls(k) : cls}" cx="${(cx + rx * Math.cos(a)).toFixed(1)}" cy="${(cy + ry * Math.sin(a)).toFixed(1)}" r="${r}"/>`;
+    }
+    return s;
+}
+const rosa = (x, y, r) => `<circle class="v" cx="${x}" cy="${y}" r="${r}"/>`
+    + `<path class="n f" d="M${x - r * .3} ${y}a${r * .3} ${r * .3} 0 1 1 ${r * .3} ${r * .3}M${x - r * .68} ${y + r * .05}a${r * .68} ${r * .62} 0 0 0 ${r * 1.36} 0M${x - r * .5} ${y - r * .45}a${r * .6} ${r * .5} 0 0 1 ${r} 0"/>`;
+
+Object.assign(ARTE, {
+    camafeu: `<path class="n" d="M50 14v6"/><circle class="o" cx="50" cy="12" r="3"/>`
+        + contas(50, 52, 29, 35, 22, 3, "c")
+        + `<ellipse class="o" cx="50" cy="52" rx="26" ry="32"/><ellipse class="p" cx="50" cy="52" rx="19" ry="25"/>`
+        + `<path class="c s" d="M55 33C47 31 42 36 42 43C42 46 40 48 38.5 50.5L42 51.5C41.4 54 42 55.5 43.6 56.4C42.8 58 43.4 60 46 60.6C46.2 64.5 44 68.5 39.5 72.5Q50 77.5 61.5 73.5C59.5 66 59.5 58.5 61.5 51C66 45 64 35 55 33Z"/>`
+        + `<circle class="c s" cx="59" cy="35.5" r="5.2"/>` + brilho(80, 22, .55, "o s") + brilho(20, 80, .4),
+    rosario: contas(50, 36, 25, 23, 19, 2.7, (k) => (k % 5 === 0 ? "v" : "p"), -30, 210)
+        + `<path class="n f" d="M29 48L47 61M71 48L53 61"/>`
+        + `<ellipse class="o" cx="50" cy="62.5" rx="4.5" ry="5.5"/>`
+        + `<circle class="p" cx="50" cy="71" r="2.4"/>`
+        + `<path class="p" d="M48 74h4v6h6v4h-6v11h-4v-11h-6v-4h6z"/>` + brilho(82, 70, .55, "o s"),
+    chokerRosa: `<path class="p" d="M14 30Q50 64 86 30L86 38Q50 72 14 38Z"/>`
+        + `<path class="p" d="M14 34l-6 -6l1 12zM86 34l6 -6l-1 12z"/>`
+        + `<ellipse class="m" cx="40" cy="58" rx="7" ry="3.5" transform="rotate(20 40 58)"/><ellipse class="m" cx="60" cy="58" rx="7" ry="3.5" transform="rotate(-20 60 58)"/>`
+        + rosa(50, 55, 11) + `<path class="n f" d="M50 66v8"/><circle class="v" cx="50" cy="77" r="2.6"/>` + brilho(78, 72, .55, "c s"),
+    casaco: `<path class="p" d="M34 18L22 26L10 76L20 78L27 48L26 88H74L73 48L80 78L90 76L78 26L66 18Z"/>`
+        + `<path class="n f fl" d="M50 26V88"/>`
+        + [[33, 18], [37, 23], [41, 28], [45, 33], [48.5, 38], [67, 18], [63, 23], [59, 28], [55, 33], [51.5, 38], [40, 15.5], [46, 14.5], [54, 14.5], [60, 15.5]].map(([x, y]) => `<circle class="pe" cx="${x}" cy="${y}" r="4.4"/>`).join("")
+        + [[22, 86], [29, 88], [36, 88.5], [43, 89], [50, 89], [57, 89], [64, 88.5], [71, 88], [78, 86]].map(([x, y]) => `<circle class="pe" cx="${x}" cy="${y}" r="4.4"/>`).join("")
+        + [[12, 76], [17, 78], [85, 78], [90, 76]].map(([x, y]) => `<circle class="pe" cx="${x}" cy="${y}" r="4"/>`).join("")
+        + `<circle class="v" cx="50" cy="40" r="3"/>` + brilho(88, 22, .55, "o s"),
+});
+
 const arte = (p, classe = "") => p.foto
     ? `<img class="foto ${classe}" src="${p.foto}" alt="" width="400" height="400" loading="lazy" decoding="async" style="object-position:${p.pos || "50% 50%"}">`
     : `<svg class="arte ${classe}" viewBox="0 0 100 100" aria-hidden="true" focusable="false">${ARTE[p.arte]}</svg>`;
@@ -232,12 +267,44 @@ const PRODUTOS = [
         busca: "capa manto veludo bruxa preta",
     },
     {
+        id: "casaco", nome: "Casaco de Pelúcia Noite", cat: "Roupas", preco: 27990, tam: null, arte: "casaco", tom: "l", novo: true,
+        alt: "Ilustração de casaco longo preto com gola, punhos e barra de pelúcia",
+        resumo: "Longo · gola e barra de pelúcia",
+        desc: "Casaco longo preto com gola, punhos e barra de pelúcia macia. Por cima de vestido ou de saia longa, é trad goth na hora.",
+        itens: ["Comprimento abaixo do joelho", "Pelúcia sintética macia", "Forro leve", "Botão escondido"],
+        busca: "casaco sobretudo pelucia pelo peludo preto longo",
+    },
+    {
         id: "choker", nome: "Choker Lua de Renda", cat: "Joias e bijuterias", preco: 3990, tam: null, arte: "choker", tom: "r",
         alt: "Ilustração de choker preto com renda creme e pingente de lua lilás",
         resumo: "Veludo · renda · lua",
         desc: "Choker de veludo preto com renda creme por baixo e um pingente de lua lilás. Fecho ajustável com correntinha extensora.",
         itens: ["Veludo macio", "Renda creme", "Pingente de lua esmaltado", "Correntinha extensora de 5 cm"],
         busca: "choker gargantilha colar lua renda veludo",
+    },
+    {
+        id: "chokerRosa", nome: "Choker Rosa Vermelha", cat: "Joias e bijuterias", preco: 3990, tam: null, arte: "chokerRosa", tom: "c", novo: true,
+        alt: "Ilustração de choker de veludo preto com uma rosa vermelha no centro e folhinhas",
+        resumo: "Veludo · rosa vermelha",
+        desc: "Choker de fita de veludo preto com uma rosa vermelha no centro e uma gotinha pendurada. Amarra atrás, serve em qualquer pescoço.",
+        itens: ["Fita de veludo", "Rosa de tecido vinho", "Amarração atrás", "Gotinha pendente"],
+        busca: "choker gargantilha rosa vermelha veludo flor",
+    },
+    {
+        id: "rosario", nome: "Colar Rosário Noturno", cat: "Joias e bijuterias", preco: 5990, tam: null, arte: "rosario", tom: "r",
+        alt: "Ilustração de colar rosário de contas pretas e vinho com medalha dourada e cruz",
+        resumo: "Contas pretas e vinho · cruz",
+        desc: "Colar rosário de contas pretas, com uma conta vinho a cada cinco, medalhinha dourada e cruz pendente. Longo, fica lindo por cima de tudo.",
+        itens: ["Contas de vidro", "Medalha dourada", "Cruz de metal escuro", "Comprimento longo"],
+        busca: "rosario terco colar contas cruz",
+    },
+    {
+        id: "camafeu", nome: "Broche Camafeu", cat: "Joias e bijuterias", preco: 4490, tam: null, arte: "camafeu", tom: "c",
+        alt: "Ilustração de broche camafeu oval com perfil de moça marfim sobre fundo escuro e moldura dourada de pérolas",
+        resumo: "Perfil marfim · moldura de pérolas",
+        desc: "Broche camafeu com perfil de moça em marfim, moldura dourada e pérolas em volta. Na gola, no espartilho ou numa fita de veludo.",
+        itens: ["Moldura dourada", "Pérolas em volta", "Alfinete com trava", "Dá pra usar como pingente"],
+        busca: "broche camafeu cameo vitoriano perola",
     },
     {
         id: "colarCruz", nome: "Colar Cruz Lilás", cat: "Joias e bijuterias", preco: 4990, tam: null, arte: "colarCruz", tom: "m",
@@ -289,21 +356,37 @@ const PRODUTOS = [
     },
 ];
 
+/* ===== Estilos: "Qual é a sua vibe?" filtra a vitrine. Uma peça pode estar em mais de um ===== */
+const ESTILOS = [
+    { id: "vitoriana", nome: "Vitoriana", desc: "Espartilho, renda marfim e camafeu: delicada e assombrada, feito retrato antigo.", artes: ["blusa", "camafeu", "espartilho"] },
+    { id: "tradgoth", nome: "Trad goth", desc: "Veludo preto, pelúcia, rosário e rosa vermelha. Pra noite toda na rua.", artes: ["rosario", "casaco", "chokerRosa"] },
+    { id: "bruxinha", nome: "Bruxinha", desc: "Bola de cristal, lua e capa de veludo pra quem lê o futuro.", artes: ["colarBola", "capa", "anel"] },
+    { id: "pastel", nome: "Pastel goth", desc: "Lilás, rosa e menta com um pé nas trevas: fofa e macabra.", artes: ["brincoCruz", "vestido", "choker"] },
+];
+const ESTILOS_DAS_PECAS = {
+    vitoriana: ["espartilho", "blusa", "saia", "camafeu", "chokerRosa", "colarCruz", "choker"],
+    tradgoth: ["casaco", "rosario", "chokerRosa", "bolsaCaixao", "brincoCruz", "capa", "camiseta"],
+    bruxinha: ["capa", "colarBola", "anel", "brincoMorcego", "perfume", "bolsaCaixao"],
+    pastel: ["vestido", "saia", "choker", "brincoCruz", "colarCruz", "camiseta", "brincoMorcego", "espartilho"],
+};
+PRODUTOS.forEach((p) => { p.estilos = Object.keys(ESTILOS_DAS_PECAS).filter((e) => ESTILOS_DAS_PECAS[e].includes(p.id)); });
+const estilo = (id) => ESTILOS.find((e) => e.id === id);
+
 /* ===== Looks prontos: um clique adiciona as três peças ===== */
 const LOOKS = [
     {
         id: "boneca", nome: "Look Boneca Assombrada",
-        desc: "Vestido, meia listrada e Mary Jane: doce com um pé nas trevas.",
+        desc: "Vestido boneca, choker de renda e a bolsa caixão: doce com um pé nas trevas.",
         itens: [{ id: "vestido", tam: "" }, { id: "choker", tam: "" }, { id: "bolsaCaixao", tam: "" }],
     },
     {
         id: "cha", nome: "Look Chá da Meia-Noite",
-        desc: "Blusa vitoriana, espartilho e tiara de rosas.",
+        desc: "Blusa vitoriana, espartilho e o colar de cruz.",
         itens: [{ id: "blusa", tam: "" }, { id: "espartilho", tam: "" }, { id: "colarCruz", tam: "" }],
     },
     {
         id: "lua", nome: "Kit Noite de Lua Cheia",
-        desc: "Capa de veludo, chapéu de bruxa e o colar de bola de cristal.",
+        desc: "Capa de veludo, colar bola de cristal e brinco morceguinho.",
         itens: [{ id: "capa", tam: "" }, { id: "colarBola", tam: "" }, { id: "brincoMorcego", tam: "" }],
     },
 ];
@@ -344,7 +427,7 @@ const itemValido = (i) => {
 let sacola = ler(CHAVE_SACOLA, []);
 sacola = Array.isArray(sacola) ? sacola.filter(itemValido) : [];
 
-const filtro = { cat: "todos", q: "", ordem: "padrao" };
+const filtro = { cat: "todos", q: "", ordem: "padrao", estilo: "" };
 
 let favoritos = ler(CHAVE_FAVORITOS, []);
 favoritos = Array.isArray(favoritos) ? favoritos.filter((id) => produto(id)) : [];
@@ -409,6 +492,7 @@ function produtosVisiveis() {
     const q = normalizar(filtro.q.trim());
     const lista = PRODUTOS.filter((p) => {
         if (filtro.cat === "favoritos" ? !ehFavorito(p.id) : filtro.cat !== "todos" && p.cat !== filtro.cat) return false;
+        if (filtro.estilo && !p.estilos.includes(filtro.estilo)) return false;
         return !q || normalizar(`${p.nome} ${p.cat} ${p.resumo} ${p.busca}`).includes(q);
     });
     if (filtro.ordem === "menor") lista.sort((a, b) => (a.preco ?? Infinity) - (b.preco ?? Infinity));
@@ -419,7 +503,10 @@ function produtosVisiveis() {
 
 function renderChips() {
     const nomes = ["todos", ...CATEGORIAS];
-    chipsEl.innerHTML = nomes.map((nome) => {
+    const chipEstilo = filtro.estilo
+        ? `<button type="button" class="chip chip-estilo" data-limpar-estilo aria-label="Tirar o filtro de estilo ${esc(estilo(filtro.estilo).nome)}">✦ ${esc(estilo(filtro.estilo).nome)}<span aria-hidden="true">×</span></button>`
+        : "";
+    chipsEl.innerHTML = chipEstilo + nomes.map((nome) => {
         const total = nome === "todos" ? PRODUTOS.length : PRODUTOS.filter((p) => p.cat === nome).length;
         const rotulo = nome === "todos" ? "Tudo" : nome;
         return `<button type="button" class="chip" data-cat="${nome}" aria-pressed="${filtro.cat === nome}">${rotulo}<small>${total}</small></button>`;
@@ -433,7 +520,31 @@ function renderGrade() {
     grade.innerHTML = lista.map(cardHtml).join("");
     grade.hidden = lista.length === 0;
     vazioEl.hidden = lista.length !== 0;
-    contagemEl.textContent = lista.length === 1 ? "1 peça" : lista.length + " peças";
+    contagemEl.textContent = (lista.length === 1 ? "1 peça" : lista.length + " peças") + (filtro.estilo ? ` · ${estilo(filtro.estilo).nome}` : "");
+    renderEstilos();
+}
+
+function renderEstilos() {
+    const el = $("#estilos");
+    if (!el) return;
+    el.innerHTML = ESTILOS.map((e) => {
+        const total = PRODUTOS.filter((p) => p.estilos.includes(e.id)).length;
+        const artes = e.artes.map((id) => `<span class="estilo-arte tom-${produto(id).tom}">${arte(produto(id))}</span>`).join("");
+        return `<li><button type="button" class="estilo estilo-${e.id}" data-estilo="${e.id}" aria-pressed="${filtro.estilo === e.id}">
+            <span class="estilo-foto" aria-hidden="true">${artes}</span>
+            <span class="estilo-nome">${esc(e.nome)}</span>
+            <span class="estilo-desc">${esc(e.desc)}</span>
+            <span class="estilo-total">${total} peças →</span>
+        </button></li>`;
+    }).join("");
+}
+
+function escolherEstilo(id) {
+    filtro.estilo = filtro.estilo === id ? "" : id;
+    filtro.cat = "todos";
+    renderChips();
+    renderGrade();
+    if (filtro.estilo) document.getElementById("colecao").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
 }
 
 /* ===== Looks prontos na tela ===== */
@@ -688,6 +799,9 @@ function removerItem(chave) {
 
 /* ===== Eventos ===== */
 document.addEventListener("click", (e) => {
+    const vibe = e.target.closest("[data-estilo]");
+    if (vibe) { escolherEstilo(vibe.dataset.estilo); return; }
+
     const fav = e.target.closest("[data-fav]");
     if (fav) { alternarFavorito(fav.dataset.fav); return; }
 
@@ -730,6 +844,13 @@ window.addEventListener("hashchange", abrirPecaDoLink);
 botaoSacola.addEventListener("click", () => dlgSacola.showModal());
 
 chipsEl.addEventListener("click", (e) => {
+    if (e.target.closest("[data-limpar-estilo]")) {
+        filtro.estilo = "";
+        renderChips();
+        renderGrade();
+        chipsEl.querySelector(".chip").focus();
+        return;
+    }
     const botao = e.target.closest("[data-cat]");
     if (!botao) return;
     filtro.cat = botao.dataset.cat;
@@ -740,7 +861,7 @@ chipsEl.addEventListener("click", (e) => {
 buscaEl.addEventListener("input", () => { filtro.q = buscaEl.value; renderGrade(); });
 ordemEl.addEventListener("change", () => { filtro.ordem = ordemEl.value; renderGrade(); });
 $("#limparFiltros").addEventListener("click", () => {
-    filtro.cat = "todos"; filtro.q = ""; filtro.ordem = "padrao";
+    filtro.cat = "todos"; filtro.q = ""; filtro.ordem = "padrao"; filtro.estilo = "";
     buscaEl.value = ""; ordemEl.value = "padrao";
     renderChips();
     renderGrade();

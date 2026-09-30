@@ -14,6 +14,7 @@
     --tinta: #241a33;
     --ouro: #e9c46a;
     --vela: #ffb45e;
+    --vinho: #a3203f;
     --erro: #ff7a9c;
     --fonte: "Quicksand", system-ui, -apple-system, "Segoe UI", sans-serif;
     --serifa: "Cormorant Garamond", Georgia, serif;
@@ -205,6 +206,8 @@ a { color: var(--rosa); }
 .arte .c { fill: var(--creme); }
 .arte .p { fill: var(--tinta); }
 .arte .n { fill: none; }
+.arte .v { fill: var(--vinho); }
+.arte .pe { fill: #4d3f60; }
 .arte .o { fill: var(--ouro); }
 .arte .vaz { fill: var(--tom1); }
 .arte .g { stroke-width: 5; }
@@ -217,8 +220,9 @@ a { color: var(--rosa); }
 .arte .g + .fl { stroke-width: 2.4; }
 .tom-l { --tom1: #efe4ff; --tom2: #cbb3f5; }
 .tom-r { --tom1: #ffeaf4; --tom2: #f5b7d5; }
+.tom-c { --tom1: #fbf6ec; --tom2: #e3d4b8; }
 .tom-m { --tom1: #e6fbf2; --tom2: #a9e3cf; }
-.card-imagem, .dp-imagem, .look-arte, .item-arte, .moldura {
+.card-imagem, .dp-imagem, .look-arte, .item-arte, .moldura, .estilo-arte {
     background:
         radial-gradient(rgba(36, 26, 51, .09) 1.2px, transparent 1.6px) 0 0 / 14px 14px,
         radial-gradient(circle at 50% 40%, var(--tom1), var(--tom2) 78%);
@@ -242,6 +246,39 @@ a { color: var(--rosa); }
 .chip-fav { display: inline-flex; align-items: center; gap: 6px; }
 .chip-fav svg { width: 15px; height: 15px; fill: var(--rosa); }
 .chip-fav[aria-pressed="true"] svg { fill: var(--tinta); }
+
+/* ===== qual é a sua vibe? (comprar por estilo) ===== */
+.estilos { padding: 40px 0 8px; }
+.estilos-grade { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin: 0; padding: 0; list-style: none; }
+.estilo { --fundo: #2b1b40; --luz: rgba(205, 180, 255, .35); display: flex; flex-direction: column; width: 100%; height: 100%; padding: 12px 12px 16px; border: 2px solid var(--linha); border-radius: var(--raio); background: var(--painel); color: var(--texto); font: inherit; text-align: left; cursor: pointer; transition: transform .2s, border-color .2s, box-shadow .2s; }
+.estilo:hover { transform: translateY(-4px) rotate(-.6deg); border-color: var(--rosa); box-shadow: 0 14px 30px rgba(0, 0, 0, .35); }
+.estilo[aria-pressed="true"] { border-color: var(--ouro); box-shadow: 0 0 0 4px rgba(233, 196, 106, .25); }
+/* "foto antiga": fundo escuro com luz no meio e vinheta, as peças arrumadas por cima */
+.estilo-foto { position: relative; display: block; aspect-ratio: 4 / 3; margin-bottom: 12px; overflow: hidden; border: 6px solid #efe6d6; border-bottom-width: 18px; border-radius: 4px; background: radial-gradient(70% 70% at 50% 45%, var(--luz), transparent 75%), var(--fundo); box-shadow: inset 0 0 40px rgba(0, 0, 0, .6); }
+.estilo-arte { position: absolute; width: 40%; aspect-ratio: 1; padding: 6px; border: 2px solid var(--tinta); border-radius: 12px; box-shadow: 0 8px 16px rgba(0, 0, 0, .4); transition: transform .3s; }
+.estilo-arte > .arte { width: 100%; height: 100%; }
+.estilo-arte:nth-child(1) { left: 6%; top: 14%; rotate: -8deg; }
+.estilo-arte:nth-child(2) { left: 30%; top: 6%; z-index: 1; width: 44%; }
+.estilo-arte:nth-child(3) { right: 6%; top: 18%; rotate: 7deg; }
+.estilo:hover .estilo-arte:nth-child(1) { transform: translate(-4px, -2px); }
+.estilo:hover .estilo-arte:nth-child(3) { transform: translate(4px, -2px); }
+.estilo-nome { font: 700 1.6rem/1.1 var(--serifa); }
+.estilo-desc { margin: 4px 0 8px; color: var(--mudo); font-size: .88rem; line-height: 1.45; }
+.estilo-total { margin-top: auto; color: var(--ouro); font-weight: 700; font-size: .86rem; }
+.estilo[aria-pressed="true"] .estilo-total::before { content: "✦ filtrando · "; }
+.estilo-vitoriana { --fundo: #3a3128; --luz: rgba(255, 244, 225, .4); }
+.estilo-tradgoth { --fundo: #1a0d14; --luz: rgba(163, 32, 63, .5); }
+.estilo-bruxinha { --fundo: #24163f; --luz: rgba(255, 180, 94, .35); }
+.estilo-pastel { --fundo: #3b2750; --luz: rgba(255, 184, 217, .45); }
+.chip-estilo { display: inline-flex; align-items: center; gap: 8px; border-color: var(--ouro); color: var(--ouro); }
+.chip-estilo span { font-size: 1.1rem; line-height: 1; }
+@media (max-width: 980px) { .estilos-grade { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px) {
+    .estilos-grade { gap: 10px; }
+    .estilo { padding: 8px 8px 12px; }
+    .estilo-nome { font-size: 1.3rem; }
+    .estilo-desc { display: none; }
+}
 
 /* ===== looks prontos ===== */
 .looks { padding: 40px 0; }
