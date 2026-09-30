@@ -163,26 +163,82 @@ document.querySelectorAll(".botao").forEach((botao) => {
     const gravar = (k, v) => { try { v ? localStorage.setItem(k, v) : localStorage.removeItem(k); } catch (e) { /* sem armazenamento */ } };
     const reais = (n) => "R$ " + Math.round(n).toLocaleString("pt-BR");
 
-    // extra: a terceira cena do ramo (pedidos, loja ou agenda); ticket e mensagens: ponto de partida da calculadora
+    // Cada ramo tem as conversas dele, do jeito que chegam no WhatsApp de verdade (com um pouco de zoeira).
+    // whats: o que o cliente manda / o que o site responde sozinho. extra: a terceira cena (pedidos, loja ou
+    // agenda). ticket e mensagens: ponto de partida da calculadora.
     const NEGOCIOS = {
         pizzaria: { emoji: "🍕", exemplo: "Sua Pizzaria", busca: "pizzaria", extra: "pedidos", ticket: 60, mensagens: 60,
             concorrentes: ["Pizzaria Bella Massa · ⭐ 4,8 · cardápio · WhatsApp", "Forno & Cia · ⭐ 4,6 · pedir online"],
-            perguntas: [["que horas abre?", "Terça a domingo, 18h às 23h30 🍕"], ["tem entrega no centro?", "Entregamos! Frete grátis até 5 km"], ["tem pizza de brigadeiro com bacon?", ""]] },
+            whats: {
+                sem: ["boa noite, ainda tá aberto?", "quanto tá a grande de calabresa?", "entrega no Jardim dos Estados?", "tem pizza de brigadeiro com bacon?", "???"],
+                alerta: "você viu às 23h47, de chinelo 🩴. ele já tá comendo a do concorrente",
+                com: [["“ainda tá aberto?” → Até 23h30 🍕", "na hora"], ["“quanto tá a grande?” → cardápio com preço e foto", "sem digitar nada"], ["“entrega no Jardim dos Estados?” → Entrega! Taxa R$ 5", "na hora"]],
+                fim: "e você? tirando pizza do forno em paz 🔥",
+            } },
         barbearia: { emoji: "💈", exemplo: "Sua Barbearia", busca: "barbearia", extra: "agenda", ticket: 40, mensagens: 40,
             concorrentes: ["Barbearia Navalha · ⭐ 4,9 · agenda online", "Corte Fino · ⭐ 4,7 · WhatsApp"],
-            perguntas: [["tem horário sábado?", "Sábado das 8h às 18h, escolhe o horário no site 💈"], ["quanto é o corte?", "Corte R$ 35 · barba R$ 25"], ["faz o corte do Neymar?", ""]] },
+            whats: {
+                sem: ["fala mano, tem horário hoje?", "e amanhã cedo?", "quanto tá corte + barba?", "faz o corte do Neymar?", "??"],
+                alerta: "você com a máquina na mão, respondendo com o cotovelo 💈",
+                com: [["“tem horário hoje?” → 16h30 ou 18h, escolhe no link", "na hora"], ["“corte + barba?” → R$ 55, tá na tela", "sem digitar nada"], ["“faz o do Neymar?” → Faz! Tem foto de referência no site 😎", "na hora"]],
+                fim: "e você? só na tesoura, sem largar o cliente ✂️",
+            },
+            agenda: {
+                sem: ["mano, tem como 15h?", "ah não, 15h eu não consigo", "16h então?", "vou ver aqui e te falo", "e aí, tem?"],
+                alerta: "📅 marcou o Zé e o Pedro no mesmo horário. os dois de cara feia 😬",
+                com: [["Zé escolheu sábado, 15h", "sozinho"], ["lembrete no WhatsApp 1h antes", "automático"], ["Pedro viu que 15h tava ocupado e pegou 16h", "sem briga"]],
+                fim: "cadeira cheia e zero “e aí, tem?” ✓",
+            } },
         "loja de roupa": { emoji: "👕", exemplo: "Sua Loja", busca: "loja de roupa", extra: "loja", ticket: 150, mensagens: 50,
             concorrentes: ["Estilo Urbano · ⭐ 4,8 · loja online", "Vitrine Store · ⭐ 4,6 · entrega"],
-            perguntas: [["tem M?", "Tem P, M e G, é só escolher no site"], ["quanto tá o moletom?", "R$ 189, com foto de todos os ângulos"], ["tem esse mas em outra cor, outro tamanho e mais barato?", ""]] },
+            whats: {
+                sem: ["oii, esse vestido ainda tem?", "tem no M?", "e na cor preta?", "quanto fica o frete pra Dourados?", "vou pensar e te aviso 🙃"],
+                alerta: "📸 23 fotos no direct e ela ainda vai pensar",
+                com: [["“ainda tem?” → estoque na tela, sempre atualizado", "na hora"], ["“tem no M?” → P, M e G, é só escolher", "sem digitar nada"], ["“frete pra Dourados?” → calculado no carrinho", "sozinho"]],
+                fim: "e você? embalando pedido, não respondendo direct 📦",
+            } },
         "salão": { emoji: "💇", exemplo: "Seu Salão", busca: "salão de beleza", extra: "agenda", ticket: 90, mensagens: 40,
             concorrentes: ["Studio Bella · ⭐ 4,9 · agenda online", "Espaço Glamour · ⭐ 4,7 · WhatsApp"],
-            perguntas: [["tem horário pra escova amanhã?", "Amanhã às 10h, 14h ou 16h, escolhe no site 💇"], ["quanto é a progressiva?", "A partir de R$ 180"], ["dá pra fazer luzes em 20 minutos?", ""]] },
+            whats: {
+                sem: ["amiga, tem horário pra escova hoje?", "quanto tá a progressiva?", "faz unha junto?", "dá pra fazer luzes em 20 minutos?", "??"],
+                alerta: "você com a mão cheia de tinta, tentando responder com o nariz 💇",
+                com: [["“escova hoje?” → 14h ou 16h, escolhe no link", "na hora"], ["“progressiva?” → a partir de R$ 180, tá na tela", "sem digitar nada"], ["“faz unha junto?” → marca os dois no mesmo horário", "sozinho"]],
+                fim: "e você? fazendo cabelo, não virando secretária ✨",
+            },
+            agenda: {
+                sem: ["tem sábado?", "de manhã", "ah, de manhã não dá", "e se eu levar minha irmã?", "vou ver e te falo"],
+                alerta: "📅 três clientes às 9h de sábado. boa sorte 😬",
+                com: [["escova + unha, sábado 10h", "marcou sozinha"], ["a irmã pegou 10h30 no link", "sem mensagem"], ["lembrete no WhatsApp 1 dia antes", "automático"]],
+                fim: "agenda cheia e você nem pegou no celular ✓",
+            } },
         academia: { emoji: "💪", exemplo: "Sua Academia", busca: "academia", extra: "agenda", ticket: 100, mensagens: 30,
             concorrentes: ["Academia Força Total · ⭐ 4,8 · planos online", "Fit Center · ⭐ 4,6 · aula experimental"],
-            perguntas: [["quanto é a mensalidade?", "Planos a partir de R$ 89/mês"], ["abre domingo?", "Domingo das 8h às 12h"], ["dá pra ficar monstro até sexta?", ""]] },
+            whats: {
+                sem: ["quanto tá a mensalidade?", "tem plano anual?", "abre domingo?", "dá pra ficar monstro até sexta?", "segunda eu começo 😅"],
+                alerta: "ele disse “segunda eu começo”. faz 3 anos 🥲",
+                com: [["“mensalidade?” → planos a partir de R$ 89, na tela", "sem digitar nada"], ["“abre domingo?” → Domingo das 8h às 12h", "na hora"], ["“tem aula experimental?” → marca no link", "sozinho"]],
+                fim: "e você? dando treino, não respondendo preço 💪",
+            },
+            agenda: {
+                sem: ["quero fazer aula experimental", "pode ser hoje?", "hoje não dá, amanhã?", "amanhã tenho coisa...", "sexta então"],
+                alerta: "📅 sexta ele sumiu. “segunda eu começo” 🥲",
+                com: [["aula experimental: quinta, 19h", "marcou sozinho"], ["lembrete no WhatsApp 2h antes", "automático"], ["ele veio. e voltou na segunda", "milagre"]],
+                fim: "aluno novo matriculado sem você largar o treino ✓",
+            } },
         "clínica": { emoji: "🩺", exemplo: "Sua Clínica", busca: "clínica", extra: "agenda", ticket: 200, mensagens: 30,
             concorrentes: ["Clínica Vida · ⭐ 4,9 · agendamento online", "Centro Médico Saúde · ⭐ 4,7 · convênios"],
-            perguntas: [["atende convênio?", "Unimed, Bradesco Saúde e particular"], ["tem horário essa semana?", "Quinta 9h ou sexta 15h, marca no site 🩺"], ["o doutor atende por áudio?", ""]] },
+            whats: {
+                sem: ["bom dia, atende Unimed?", "tem horário essa semana?", "quanto é a consulta particular?", "o doutor atende por áudio?", "alô??"],
+                alerta: "a recepção respondendo 80 mensagens com o telefone tocando 📞",
+                com: [["“atende Unimed?” → convênios aceitos, na tela", "na hora"], ["“horário essa semana?” → quinta 9h ou sexta 15h, no link", "sozinho"], ["“consulta particular?” → valor e o que inclui, na tela", "sem digitar nada"]],
+                fim: "e a recepção? atendendo quem tá na sala 🩺",
+            },
+            agenda: {
+                sem: ["tem horário quinta?", "de manhã, antes do trabalho", "ah, 8h não dá", "vou ver e te ligo", "(uma semana depois) oi, ainda tem vaga?"],
+                alerta: "📅 paciente faltou sem avisar. horário vazio 🫠",
+                com: [["paciente marcou quinta, 9h", "sozinho"], ["lembrete 1 dia antes: “confirma?”", "automático"], ["desmarcou pelo link, horário liberado", "sem furo"]],
+                fim: "agenda cheia e zero falta sem aviso ✓",
+            } },
     };
 
     // demos que servem de "testar" (se o card existir na página)
@@ -209,8 +265,8 @@ document.querySelectorAll(".botao").forEach((botao) => {
             },
             {
                 aba: "WhatsApp", tipoOrc: "automacao", cta: "quero parar de responder a mesma coisa →", testar: demo("Fatia Nobre", "testar um atendimento automático ↗"),
-                sem: [...n.perguntas.map(([p]) => ["msg", p]), ["msg", "oi??"], ["msg", "vou ali no concorrente então 👋"], ["alerta", "você respondendo às 23h47 de chinelo 🩴 e ele já comprou em outro lugar"]],
-                com: [...n.perguntas.filter(([, r]) => r).slice(0, 2).map(([p, r]) => ["ok", `“${p}” → ${r}`, "na hora"]), ["ok", "47ª pergunta igual do dia", "mesma paciência da 1ª"], ["fim", "e você? dormindo 😴 o site respondeu tudo e nem pediu hora extra"]],
+                sem: [...n.whats.sem.map((m) => ["msg", m]), ["alerta", n.whats.alerta]],
+                com: [...n.whats.com.map(([t, d]) => ["ok", t, d]), ["fim", n.whats.fim]],
                 metricas: [["Tempo de resposta", "quando der 🐢", "na hora ⚡"], ["Mesma pergunta", "47ª vez hoje", "respondida sozinha"], ["Seu celular", "não para de apitar 📳", "em paz 🧘"]],
             },
         ];
@@ -228,9 +284,9 @@ document.querySelectorAll(".botao").forEach((botao) => {
         });
         if (n.extra === "agenda") lista.push({
             aba: "agenda", tipoOrc: "sistema", cta: "quero uma agenda que se preenche sozinha →", testar: { href: "#projetos", texto: "ver sistemas que eu fiz ↓" },
-            sem: [["msg", n.perguntas[0][0]], ["msg", "e às 15h?"], ["msg", "vou ver aqui e te falo"], ["msg", "e aí??"], ["alerta", "📅 dois clientes no mesmo horário. vai ser um encontro constrangedor 😬"]],
-            com: [["ok", "cliente escolheu sábado, 15h", "sozinho"], ["ok", "lembrete no WhatsApp um dia antes", "automático"], ["ok", "cliente remarcou sozinho", "sem drama"], ["fim", "agenda cheia e zero “e aí??” ✓"]],
-            metricas: [["Pra marcar horário", "10 mensagens", "2 toques"], ["Horário duplicado", "acontece 😬", "impossível"], ["A agenda fica", "no caderno (molhado)", "no celular"]],
+            sem: [...n.agenda.sem.map((m) => ["msg", m]), ["alerta", n.agenda.alerta]],
+            com: [...n.agenda.com.map(([t, d]) => ["ok", t, d]), ["fim", n.agenda.fim]],
+            metricas: [["Pra marcar horário", "10 mensagens", "2 toques"], ["Horário furado", "acontece 😬", "raridade"], ["A agenda fica", "no caderno (molhado)", "no celular"]],
         });
         return lista;
     }
