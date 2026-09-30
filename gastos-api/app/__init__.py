@@ -1,9 +1,13 @@
+import os
+
 from flask import Flask
 from flasgger import Swagger
 from flask_cors import CORS
 from sqlalchemy import inspect, text
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 from .database import db
+from .limites import limiter
 
 ORIGENS_PERMITIDAS = [
     "https://samueldevmi.github.io",
@@ -99,8 +103,16 @@ def create_app(database_uri: str = "sqlite:///gastos.db") -> Flask:
     # um gasto tem poucos campos curtos; sem limite, um pedido de centenas de MB ocuparia a memória do servidor
     app.config["MAX_CONTENT_LENGTH"] = 16 * 1024
 
-    CORS(app, origins=ORIGENS_PERMITIDAS)
+    # O Render fica na frente da API: sem isso, todo mundo teria o IP do Render e dividiria o mesmo limite.
+    # Confia só no último endereço que o proxy acrescentou (o resto do cabeçalho o visitante pode inventar).
+    proxies = int(os.environ.get("PROXIES_NA_FRENTE", "1"))
+    if proxies:
+        app.wsgi_app = ProxyFix(app.wsgi_app, x_for=proxies)
+
+    # max_age: o navegador guarda a permissão por 10 min em vez de pedir de novo a cada chamada
+    CORS(app, origins=ORIGENS_PERMITIDAS, max_age=600)
     db.init_app(app)
+    limiter.init_app(app)
     Swagger(app, template=SWAGGER_TEMPLATE, config=SWAGGER_CONFIG)
 
     from . import models, models_casal  # noqa: F401  (garante que os modelos sejam registrados)
@@ -113,6 +125,10 @@ def create_app(database_uri: str = "sqlite:///gastos.db") -> Flask:
     with app.app_context():
         db.create_all()
         _migrar_coluna_tipo()
+
+    @app.errorhandler(429)
+    def pedidos_demais(_erro):
+        return {"erro": "Muitos pedidos seguidos. Espera um pouquinho e tenta de novo."}, 429
 
     @app.errorhandler(413)
     def corpo_grande_demais(_erro):

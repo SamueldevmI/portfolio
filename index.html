@@ -2,6 +2,9 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
+    <!-- Segurança (CSP): o navegador só roda script que é arquivo deste site e só conversa com os serviços listados.
+         Se algum código malicioso conseguir entrar na página, ele não roda. Serviço novo (API, imagem, fonte)? Acrescente aqui. -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://ghchart.rshah.org https://visitor-badge.laobi.icu; connect-src 'self' data: https://api.github.com https://github-contributions-api.jogruber.de https://api.sunrise-sunset.org; frame-src 'self'; media-src 'self' data: blob:; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Samuel Mickael, desenvolvedor web e mobile em Campo Grande - MS. Crio sites, sistemas e aplicativos sob medida. Veja os projetos e peça um orçamento.">
     <meta name="theme-color" content="#161616">
@@ -23,16 +26,7 @@
     <meta name="twitter:description" content="Sites, sistemas e aplicativos sob medida. Veja meus projetos e peça um orçamento pelo WhatsApp.">
     <meta name="twitter:image" content="https://samueldevmi.github.io/portfolio/imagem/og-image-v5.jpg">
     <meta name="twitter:image:alt" content="Samuel Mickael, desenvolvedor web e mobile: sites, sistemas e apps sob medida.">
-    <script>
-        /* Modo leve: celular, economia de dados ou internet lenta desligam os efeitos mais pesados.
-           ?leve=1 força ligado e ?leve=0 força desligado. */
-        (function () {
-            var forcado = new URLSearchParams(location.search).get("leve");
-            var conexao = navigator.connection || {};
-            var leve = forcado === "1" || (forcado !== "0" && (matchMedia("(pointer:coarse)").matches || conexao.saveData === true || /(^|-)(2g|3g)$/.test(conexao.effectiveType || "")));
-            if (leve) document.documentElement.classList.add("modo-leve");
-        })();
-    </script>
+    <script src="modo-leve.js?v=20260930csp"></script>
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="imagem/apple-touch-icon.png">
     <link rel="manifest" href="manifest.json">
@@ -40,8 +34,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap">
-    <link rel="stylesheet" href="style.css?v=20260930loja">
-<link rel="stylesheet" href="acabamento.css?v=20260930loja">
+    <link rel="stylesheet" href="style.css?v=20260930csp">
+<link rel="stylesheet" href="acabamento.css?v=20260930csp">
     <title id="tituloPagina">Samuel Mickael | Desenvolvedor Web &amp; Mobile</title>
     <script type="application/ld+json">
     {
@@ -668,9 +662,9 @@
     </div>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-    <script src="script.js?v=20260930loja"></script>
-<script src="acabamento.js?v=20260930loja" defer></script>
-<script src="musica.js?v=20260930loja" defer></script>
-<script src="mobile.js?v=20260930loja" defer></script>
+    <script src="script.js?v=20260930csp"></script>
+<script src="acabamento.js?v=20260930csp" defer></script>
+<script src="musica.js?v=20260930csp" defer></script>
+<script src="mobile.js?v=20260930csp" defer></script>
 </body>
 </html>

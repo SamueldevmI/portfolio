@@ -273,3 +273,8 @@ botaoTema.addEventListener("click", () => {
 document.getElementById("data").value = new Date().toISOString().slice(0, 10);
 renderizar();
 carregarTransacoes();
+
+// Funciona sem internet (estava dentro do index.html; a CSP só deixa rodar script que é arquivo do site)
+if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => navigator.serviceWorker.register("sw.js"));
+}

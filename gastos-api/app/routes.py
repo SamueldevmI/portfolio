@@ -4,6 +4,7 @@ from flask import Blueprint, jsonify, request
 
 from . import validacao
 from .database import db
+from .limites import escrita
 from .models import Gasto
 
 bp = Blueprint("gastos", __name__, url_prefix="/gastos")
@@ -79,6 +80,7 @@ def listar_gastos():
 
 
 @bp.post("")
+@escrita
 def criar_gasto():
     """Cria um novo gasto ou receita.
     ---
@@ -140,6 +142,7 @@ def obter_gasto(gasto_id: int):
 
 
 @bp.put("/<int:gasto_id>")
+@escrita
 def atualizar_gasto(gasto_id: int):
     """Atualiza um ou mais campos de um gasto existente.
     ---
@@ -187,6 +190,7 @@ def atualizar_gasto(gasto_id: int):
 
 
 @bp.delete("/<int:gasto_id>")
+@escrita
 def remover_gasto(gasto_id: int):
     """Remove um gasto.
     ---

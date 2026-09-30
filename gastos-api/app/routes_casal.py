@@ -5,6 +5,7 @@ from flask import Blueprint, jsonify, request
 
 from . import validacao
 from .database import db
+from .limites import CRIAR_CASAL, codigo_errado, escrita, limiter
 from .models_casal import MAX_INTEGRANTES_POR_CASAL, Casal, GastoCasal, Integrante
 
 bp = Blueprint("casal", __name__, url_prefix="/casal")
@@ -84,6 +85,7 @@ def _validar_gasto(dados: dict, casal: Casal) -> dict:
 
 
 @bp.post("")
+@limiter.limit(CRIAR_CASAL)
 def criar_casal():
     """Cria um casal novo e o primeiro integrante.
     ---
@@ -131,6 +133,8 @@ def criar_casal():
 
 
 @bp.post("/<codigo>/entrar")
+@escrita
+@codigo_errado
 def entrar_no_casal(codigo: str):
     """Entra num casal existente usando o código compartilhado.
     ---
@@ -182,6 +186,7 @@ def entrar_no_casal(codigo: str):
 
 
 @bp.get("/<codigo>")
+@codigo_errado
 def obter_casal(codigo: str):
     """Consulta um casal pelo código (pra saber quem já entrou).
     ---
@@ -205,6 +210,7 @@ def obter_casal(codigo: str):
 
 
 @bp.get("/<codigo>/gastos")
+@codigo_errado
 def listar_gastos_casal(codigo: str):
     """Lista os gastos do casal, mais recentes primeiro.
     ---
@@ -228,6 +234,8 @@ def listar_gastos_casal(codigo: str):
 
 
 @bp.post("/<codigo>/gastos")
+@escrita
+@codigo_errado
 def criar_gasto_casal(codigo: str):
     """Registra um gasto novo do casal.
     ---
@@ -275,6 +283,8 @@ def criar_gasto_casal(codigo: str):
 
 
 @bp.delete("/<codigo>/gastos/<int:gasto_id>")
+@escrita
+@codigo_errado
 def remover_gasto_casal(codigo: str, gasto_id: int):
     """Remove um gasto do casal.
     ---
@@ -309,6 +319,7 @@ def remover_gasto_casal(codigo: str, gasto_id: int):
 
 
 @bp.get("/<codigo>/saldo")
+@codigo_errado
 def saldo_casal(codigo: str):
     """Calcula quem deve quanto pra quem.
     ---

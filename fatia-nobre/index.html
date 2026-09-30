@@ -2,6 +2,9 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
+    <!-- Segurança (CSP): o navegador só roda script que é arquivo deste site e só conversa com os serviços listados.
+         Se algum código malicioso conseguir entrar na página, ele não roda. Serviço novo (API, imagem, fonte)? Acrescente aqui. -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Fatia Nobre — Atendimento automático</title>
     <meta name="description" content="Demonstração de um atendimento automático: a pizzaria fictícia Fatia Nobre reconhece a pergunta por palavras-chave e responde na hora, mesmo de madrugada. Projeto de portfólio de Samuel Mickael.">
