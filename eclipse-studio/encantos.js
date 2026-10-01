@@ -329,104 +329,100 @@ const RECEITAS = {
     montar();
 })();
 
-/* ========== 4. Clima sonoro: chuva, velas crepitando e sininhos, tudo sintetizado (sem arquivo de áudio) ========== */
+/* ========== 4. Clima sonoro: chuva macia, lareira e caixinha de música, tudo sintetizado (sem arquivo de áudio) ========== */
 const CLIMA = (() => {
     const botao = document.getElementById("botaoSom");
-    const CHAVE_SOM = "es-som";
-    let ctx = null, mestre = null, ligado = false, timers = [];
+    let ctx = null, mestre = null, eco = null, ligado = false, timers = [];
 
-    function ruido(segundos) {
-        const buffer = ctx.createBuffer(1, ctx.sampleRate * segundos, ctx.sampleRate);
-        const dados = buffer.getChannelData(0);
-        let ultimo = 0;
-        for (let i = 0; i < dados.length; i++) { // ruído "marrom": mais grave e macio que o branco
+    /* ruído "rosa" e "marrom": bem mais macios que o branco, soam como chuva de verdade */
+    function ruido(segundos, tipo) {
+        const buffer = ctx.createBuffer(1, Math.max(1, Math.floor(ctx.sampleRate * segundos)), ctx.sampleRate);
+        const d = buffer.getChannelData(0);
+        let b0 = 0, b1 = 0, b2 = 0, ultimo = 0;
+        for (let i = 0; i < d.length; i++) {
             const branco = Math.random() * 2 - 1;
-            ultimo = (ultimo + .02 * branco) / 1.02;
-            dados[i] = ultimo * 3.5;
+            if (tipo === "marrom") { ultimo = (ultimo + .02 * branco) / 1.02; d[i] = ultimo * 3.5; }
+            else { b0 = .99765 * b0 + branco * .099046; b1 = .963 * b1 + branco * .2965164; b2 = .57 * b2 + branco * 1.0526913; d[i] = (b0 + b1 + b2 + branco * .1848) * .11; }
         }
         return buffer;
     }
-    function ruidoBranco(segundos) {
-        const buffer = ctx.createBuffer(1, Math.max(1, ctx.sampleRate * segundos), ctx.sampleRate);
-        const dados = buffer.getChannelData(0);
-        for (let i = 0; i < dados.length; i++) dados[i] = Math.random() * 2 - 1;
-        return buffer;
+    function filtro(tipo, freq, q = .7) {
+        const f = ctx.createBiquadFilter(); f.type = tipo; f.frequency.value = freq; f.Q.value = q; return f;
     }
-    function tocarRuido(buffer, filtro, freq, volume, dur, quando = ctx.currentTime) {
-        const fonte = ctx.createBufferSource();
-        fonte.buffer = buffer;
-        const f = ctx.createBiquadFilter(); f.type = filtro; f.frequency.value = freq;
+    function rajada(buffer, f, volume, dur, destino = mestre, quando = ctx.currentTime) {
+        const fonte = ctx.createBufferSource(); fonte.buffer = buffer;
         const g = ctx.createGain();
-        g.gain.setValueAtTime(volume, quando);
+        g.gain.setValueAtTime(.0001, quando);
+        g.gain.exponentialRampToValueAtTime(volume, quando + Math.min(.02, dur / 4));
         g.gain.exponentialRampToValueAtTime(.0001, quando + dur);
-        fonte.connect(f).connect(g).connect(mestre);
-        fonte.start(quando);
-        fonte.stop(quando + dur + .05);
-        return { fonte, f };
+        fonte.connect(f).connect(g).connect(destino);
+        fonte.start(quando); fonte.stop(quando + dur + .05);
     }
 
     function iniciar() {
         ctx = new (window.AudioContext || window.webkitAudioContext)();
-        mestre = ctx.createGain();
-        mestre.gain.value = 0;
-        mestre.connect(ctx.destination);
-        /* chuva: ruído marrom em laço, filtrado */
-        const chuva = ctx.createBufferSource();
-        chuva.buffer = ruido(3); chuva.loop = true;
-        const passaBaixa = ctx.createBiquadFilter(); passaBaixa.type = "lowpass"; passaBaixa.frequency.value = 1400;
-        const passaAlta = ctx.createBiquadFilter(); passaAlta.type = "highpass"; passaAlta.frequency.value = 250;
-        const volChuva = ctx.createGain(); volChuva.gain.value = .22;
-        chuva.connect(passaBaixa).connect(passaAlta).connect(volChuva).connect(mestre);
-        chuva.start();
-        /* um coro bem baixinho de fundo */
-        [110, 164.8, 220].forEach((freq, i) => {
-            const o = ctx.createOscillator(); o.type = "sine"; o.frequency.value = freq;
-            const g = ctx.createGain(); g.gain.value = .012;
-            const lfo = ctx.createOscillator(); lfo.frequency.value = .08 + i * .03;
-            const lfoG = ctx.createGain(); lfoG.gain.value = .008;
-            lfo.connect(lfoG).connect(g.gain);
-            o.connect(g).connect(mestre); o.start(); lfo.start();
-        });
+        mestre = ctx.createGain(); mestre.gain.value = 0; mestre.connect(ctx.destination);
+        /* eco suave, só pros sininhos */
+        eco = ctx.createDelay(1); eco.delayTime.value = .28;
+        const volta = ctx.createGain(); volta.gain.value = .32;
+        const abafa = filtro("lowpass", 2200);
+        eco.connect(abafa).connect(volta).connect(eco);
+        abafa.connect(mestre);
+
+        /* chuva: corpo grave + chiado leve, com rajadas lentas de vento */
+        const chuva = ctx.createGain(); chuva.gain.value = 1; chuva.connect(mestre);
+        const corpo = ctx.createBufferSource(); corpo.buffer = ruido(8, "marrom"); corpo.loop = true;
+        const gCorpo = ctx.createGain(); gCorpo.gain.value = .16;
+        corpo.connect(filtro("lowpass", 650)).connect(gCorpo).connect(chuva);
+        const chiado = ctx.createBufferSource(); chiado.buffer = ruido(7, "rosa"); chiado.loop = true;
+        const gChiado = ctx.createGain(); gChiado.gain.value = .05;
+        chiado.connect(filtro("highpass", 500)).connect(filtro("lowpass", 2600)).connect(gChiado).connect(chuva);
+        const vento = ctx.createOscillator(); vento.frequency.value = .07;
+        const gVento = ctx.createGain(); gVento.gain.value = .18;
+        vento.connect(gVento).connect(chuva.gain);
+        corpo.start(); chiado.start(); vento.start();
     }
 
-    function agendarAmbiente() {
-        const estalo = ruidoBranco(.02);
-        const gota = ruidoBranco(.03);
-        const crepitar = () => { // estalinhos da vela
+    function agendarLareira() {
+        const estalo = ruido(.12, "rosa");
+        const crepitar = () => {
             if (!ligado) return;
-            const n = 1 + Math.floor(Math.random() * 3);
-            for (let i = 0; i < n; i++) tocarRuido(estalo, "highpass", 1800 + Math.random() * 2500, .05 + Math.random() * .12, .02 + Math.random() * .03, ctx.currentTime + i * .03);
-            timers.push(setTimeout(crepitar, 90 + Math.random() * 700));
+            const quantos = Math.random() < .25 ? 2 : 1;
+            for (let i = 0; i < quantos; i++) {
+                rajada(estalo, filtro("bandpass", 700 + Math.random() * 900, 1.2), .05 + Math.random() * .05, .04 + Math.random() * .06, mestre, ctx.currentTime + i * (.05 + Math.random() * .08));
+            }
+            timers.push(setTimeout(crepitar, 900 + Math.random() * 2600)); // raro: um estalo aqui, outro ali
         };
-        const pingar = () => { // gotas na janela
-            if (!ligado) return;
-            tocarRuido(gota, "bandpass", 2500 + Math.random() * 3500, .03 + Math.random() * .05, .05);
-            timers.push(setTimeout(pingar, 60 + Math.random() * 260));
-        };
-        crepitar(); pingar();
+        timers.push(setTimeout(crepitar, 1200));
     }
 
-    function sino(agudo = 1) {
-        if (!ligado) return;
-        const t = ctx.currentTime;
-        [1568, 2349, 3136, 4186].forEach((freq, i) => {
-            const o = ctx.createOscillator(); o.type = "sine"; o.frequency.value = freq * agudo * (1 + (Math.random() - .5) * .01);
+    /* caixinha de música: notas da escala pentatônica, sempre bonitas juntas */
+    const NOTAS = [880, 987.8, 1174.7, 1318.5, 1568];
+    function nota(freq, quando, volume) {
+        [[1, 1], [2, .12]].forEach(([mult, peso]) => {
+            const o = ctx.createOscillator(); o.type = "sine"; o.frequency.value = freq * mult;
             const g = ctx.createGain();
-            g.gain.setValueAtTime(0, t + i * .012);
-            g.gain.linearRampToValueAtTime(.09 / (i + 1), t + i * .012 + .008);
-            g.gain.exponentialRampToValueAtTime(.0001, t + 1.6 - i * .2);
-            o.connect(g).connect(mestre); o.start(t); o.stop(t + 1.7);
+            g.gain.setValueAtTime(.0001, quando);
+            g.gain.exponentialRampToValueAtTime(volume * peso, quando + .01);
+            g.gain.exponentialRampToValueAtTime(.0001, quando + 1.3);
+            o.connect(g); g.connect(mestre); g.connect(eco);
+            o.start(quando); o.stop(quando + 1.4);
         });
+    }
+    function sino(quantas = 2) {
+        if (!ligado) return;
+        const inicio = Math.floor(Math.random() * (NOTAS.length - quantas));
+        for (let i = 0; i < quantas; i++) nota(NOTAS[inicio + i], ctx.currentTime + i * .11, .05);
     }
     function pagina() {
         if (!ligado) return;
-        const { f } = tocarRuido(ruidoBranco(.35), "bandpass", 700, .35, .32);
-        f.frequency.exponentialRampToValueAtTime(3200, ctx.currentTime + .28);
+        rajada(ruido(.3, "rosa"), filtro("bandpass", 1800, .6), .1, .22);
     }
     function sopro() {
         if (!ligado) return;
-        const { f } = tocarRuido(ruido(.7), "lowpass", 900, .9, .6);
-        f.frequency.exponentialRampToValueAtTime(200, ctx.currentTime + .6);
+        const f = filtro("lowpass", 700);
+        f.frequency.exponentialRampToValueAtTime(220, ctx.currentTime + .5);
+        rajada(ruido(.6, "marrom"), f, .3, .5);
     }
 
     function ligar() {
@@ -434,35 +430,28 @@ const CLIMA = (() => {
         ctx.resume();
         ligado = true;
         mestre.gain.cancelScheduledValues(ctx.currentTime);
-        mestre.gain.setTargetAtTime(.55, ctx.currentTime, .6); // entra devagar
-        agendarAmbiente();
+        mestre.gain.setTargetAtTime(.5, ctx.currentTime, 1.2); // entra bem devagar
+        agendarLareira();
         botao.setAttribute("aria-pressed", "true");
         botao.setAttribute("aria-label", "Desligar o clima sonoro");
-        guardar(CHAVE_SOM, true);
     }
     function desligar() {
         ligado = false;
         timers.forEach(clearTimeout); timers = [];
-        if (ctx) mestre.gain.setTargetAtTime(0, ctx.currentTime, .25);
+        if (ctx) mestre.gain.setTargetAtTime(0, ctx.currentTime, .3);
         botao.setAttribute("aria-pressed", "false");
-        botao.setAttribute("aria-label", "Ligar o clima: chuva e velas crepitando");
-        guardar(CHAVE_SOM, false);
+        botao.setAttribute("aria-label", "Ligar o clima: chuva e lareira");
     }
 
     if (botao) {
+        botao.setAttribute("aria-label", "Ligar o clima: chuva e lareira");
         botao.addEventListener("click", () => (ligado ? desligar() : ligar()));
-        /* quem deixou ligado da última vez: o som volta no primeiro toque (o navegador exige um gesto) */
-        if (ler(CHAVE_SOM, false)) {
-            botao.classList.add("lembra");
-            const religar = (e) => { if (!e.target.closest("#botaoSom") && !ligado) ligar(); removeEventListener("pointerdown", religar); };
-            addEventListener("pointerdown", religar);
-        }
         document.addEventListener("visibilitychange", () => { if (ctx && ligado) (document.hidden ? ctx.suspend() : ctx.resume()); });
     }
-    document.addEventListener("sacola:caiu", () => sino(1));
-    document.addEventListener("encanto:som", (e) => ({ sino: () => sino(1.25), pagina, sopro }[e.detail] || (() => {}))());
+    document.addEventListener("sacola:caiu", () => sino(2));
+    document.addEventListener("encanto:som", (e) => ({ sino: () => sino(3), pagina, sopro }[e.detail] || (() => {}))());
     document.getElementById("apagarVelas")?.addEventListener("click", sopro);
-    document.getElementById("gatoUsar")?.addEventListener("click", () => sino(.8));
+    document.getElementById("gatoUsar")?.addEventListener("click", () => sino(3));
     return { sino };
 })();
 
@@ -470,16 +459,16 @@ const CLIMA = (() => {
 (function varinha() {
     if (semMovimento || !matchMedia("(pointer: fine)").matches) return;
     document.documentElement.classList.add("varinha");
-    const CORES = ["#e9c46a", "#ffb8d9", "#cdb4ff", "#aef0d6", "#fff4fb"];
+    const CORES = ["rgba(233, 196, 106, .9)", "rgba(255, 227, 154, .9)", "rgba(255, 244, 225, .8)"];
     let ultimo = { x: 0, y: 0, t: 0 }, vivas = 0;
     addEventListener("pointermove", (e) => {
         if (e.pointerType !== "mouse") return;
         const agora = performance.now();
-        if (agora - ultimo.t < 35 || Math.hypot(e.clientX - ultimo.x, e.clientY - ultimo.y) < 14 || vivas >= 22) return;
+        if (agora - ultimo.t < 45 || Math.hypot(e.clientX - ultimo.x, e.clientY - ultimo.y) < 18 || vivas >= 12) return;
         ultimo = { x: e.clientX, y: e.clientY, t: agora };
         const f = document.createElement("i");
         f.className = "faisca-varinha";
-        f.style.cssText = `left:${e.clientX}px;top:${e.clientY}px;--cor:${CORES[Math.floor(Math.random() * CORES.length)]};--dx:${(Math.random() * 30 - 15).toFixed(0)}px;--dy:${(10 + Math.random() * 26).toFixed(0)}px;--tam:${(5 + Math.random() * 7).toFixed(0)}px`;
+        f.style.cssText = `left:${e.clientX}px;top:${e.clientY}px;--cor:${CORES[Math.floor(Math.random() * CORES.length)]};--dx:${(Math.random() * 12 - 6).toFixed(0)}px;--dy:${(14 + Math.random() * 18).toFixed(0)}px;--tam:${(3 + Math.random() * 3).toFixed(1)}px`;
         f.addEventListener("animationend", () => { f.remove(); vivas--; });
         vivas++;
         document.body.appendChild(f);
