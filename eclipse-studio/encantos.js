@@ -55,7 +55,7 @@ function fraseDaLua(fase) {
 function previsaoDoDia(signo) {
     const sorte = sorteioComSemente(`${hojeChave()}|${signo.id}`);
     const pega = (lista) => lista[Math.floor(sorte() * lista.length)];
-    const pecas = PRODUTOS.filter((p) => !p.secreto && p.estilos.includes(ELEMENTO_VIBE[signo.elemento]));
+    const pecas = PRODUTOS.filter((p) => naVitrine(p) && disponivel(p) && p.estilos.includes(ELEMENTO_VIBE[signo.elemento]));
     const [cor, corHex] = pega(CORES_DO_DIA);
     return {
         texto: `${pega(ABERTURAS[signo.elemento])} ${pega(CONSELHOS)}`,
@@ -247,7 +247,7 @@ const RECEITAS = {
     const paginas = [capa];
     ESTILOS.forEach((e, i) => {
         const arcano = ARCANOS[e.id];
-        const pecas = PRODUTOS.filter((p) => !p.secreto && p.estilos.includes(e.id)).slice(0, 5);
+        const pecas = PRODUTOS.filter((p) => naVitrine(p) && disponivel(p) && p.estilos.includes(e.id)).slice(0, 5);
         paginas.push(`<div class="pagina pagina-receita"><p class="pagina-capitulo">Capítulo ${NUMERAIS[i]}</p><h3>${esc(e.nome)}</h3>
             <span class="pagina-arte tom-${arcano.tom}"><svg class="arte" viewBox="0 0 100 100" aria-hidden="true">${ARTE[arcano.arte]}</svg></span>
             <p class="pagina-texto">${esc(RECEITAS[e.id])}</p></div>`);

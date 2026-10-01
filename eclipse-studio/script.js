@@ -24,6 +24,10 @@ const LOJA = {
         { id: "imbirussu", nome: "Imbirussu", taxa: 1400 },
         { id: "anhanduizinho", nome: "Anhanduizinho", taxa: 1500 },
     ],
+    /* caixa misteriosa: 3 peças surpresa de uma vibe. Preço em centavos (provisório até a Elizabeth decidir) */
+    caixa: { preco: 9900, pecas: 3 },
+    /* coleção de arcanos: uma carta nova por dia de visita; completou as 4, ganha o código. Prêmio provisório */
+    colecao: { codigo: "COVEN4", premio: "a Elizabeth manda um mimo surpresa junto com o pedido" },
 };
 
 /* "Quem já é da coven": prints e elogios de clientes de verdade. Enquanto estiver vazio, a seção não aparece.
@@ -236,6 +240,11 @@ const CATEGORIAS = ["Roupas", "Joias e bijuterias", "Bolsas", "Maquiagem e perfu
 
 /* peças do drop secreto: ficam fora da vitrine e só aparecem atrás da porta secreta */
 Object.assign(ARTE, {
+    caixa: `<path class="p" d="M18 44H82V86H18Z"/><path class="p" d="M14 34H86V46H14Z"/>`
+        + `<path class="o" d="M45 34H55V86H45Z"/><path class="o" d="M14 38H86V43H14Z"/>`
+        + `<path class="o" d="M50 34C40 20 26 22 30 30C33 35 44 34 50 34ZM50 34C60 20 74 22 70 30C67 35 56 34 50 34Z"/>`
+        + `<circle class="v" cx="50" cy="64" r="9"/><circle class="o s" cx="50" cy="64" r="5"/><circle class="v s" cx="52" cy="62.5" r="4.6"/>`
+        + brilho(84, 20, .6, "o s") + brilho(16, 64, .45),
     colarEclipse: `<path class="n f" d="M18 12Q50 60 82 12" stroke-dasharray="0 5" stroke-width="4"/><circle class="n" cx="50" cy="44" r="3"/>`
         + `<circle class="o" cx="50" cy="64" r="16"/><circle class="p" cx="54.5" cy="60" r="14.5"/>`
         + brilho(40, 74, .35, "c s") + brilho(80, 40, .6, "o s") + brilho(22, 70, .45),
@@ -334,7 +343,7 @@ const PRODUTOS = [
         busca: "rosario terco colar contas cruz",
     },
     {
-        id: "camafeu", nome: "Broche Camafeu", cat: "Joias e bijuterias", preco: 4490, tam: null, arte: "camafeu", tom: "c", unica: true,
+        id: "camafeu", nome: "Broche Camafeu", cat: "Joias e bijuterias", preco: 4490, tam: null, arte: "camafeu", tom: "c", unica: true, vendida: true,
         alt: "Ilustração de broche camafeu oval com perfil de moça marfim sobre fundo escuro e moldura dourada de pérolas",
         resumo: "Perfil marfim · moldura de pérolas",
         desc: "Broche camafeu com perfil de moça em marfim, moldura dourada e pérolas em volta. Na gola, no espartilho ou numa fita de veludo.",
@@ -388,6 +397,15 @@ const PRODUTOS = [
         desc: "Bolsa preta em formato de caixão, com cruz lilás na frente e costura rosa aparente. Cabe celular, carteira e maquiagem.",
         itens: ["Couro sintético", "Cruz lilás aplicada", "Alça de mão e alça longa", "Forro de cetim rosa"],
         busca: "bolsa caixao coffin preta cruz",
+    },
+    {
+        id: "caixa", nome: "Caixa Misteriosa do Coven", cat: "Caixas", preco: LOJA.caixa.preco, tam: ["Vitoriana", "Trad goth", "Bruxinha", "Pastel goth"], rotulo: "Vibe",
+        arte: "caixa", tom: "l", oculto: true,
+        alt: "Ilustração de caixa preta com fita dourada, selo de eclipse e um ponto de interrogação",
+        resumo: `${LOJA.caixa.pecas} peças surpresa da vibe que você escolher`,
+        desc: `Uma caixa com ${LOJA.caixa.pecas} peças surpresa da vibe que você escolher, montada pela Elizabeth. Você só descobre o que veio quando abrir.`,
+        itens: [`${LOJA.caixa.pecas} peças surpresa`, "Você escolhe a vibe", "Montada à mão", "Sem troca do conteúdo, só de tamanho"],
+        busca: "caixa misteriosa surpresa coven",
     },
     {
         id: "colarEclipse", nome: "Colar Eclipse Dourado", cat: "Joias e bijuterias", preco: 6990, tam: null, arte: "colarEclipse", tom: "l", secreto: true,
@@ -473,9 +491,13 @@ const MAX_POR_ITEM = 9;
 const maxDe = (p) => (p && p.unica ? 1 : MAX_POR_ITEM);
 const fotosDe = (p) => p.fotos || (p.foto ? [p.foto] : []);
 
+/* peça única que já foi vendida não pode ir pra sacola; caixa e drop secreto ficam fora da vitrine */
+const disponivel = (p) => !p.vendida;
+const naVitrine = (p) => !p.secreto && !p.oculto;
+
 const itemValido = (i) => {
     const p = i && produto(i.id);
-    if (!p) return false;
+    if (!p || !disponivel(p)) return false;
     const tamOk = p.tam ? p.tam.includes(i.tam) : i.tam === "";
     return tamOk && Number.isInteger(i.qtd) && i.qtd >= 1 && i.qtd <= maxDe(p);
 };
@@ -529,21 +551,26 @@ function tamanhosHtml(p, prefixo) {
     return `<fieldset class="tamanhos"><legend>Tamanho</legend>${opcoes}</fieldset><p class="dica" role="alert" hidden>Escolha um tamanho.</p>`;
 }
 
+const romano = (n) => [[10, "X"], [9, "IX"], [5, "V"], [4, "IV"], [1, "I"]].reduce((r, [v, l]) => { while (n >= v) { r += l; n -= v; } return r; }, "");
+
 function cardHtml(p, indice) {
-    return `<li class="card" data-id="${p.id}" style="--i:${indice}">
-        <button class="card-imagem tom-${p.tom}${fotosDe(p).length > 1 ? " duas-fotos" : ""}" type="button" data-abrir="${p.id}" aria-label="Ver detalhes de ${esc(p.nome)}${p.novo ? ", peça nova" : ""}${p.unica ? ", peça única" : ""}">
+    const numero = romano(PRODUTOS.indexOf(p) + 1);
+    return `<li class="card${p.vendida ? " vendida" : ""}" data-id="${p.id}" style="--i:${indice}">
+        <span class="card-num" aria-hidden="true">${numero}</span>
+        <button class="card-imagem tom-${p.tom}${fotosDe(p).length > 1 ? " duas-fotos" : ""}" type="button" data-abrir="${p.id}" aria-label="Ver detalhes de ${esc(p.nome)}${p.novo ? ", peça nova" : ""}${p.unica ? ", peça única" : ""}${p.vendida ? ", já vendida" : ""}">
             ${arte(p)}
-            ${fotosDe(p).length > 1 ? `<img class="foto foto-2" src="${esc(fotosDe(p)[1])}" alt="" width="400" height="400" loading="lazy" decoding="async">` : ""}
-            <span class="selos">${p.novo ? '<span class="selo-novo">Novidade</span>' : ""}${p.unica ? '<span class="selo-unica">Peça única</span>' : ""}</span>
+            ${fotosDe(p).length > 1 && !p.vendida ? `<img class="foto foto-2" src="${esc(fotosDe(p)[1])}" alt="" width="400" height="400" loading="lazy" decoding="async">` : ""}
+            ${p.vendida ? '<span class="veu" aria-hidden="true"><b>já tem dona</b><small>🕯</small></span>' : p.novo ? '<span class="selo-novo">Novidade</span>' : ""}
         </button>
         ${favBotao(p)}
         <div class="card-corpo">
             <p class="card-cat">${esc(p.cat)}</p>
             <h3 class="card-nome"><button type="button" class="card-nome-botao" data-abrir="${p.id}">${esc(p.nome)}</button></h3>
             <p class="card-resumo">${esc(p.resumo)}</p>
+            ${p.unica ? '<p class="selo-unica">🕯 Peça única<span class="selo-extra"> · só existe uma</span></p>' : ""}
             <p class="card-preco">${precoTexto(p)}</p>
-            ${tamanhosHtml(p, "tam")}
-            <button class="botao botao-cheio" type="button" data-add="${p.id}">Pôr na sacola</button>
+            ${p.vendida ? "" : tamanhosHtml(p, "tam")}
+            ${p.vendida ? '<button class="botao botao-cheio" type="button" disabled>Já tem dona</button>' : `<button class="botao botao-cheio" type="button" data-add="${p.id}">Pôr na sacola</button>`}
         </div>
     </li>`;
 }
@@ -552,7 +579,7 @@ function produtosVisiveis() {
     const q = normalizar(filtro.q.trim());
     const lista = PRODUTOS.filter((p) => {
         if (filtro.cat === "favoritos" ? !ehFavorito(p.id) : filtro.cat !== "todos" && p.cat !== filtro.cat) return false;
-        if (p.secreto) return false; // drop secreto: só atrás da porta
+        if (!naVitrine(p)) return false; // drop secreto e caixa: cada um no seu canto
         if (filtro.estilo && !p.estilos.includes(filtro.estilo)) return false;
         if (filtro.faixa) {
             const [de, ate] = filtro.faixa.split("-").map((v) => (v === "" ? null : Number(v)));
@@ -573,7 +600,7 @@ function renderChips() {
         ? `<button type="button" class="chip chip-estilo" data-limpar-estilo aria-label="Tirar o filtro de estilo ${esc(estilo(filtro.estilo).nome)}">✦ ${esc(estilo(filtro.estilo).nome)}<span aria-hidden="true">×</span></button>`
         : "";
     chipsEl.innerHTML = chipEstilo + nomes.map((nome) => {
-        const vitrine = PRODUTOS.filter((p) => !p.secreto);
+        const vitrine = PRODUTOS.filter(naVitrine);
         const total = nome === "todos" ? vitrine.length : vitrine.filter((p) => p.cat === nome).length;
         const rotulo = nome === "todos" ? "Tudo" : nome;
         return `<button type="button" class="chip" data-cat="${nome}" aria-pressed="${filtro.cat === nome}">${rotulo}<small>${total}</small></button>`;
@@ -678,14 +705,14 @@ function abrirProduto(id) {
             <p class="card-cat">${esc(p.cat)} · ${codigo(p.id)}</p>
             <h2 id="produtoTitulo">${esc(p.nome)}</h2>
             <p class="card-preco">${precoTexto(p)}</p>
-            ${p.unica ? '<p class="dp-unica">✦ Peça única: achado de brechó, só tem esta. Quando sair, saiu.</p>' : ""}
             <p class="dp-desc">${esc(p.desc)}</p>
             <ul class="dp-itens">${p.itens.map((t) => `<li>${esc(t)}</li>`).join("")}</ul>
-            ${tamanhosHtml(p, "dlg")}
-            <button class="botao botao-cheio" type="button" data-add="${p.id}">Pôr na sacola</button>
+            ${p.unica ? `<p class="selo-unica">🕯 Peça única · ${p.vendida ? "essa já encontrou a dona dela" : "só existe uma"}</p>` : ""}
+            ${p.vendida ? "" : tamanhosHtml(p, "dlg")}
+            ${p.vendida ? '<button class="botao botao-cheio" type="button" disabled>Já tem dona</button>' : `<button class="botao botao-cheio" type="button" data-add="${p.id}">Pôr na sacola</button>`}
             <div class="dp-extras">
                 ${favBotao(p, "fav-texto")}
-                <a class="link-fraco" href="${linkWhats(`Oi! Quais são as medidas da peça ${p.nome} (${codigo(p.id)})? 🖤`)}" target="_blank" rel="noopener noreferrer">Pedir as medidas</a>
+                ${p.vendida ? "" : `<a class="link-fraco" href="${linkWhats(`Oi! Quais são as medidas da peça ${p.nome} (${codigo(p.id)})? 🖤`)}" target="_blank" rel="noopener noreferrer">Pedir as medidas</a>`}
                 <button class="link-fraco" type="button" data-compartilhar="${p.id}">Compartilhar</button>
             </div>
             ${combinaHtml(p)}
@@ -714,7 +741,7 @@ function galeriaHtml(p) {
 
 /* "combina com": peças da mesma vibe, de outra categoria primeiro */
 function combinaHtml(p) {
-    const lista = PRODUTOS.filter((x) => x.id !== p.id && !x.secreto && x.estilos.some((e) => p.estilos.includes(e)))
+    const lista = PRODUTOS.filter((x) => x.id !== p.id && naVitrine(x) && disponivel(x) && x.estilos.some((e) => p.estilos.includes(e)))
         .sort((a, b) => (a.cat === p.cat) - (b.cat === p.cat))
         .slice(0, 3);
     if (!lista.length) return "";
@@ -783,7 +810,7 @@ function renderBarraSacola(vazia, quantidade) {
     $("#barraTotal").textContent = brl(totalCentavos() + taxaEntrega()) + (temSobConsulta() ? " +" : "");
     barraSacola.setAttribute("aria-label", `Sacola: ${$("#barraQtd").textContent}, ${$("#barraTotal").textContent}. Fechar pedido`);
 }
-const rotuloTam = (i) => (i.tam ? "Tamanho " + i.tam : "Tamanho único");
+const rotuloTam = (i) => (i.tam ? `${produto(i.id).rotulo || "Tamanho"} ${i.tam}` : "Tamanho único");
 
 function montarMensagem() {
     const linhas = [`Oi! 🔮 Quero encomendar esta poção na ${LOJA.nome} 🖤`, "", "*Ingredientes:*"];
@@ -799,6 +826,7 @@ function montarMensagem() {
     if (nome) linhas.push(`Nome: ${nome}`);
     if (obs) linhas.push(`Obs.: ${obs}`);
     if (ler(CHAVE_GATO, false)) linhas.push(`🐈‍⬛ Achei o gato preto no site: código ${LOJA.segredo.codigo}`);
+    if (ler("es-arcanos", { cartas: [] }).cartas?.length >= 4) linhas.push(`🃏 Completei a coleção de arcanos: código ${LOJA.colecao.codigo}`);
     linhas.push("", "Podemos combinar a entrega e o pagamento por aqui?");
     if (LOJA.demo) linhas.push("", "_(Pedido de teste da prévia do site)_");
     return linhas.join("\n");
@@ -884,6 +912,7 @@ function pedirTamanho(escopo) {
 
 function adicionar(id, escopo) {
     const p = produto(id);
+    if (!p || !disponivel(p)) return;
     let tam = "";
     if (p.tam) {
         const marcado = escopo.querySelector("input[type=radio]:checked");
@@ -991,7 +1020,7 @@ faixaEl.addEventListener("change", () => { filtro.faixa = faixaEl.value; renderG
 tamanhoEl.addEventListener("change", () => { filtro.tam = tamanhoEl.value; renderGrade(); });
 /* o filtro de tamanho só aparece quando alguma peça tem tamanhos (hoje quase tudo é tamanho único) */
 (function montarFiltroTamanho() {
-    const tams = ROUPA.filter((t) => PRODUTOS.some((p) => !p.secreto && p.tam && p.tam.includes(t)));
+    const tams = ROUPA.filter((t) => PRODUTOS.some((p) => naVitrine(p) && p.tam && p.tam.includes(t)));
     if (!tams.length) return;
     tamanhoEl.insertAdjacentHTML("beforeend", tams.map((t) => `<option value="${t}">Tamanho ${t}</option>`).join("") + '<option value="unico">Tamanho único</option>');
     $("#campoTamanho").hidden = false;
@@ -1114,7 +1143,6 @@ const abrirAbaMistica = (function cantinhoMistico() {
             painel(a).hidden = !sim;
         });
         if (focar) aba.focus();
-        if (!["aba-taro", "aba-ritual"].includes(aba.id) && window.carregarEncantos) window.carregarEncantos();
     }
     abas.forEach((aba, k) => {
         aba.addEventListener("click", () => ativar(aba));
