@@ -42,9 +42,13 @@
             </a>
             <nav aria-label="Principal">
                 <a href="#colecao">Coleção</a>
+                <a href="#taro">Magias</a>
                 <a href="#sobre">A marca</a>
                 <a href="#duvidas">Dúvidas</a>
             </nav>
+            <button class="botao-som" id="botaoSom" type="button" aria-pressed="false" aria-label="Ligar o clima: chuva e velas crepitando">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path class="onda onda-1" d="M15.5 9.5a3.5 3.5 0 0 1 0 5"/><path class="onda onda-2" d="M18 7a7 7 0 0 1 0 10"/></svg>
+            </button>
             <button class="botao-sacola" id="abrirSacola" type="button" aria-label="Abrir sacola, vazia">
                 <span class="caldeirao-icone" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10h18"/><path d="M5 10c0 5.5 2.8 9 7 9s7-3.5 7-9"/><path d="M7.5 18.5 6.5 21M16.5 18.5l1 2.5"/></svg><i></i><i></i><i></i></span>
                 <span class="sacola-rotulo">Sacola</span>
@@ -256,6 +260,54 @@
         </div>
     </section>
 
+    <section class="horoscopo" id="horoscopo" aria-labelledby="horoscopoTitulo">
+        <div class="miolo">
+            <h2 id="horoscopoTitulo" class="titulo">Horóscopo alt</h2>
+            <p class="sub" id="horoscopoData">Escolha o seu signo: a previsão muda todo dia.</p>
+            <div class="signos" id="signos" role="group" aria-label="Escolha o seu signo"></div>
+            <article class="previsao" id="previsao" aria-live="polite" hidden></article>
+        </div>
+    </section>
+
+    <section class="grimorio" id="grimorio" aria-labelledby="grimorioTitulo">
+        <div class="miolo">
+            <h2 id="grimorioTitulo" class="titulo">O grimório</h2>
+            <p class="sub">Receitas de estilo pra cada vibe. Vire as páginas (dá pra arrastar, tocar nos cantos ou usar as setas).</p>
+            <div class="livro" id="livro" tabindex="0" role="region" aria-roledescription="livro" aria-label="Grimório da Eclipse Studio"></div>
+            <div class="livro-controles">
+                <button class="botao botao-linha" id="paginaAnterior" type="button">‹ Voltar</button>
+                <span class="livro-pagina" id="livroPagina" aria-live="polite"></span>
+                <button class="botao" id="paginaProxima" type="button">Virar a página ›</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="porta-secreta" id="porta" aria-labelledby="portaTitulo">
+        <div class="miolo porta-in">
+            <div class="porta" id="portaDesenho" aria-hidden="true">
+                <div class="porta-luz"></div>
+                <div class="porta-folha porta-e"><i class="porta-ornamento"></i></div>
+                <div class="porta-folha porta-d"><i class="porta-ornamento"></i><i class="porta-fechadura"></i></div>
+            </div>
+            <div class="porta-texto">
+                <p class="eyebrow">Só pros close friends</p>
+                <h2 id="portaTitulo" class="titulo">A porta secreta</h2>
+                <p>Tem peça que só aparece pra quem sabe a palavra mágica. Ela sai nos close friends do <a href="https://www.instagram.com/eclipse_studiocg/" target="_blank" rel="noopener noreferrer">@eclipse_studiocg</a>.</p>
+                <form class="porta-form" id="portaForm" autocomplete="off">
+                    <label class="visualmente-oculto" for="palavraMagica">Palavra mágica</label>
+                    <input id="palavraMagica" type="text" placeholder="Palavra mágica…" maxlength="40" spellcheck="false">
+                    <button class="botao" type="submit">Abrir a porta</button>
+                </form>
+                <p class="porta-status" id="portaStatus" role="status"></p>
+            </div>
+        </div>
+        <div class="miolo drop-secreto" id="dropSecreto" hidden>
+            <h3 class="titulo">Drop secreto</h3>
+            <p class="sub">Você entrou. Essas peças não aparecem na vitrine: é só pra quem sabe a palavra.</p>
+            <ul class="grade" id="gradeSecreta"></ul>
+        </div>
+    </section>
+
     <div class="cera" aria-hidden="true"></div>
 
     <section class="sobre" id="sobre" aria-labelledby="sobreTitulo">
@@ -390,5 +442,6 @@
 
     <script src="script.js"></script>
     <script src="magia.js"></script>
+    <script src="encantos.js"></script>
 </body>
 </html>

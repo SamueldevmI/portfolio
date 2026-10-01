@@ -8,6 +8,10 @@ const LOJA = {
     demo: true,                // true = a mensagem avisa que é pedido de teste; vira false quando a vitrine tiver as peças reais
     /* quem acha o gato preto no escuro ganha este código. O prêmio é a Elizabeth quem decide: troque o texto aqui */
     segredo: { codigo: "GATOPRETO", premio: "a Elizabeth manda um mimo surpresa junto com o pedido" },
+    /* porta secreta: a palavra mágica sai nos close friends. Guardamos só o "hash" dela (não a palavra).
+       Pra trocar: node -e "console.log(require('crypto').createHash('sha256').update('nova palavra').digest('hex'))"
+       (em minúsculas e sem acento) e cole o resultado aqui. Palavra atual: "lua negra" */
+    portaSecreta: { hash: "6dcae9f36a3739b5682db1e381018620fb15bbfc20c6be0f6408481a1e244e0d" },
 };
 
 /* Prévia com outro nome: eclipse-studio/?nome=Outro Nome */
@@ -211,6 +215,16 @@ const arte = (p, classe = "") => p.foto
 const ROUPA = ["PP", "P", "M", "G", "GG"];
 const CATEGORIAS = ["Roupas", "Joias e bijuterias", "Bolsas", "Maquiagem e perfumes"];
 
+/* peças do drop secreto: ficam fora da vitrine e só aparecem atrás da porta secreta */
+Object.assign(ARTE, {
+    colarEclipse: `<path class="n f" d="M18 12Q50 60 82 12" stroke-dasharray="0 5" stroke-width="4"/><circle class="n" cx="50" cy="44" r="3"/>`
+        + `<circle class="o" cx="50" cy="64" r="16"/><circle class="p" cx="54.5" cy="60" r="14.5"/>`
+        + brilho(40, 74, .35, "c s") + brilho(80, 40, .6, "o s") + brilho(22, 70, .45),
+    brincoLua: `<path class="n" d="M30 50V38a6 6 0 0 1 12 0"/><path class="n" d="M70 50V38a6 6 0 0 1 12 0"/>`
+        + `<path class="p fo" d="M34 50A12 12 0 1 0 34 74A14 14 0 0 1 34 50Z"/><path class="p fo" d="M74 50A12 12 0 1 0 74 74A14 14 0 0 1 74 50Z"/>`
+        + brilho(26, 86, .3, "o s") + brilho(66, 86, .3, "o s") + brilho(50, 24, .5, "c s"),
+});
+
 const PRODUTOS = [
     {
         id: "camiseta", nome: "Camiseta Estampada", cat: "Roupas", preco: 3000, tam: null, arte: "camiseta", tom: "m", novo: true,
@@ -356,6 +370,22 @@ const PRODUTOS = [
         itens: ["Couro sintético", "Cruz lilás aplicada", "Alça de mão e alça longa", "Forro de cetim rosa"],
         busca: "bolsa caixao coffin preta cruz",
     },
+    {
+        id: "colarEclipse", nome: "Colar Eclipse Dourado", cat: "Joias e bijuterias", preco: 6990, tam: null, arte: "colarEclipse", tom: "l", secreto: true,
+        alt: "Ilustração de colar com pingente de eclipse: disco escuro sobre anel dourado",
+        resumo: "Exclusivo dos close friends",
+        desc: "Pingente de eclipse, com o disco escuro cobrindo o sol dourado. Peça do drop secreto: só aparece pra quem sabe a palavra mágica.",
+        itens: ["Pingente esmaltado", "Corrente de 45 cm", "Poucas unidades", "Só no drop secreto"],
+        busca: "colar eclipse dourado pingente secreto",
+    },
+    {
+        id: "brincoLuaNegra", nome: "Brinco Lua Negra", cat: "Joias e bijuterias", preco: 3990, tam: null, arte: "brincoLua", tom: "r", secreto: true,
+        alt: "Ilustração de par de brincos de lua crescente preta com contorno dourado",
+        resumo: "Exclusivo dos close friends",
+        desc: "Par de luas crescentes pretas com contorno dourado. Peça do drop secreto: só aparece pra quem sabe a palavra mágica.",
+        itens: ["Par de brincos", "Contorno dourado", "Gancho antialérgico", "Só no drop secreto"],
+        busca: "brinco lua negra crescente secreto",
+    },
 ];
 
 /* ===== Estilos: "Qual é a sua vibe?" filtra a vitrine. Uma peça pode estar em mais de um ===== */
@@ -495,6 +525,7 @@ function produtosVisiveis() {
     const q = normalizar(filtro.q.trim());
     const lista = PRODUTOS.filter((p) => {
         if (filtro.cat === "favoritos" ? !ehFavorito(p.id) : filtro.cat !== "todos" && p.cat !== filtro.cat) return false;
+        if (p.secreto) return false; // drop secreto: só atrás da porta
         if (filtro.estilo && !p.estilos.includes(filtro.estilo)) return false;
         return !q || normalizar(`${p.nome} ${p.cat} ${p.resumo} ${p.busca}`).includes(q);
     });
@@ -510,7 +541,8 @@ function renderChips() {
         ? `<button type="button" class="chip chip-estilo" data-limpar-estilo aria-label="Tirar o filtro de estilo ${esc(estilo(filtro.estilo).nome)}">✦ ${esc(estilo(filtro.estilo).nome)}<span aria-hidden="true">×</span></button>`
         : "";
     chipsEl.innerHTML = chipEstilo + nomes.map((nome) => {
-        const total = nome === "todos" ? PRODUTOS.length : PRODUTOS.filter((p) => p.cat === nome).length;
+        const vitrine = PRODUTOS.filter((p) => !p.secreto);
+        const total = nome === "todos" ? vitrine.length : vitrine.filter((p) => p.cat === nome).length;
         const rotulo = nome === "todos" ? "Tudo" : nome;
         return `<button type="button" class="chip" data-cat="${nome}" aria-pressed="${filtro.cat === nome}">${rotulo}<small>${total}</small></button>`;
     }).join("") + (favoritos.length || filtro.cat === "favoritos"
