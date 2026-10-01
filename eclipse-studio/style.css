@@ -230,7 +230,7 @@ a { color: var(--rosa); }
 .tom-r { --tom1: #ffeaf4; --tom2: #f5b7d5; }
 .tom-c { --tom1: #fbf6ec; --tom2: #e3d4b8; }
 .tom-m { --tom1: #e6fbf2; --tom2: #a9e3cf; }
-.card-imagem, .dp-imagem, .look-arte, .item-arte, .moldura, .estilo-arte {
+.card-imagem, .dp-imagem, .look-arte, .item-arte, .moldura, .estilo-arte, .voando, .carta-arte {
     background:
         radial-gradient(rgba(36, 26, 51, .09) 1.2px, transparent 1.6px) 0 0 / 14px 14px,
         radial-gradient(circle at 50% 40%, var(--tom1), var(--tom2) 78%);
@@ -558,3 +558,130 @@ dialog::backdrop { background: rgba(15, 9, 24, .78); -webkit-backdrop-filter: bl
 .gato-olhos { transform-origin: 25px 10px; animation: gato-pisca 6.4s ease-in-out infinite; }
 @keyframes gato-pisca { 0%, 94%, 100% { transform: scaleY(1); } 97% { transform: scaleY(.1); } }
 @media (prefers-reduced-motion: reduce) { .gato-cauda, .gato-corpo, .gato-olhos { animation: none; } }
+
+/* ===================== magias (magia.js) ===================== */
+
+/* --- caldeirão: a peça voa pra sacola e ele borbulha --- */
+.caldeirao-icone { position: relative; display: grid; }
+.caldeirao-icone i { position: absolute; bottom: 62%; width: 5px; height: 5px; border-radius: 50%; background: var(--menta); opacity: 0; }
+.caldeirao-icone i:nth-child(2) { left: 28%; }
+.caldeirao-icone i:nth-child(3) { left: 50%; width: 7px; height: 7px; }
+.caldeirao-icone i:nth-child(4) { left: 68%; }
+.botao-sacola { transition: border-color .3s, color .15s, box-shadow .3s; }
+.botao-sacola.borbulha { border-color: var(--menta); box-shadow: 0 0 20px rgba(174, 240, 214, .45); }
+.botao-sacola.borbulha .caldeirao-icone i { animation: bolha 1.1s ease-out; }
+.botao-sacola.borbulha .caldeirao-icone i:nth-child(3) { animation-delay: .15s; }
+.botao-sacola.borbulha .caldeirao-icone i:nth-child(4) { animation-delay: .3s; }
+@keyframes bolha { 0% { opacity: 0; transform: translateY(0) scale(.4); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(-16px) scale(1.25); } }
+.voando { position: fixed; z-index: 70; display: grid; width: 76px; height: 76px; padding: 8px; border: 2px solid var(--tinta); border-radius: 14px; box-shadow: 0 10px 24px rgba(0, 0, 0, .45); pointer-events: none; }
+.voando > .arte, .voando > .foto { width: 100%; height: 100%; }
+.voando:has(> .foto) { padding: 0; overflow: hidden; }
+
+/* --- a lua de verdade --- */
+.hero-magia { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; margin-top: 22px; }
+.lua-hoje { display: inline-flex; align-items: center; gap: 10px; padding: 6px 16px 6px 7px; border: 1px solid var(--linha-forte); border-radius: 999px; color: var(--mudo); font-size: .86rem; text-decoration: none; transition: border-color .2s; }
+.lua-hoje:hover { border-color: var(--ouro); }
+.lua-hoje svg { width: 30px; height: 30px; flex: none; }
+.lua-hoje b { color: var(--texto); }
+.lua-sombra { fill: #2c1e40; }
+.lua-luz { fill: #f7ecd4; }
+.lua-borda { fill: none; stroke: rgba(233, 196, 106, .55); stroke-width: 2; }
+.lua-crateras circle { fill: rgba(150, 120, 90, .22); }
+.ritual { padding: 48px 0 60px; }
+.ritual-in { display: grid; grid-template-columns: 230px 1fr; align-items: center; gap: 44px; }
+.ritual-lua svg { display: block; width: 100%; filter: drop-shadow(0 0 40px rgba(247, 236, 212, .3)); }
+.contagem-lua { display: flex; flex-wrap: wrap; gap: 12px; margin: 4px 0 24px; }
+.contagem-lua:empty { display: none; }
+.contagem-lua div { min-width: 92px; padding: 10px 12px; border: 2px solid var(--linha-forte); border-radius: 16px; background: rgba(35, 22, 55, .6); text-align: center; }
+.contagem-lua b { display: block; color: var(--ouro); font: 700 2.4rem/1 var(--serifa); }
+.contagem-lua span { color: var(--mudo); font-size: .76rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+
+/* --- apague as velas --- */
+.apagar-velas { padding: 6px 0; border: 0; background: none; color: var(--ouro); font: 700 .9rem var(--fonte); text-decoration: underline dotted; text-underline-offset: 5px; cursor: pointer; }
+.apagar-velas small { margin-left: 4px; color: var(--mudo); font-weight: 600; }
+.apagar-velas:hover { color: var(--creme); }
+.fumaca { fill: none; stroke: rgba(235, 225, 245, .7); stroke-width: 2.5; stroke-linecap: round; stroke-dasharray: 44; stroke-dashoffset: 44; opacity: 0; }
+.velas-apagadas .hero .chama { animation: vela-apaga .5s ease-in forwards; }
+.velas-apagadas .hero .fumaca { animation: fumaca-sobe 1.8s .25s ease-out forwards; }
+.velas-apagadas .hero::before { opacity: 0; transition: opacity .6s; }
+@keyframes vela-apaga { to { transform: scale(.1) translateY(8px); opacity: 0; } }
+@keyframes fumaca-sobe { 20% { opacity: .9; } 100% { opacity: 0; stroke-dashoffset: 0; transform: translateY(-16px); } }
+.escuridao { position: fixed; inset: 0; z-index: 45; overflow: hidden; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .9s, visibility .9s; }
+.escuro .escuridao { opacity: 1; visibility: visible; }
+/* a luz é um quadrado enorme com um furo no meio: quando o dedo mexe, só o transform muda (não repinta a tela) */
+.luz-vela { position: absolute; left: 0; top: 0; will-change: transform; background: radial-gradient(circle, rgba(255, 170, 80, .1) 0, rgba(255, 170, 80, .04) clamp(40px, 5vmax, 70px), rgba(6, 2, 12, .55) clamp(90px, 11vmax, 160px), rgba(6, 2, 12, .975) clamp(140px, 17vmax, 240px)); }
+.escuro .olhos-noite { z-index: 46; }
+.escuro .zap-flutuante { opacity: .3; }
+/* no escuro ninguém vê o chuvisco de filme nem o topo animado: desliga pra sobrar fôlego pra luz da vela */
+.escuro body::after { display: none; }
+.escuro .hero *:not(.fumaca), .escuro .brilhos i { animation-play-state: paused; }
+.acender-velas { position: fixed; left: 18px; bottom: 18px; z-index: 58; min-height: 48px; padding: 0 20px; border: 2px solid var(--ouro); border-radius: 999px; background: rgba(21, 12, 31, .92); color: var(--ouro); font: 700 .92rem var(--fonte); cursor: pointer; box-shadow: 0 0 24px rgba(233, 196, 106, .3); }
+.segredo { display: none; }
+.escuro .segredo { display: block; }
+.segredo-topo { max-width: 34ch; margin: 22px 0 0; color: var(--ouro); font: italic 700 1.25rem/1.35 var(--serifa); text-shadow: 0 0 14px rgba(233, 196, 106, .7); }
+.segredo-recorte { color: #9a3d6b !important; font: italic 700 1.05rem var(--serifa); }
+.sobre-in { position: relative; }
+.gato-escondido { display: none; position: absolute; left: 1%; bottom: -34px; z-index: 47; width: 64px; padding: 0; border: 0; background: none; cursor: pointer; }
+.escuro .gato-escondido { display: block; }
+.gato-escondido svg { display: block; width: 100%; overflow: visible; }
+.esc-corpo { fill: #0b0610; }
+.esc-rabo { fill: none; stroke: #0b0610; stroke-width: 6; stroke-linecap: round; }
+.esc-olho { fill: none; stroke: #ffe27a; stroke-width: 4; stroke-linecap: round; filter: drop-shadow(0 0 4px #ffd24a) drop-shadow(0 0 9px rgba(255, 200, 60, .8)); transform-box: fill-box; transform-origin: center; animation: esc-pisca 4.5s infinite; }
+@keyframes esc-pisca { 0%, 44%, 50%, 100% { transform: none; } 47% { transform: scaleY(.1); } }
+.gato-escondido:focus-visible { outline: 2px solid var(--ouro); outline-offset: 6px; border-radius: 12px; }
+.dialogo-gato { width: min(420px, calc(100% - 32px)); padding: 30px 24px 24px; border: 2px solid var(--ouro); border-radius: 24px; background: var(--painel); text-align: center; }
+.dialogo-gato[open] { animation: sobe .3s; }
+.gato-achado { width: 110px; margin: 0 auto 6px; overflow: visible; }
+.gato-achado path { fill: var(--tinta); stroke: var(--lilas); stroke-width: 1.5; }
+.gato-achado .rabo { fill: none; stroke: var(--tinta); stroke-width: 6; stroke-linecap: round; }
+.gato-achado .olho { fill: none; stroke: var(--ouro); stroke-width: 4; stroke-linecap: round; }
+.dialogo-gato h2 { margin: 0 0 6px; font: 700 2rem/1.1 var(--serifa); }
+.dialogo-gato p { margin: 0 0 12px; color: var(--mudo); }
+.dialogo-gato .gato-codigo { width: fit-content; margin: 4px auto 18px; padding: 10px 18px; border: 2px dashed var(--ouro); border-radius: 14px; background: rgba(233, 196, 106, .1); color: var(--ouro); font: 700 1.5rem var(--fonte); letter-spacing: .18em; }
+
+/* --- tarô do look --- */
+.taro { padding: 56px 0 24px; }
+.taro-mesa { display: grid; justify-items: center; gap: 26px; }
+.taro-cartas { display: grid; grid-template-columns: repeat(3, minmax(0, 220px)); justify-content: center; gap: 22px; width: 100%; margin: 0; padding: 0; list-style: none; }
+.taro-carta { display: flex; flex-direction: column; align-items: center; gap: 10px; min-width: 0; }
+.carta-papel { color: var(--ouro); font-size: .78rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+.carta { width: 100%; aspect-ratio: 5 / 8.4; perspective: 1100px; }
+.carta-dentro { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform .75s cubic-bezier(.3, 1.3, .5, 1); }
+.taro-carta.virada .carta-dentro { transform: rotateY(180deg); }
+.carta-verso, .carta-frente { position: absolute; inset: 0; border: 3px solid var(--tinta); border-radius: 16px; box-shadow: 0 16px 30px rgba(0, 0, 0, .45); -webkit-backface-visibility: hidden; backface-visibility: hidden; }
+.carta-verso { display: grid; place-items: center; outline: 2px solid var(--ouro); outline-offset: -10px;
+    background: radial-gradient(circle, rgba(233, 196, 106, .2), transparent 60%), repeating-linear-gradient(45deg, rgba(233, 196, 106, .08) 0 2px, transparent 2px 14px), repeating-linear-gradient(-45deg, rgba(233, 196, 106, .08) 0 2px, transparent 2px 14px), #1c1030; }
+.carta-verso svg { width: 42%; overflow: visible; }
+.carta-verso .coroa { fill: var(--ouro); filter: drop-shadow(0 0 8px rgba(233, 196, 106, .7)); }
+.carta-verso .disco { fill: #1c1030; }
+.carta-frente { display: flex; flex-direction: column; align-items: center; justify-content: space-between; gap: 4px; padding: 10% 8% 9%; outline: 2px solid var(--ouro); outline-offset: -8px; background: linear-gradient(#fbf6ec, #ecdfc4); color: var(--tinta); text-align: center; transform: rotateY(180deg); }
+.carta-num { color: #8a5a2b; font: 700 1.1rem/1 var(--serifa); }
+.carta-arte { display: grid; width: 84%; aspect-ratio: 1; padding: 10%; border: 2px solid var(--tinta); border-radius: 50% 50% 12px 12px; }
+.carta-arte > .arte, .carta-arte > .foto { width: 100%; height: 100%; }
+.carta-arte:has(> .foto) { padding: 0; overflow: hidden; }
+.carta-nome { font: 700 1.3rem/1.05 var(--serifa); }
+.carta-sub { color: #6b5a7a; font-size: .78rem; font-weight: 700; }
+.taro-cartas.embaralhando .taro-carta { animation: embaralhar .6s ease-in-out; }
+.taro-cartas.embaralhando .taro-carta:nth-child(2) { animation-direction: reverse; }
+@keyframes embaralhar { 30% { transform: translateX(34px) rotate(6deg); } 65% { transform: translateX(-26px) rotate(-5deg); } }
+.taro-leitura { max-width: 760px; padding: 22px 26px; border: 1px dashed var(--linha-forte); border-radius: var(--raio); background: rgba(35, 22, 55, .6); text-align: center; animation: sobe .4s; }
+.taro-leitura h3 { margin: 0 0 6px; font: 700 2rem/1.1 var(--serifa); }
+.taro-leitura h3 span { color: var(--ouro); }
+.leitura-texto { margin: 0 0 10px; font: italic 600 1.3rem/1.4 var(--serifa); }
+.leitura-look { margin: 0 0 16px; color: var(--mudo); }
+.leitura-look b { color: var(--rosa); }
+.leitura-acoes { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+@media (max-width: 640px) {
+    .taro-cartas { gap: 8px; }
+    .carta-papel { font-size: .62rem; letter-spacing: .08em; }
+    .carta-frente { padding: 12% 6% 10%; outline-offset: -6px; }
+    .carta-nome { font-size: .92rem; }
+    .carta-sub { font-size: .66rem; }
+    .carta-num { font-size: .85rem; }
+    .ritual-in { grid-template-columns: 1fr; gap: 20px; text-align: center; }
+    .ritual-lua { width: 150px; margin: 0 auto; }
+    .contagem-lua { justify-content: center; }
+    .contagem-lua div { min-width: 78px; }
+    .acender-velas { left: 14px; bottom: 14px; }
+}
+@media (prefers-reduced-motion: reduce) { .velas-apagadas .hero .chama { opacity: 0; } }
