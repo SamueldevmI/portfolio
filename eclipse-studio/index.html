@@ -23,7 +23,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Quicksand:wght@400;500;600;700&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
     <script type="application/ld+json">{"@context": "https://schema.org", "@type": "ClothingStore", "name": "Eclipse Studio", "description": "Moda alternativa em Campo Grande - MS: roupas, bijuterias, bolsas e perfumes no estilo alt, com pedido pelo WhatsApp.", "url": "https://samueldevmi.github.io/portfolio/eclipse-studio/", "image": "https://samueldevmi.github.io/portfolio/eclipse-studio/compartilhar.png", "telephone": "+55 67 99975-0866", "address": {"@type": "PostalAddress", "addressLocality": "Campo Grande", "addressRegion": "MS", "addressCountry": "BR"}, "areaServed": {"@type": "City", "name": "Campo Grande"}, "sameAs": ["https://www.instagram.com/eclipse_studiocg/"], "paymentAccepted": "Pix, cartão de crédito, cartão de débito, dinheiro", "currenciesAccepted": "BRL"}</script>
-    <link rel="stylesheet" href="style.css?v=20261001som">
+    <link rel="stylesheet" href="style.css?v=20261001feiticos">
 </head>
 <body>
     <a class="pular" href="#colecao">Pular para as peças</a>
@@ -282,6 +282,41 @@
         </div>
     </section>
 
+    <section class="caixa-misteriosa" id="caixa" aria-labelledby="caixaTitulo">
+        <div class="miolo caixa-in">
+            <button class="caixa-desenho" id="caixaDesenho" type="button" aria-label="Sacudir a caixa misteriosa">
+                <svg viewBox="0 0 200 200" aria-hidden="true">
+                    <ellipse class="cx-sombra" cx="100" cy="182" rx="70" ry="9"/>
+                    <g class="cx-fumaca"><circle cx="80" cy="70" r="16"/><circle cx="104" cy="56" r="20"/><circle cx="126" cy="72" r="15"/></g>
+                    <path class="cx-corpo" d="M36 96H164V176H36Z"/>
+                    <path class="cx-fita" d="M92 96H108V176H92Z"/>
+                    <circle class="cx-selo" cx="100" cy="136" r="15"/><circle class="cx-selo-luz" cx="100" cy="136" r="8"/><circle class="cx-selo-sombra" cx="103.5" cy="133" r="7.5"/>
+                    <g class="cx-tampa"><path class="cx-corpo" d="M28 76H172V98H28Z"/><path class="cx-fita" d="M92 76H108V98H92Z"/>
+                    <path class="cx-laco" d="M100 76C84 50 60 54 68 68C73 76 88 76 100 76ZM100 76C116 50 140 54 132 68C127 76 112 76 100 76Z"/></g>
+                </svg>
+            </button>
+            <div class="caixa-texto">
+                <p class="eyebrow">Caixa misteriosa do coven</p>
+                <h2 id="caixaTitulo" class="titulo">O que tem dentro?</h2>
+                <p class="sub" id="caixaSub"></p>
+                <div class="caixa-vibes" id="caixaVibes" role="group" aria-label="Escolha a vibe da caixa"></div>
+                <div class="caixa-revelacao" id="caixaRevelacao" aria-live="polite"></div>
+                <div class="caixa-acoes">
+                    <button class="botao" id="caixaAbrir" type="button">Abrir a caixa</button>
+                    <button class="botao botao-linha" id="caixaQuero" type="button" hidden>Quero essa caixa</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="colecao-arcanos" id="arcanos" aria-labelledby="arcanosTitulo">
+        <div class="miolo">
+            <h2 id="arcanosTitulo" class="titulo">Coleção de arcanos</h2>
+            <p class="sub" id="arcanosSub"></p>
+            <ol class="album" id="album"></ol>
+        </div>
+    </section>
+
     <section class="porta-secreta" id="porta" aria-labelledby="portaTitulo">
         <div class="miolo porta-in">
             <div class="porta" id="portaDesenho" aria-hidden="true">
@@ -395,8 +430,9 @@
             <div class="sacola-corpo">
                 <ul class="itens" id="itens"></ul>
                 <div class="sacola-vazia" id="sacolaVazia" hidden>
+                    <svg class="nyx-dormindo" viewBox="0 0 120 70" aria-hidden="true"><path class="caldeirao" d="M14 34h92c0 18-16 30-46 30S14 52 14 34z"/><path class="nyx-corpo" d="M30 34c0-14 12-22 30-22 6 0 11 1 15 3l6-9 2 11c5 4 8 10 8 17z"/><path class="nyx-olho-fechado" d="M74 22q3 2 6 0"/><path class="nyx-rabo" d="M30 32c-10 2-14-6-8-10"/><text class="zzz" x="92" y="14">z</text><text class="zzz z2" x="100" y="6">z</text></svg>
                     <p class="vazio-titulo">Sacola vazia</p>
-                    <p>Escolha uma peça e ela aparece aqui.</p>
+                    <p class="nyx-fala-vazia">A Nyx está dormindo aqui dentro. Ponha uma peça que ela acorda.</p>
                     <button class="botao botao-linha" type="button" data-fechar>Continuar olhando</button>
                 </div>
             </div>
@@ -414,6 +450,7 @@
                 <a class="botao botao-cheio" id="enviarZap" href="#" target="_blank" rel="noopener noreferrer">Enviar pedido pelo WhatsApp</a>
                 <div class="sacola-acoes">
                     <button class="link-fraco" id="copiarPedido" type="button">Copiar pedido</button>
+                    <button class="link-fraco" id="pedirPresente" type="button">🎁 Pedir de presente</button>
                     <button class="link-fraco" id="esvaziar" type="button">Esvaziar sacola</button>
                 </div>
                 <p class="nota" id="nota" role="status">No WhatsApp a gente confirma o estoque, combina a entrega e manda o Pix ou o link do cartão. Este site não pede nem guarda dado de pagamento.</p>
@@ -435,13 +472,58 @@
         <button class="botao botao-cheio" id="gatoUsar" type="button">Pôr o código no meu pedido</button>
     </dialog>
 
+    <dialog id="dialogoPresente" class="dialogo-carta" aria-labelledby="presenteTitulo">
+        <button class="fechar" type="button" data-fechar aria-label="Fechar">×</button>
+        <form id="formPresente" method="dialog">
+            <p class="carta-selo" aria-hidden="true">🎁</p>
+            <h2 id="presenteTitulo">Me dá de presente?</h2>
+            <p class="carta-explica">A gente escreve uma cartinha com as peças da sua sacola. Você manda pra quem quiser, e a pessoa abre o link e já pode comprar.</p>
+            <label class="campo" for="presenteDe">Seu nome</label>
+            <input id="presenteDe" type="text" maxlength="40" required placeholder="Como a pessoa te conhece?">
+            <label class="campo" for="presentePara">Pra quem <small>(opcional)</small></label>
+            <input id="presentePara" type="text" maxlength="40" placeholder="Ex.: mãe, amor, madrinha">
+            <button class="botao botao-cheio" type="submit">Escrever a carta e mandar no WhatsApp</button>
+            <button class="link-fraco" type="button" id="copiarCarta">ou copiar o link da carta</button>
+        </form>
+    </dialog>
+
+    <dialog id="dialogoCarta" class="dialogo-carta carta-recebida" aria-labelledby="cartaTitulo">
+        <button class="fechar" type="button" data-fechar aria-label="Fechar">×</button>
+        <div class="selo-cera" id="seloCera" aria-hidden="true"><span>✦</span></div>
+        <div class="carta-folha">
+            <h2 id="cartaTitulo"></h2>
+            <p class="carta-texto" id="cartaTexto"></p>
+            <ul class="carta-itens" id="cartaItens"></ul>
+            <p class="carta-total" id="cartaTotal"></p>
+            <button class="botao botao-cheio" id="cartaComprar" type="button">Pôr tudo na sacola</button>
+            <p class="carta-assina">com amor, Eclipse Studio 🖤</p>
+        </div>
+    </dialog>
+
+    <dialog id="dialogoArcano" class="dialogo-carta dialogo-arcano" aria-labelledby="arcanoTitulo">
+        <button class="fechar" type="button" data-fechar aria-label="Fechar">×</button>
+        <p class="carta-explica" id="arcanoAviso"></p>
+        <div class="arcano-revelado" id="arcanoRevelado"></div>
+        <h2 id="arcanoTitulo"></h2>
+        <p class="carta-explica" id="arcanoTexto"></p>
+        <a class="botao botao-cheio" href="#arcanos" data-fechar>Ver minha coleção</a>
+    </dialog>
+
+    <div class="nyx" id="nyx" hidden>
+        <p class="nyx-balao" id="nyxBalao" role="status" hidden></p>
+        <button class="nyx-gato" id="nyxGato" type="button" aria-label="Nyx, a gata da loja: toque pra uma dica">
+            <svg viewBox="-6 -22 76 78" aria-hidden="true"><path class="nyx-rabo" d="M42 44C60 46 66 30 58 20"/><path class="nyx-corpo" d="M6 50C-2 34 0 12 10 1L7 -16L18 -7C22 -8 27 -8 31 -7L42 -16L39 1C48 12 50 34 44 50Z"/><path class="nyx-olhos" d="M14 9l6 3M36 9l-6 3"/><path class="nyx-coleira" d="M10 22q15 8 30 0"/><circle class="nyx-pingente" cx="25" cy="27" r="3.4"/></svg>
+        </button>
+    </div>
+
     <div class="escuridao" id="escuridao" aria-hidden="true"><div class="luz-vela" id="luzVela"></div></div>
     <button class="acender-velas" id="acenderVelas" type="button" hidden><span aria-hidden="true">🕯</span> Acender as velas</button>
 
     <div class="avisos" id="avisos" role="status" aria-live="polite"></div>
 
-    <script src="script.js?v=20261001som"></script>
-    <script src="magia.js?v=20261001som"></script>
-    <script src="encantos.js?v=20261001som"></script>
+    <script src="script.js?v=20261001feiticos"></script>
+    <script src="magia.js?v=20261001feiticos"></script>
+    <script src="encantos.js?v=20261001feiticos"></script>
+    <script src="feiticos.js?v=20261001feiticos"></script>
 </body>
 </html>

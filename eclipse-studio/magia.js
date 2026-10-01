@@ -186,7 +186,7 @@ const nomeNoTaro = (p) => NOMES_NO_TARO[p.id] || p.nome;
         let nova;
         do {
             const estilo = sortear(ESTILOS);
-            const doEstilo = PRODUTOS.filter((p) => p.estilos.includes(estilo.id));
+            const doEstilo = PRODUTOS.filter((p) => disponivel(p) && p.estilos.includes(estilo.id));
             nova = { estilo, arcano: ARCANOS[estilo.id], peca: sortear(doEstilo.filter((p) => p.cat === "Roupas")), feitico: sortear(doEstilo.filter((p) => p.cat !== "Roupas")) };
         } while (tiragem && nova.peca === tiragem.peca && nova.feitico === tiragem.feitico);
         return nova;

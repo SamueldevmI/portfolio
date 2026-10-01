@@ -228,7 +228,7 @@ a { color: var(--rosa); }
 .tom-r { --tom1: #ffeaf4; --tom2: #f5b7d5; }
 .tom-c { --tom1: #fbf6ec; --tom2: #e3d4b8; }
 .tom-m { --tom1: #e6fbf2; --tom2: #a9e3cf; }
-.card-imagem, .dp-imagem, .look-arte, .item-arte, .moldura, .estilo-arte, .voando, .carta-arte, .previsao-arte, .pagina-arte, .ingrediente-arte {
+.card-imagem, .dp-imagem, .look-arte, .item-arte, .moldura, .estilo-arte, .voando, .carta-arte, .previsao-arte, .pagina-arte, .ingrediente-arte, .caixa-revelacao li > span, .carta-item-arte {
     background:
         radial-gradient(rgba(36, 26, 51, .09) 1.2px, transparent 1.6px) 0 0 / 14px 14px,
         radial-gradient(circle at 50% 40%, var(--tom1), var(--tom2) 78%);
@@ -831,4 +831,169 @@ html.varinha :is(input[type="text"], input[type="search"], textarea) { cursor: t
     .signos { grid-template-columns: repeat(3, 1fr); }
     .sacola-rotulo { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
     .botao-sacola { padding: 0 12px; }
+}
+
+/* ===================== feitiços (feiticos.js) ===================== */
+
+/* --- as peças da vitrine viram cartas de tarô --- */
+.card { padding: 36px 14px 14px; border: 3px solid var(--tinta); border-radius: 18px; outline: 2px solid var(--ouro); outline-offset: -10px;
+    background: radial-gradient(rgba(90, 60, 30, .07) 1px, transparent 1.4px) 0 0 / 5px 5px, linear-gradient(#faf3e3, #e9d9b6); color: var(--tinta); text-align: center; box-shadow: 0 16px 32px rgba(0, 0, 0, .45); }
+.card:hover, .card:focus-within { border-color: var(--tinta); transform: translateY(-6px) rotate(-.8deg); box-shadow: 0 22px 40px rgba(0, 0, 0, .5), 0 0 0 4px rgba(233, 196, 106, .35); }
+.card-num { position: absolute; top: 12px; left: 0; right: 0; color: #8a5a2b; font: 700 1.05rem/1 var(--serifa); letter-spacing: .08em; }
+.card-num::before, .card-num::after { content: "✦"; margin: 0 8px; color: var(--ouro); font-size: .7em; vertical-align: .15em; }
+.card .card-imagem { border: 2px solid var(--tinta); border-radius: 50% 50% 12px 12px / 34% 34% 12px 12px; }
+.card .fav { top: 48px; right: 22px; width: 36px; height: 36px; }
+.card .selo-novo { top: auto; bottom: 10px; left: 50%; translate: -50% 0; }
+.card .card-corpo { align-items: center; padding: 12px 4px 4px; }
+.card .card-cat { color: #8a5a2b; }
+.card .card-nome-botao { color: var(--tinta); text-align: center; }
+.card .card-nome-botao:hover { color: #9a3d6b; }
+.card .card-resumo { color: #6b5a7a; }
+.card .card-preco { color: #9a3d6b; }
+.card .tam-unico { color: #6b5a7a; }
+.card .tamanhos { justify-content: center; }
+.card .tam span { border-color: #b9a37f; color: var(--tinta); }
+.card .tam input:checked + span { background: var(--lilas); border-color: var(--tinta); }
+.card .botao { margin-top: auto; }
+.card::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(115deg, transparent 35%, rgba(255, 255, 255, .35) 48%, transparent 60%) -150% 0 / 250% 100% no-repeat; pointer-events: none; transition: background-position .8s; }
+.card:hover::after { background-position: 150% 0; }
+
+/* --- peça única e "já tem dona" --- */
+.selo-unica { margin: 2px 0 2px; padding: 3px 10px; border: 1px solid rgba(154, 61, 107, .45); border-radius: 999px; color: #9a3d6b !important; font-size: .74rem; font-weight: 700; }
+.dp .selo-unica { width: fit-content; color: var(--rosa) !important; border-color: rgba(255, 184, 217, .4); }
+.veu { position: absolute; inset: 0; display: grid; place-content: center; gap: 2px; background: linear-gradient(rgba(21, 12, 31, .35), rgba(21, 12, 31, .7)), repeating-linear-gradient(45deg, rgba(255, 255, 255, .07) 0 2px, transparent 2px 9px); color: var(--creme); text-align: center; }
+.veu b { font: italic 700 1.5rem/1 var(--serifa); text-shadow: 0 2px 10px rgba(0, 0, 0, .7); }
+.veu small { font-size: 1.2rem; }
+.card.vendida .card-imagem .arte { filter: grayscale(.7); opacity: .7; }
+.card.vendida .botao:disabled, .dp .botao:disabled { background: #cbbfa5; box-shadow: none; color: #6b5a7a; cursor: not-allowed; transform: none; }
+
+/* --- caixa misteriosa --- */
+.caixa-misteriosa { padding: 48px 0; }
+.caixa-in { display: grid; grid-template-columns: 300px 1fr; align-items: center; gap: 44px; }
+.caixa-desenho { padding: 0; border: 0; background: none; cursor: pointer; }
+.caixa-desenho svg { display: block; width: 100%; overflow: visible; }
+.cx-sombra { fill: rgba(0, 0, 0, .35); }
+.cx-corpo { fill: #1c1030; stroke: var(--tinta); stroke-width: 4; }
+.cx-fita { fill: var(--ouro); stroke: var(--tinta); stroke-width: 3; }
+.cx-laco { fill: var(--ouro); stroke: var(--tinta); stroke-width: 3; }
+.cx-selo { fill: var(--vinho); stroke: var(--tinta); stroke-width: 3; }
+.cx-selo-luz { fill: var(--ouro); }
+.cx-selo-sombra { fill: var(--vinho); }
+.cx-tampa { transform-box: fill-box; transform-origin: 0% 100%; transition: transform .7s cubic-bezier(.3, 1.4, .5, 1); }
+.cx-fumaca circle { fill: rgba(235, 225, 245, .55); opacity: 0; transform-box: fill-box; transform-origin: center; }
+.caixa-desenho.aberta .cx-tampa { transform: translate(-14px, -22px) rotate(-18deg); }
+.caixa-desenho.aberta .cx-fumaca circle { animation: cx-fumaca 1.6s ease-out forwards; }
+.caixa-desenho.aberta .cx-fumaca circle:nth-child(2) { animation-delay: .12s; }
+.caixa-desenho.aberta .cx-fumaca circle:nth-child(3) { animation-delay: .24s; }
+@keyframes cx-fumaca { 15% { opacity: 1; } 100% { opacity: 0; transform: translateY(-60px) scale(2); } }
+.caixa-desenho.sacudindo svg { animation: cx-sacode .6s; }
+@keyframes cx-sacode { 15% { transform: rotate(-6deg) translateY(-6px); } 35% { transform: rotate(5deg); } 55% { transform: rotate(-4deg) translateY(-3px); } 75% { transform: rotate(3deg); } }
+.caixa-vibes { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 16px; }
+.caixa-revelacao p { margin: 0 0 10px; color: var(--mudo); }
+.caixa-revelacao b { color: var(--ouro); }
+.caixa-revelacao ul { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 18px; padding: 0; list-style: none; }
+.caixa-revelacao li { display: grid; justify-items: center; gap: 4px; width: 84px; animation: sobe .4s both; animation-delay: calc(var(--i) * 90ms); }
+.caixa-revelacao li > span { display: grid; width: 72px; aspect-ratio: 1; padding: 8px; border: 2px solid var(--tinta); border-radius: 50% 50% 10px 10px; }
+.caixa-revelacao li > span > :is(.arte, .foto) { width: 100%; height: 100%; }
+.caixa-revelacao small { color: var(--mudo); font-size: .72rem; line-height: 1.2; text-align: center; }
+.caixa-acoes { display: flex; flex-wrap: wrap; gap: 10px; }
+
+/* --- coleção de arcanos --- */
+.colecao-arcanos { padding: 48px 0; }
+.album { display: flex; flex-wrap: wrap; justify-content: center; gap: 18px; margin: 0; padding: 0; list-style: none; }
+.album-carta { position: relative; width: 170px; aspect-ratio: 5 / 8.4; }
+.album-carta .carta-verso, .album-carta .carta-frente { position: absolute; inset: 0; border: 3px solid var(--tinta); border-radius: 16px; box-shadow: 0 14px 28px rgba(0, 0, 0, .45); transform: none; }
+.album-carta .carta-verso { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; opacity: .55; }
+.album-carta .carta-verso span { color: var(--ouro); font-size: .78rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+.album-carta.tem { animation: sobe .5s both; }
+.album-carta.tem .carta-frente { display: flex; }
+.album-codigo { display: grid; place-content: center; gap: 4px; width: 170px; aspect-ratio: 5 / 8.4; border: 2px dashed var(--ouro); border-radius: 16px; background: rgba(233, 196, 106, .08); text-align: center; }
+.album-codigo span { color: var(--mudo); font-size: .78rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+.album-codigo b { color: var(--ouro); font-size: 1.4rem; letter-spacing: .14em; }
+
+/* --- cartas (presente, carta recebida, arcano novo) --- */
+.dialogo-carta { width: min(460px, calc(100% - 28px)); max-height: calc(100dvh - 28px); padding: 28px 24px 24px; overflow: auto; border: 2px solid var(--ouro); border-radius: 24px; background: var(--painel); text-align: center; }
+.dialogo-carta[open] { animation: sobe .35s; }
+.dialogo-carta h2 { margin: 0 0 8px; font: 700 2rem/1.1 var(--serifa); }
+.dialogo-carta form { display: grid; gap: 8px; text-align: left; }
+.dialogo-carta form h2, .dialogo-carta form .carta-explica, .carta-selo { text-align: center; }
+.dialogo-carta input { min-height: 44px; padding: 10px 14px; border: 2px solid var(--linha-forte); border-radius: 14px; background: var(--bg2); color: var(--texto); font: 500 1rem var(--fonte); }
+.dialogo-carta input:focus { outline: none; border-color: var(--ouro); }
+.dialogo-carta .botao { margin-top: 8px; }
+.dialogo-carta .link-fraco { justify-self: center; }
+.carta-selo { margin: 0; font-size: 2.4rem; }
+.carta-explica { margin: 0 0 6px; color: var(--mudo); }
+.carta-recebida { padding: 0; border: 0; background: none; overflow: visible; }
+.carta-recebida .fechar { top: 12px; right: 12px; }
+.carta-folha { padding: 34px 26px 24px; border-radius: 6px; background: radial-gradient(rgba(90, 60, 30, .08) 1px, transparent 1.4px) 0 0 / 5px 5px, radial-gradient(120% 90% at 30% 20%, #faf2df, #e2d0aa); box-shadow: 0 30px 60px rgba(0, 0, 0, .6); color: #3a2b1f; animation: carta-abre .7s .55s both; }
+@keyframes carta-abre { from { opacity: 0; transform: translateY(30px) scaleY(.6); } }
+.carta-folha h2 { color: #2a1d14; }
+.carta-texto { margin: 0 0 14px; font: italic 600 1.15rem/1.45 var(--serifa); }
+.carta-itens { display: grid; gap: 8px; margin: 0 0 12px; padding: 0; list-style: none; text-align: left; }
+.carta-itens li { display: grid; grid-template-columns: 48px 1fr auto; align-items: center; gap: 10px; padding: 6px 8px; border: 1px dashed rgba(58, 43, 31, .35); border-radius: 10px; font: 700 1rem/1.2 var(--serifa); }
+.carta-itens small { font: 600 .8rem var(--fonte); color: #6b5a7a; }
+.carta-itens b { color: #9a3d6b; font: 700 .86rem var(--fonte); white-space: nowrap; }
+.carta-item-arte { display: grid; width: 48px; aspect-ratio: 1; padding: 5px; border: 2px solid var(--tinta); border-radius: 10px; }
+.carta-item-arte > :is(.arte, .foto) { width: 100%; height: 100%; }
+.carta-total { margin: 0 0 6px; font-weight: 700; }
+.carta-assina { margin: 12px 0 0; color: #9a3d6b; font: 400 1.4rem var(--gotica); }
+.selo-cera { position: relative; z-index: 2; display: grid; place-items: center; width: 84px; height: 84px; margin: 0 auto -42px; border-radius: 50% 46% 52% 48%; background: radial-gradient(circle at 38% 35%, #d2486b, var(--vinho) 55%, #5e1022); box-shadow: 0 6px 16px rgba(0, 0, 0, .5), inset 0 -4px 8px rgba(0, 0, 0, .35); color: #f2b3c4; font-size: 1.8rem; }
+.selo-cera.quebrando { animation: selo-quebra .6s .3s ease-in both; }
+@keyframes selo-quebra { 40% { transform: scale(1.12) rotate(-6deg); } 100% { transform: translateY(-30px) rotate(25deg) scale(.6); opacity: 0; } }
+.dialogo-arcano .carta { width: 190px; margin: 6px auto 16px; }
+.dialogo-arcano .carta-frente, .dialogo-arcano .carta-verso { display: flex; }
+.dialogo-arcano .carta.virada .carta-dentro { transform: rotateY(180deg); }
+
+/* --- a Nyx --- */
+.nyx { position: fixed; left: 14px; bottom: 14px; z-index: 50; display: flex; align-items: flex-end; gap: 6px; animation: nyx-chega .6s both; }
+.nyx[hidden] { display: none; }
+@keyframes nyx-chega { from { opacity: 0; transform: translateY(30px); } }
+.nyx-gato { width: 62px; padding: 0; border: 0; background: none; cursor: pointer; filter: drop-shadow(0 6px 10px rgba(0, 0, 0, .5)); order: 0; }
+.nyx-gato svg { display: block; width: 100%; overflow: visible; }
+.nyx-corpo { fill: #120a1a; stroke: var(--lilas); stroke-width: 1.6; stroke-linejoin: round; transform-origin: 25px 50px; animation: gato-respira 4s ease-in-out infinite; }
+.nyx-rabo { fill: none; stroke: #120a1a; stroke-width: 6; stroke-linecap: round; transform-origin: 42px 44px; animation: cauda-balanca 3.2s ease-in-out infinite; }
+.nyx-olhos { fill: none; stroke: var(--ouro); stroke-width: 3.4; stroke-linecap: round; transform-box: fill-box; transform-origin: center; animation: nyx-pisca 5s infinite; }
+@keyframes nyx-pisca { 0%, 46%, 52%, 100% { transform: none; } 49% { transform: scaleY(.1); } }
+.nyx-coleira { fill: none; stroke: var(--vinho); stroke-width: 3; stroke-linecap: round; }
+.nyx-pingente { fill: var(--ouro); stroke: var(--tinta); stroke-width: 1; }
+.nyx.pulando .nyx-gato { animation: nyx-pula .55s cubic-bezier(.3, 1.6, .5, 1); }
+@keyframes nyx-pula { 40% { transform: translateY(-18px) rotate(-4deg); } }
+.nyx.ronrona .nyx-gato { animation: nyx-ronrona .12s 8 alternate; }
+@keyframes nyx-ronrona { to { transform: translateX(1.5px); } }
+.nyx-balao { order: 1; position: relative; display: flex; align-items: flex-start; gap: 8px; max-width: min(260px, calc(100vw - 110px)); margin: 0 0 40px; padding: 10px 12px; border: 2px solid var(--tinta); border-radius: 16px 16px 16px 4px; background: var(--creme); box-shadow: 0 10px 24px rgba(0, 0, 0, .4); color: var(--tinta); font-size: .86rem; font-weight: 600; line-height: 1.35; animation: sobe .25s; }
+.nyx-calar { flex: none; padding: 0 2px; border: 0; background: none; color: #8a7a9a; font: 700 .72rem var(--fonte); cursor: pointer; }
+.nyx-calar:hover { color: var(--tinta); }
+.escuro .nyx { display: none; }
+.nyx-dormindo { display: block; width: 150px; margin: 0 auto 6px; overflow: visible; }
+.nyx-dormindo .caldeirao { fill: #241a33; stroke: var(--lilas); stroke-width: 2; }
+.nyx-dormindo .nyx-corpo { animation: gato-respira 3s ease-in-out infinite; transform-origin: 60px 34px; }
+.nyx-dormindo .nyx-rabo { animation: none; stroke-width: 5; }
+.nyx-olho-fechado { fill: none; stroke: var(--ouro); stroke-width: 2.2; stroke-linecap: round; }
+.zzz { fill: var(--mudo); font: 700 13px var(--fonte); animation: zzz 2.4s ease-in-out infinite; }
+.zzz.z2 { font-size: 10px; animation-delay: 1.2s; }
+@keyframes zzz { 0% { opacity: 0; transform: translate(0, 6px); } 50% { opacity: 1; } 100% { opacity: 0; transform: translate(6px, -8px); } }
+.nyx-fala-vazia { font-size: .95rem; }
+
+@media (max-width: 860px) {
+    .caixa-in { grid-template-columns: 1fr; gap: 20px; text-align: center; }
+    .caixa-desenho { width: 210px; margin: 0 auto; }
+    .caixa-vibes, .caixa-revelacao ul, .caixa-acoes { justify-content: center; }
+}
+@media (max-width: 640px) {
+    .card { padding: 30px 8px 10px; outline-offset: -7px; border-radius: 14px; }
+    .card-num { top: 9px; font-size: .9rem; }
+    .card-num::before, .card-num::after { margin: 0 4px; }
+    .card .fav { top: 38px; right: 14px; width: 32px; height: 32px; }
+    .card .selo-novo { font-size: .62rem; padding: 2px 8px; }
+    .selo-unica { font-size: .66rem; padding: 2px 8px; }
+    .card .selo-extra { display: none; }
+    .veu b { font-size: 1.1rem; }
+    .album { gap: 10px; }
+    .album-carta, .album-codigo { width: calc(50% - 5px); max-width: 170px; }
+    .nyx { left: 10px; bottom: 10px; }
+    .nyx-gato { width: 52px; }
+    .avisos { bottom: 84px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .card:hover, .card:focus-within { transform: none; }
 }
