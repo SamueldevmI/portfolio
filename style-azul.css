@@ -1570,8 +1570,12 @@ html.sem-animacoes, html.sem-animacoes *, html.sem-animacoes *::before, html.sem
 
 /* ---------- Serviços como pacotes: preço de partida e o que inclui ---------- */
 #servicos .servico-preco { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; margin: 16px 0 0; padding-top: 14px; border-top: 1px solid var(--line); color: var(--muted); }
+#servicos .servico-preco[hidden] { display: none; }
 #servicos .servico-preco strong { color: var(--ouro); font-size: 1.35rem; font-weight: 700; letter-spacing: -.02em; text-shadow: 0 0 10px rgba(var(--ouro-rgb), .35); }
 #servicos .servico-preco small { font: .72rem "DM Mono", monospace; letter-spacing: .04em; }
+#servicos .servico-preco s { opacity: .6; font-size: 1rem; text-decoration-color: var(--urgencia); }
+#servicos .promo-automacao { margin: 10px 0 0; padding: 10px 12px; border-radius: 10px; background: rgba(var(--urgencia-rgb), .14); border: 1px solid rgba(var(--urgencia-rgb), .5); font-size: .85rem; color: var(--text); }
+#servicos .promo-automacao b { color: var(--urgencia); }
 #servicos .servico-inclui { display: grid; gap: 6px; margin: 12px 0 4px; padding: 0; list-style: none; color: var(--muted); font-size: .88rem; }
 #servicos .servico-inclui li { position: relative; padding-left: 20px; }
 #servicos .servico-inclui li::before { content: ""; position: absolute; left: 2px; top: .42em; width: 9px; height: 5px; border-left: 2px solid var(--sucesso); border-bottom: 2px solid var(--sucesso); transform: rotate(-45deg); }

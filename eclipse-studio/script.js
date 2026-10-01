@@ -12,7 +12,23 @@ const LOJA = {
        Pra trocar: node -e "console.log(require('crypto').createHash('sha256').update('nova palavra').digest('hex'))"
        (em minúsculas e sem acento) e cole o resultado aqui. Palavra atual: "lua negra" */
     portaSecreta: { hash: "6dcae9f36a3739b5682db1e381018620fb15bbfc20c6be0f6408481a1e244e0d" },
+    /* entrega por região de Campo Grande (taxa em centavos). VALORES DE EXEMPLO: a Elizabeth confirma antes do lançamento.
+       Acima de freteGratis a entrega sai de graça em qualquer região. */
+    entregas: [
+        { id: "retirada", nome: "Retirada combinada", taxa: 0 },
+        { id: "centro", nome: "Centro", taxa: 800 },
+        { id: "prosa", nome: "Prosa", taxa: 1200 },
+        { id: "segredo", nome: "Segredo", taxa: 1200 },
+        { id: "bandeira", nome: "Bandeira", taxa: 1200 },
+        { id: "lagoa", nome: "Lagoa", taxa: 1400 },
+        { id: "imbirussu", nome: "Imbirussu", taxa: 1400 },
+        { id: "anhanduizinho", nome: "Anhanduizinho", taxa: 1500 },
+    ],
 };
+
+/* "Quem já é da coven": prints e elogios de clientes de verdade. Enquanto estiver vazio, a seção não aparece.
+   Ex.: { texto: "amei o espartilho, veio cheiroso e embalado com carinho", nome: "Ana", insta: "anaalt", foto: "fotos/coven-ana.jpg" } */
+const DEPOIMENTOS = [];
 
 /* Prévia com outro nome: eclipse-studio/?nome=Outro Nome */
 const NOME_VISITANTE = (new URLSearchParams(location.search).get("nome") || "").trim().slice(0, 40);
@@ -211,7 +227,10 @@ const arte = (p, classe = "") => p.foto
 
 /* ===== Catálogo (preço em centavos; preco: null = "sob consulta") =====
    Camisetas e perfumes são da Eclipse; o resto ainda é peça de exemplo até chegarem as fotos.
-   Quase tudo é tamanho único (tam: null). Se uma peça tiver tamanhos, use tam: ROUPA. */
+   Quase tudo é tamanho único (tam: null). Se uma peça tiver tamanhos, use tam: ROUPA.
+   unica: true = achado de brechó / peça única: ganha o selo e só dá pra pôr 1 na sacola.
+   Fotos: foto: "fotos/peca.jpg" (uma) ou fotos: ["fotos/peca-frente.jpg", "fotos/peca-vestida.jpg"] (a 2ª aparece ao passar o mouse
+   e na janela da peça). O guia de como tirar está em fotos/index.html. */
 const ROUPA = ["PP", "P", "M", "G", "GG"];
 const CATEGORIAS = ["Roupas", "Joias e bijuterias", "Bolsas", "Maquiagem e perfumes"];
 
@@ -267,7 +286,7 @@ const PRODUTOS = [
         busca: "vestido boneca lolita lilas manga bufante",
     },
     {
-        id: "blusa", nome: "Blusa Vitoriana Creme", cat: "Roupas", preco: 11990, tam: null, arte: "blusa", tom: "l",
+        id: "blusa", nome: "Blusa Vitoriana Creme", cat: "Roupas", preco: 11990, tam: null, arte: "blusa", tom: "l", unica: true,
         alt: "Ilustração de blusa creme de manga bufante com gola alta de babado e fita preta",
         resumo: "Gola alta · manga bufante",
         desc: "Blusa creme de gola alta com babado lilás, fita preta no pescoço e manga bufante com punho de renda. Base perfeita pro espartilho.",
@@ -283,7 +302,7 @@ const PRODUTOS = [
         busca: "capa manto veludo bruxa preta",
     },
     {
-        id: "casaco", nome: "Casaco de Pelúcia Noite", cat: "Roupas", preco: 27990, tam: null, arte: "casaco", tom: "l", novo: true,
+        id: "casaco", nome: "Casaco de Pelúcia Noite", cat: "Roupas", preco: 27990, tam: null, arte: "casaco", tom: "l", novo: true, unica: true,
         alt: "Ilustração de casaco longo preto com gola, punhos e barra de pelúcia",
         resumo: "Longo · gola e barra de pelúcia",
         desc: "Casaco longo preto com gola, punhos e barra de pelúcia macia. Por cima de vestido ou de saia longa, é trad goth na hora.",
@@ -315,7 +334,7 @@ const PRODUTOS = [
         busca: "rosario terco colar contas cruz",
     },
     {
-        id: "camafeu", nome: "Broche Camafeu", cat: "Joias e bijuterias", preco: 4490, tam: null, arte: "camafeu", tom: "c",
+        id: "camafeu", nome: "Broche Camafeu", cat: "Joias e bijuterias", preco: 4490, tam: null, arte: "camafeu", tom: "c", unica: true,
         alt: "Ilustração de broche camafeu oval com perfil de moça marfim sobre fundo escuro e moldura dourada de pérolas",
         resumo: "Perfil marfim · moldura de pérolas",
         desc: "Broche camafeu com perfil de moça em marfim, moldura dourada e pérolas em volta. Na gola, no espartilho ou numa fita de veludo.",
@@ -449,18 +468,21 @@ const CHAVE_SACOLA = "es-sacola-v1";
 const CHAVE_NOME = "es-nome";
 const CHAVE_FAVORITOS = "es-favoritos";
 const CHAVE_GATO = "es-gato";
+const CHAVE_ENTREGA = "es-entrega";
 const MAX_POR_ITEM = 9;
+const maxDe = (p) => (p && p.unica ? 1 : MAX_POR_ITEM);
+const fotosDe = (p) => p.fotos || (p.foto ? [p.foto] : []);
 
 const itemValido = (i) => {
     const p = i && produto(i.id);
     if (!p) return false;
     const tamOk = p.tam ? p.tam.includes(i.tam) : i.tam === "";
-    return tamOk && Number.isInteger(i.qtd) && i.qtd >= 1 && i.qtd <= MAX_POR_ITEM;
+    return tamOk && Number.isInteger(i.qtd) && i.qtd >= 1 && i.qtd <= maxDe(p);
 };
 let sacola = ler(CHAVE_SACOLA, []);
 sacola = Array.isArray(sacola) ? sacola.filter(itemValido) : [];
 
-const filtro = { cat: "todos", q: "", ordem: "padrao", estilo: "" };
+const filtro = { cat: "todos", q: "", ordem: "padrao", estilo: "", faixa: "", tam: "" };
 
 let favoritos = ler(CHAVE_FAVORITOS, []);
 favoritos = Array.isArray(favoritos) ? favoritos.filter((id) => produto(id)) : [];
@@ -487,6 +509,10 @@ const botaoSacola = $("#abrirSacola");
 const contadorEl = $("#contadorSacola");
 const campoNome = $("#campoNome");
 const campoObs = $("#campoObs");
+const campoEntrega = $("#campoEntrega");
+campoEntrega.innerHTML = '<option value="">Escolher depois, no WhatsApp</option>'
+    + LOJA.entregas.map((e) => `<option value="${e.id}">${esc(e.nome)}${e.taxa ? " · " + brl(e.taxa) : " · sem custo"}</option>`).join("");
+campoEntrega.value = LOJA.entregas.some((e) => e.id === ler(CHAVE_ENTREGA, "")) ? ler(CHAVE_ENTREGA, "") : "";
 const previaEl = $("#previa");
 const enviarEl = $("#enviarZap");
 const notaEl = $("#nota");
@@ -505,9 +531,10 @@ function tamanhosHtml(p, prefixo) {
 
 function cardHtml(p, indice) {
     return `<li class="card" data-id="${p.id}" style="--i:${indice}">
-        <button class="card-imagem tom-${p.tom}" type="button" data-abrir="${p.id}" aria-label="Ver detalhes de ${esc(p.nome)}${p.novo ? ", peça nova" : ""}">
+        <button class="card-imagem tom-${p.tom}${fotosDe(p).length > 1 ? " duas-fotos" : ""}" type="button" data-abrir="${p.id}" aria-label="Ver detalhes de ${esc(p.nome)}${p.novo ? ", peça nova" : ""}${p.unica ? ", peça única" : ""}">
             ${arte(p)}
-            ${p.novo ? '<span class="selo-novo">Novidade</span>' : ""}
+            ${fotosDe(p).length > 1 ? `<img class="foto foto-2" src="${esc(fotosDe(p)[1])}" alt="" width="400" height="400" loading="lazy" decoding="async">` : ""}
+            <span class="selos">${p.novo ? '<span class="selo-novo">Novidade</span>' : ""}${p.unica ? '<span class="selo-unica">Peça única</span>' : ""}</span>
         </button>
         ${favBotao(p)}
         <div class="card-corpo">
@@ -527,6 +554,11 @@ function produtosVisiveis() {
         if (filtro.cat === "favoritos" ? !ehFavorito(p.id) : filtro.cat !== "todos" && p.cat !== filtro.cat) return false;
         if (p.secreto) return false; // drop secreto: só atrás da porta
         if (filtro.estilo && !p.estilos.includes(filtro.estilo)) return false;
+        if (filtro.faixa) {
+            const [de, ate] = filtro.faixa.split("-").map((v) => (v === "" ? null : Number(v)));
+            if (p.preco == null || (de != null && p.preco < de) || (ate != null && p.preco > ate)) return false;
+        }
+        if (filtro.tam && !(filtro.tam === "unico" ? !p.tam : p.tam && p.tam.includes(filtro.tam))) return false;
         return !q || normalizar(`${p.nome} ${p.cat} ${p.resumo} ${p.busca}`).includes(q);
     });
     if (filtro.ordem === "menor") lista.sort((a, b) => (a.preco ?? Infinity) - (b.preco ?? Infinity));
@@ -556,6 +588,7 @@ function renderGrade() {
     grade.hidden = lista.length === 0;
     vazioEl.hidden = lista.length !== 0;
     contagemEl.textContent = (lista.length === 1 ? "1 peça" : lista.length + " peças") + (filtro.estilo ? ` · ${estilo(filtro.estilo).nome}` : "");
+    contagemEl.dataset.total = lista.length;
     renderEstilos();
 }
 
@@ -579,7 +612,7 @@ function escolherEstilo(id) {
     filtro.cat = "todos";
     renderChips();
     renderGrade();
-    if (filtro.estilo) document.getElementById("colecao").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+    if (filtro.estilo) document.getElementById("chips").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
 }
 
 /* ===== Looks prontos na tela ===== */
@@ -623,14 +656,14 @@ function adicionarLook(lookId, origem) {
     look.itens.forEach((i) => {
         const existente = sacola.find((x) => x.id === i.id && x.tam === i.tam);
         if (existente) {
-            if (existente.qtd < MAX_POR_ITEM) existente.qtd += 1; else algumNoMaximo = true;
+            if (existente.qtd < maxDe(produto(i.id))) existente.qtd += 1; else algumNoMaximo = true;
         } else {
             sacola.push({ id: i.id, tam: i.tam, qtd: 1 });
         }
     });
     renderSacola();
     balancarSacola();
-    const rotulo = `✦ Look no caldeirão: ${look.itens.length} peças${algumNoMaximo ? " (uma já estava no máximo)" : ""}`;
+    const rotulo = `✦ Look no caldeirão: ${look.itens.length} peças${algumNoMaximo ? " (uma já estava na sacola e não dá pra pôr mais)" : ""}`;
     avisar(rotulo, { rotulo: "Ver sacola", fazer: () => dlgSacola.showModal() });
 }
 
@@ -640,23 +673,52 @@ function abrirProduto(id) {
     if (!p) return;
     dlgProduto.innerHTML = `<div class="dp">
         <button class="fechar" type="button" data-fechar aria-label="Fechar">×</button>
-        <div class="dp-imagem tom-${p.tom}" role="img" aria-label="${esc(p.alt)}">${arte(p)}</div>
+        ${galeriaHtml(p)}
         <div class="dp-info" data-escopo>
             <p class="card-cat">${esc(p.cat)} · ${codigo(p.id)}</p>
             <h2 id="produtoTitulo">${esc(p.nome)}</h2>
             <p class="card-preco">${precoTexto(p)}</p>
+            ${p.unica ? '<p class="dp-unica">✦ Peça única: achado de brechó, só tem esta. Quando sair, saiu.</p>' : ""}
             <p class="dp-desc">${esc(p.desc)}</p>
             <ul class="dp-itens">${p.itens.map((t) => `<li>${esc(t)}</li>`).join("")}</ul>
             ${tamanhosHtml(p, "dlg")}
             <button class="botao botao-cheio" type="button" data-add="${p.id}">Pôr na sacola</button>
             <div class="dp-extras">
                 ${favBotao(p, "fav-texto")}
-                <button class="link-fraco" type="button" data-compartilhar="${p.id}">Compartilhar esta peça</button>
+                <a class="link-fraco" href="${linkWhats(`Oi! Quais são as medidas da peça ${p.nome} (${codigo(p.id)})? 🖤`)}" target="_blank" rel="noopener noreferrer">Pedir as medidas</a>
+                <button class="link-fraco" type="button" data-compartilhar="${p.id}">Compartilhar</button>
             </div>
+            ${combinaHtml(p)}
         </div>
     </div>`;
+    const trilho = dlgProduto.querySelector(".dp-trilho");
+    if (trilho) trilho.addEventListener("scroll", () => {
+        const n = Math.round(trilho.scrollLeft / trilho.clientWidth);
+        dlgProduto.querySelectorAll(".dp-pontos i").forEach((b, k) => b.classList.toggle("ativo", k === n));
+    }, { passive: true });
     if (!dlgProduto.open) dlgProduto.showModal();
     history.replaceState(null, "", "#peca-" + p.id);
+}
+
+const linkWhats = (texto) => `https://wa.me/${LOJA.whatsapp.replace(/\D/g, "")}?text=${encodeURIComponent(texto)}`;
+
+/* fotos da peça: com mais de uma, vira um trilho que arrasta para o lado, com pontinhos */
+function galeriaHtml(p) {
+    const fotos = fotosDe(p);
+    if (fotos.length < 2) return `<div class="dp-imagem tom-${p.tom}" role="img" aria-label="${esc(p.alt)}">${arte(p)}</div>`;
+    return `<div class="dp-imagem dp-galeria tom-${p.tom}" role="group" aria-label="Fotos de ${esc(p.nome)}">
+        <div class="dp-trilho">${fotos.map((f, k) => `<img class="foto" src="${esc(f)}" alt="${k ? "" : esc(p.alt)}" width="400" height="400" loading="${k ? "lazy" : "eager"}" decoding="async">`).join("")}</div>
+        <span class="dp-pontos" aria-hidden="true">${fotos.map((_, k) => `<i${k ? "" : ' class="ativo"'}></i>`).join("")}</span>
+    </div>`;
+}
+
+/* "combina com": peças da mesma vibe, de outra categoria primeiro */
+function combinaHtml(p) {
+    const lista = PRODUTOS.filter((x) => x.id !== p.id && !x.secreto && x.estilos.some((e) => p.estilos.includes(e)))
+        .sort((a, b) => (a.cat === p.cat) - (b.cat === p.cat))
+        .slice(0, 3);
+    if (!lista.length) return "";
+    return `<div class="dp-combina"><p>Combina com</p><ul>${lista.map((x) => `<li><button type="button" data-abrir="${x.id}"><span class="dp-combina-arte tom-${x.tom}">${arte(x)}</span><span>${esc(x.nome)}</span><b>${precoTexto(x)}</b></button></li>`).join("")}</ul></div>`;
 }
 
 /* ===== Link de cada peça: eclipse-studio/#peca-espartilho abre a peça direto ===== */
@@ -705,8 +767,22 @@ function verFavoritos() {
 /* ===== Sacola ===== */
 const chaveDe = (i) => i.id + "|" + i.tam;
 const totalCentavos = () => sacola.reduce((soma, i) => soma + (produto(i.id).preco ?? 0) * i.qtd, 0);
+const entregaEscolhida = () => LOJA.entregas.find((e) => e.id === campoEntrega.value) || null;
+const taxaEntrega = () => { const e = entregaEscolhida(); return !e || totalCentavos() >= LOJA.freteGratis ? 0 : e.taxa; };
 const temSobConsulta = () => sacola.some((i) => produto(i.id).preco == null);
 const totalItens = () => sacola.reduce((soma, i) => soma + i.qtd, 0);
+
+/* barra fixa embaixo (celular): aparece quando tem peça na sacola */
+const barraSacola = $("#barraSacola");
+function renderBarraSacola(vazia, quantidade) {
+    if (!barraSacola) return;
+    barraSacola.hidden = vazia;
+    document.body.classList.toggle("tem-sacola", !vazia);
+    if (vazia) return;
+    $("#barraQtd").textContent = quantidade === 1 ? "1 peça" : quantidade + " peças";
+    $("#barraTotal").textContent = brl(totalCentavos() + taxaEntrega()) + (temSobConsulta() ? " +" : "");
+    barraSacola.setAttribute("aria-label", `Sacola: ${$("#barraQtd").textContent}, ${$("#barraTotal").textContent}. Fechar pedido`);
+}
 const rotuloTam = (i) => (i.tam ? "Tamanho " + i.tam : "Tamanho único");
 
 function montarMensagem() {
@@ -715,7 +791,9 @@ function montarMensagem() {
         const p = produto(i.id);
         linhas.push(`• ${i.qtd}x ${p.nome}${i.tam ? " (" + i.tam + ")" : ""} — ${p.preco == null ? "valor a combinar" : brl(p.preco * i.qtd)}`);
     });
-    linhas.push("", `*Total estimado: ${brl(totalCentavos())}*${temSobConsulta() ? " + itens a combinar" : ""}`);
+    const entrega = entregaEscolhida();
+    if (entrega) linhas.push("", `Entrega: ${entrega.nome}${entrega.taxa === 0 ? "" : taxaEntrega() ? ` (taxa ${brl(taxaEntrega())})` : " (frete grátis ✦)"}`);
+    linhas.push("", `*Total estimado: ${brl(totalCentavos() + taxaEntrega())}*${temSobConsulta() ? " + itens a combinar" : ""}`);
     const nome = campoNome.value.trim();
     const obs = campoObs.value.trim();
     if (nome) linhas.push(`Nome: ${nome}`);
@@ -733,11 +811,11 @@ function itemHtml(i) {
         <span class="item-arte tom-${p.tom}">${arte(p)}</span>
         <div class="item-info">
             <p class="item-nome">${esc(p.nome)}</p>
-            <p class="item-tam">${rotuloTam(i)} · ${precoTexto(p)}</p>
+            <p class="item-tam">${rotuloTam(i)} · ${precoTexto(p)}${p.unica ? " · peça única" : ""}</p>
             <div class="qtd">
                 <button type="button" data-menos aria-label="Diminuir a quantidade: ${esc(nomeCompleto)}"${i.qtd <= 1 ? " disabled" : ""}>−</button>
                 <span class="qtd-valor" aria-label="Quantidade">${i.qtd}</span>
-                <button type="button" data-mais aria-label="Aumentar a quantidade: ${esc(nomeCompleto)}"${i.qtd >= MAX_POR_ITEM ? " disabled" : ""}>+</button>
+                <button type="button" data-mais aria-label="Aumentar a quantidade: ${esc(nomeCompleto)}"${i.qtd >= maxDe(p) ? " disabled" : ""}>+</button>
             </div>
         </div>
         <div class="item-lado">
@@ -761,10 +839,14 @@ function renderSacola() {
     itensEl.innerHTML = sacola.map(itemHtml).join("");
     sacolaVaziaEl.hidden = !vazia;
     sacolaRodapeEl.hidden = vazia;
-    totalEl.textContent = brl(totalCentavos());
+    totalEl.textContent = brl(totalCentavos() + taxaEntrega());
     if (temSobConsulta()) totalEl.insertAdjacentHTML("beforeend", "<small>+ itens a combinar</small>");
     const falta = LOJA.freteGratis - totalCentavos();
-    freteEl.textContent = falta > 0 ? `Faltam ${brl(falta)} pro frete grátis ✦` : "✦ Frete grátis na entrega em Campo Grande";
+    const entrega = entregaEscolhida();
+    freteEl.textContent = falta <= 0 ? "✦ Frete grátis na entrega em Campo Grande"
+        : entrega && entrega.taxa ? `Entrega no ${entrega.nome}: ${brl(entrega.taxa)}. Faltam ${brl(falta)} pro frete grátis ✦`
+        : entrega ? "Retirada sem custo ✦" : `Faltam ${brl(falta)} pro frete grátis ✦`;
+    renderBarraSacola(vazia, quantidade);
     contadorEl.hidden = vazia;
     contadorEl.textContent = quantidade;
     botaoSacola.setAttribute("aria-label", vazia ? "Abrir sacola, vazia" : `Abrir sacola, ${quantidade} ${quantidade === 1 ? "peça" : "peças"}`);
@@ -809,9 +891,9 @@ function adicionar(id, escopo) {
         tam = marcado.value;
     }
     const existente = sacola.find((i) => i.id === id && i.tam === tam);
-    if (existente && existente.qtd >= MAX_POR_ITEM) {
+    if (existente && existente.qtd >= maxDe(p)) {
         if (dlgProduto.open) dlgProduto.close(); // o aviso fica atrás de um diálogo aberto
-        avisar(`Máximo de ${MAX_POR_ITEM} por peça. Pra mais, combine no WhatsApp.`);
+        avisar(p.unica ? `${p.nome} é peça única: ela já está na sua sacola 🖤` : `Máximo de ${MAX_POR_ITEM} por peça. Pra mais, combine no WhatsApp.`, { rotulo: "Ver sacola", fazer: () => dlgSacola.showModal() });
         return;
     }
     if (existente) existente.qtd += 1; else sacola.push({ id, tam, qtd: 1 });
@@ -826,7 +908,7 @@ function adicionar(id, escopo) {
 function mudarQuantidade(chave, delta) {
     const item = sacola.find((i) => chaveDe(i) === chave);
     if (!item) return;
-    item.qtd = Math.min(MAX_POR_ITEM, Math.max(1, item.qtd + delta));
+    item.qtd = Math.min(maxDe(produto(item.id)), Math.max(1, item.qtd + delta));
     renderSacola();
     const seletor = delta > 0 ? "[data-mais]" : "[data-menos]";
     const alvo = itensEl.querySelector(`[data-chave="${chave}"] ${seletor}`) || itensEl.querySelector(`[data-chave="${chave}"] [data-mais]`);
@@ -903,9 +985,20 @@ chipsEl.addEventListener("click", (e) => {
 });
 buscaEl.addEventListener("input", () => { filtro.q = buscaEl.value; renderGrade(); });
 ordemEl.addEventListener("change", () => { filtro.ordem = ordemEl.value; renderGrade(); });
+const faixaEl = $("#faixaPreco");
+const tamanhoEl = $("#tamanhoFiltro");
+faixaEl.addEventListener("change", () => { filtro.faixa = faixaEl.value; renderGrade(); });
+tamanhoEl.addEventListener("change", () => { filtro.tam = tamanhoEl.value; renderGrade(); });
+/* o filtro de tamanho só aparece quando alguma peça tem tamanhos (hoje quase tudo é tamanho único) */
+(function montarFiltroTamanho() {
+    const tams = ROUPA.filter((t) => PRODUTOS.some((p) => !p.secreto && p.tam && p.tam.includes(t)));
+    if (!tams.length) return;
+    tamanhoEl.insertAdjacentHTML("beforeend", tams.map((t) => `<option value="${t}">Tamanho ${t}</option>`).join("") + '<option value="unico">Tamanho único</option>');
+    $("#campoTamanho").hidden = false;
+})();
 $("#limparFiltros").addEventListener("click", () => {
-    filtro.cat = "todos"; filtro.q = ""; filtro.ordem = "padrao"; filtro.estilo = "";
-    buscaEl.value = ""; ordemEl.value = "padrao";
+    filtro.cat = "todos"; filtro.q = ""; filtro.ordem = "padrao"; filtro.estilo = ""; filtro.faixa = ""; filtro.tam = "";
+    buscaEl.value = ""; ordemEl.value = "padrao"; faixaEl.value = ""; tamanhoEl.value = "";
     renderChips();
     renderGrade();
 });
@@ -920,6 +1013,8 @@ itensEl.addEventListener("click", (e) => {
 });
 
 campoNome.addEventListener("input", () => { guardar(CHAVE_NOME, campoNome.value); atualizarLinkPedido(); });
+campoEntrega.addEventListener("change", () => { guardar(CHAVE_ENTREGA, campoEntrega.value); renderSacola(); });
+barraSacola?.addEventListener("click", () => dlgSacola.showModal());
 campoObs.addEventListener("input", atualizarLinkPedido);
 
 $("#esvaziar").addEventListener("click", () => {
@@ -948,12 +1043,12 @@ enviarEl.addEventListener("click", () => {
 (function olhosNoEscuro() {
     const palco = document.querySelector(".olhos-noite");
     if (!palco || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const MAX = matchMedia("(pointer: coarse)").matches ? 2 : 3;
+    const MAX = matchMedia("(pointer: coarse)").matches ? 1 : 2;
     const CORES = [["#ffd86b", "rgba(255, 200, 90, .45)"], ["#ffcf4d", "rgba(255, 190, 70, .4)"], ["#c9f5a8", "rgba(190, 240, 150, .35)"]];
     const sorteio = (min, max) => min + Math.random() * (max - min);
 
     function surgir() {
-        setTimeout(surgir, sorteio(2200, 5200));
+        setTimeout(surgir, sorteio(6000, 12000));
         if (document.hidden || palco.childElementCount >= MAX) return;
         const [cor, brilho] = CORES[Math.floor(Math.random() * CORES.length)];
         const par = document.createElement("i");
@@ -980,6 +1075,75 @@ enviarEl.addEventListener("click", () => {
         });
         alvo = { x: e.clientX, y: e.clientY };
     }, { passive: true });
+})();
+
+/* ===== Lista do próximo drop: entra na lista de transmissão pelo WhatsApp ===== */
+(function listaDoDrop() {
+    const botao = $("#avisaDrop");
+    if (!botao) return;
+    const atualizar = () => {
+        const nome = campoNome.value.trim();
+        botao.href = linkWhats(`Oi! 🌕 Quero entrar na lista do próximo drop da lua cheia da ${LOJA.nome}${nome ? `. Aqui é a ${nome}` : ""} 🖤`);
+    };
+    atualizar();
+    campoNome.addEventListener("input", atualizar);
+    botao.addEventListener("click", () => avisar("✦ Manda a mensagem que você entra na lista do drop"));
+})();
+
+/* ===== Quem já é da coven: depoimentos (a seção só aparece quando tiver algum) ===== */
+(function coven() {
+    const secao = $("#coven");
+    if (!secao || !DEPOIMENTOS.length) return;
+    $("#covenLista").innerHTML = DEPOIMENTOS.map((d) => `<li class="coven-card">
+        ${d.foto ? `<img src="${esc(d.foto)}" alt="${esc(d.nome)} usando uma peça da ${esc(LOJA.nome)}" width="400" height="500" loading="lazy" decoding="async">` : ""}
+        <blockquote><p>“${esc(d.texto)}”</p><footer>${esc(d.nome)}${d.insta ? ` · <a href="https://www.instagram.com/${encodeURIComponent(d.insta)}/" target="_blank" rel="noopener noreferrer">@${esc(d.insta)}</a>` : ""}</footer></blockquote>
+    </li>`).join("");
+    secao.hidden = false;
+})();
+
+/* ===== Cantinho místico: tarô, lua, horóscopo, grimório e porta secreta numa seção só, em abas ===== */
+const abrirAbaMistica = (function cantinhoMistico() {
+    const abas = [...document.querySelectorAll('.mistico-abas [role="tab"]')];
+    if (!abas.length) return () => false;
+    const painel = (aba) => document.getElementById(aba.getAttribute("aria-controls"));
+    function ativar(aba, focar) {
+        abas.forEach((a) => {
+            const sim = a === aba;
+            a.setAttribute("aria-selected", String(sim));
+            a.tabIndex = sim ? 0 : -1;
+            painel(a).hidden = !sim;
+        });
+        if (focar) aba.focus();
+        if (!["aba-taro", "aba-ritual"].includes(aba.id) && window.carregarEncantos) window.carregarEncantos();
+    }
+    abas.forEach((aba, k) => {
+        aba.addEventListener("click", () => ativar(aba));
+        aba.addEventListener("keydown", (e) => {
+            const passo = { ArrowRight: 1, ArrowLeft: -1, Home: -k, End: abas.length - 1 - k }[e.key];
+            if (passo === undefined) return;
+            e.preventDefault();
+            ativar(abas[(k + passo + abas.length) % abas.length], true);
+        });
+    });
+    ativar(abas[0]);
+    /* link pra uma das magias (#taro, #ritual, #porta…): abre a aba certa antes de rolar até ela */
+    function porId(id) {
+        const aba = abas.find((a) => a.getAttribute("aria-controls") === id);
+        if (!aba) return false;
+        ativar(aba);
+        return true;
+    }
+    document.addEventListener("click", (e) => {
+        const link = e.target.closest('a[href^="#"]');
+        if (!link) return;
+        const id = link.getAttribute("href").slice(1);
+        if (!porId(id)) return;
+        e.preventDefault();
+        document.getElementById("magias").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+        history.replaceState(null, "", "#" + id);
+    });
+    if (location.hash && porId(location.hash.slice(1))) addEventListener("load", () => document.getElementById("magias").scrollIntoView());
+    return porId;
 })();
 
 /* ===== Início ===== */

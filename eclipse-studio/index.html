@@ -23,7 +23,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Quicksand:wght@400;500;600;700&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
     <script type="application/ld+json">{"@context": "https://schema.org", "@type": "ClothingStore", "name": "Eclipse Studio", "description": "Moda alternativa em Campo Grande - MS: roupas, bijuterias, bolsas e perfumes no estilo alt, com pedido pelo WhatsApp.", "url": "https://samueldevmi.github.io/portfolio/eclipse-studio/", "image": "https://samueldevmi.github.io/portfolio/eclipse-studio/compartilhar.png", "telephone": "+55 67 99975-0866", "address": {"@type": "PostalAddress", "addressLocality": "Campo Grande", "addressRegion": "MS", "addressCountry": "BR"}, "areaServed": {"@type": "City", "name": "Campo Grande"}, "sameAs": ["https://www.instagram.com/eclipse_studiocg/"], "paymentAccepted": "Pix, cartão de crédito, cartão de débito, dinheiro", "currenciesAccepted": "BRL"}</script>
-    <link rel="stylesheet" href="style.css?v=20261001som">
+    <link rel="stylesheet" href="style.css?v=20261001repaginada">
 </head>
 <body>
     <a class="pular" href="#colecao">Pular para as peças</a>
@@ -42,7 +42,7 @@
             </a>
             <nav aria-label="Principal">
                 <a href="#colecao">Coleção</a>
-                <a href="#taro">Magias</a>
+                <a href="#magias">Magias</a>
                 <a href="#sobre">A marca</a>
                 <a href="#duvidas">Dúvidas</a>
             </nav>
@@ -179,27 +179,16 @@
         </div>
     </section>
 
-    <section class="estilos" aria-labelledby="estilosTitulo">
-        <div class="miolo">
-            <h2 id="estilosTitulo" class="titulo">Qual é a sua vibe?</h2>
-            <p class="sub">Escolha um estilo e a vitrine mostra só as peças dele. Ainda descobrindo o seu? <a href="#taro">Tire o tarô do look</a> ✦</p>
-            <ul class="estilos-grade" id="estilos"></ul>
-        </div>
-    </section>
-
-    <section class="looks" aria-labelledby="looksTitulo">
-        <div class="miolo">
-            <h2 id="looksTitulo" class="titulo">Looks prontos</h2>
-            <p class="sub">Combinações que já saem casando. Um clique põe as três peças na sacola.</p>
-            <ul class="looks-grade" id="looks"></ul>
-        </div>
-    </section>
-
     <main id="colecao" class="colecao">
         <div class="miolo">
             <div class="colecao-topo">
                 <h2 class="titulo">A coleção</h2>
                 <p id="contagem" class="contagem" aria-live="polite"></p>
+            </div>
+
+            <div class="vibes" aria-labelledby="estilosTitulo">
+                <p class="vibes-topo"><span id="estilosTitulo">Qual é a sua vibe?</span> <a href="#taro">não sabe? tire o tarô ✦</a></p>
+                <ul class="estilos-grade" id="estilos"></ul>
             </div>
 
             <div class="ferramentas">
@@ -208,6 +197,19 @@
                     <label class="campo-busca">
                         <span class="visualmente-oculto">Buscar peça</span>
                         <input id="busca" type="search" placeholder="Buscar peça…" autocomplete="off">
+                    </label>
+                    <label class="campo-faixa">
+                        <span class="visualmente-oculto">Faixa de preço</span>
+                        <select id="faixaPreco">
+                            <option value="">Qualquer preço</option>
+                            <option value="0-5000">Até R$ 50</option>
+                            <option value="5000-15000">R$ 50 a R$ 150</option>
+                            <option value="15000-">Acima de R$ 150</option>
+                        </select>
+                    </label>
+                    <label class="campo-tamanho" id="campoTamanho" hidden>
+                        <span class="visualmente-oculto">Tamanho</span>
+                        <select id="tamanhoFiltro"><option value="">Qualquer tamanho</option></select>
                     </label>
                     <label class="campo-ordem">
                         <span class="visualmente-oculto">Ordenar por</span>
@@ -233,79 +235,112 @@
         </div>
     </main>
 
-    <section class="taro" id="taro" aria-labelledby="taroTitulo">
+    <section class="looks" aria-labelledby="looksTitulo">
         <div class="miolo">
-            <h2 id="taroTitulo" class="titulo">Tarô do look</h2>
-            <p class="sub">Embaralhe e tire três cartas: a sua essência, a peça e o feitiço. As cartas montam o look, e a tiragem vira imagem pro seu story.</p>
-            <div class="taro-mesa">
-                <ol class="taro-cartas" id="taroCartas" aria-live="polite"></ol>
-                <div class="taro-leitura" id="taroLeitura" hidden></div>
-                <div class="taro-acoes">
-                    <button class="botao" id="taroTirar" type="button">Embaralhar e tirar as cartas</button>
+            <h2 id="looksTitulo" class="titulo">Looks prontos</h2>
+            <p class="sub">Combinações que já saem casando. Um clique põe as três peças na sacola.</p>
+            <ul class="looks-grade" id="looks"></ul>
+        </div>
+    </section>
+
+    <section class="coven" id="coven" aria-labelledby="covenTitulo" hidden>
+        <div class="miolo">
+            <h2 id="covenTitulo" class="titulo">Quem já é da coven 🖤</h2>
+            <p class="sub">Clientes usando as peças. Marque <a href="https://www.instagram.com/eclipse_studiocg/" target="_blank" rel="noopener noreferrer">@eclipse_studiocg</a> no seu look pra aparecer aqui.</p>
+            <ul class="coven-lista" id="covenLista"></ul>
+        </div>
+    </section>
+
+
+    <section class="mistico" id="magias" aria-labelledby="misticoTitulo">
+        <div class="miolo mistico-topo">
+            <p class="eyebrow">Pra brincar enquanto escolhe</p>
+            <h2 id="misticoTitulo" class="titulo">Cantinho místico</h2>
+            <div class="mistico-abas" role="tablist" aria-label="Magias da loja">
+                <button type="button" role="tab" id="aba-taro" aria-controls="taro" aria-selected="true"><span aria-hidden="true">🃏</span> Tarô</button>
+                <button type="button" role="tab" id="aba-ritual" aria-controls="ritual" aria-selected="false" tabindex="-1"><span aria-hidden="true">🌕</span> Lua</button>
+                <button type="button" role="tab" id="aba-horoscopo" aria-controls="horoscopo" aria-selected="false" tabindex="-1"><span aria-hidden="true">♈︎</span> Horóscopo</button>
+                <button type="button" role="tab" id="aba-grimorio" aria-controls="grimorio" aria-selected="false" tabindex="-1"><span aria-hidden="true">📖</span> Grimório</button>
+                <button type="button" role="tab" id="aba-porta" aria-controls="porta" aria-selected="false" tabindex="-1"><span aria-hidden="true">🚪</span> Porta secreta</button>
+            </div>
+        </div>
+        <section class="taro mistico-painel" id="taro" role="tabpanel" tabindex="-1" aria-labelledby="taroTitulo">
+            <div class="miolo">
+                <h2 id="taroTitulo" class="titulo">Tarô do look</h2>
+                <p class="sub">Embaralhe e tire três cartas: a sua essência, a peça e o feitiço. As cartas montam o look, e a tiragem vira imagem pro seu story.</p>
+                <div class="taro-mesa">
+                    <ol class="taro-cartas" id="taroCartas" aria-live="polite"></ol>
+                    <div class="taro-leitura" id="taroLeitura" hidden></div>
+                    <div class="taro-acoes">
+                        <button class="botao" id="taroTirar" type="button">Embaralhar e tirar as cartas</button>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section class="ritual" id="ritual" aria-labelledby="ritualTitulo">
-        <div class="miolo ritual-in">
-            <div class="ritual-lua" id="ritualLua" aria-hidden="true"></div>
-            <div>
-                <p class="eyebrow">Ritual da lua cheia</p>
-                <h2 id="ritualTitulo" class="titulo">Peça nova chega na lua cheia</h2>
-                <p class="sub" id="ritualQuando"></p>
-                <div class="contagem-lua" id="contagemLua"></div>
-                <a class="botao botao-linha" href="https://www.instagram.com/eclipse_studiocg/" target="_blank" rel="noopener noreferrer">Seguir pra ver o próximo drop</a>
+        <section class="ritual mistico-painel" id="ritual" role="tabpanel" tabindex="-1" aria-labelledby="ritualTitulo">
+            <div class="miolo ritual-in">
+                <div class="ritual-lua" id="ritualLua" aria-hidden="true"></div>
+                <div>
+                    <p class="eyebrow">Ritual da lua cheia</p>
+                    <h2 id="ritualTitulo" class="titulo">Peça nova chega na lua cheia</h2>
+                    <p class="sub" id="ritualQuando"></p>
+                    <div class="contagem-lua" id="contagemLua"></div>
+                    <div class="ritual-acoes">
+                    <a class="botao" id="avisaDrop" href="#" target="_blank" rel="noopener noreferrer">Me avisa no próximo drop 🌕</a>
+                    <a class="botao botao-linha" href="https://www.instagram.com/eclipse_studiocg/" target="_blank" rel="noopener noreferrer">Seguir no Instagram</a>
+                </div>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section class="horoscopo" id="horoscopo" aria-labelledby="horoscopoTitulo">
-        <div class="miolo">
-            <h2 id="horoscopoTitulo" class="titulo">Horóscopo alt</h2>
-            <p class="sub" id="horoscopoData">Escolha o seu signo: a previsão muda todo dia.</p>
-            <div class="signos" id="signos" role="group" aria-label="Escolha o seu signo"></div>
-            <article class="previsao" id="previsao" aria-live="polite" hidden></article>
-        </div>
-    </section>
+        <section class="horoscopo mistico-painel" id="horoscopo" role="tabpanel" tabindex="-1" aria-labelledby="horoscopoTitulo">
+            <div class="miolo">
+                <h2 id="horoscopoTitulo" class="titulo">Horóscopo alt</h2>
+                <p class="sub" id="horoscopoData">Escolha o seu signo: a previsão muda todo dia.</p>
+                <div class="signos" id="signos" role="group" aria-label="Escolha o seu signo"></div>
+                <article class="previsao" id="previsao" aria-live="polite" hidden></article>
+            </div>
+        </section>
 
-    <section class="grimorio" id="grimorio" aria-labelledby="grimorioTitulo">
-        <div class="miolo">
-            <h2 id="grimorioTitulo" class="titulo">O grimório</h2>
-            <p class="sub">Receitas de estilo pra cada vibe. Vire as páginas (dá pra arrastar, tocar nos cantos ou usar as setas).</p>
-            <div class="livro" id="livro" tabindex="0" role="region" aria-roledescription="livro" aria-label="Grimório da Eclipse Studio"></div>
-            <div class="livro-controles">
-                <button class="botao botao-linha" id="paginaAnterior" type="button">‹ Voltar</button>
-                <span class="livro-pagina" id="livroPagina" aria-live="polite"></span>
-                <button class="botao" id="paginaProxima" type="button">Virar a página ›</button>
+        <section class="grimorio mistico-painel" id="grimorio" role="tabpanel" tabindex="-1" aria-labelledby="grimorioTitulo">
+            <div class="miolo">
+                <h2 id="grimorioTitulo" class="titulo">O grimório</h2>
+                <p class="sub">Receitas de estilo pra cada vibe. Vire as páginas (dá pra arrastar, tocar nos cantos ou usar as setas).</p>
+                <div class="livro" id="livro" tabindex="0" role="region" aria-roledescription="livro" aria-label="Grimório da Eclipse Studio"></div>
+                <div class="livro-controles">
+                    <button class="botao botao-linha" id="paginaAnterior" type="button">‹ Voltar</button>
+                    <span class="livro-pagina" id="livroPagina" aria-live="polite"></span>
+                    <button class="botao" id="paginaProxima" type="button">Virar a página ›</button>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section class="porta-secreta" id="porta" aria-labelledby="portaTitulo">
-        <div class="miolo porta-in">
-            <div class="porta" id="portaDesenho" aria-hidden="true">
-                <div class="porta-luz"></div>
-                <div class="porta-folha porta-e"><i class="porta-ornamento"></i></div>
-                <div class="porta-folha porta-d"><i class="porta-ornamento"></i><i class="porta-fechadura"></i></div>
+        <section class="porta-secreta mistico-painel" id="porta" role="tabpanel" tabindex="-1" aria-labelledby="portaTitulo">
+            <div class="miolo porta-in">
+                <div class="porta" id="portaDesenho" aria-hidden="true">
+                    <div class="porta-luz"></div>
+                    <div class="porta-folha porta-e"><i class="porta-ornamento"></i></div>
+                    <div class="porta-folha porta-d"><i class="porta-ornamento"></i><i class="porta-fechadura"></i></div>
+                </div>
+                <div class="porta-texto">
+                    <p class="eyebrow">Só pros close friends</p>
+                    <h2 id="portaTitulo" class="titulo">A porta secreta</h2>
+                    <p>Tem peça que só aparece pra quem sabe a palavra mágica. Ela sai nos close friends do <a href="https://www.instagram.com/eclipse_studiocg/" target="_blank" rel="noopener noreferrer">@eclipse_studiocg</a>.</p>
+                    <form class="porta-form" id="portaForm" autocomplete="off">
+                        <label class="visualmente-oculto" for="palavraMagica">Palavra mágica</label>
+                        <input id="palavraMagica" type="text" placeholder="Palavra mágica…" maxlength="40" spellcheck="false">
+                        <button class="botao" type="submit">Abrir a porta</button>
+                    </form>
+                    <p class="porta-status" id="portaStatus" role="status"></p>
+                </div>
             </div>
-            <div class="porta-texto">
-                <p class="eyebrow">Só pros close friends</p>
-                <h2 id="portaTitulo" class="titulo">A porta secreta</h2>
-                <p>Tem peça que só aparece pra quem sabe a palavra mágica. Ela sai nos close friends do <a href="https://www.instagram.com/eclipse_studiocg/" target="_blank" rel="noopener noreferrer">@eclipse_studiocg</a>.</p>
-                <form class="porta-form" id="portaForm" autocomplete="off">
-                    <label class="visualmente-oculto" for="palavraMagica">Palavra mágica</label>
-                    <input id="palavraMagica" type="text" placeholder="Palavra mágica…" maxlength="40" spellcheck="false">
-                    <button class="botao" type="submit">Abrir a porta</button>
-                </form>
-                <p class="porta-status" id="portaStatus" role="status"></p>
+            <div class="miolo drop-secreto" id="dropSecreto" hidden>
+                <h3 class="titulo">Drop secreto</h3>
+                <p class="sub">Você entrou. Essas peças não aparecem na vitrine: é só pra quem sabe a palavra.</p>
+                <ul class="grade" id="gradeSecreta"></ul>
             </div>
-        </div>
-        <div class="miolo drop-secreto" id="dropSecreto" hidden>
-            <h3 class="titulo">Drop secreto</h3>
-            <p class="sub">Você entrou. Essas peças não aparecem na vitrine: é só pra quem sabe a palavra.</p>
-            <ul class="grade" id="gradeSecreta"></ul>
-        </div>
+        </section>
     </section>
 
     <div class="cera" aria-hidden="true"></div>
@@ -401,6 +436,8 @@
                 </div>
             </div>
             <div class="sacola-rodape" id="sacolaRodape" hidden>
+                <label class="campo" for="campoEntrega">Entrega</label>
+                <select id="campoEntrega"></select>
                 <p class="frete" id="frete"></p>
                 <div class="total"><span>Total estimado</span><strong id="total">R$ 0,00</strong></div>
                 <label class="campo" for="campoNome">Seu nome <small>(opcional)</small></label>
@@ -438,10 +475,39 @@
     <div class="escuridao" id="escuridao" aria-hidden="true"><div class="luz-vela" id="luzVela"></div></div>
     <button class="acender-velas" id="acenderVelas" type="button" hidden><span aria-hidden="true">🕯</span> Acender as velas</button>
 
+    <button class="barra-sacola" id="barraSacola" type="button" hidden>
+        <span class="barra-qtd" id="barraQtd"></span>
+        <span class="barra-total" id="barraTotal"></span>
+        <span class="barra-acao">Fechar pedido <span aria-hidden="true">→</span></span>
+    </button>
+
     <div class="avisos" id="avisos" role="status" aria-live="polite"></div>
 
-    <script src="script.js?v=20261001som"></script>
-    <script src="magia.js?v=20261001som"></script>
-    <script src="encantos.js?v=20261001som"></script>
+    <script src="script.js?v=20261001repaginada"></script>
+    <script src="magia.js?v=20261001repaginada"></script>
+    <script>
+        /* encantos.js (horóscopo, porta, grimório, som e varinha) carrega depois: a primeira tela abre mais leve */
+        (function () {
+            var carregou = false;
+            function carregar(depois) {
+                if (carregou) return;
+                carregou = true;
+                var s = document.createElement("script");
+                s.src = "encantos.js?v=20261001repaginada";
+                if (depois) s.onload = depois;
+                document.body.appendChild(s);
+            }
+            window.carregarEncantos = carregar;
+            var som = document.getElementById("botaoSom");
+            if (som) som.addEventListener("click", function primeiro() { som.removeEventListener("click", primeiro); if (!carregou) carregar(function () { som.click(); }); });
+            var mistico = document.getElementById("magias");
+            if ("IntersectionObserver" in window && mistico) {
+                var obs = new IntersectionObserver(function (e) { if (e.some(function (x) { return x.isIntersecting; })) { obs.disconnect(); carregar(); } }, { rootMargin: "600px 0px" });
+                obs.observe(mistico);
+            } else carregar();
+            if (/^#(horoscopo|grimorio|porta)/.test(location.hash)) carregar();
+            addEventListener("load", function () { setTimeout(function () { (window.requestIdleCallback || setTimeout)(function () { carregar(); }); }, 8000); });
+        })();
+    </script>
 </body>
 </html>
