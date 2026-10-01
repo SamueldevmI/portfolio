@@ -274,34 +274,56 @@ function retanguloRedondo(ctx, x, y, w, h, r) {
     ctx.closePath();
 }
 
+/* fundo e marca dos stories (tarô, horóscopo): roxo de anoitecer, poeira dourada e o eclipse */
+function pintarFundoStory(ctx, W, H) {
+    const fundo = ctx.createLinearGradient(0, 0, 0, H);
+    fundo.addColorStop(0, "#150c1f"); fundo.addColorStop(.6, "#1f0f26"); fundo.addColorStop(1, "#36131c");
+    ctx.fillStyle = fundo; ctx.fillRect(0, 0, W, H);
+    const brilhoRoxo = ctx.createRadialGradient(160, 120, 0, 160, 120, 800);
+    brilhoRoxo.addColorStop(0, "rgba(160,110,230,.35)"); brilhoRoxo.addColorStop(1, "rgba(160,110,230,0)");
+    ctx.fillStyle = brilhoRoxo; ctx.fillRect(0, 0, W, H);
+    for (let i = 0; i < 90; i++) { // poeira dourada
+        ctx.fillStyle = `rgba(233,196,106,${(.2 + Math.random() * .5).toFixed(2)})`;
+        ctx.beginPath(); ctx.arc(Math.random() * W, Math.random() * H, Math.random() * 2.2 + .6, 0, 7); ctx.fill();
+    }
+    ctx.textAlign = "center";
+    ctx.fillStyle = "#e9c46a"; ctx.beginPath(); ctx.arc(W / 2 - 250, 150, 30, 0, 7); ctx.fill();
+    ctx.fillStyle = "#150c1f"; ctx.beginPath(); ctx.arc(W / 2 - 245, 145, 28, 0, 7); ctx.fill();
+    ctx.fillStyle = "#f6eeff"; ctx.font = '400 68px "UnifrakturMaguntia"'; ctx.fillText("Eclipse Studio", W / 2 + 30, 172);
+}
+const FONTES_STORY = ['400 60px "UnifrakturMaguntia"', 'italic 700 60px "Cormorant Garamond"', '700 60px "Cormorant Garamond"', '700 30px "Quicksand"', '500 30px "Quicksand"'];
+
+/* no celular abre o "compartilhar" (dá pra mandar direto pro story); no computador baixa o arquivo */
+async function entregarImagem(tela, nomeArquivo, titulo) {
+    const blob = await new Promise((ok) => tela.toBlob(ok, "image/png"));
+    const arquivo = new File([blob], nomeArquivo, { type: "image/png" });
+    if (navigator.canShare && navigator.canShare({ files: [arquivo] })) {
+        try { await navigator.share({ files: [arquivo], title: titulo }); } catch (erro) { /* a cliente desistiu de compartilhar */ }
+        return;
+    }
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = nomeArquivo;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(link.href), 4000);
+    avisar("✦ Imagem salva. É só postar no story e marcar @eclipse_studiocg");
+}
+
 async function salvarStory(t, botao) {
     if (!t) return;
     const textoOriginal = botao.textContent;
     botao.disabled = true;
     botao.textContent = "Preparando a imagem…";
     try {
-        await Promise.all(['400 60px "UnifrakturMaguntia"', 'italic 700 60px "Cormorant Garamond"', '700 60px "Cormorant Garamond"', '700 30px "Quicksand"', '500 30px "Quicksand"'].map((f) => document.fonts.load(f)));
+        await Promise.all(FONTES_STORY.map((f) => document.fonts.load(f)));
         const W = 1080, H = 1920;
         const tela = document.createElement("canvas");
         tela.width = W; tela.height = H;
         const ctx = tela.getContext("2d");
 
-        const fundo = ctx.createLinearGradient(0, 0, 0, H);
-        fundo.addColorStop(0, "#150c1f"); fundo.addColorStop(.6, "#1f0f26"); fundo.addColorStop(1, "#36131c");
-        ctx.fillStyle = fundo; ctx.fillRect(0, 0, W, H);
-        const brilhoRoxo = ctx.createRadialGradient(160, 120, 0, 160, 120, 800);
-        brilhoRoxo.addColorStop(0, "rgba(160,110,230,.35)"); brilhoRoxo.addColorStop(1, "rgba(160,110,230,0)");
-        ctx.fillStyle = brilhoRoxo; ctx.fillRect(0, 0, W, H);
-        for (let i = 0; i < 90; i++) { // poeira dourada
-            ctx.fillStyle = `rgba(233,196,106,${(.2 + Math.random() * .5).toFixed(2)})`;
-            ctx.beginPath(); ctx.arc(Math.random() * W, Math.random() * H, Math.random() * 2.2 + .6, 0, 7); ctx.fill();
-        }
-        ctx.textAlign = "center";
-
-        /* marca */
-        ctx.fillStyle = "#e9c46a"; ctx.beginPath(); ctx.arc(W / 2 - 250, 150, 30, 0, 7); ctx.fill();
-        ctx.fillStyle = "#150c1f"; ctx.beginPath(); ctx.arc(W / 2 - 245, 145, 28, 0, 7); ctx.fill();
-        ctx.fillStyle = "#f6eeff"; ctx.font = '400 68px "UnifrakturMaguntia"'; ctx.fillText("Eclipse Studio", W / 2 + 30, 172);
+        pintarFundoStory(ctx, W, H);
 
         ctx.font = '700 92px "Cormorant Garamond"'; ctx.fillText("Meu tarô do look", W / 2, 330);
         const degrade = ctx.createLinearGradient(W / 2 - 260, 0, W / 2 + 260, 0);
@@ -350,20 +372,7 @@ async function salvarStory(t, botao) {
         ctx.fillStyle = "#e9c46a"; ctx.font = '700 40px "Quicksand"';
         ctx.fillText("tire o seu no link da bio ✦ @eclipse_studiocg", W / 2, H - 120);
 
-        const blob = await new Promise((ok) => tela.toBlob(ok, "image/png"));
-        const arquivo = new File([blob], "meu-taro-eclipse-studio.png", { type: "image/png" });
-        if (navigator.canShare && navigator.canShare({ files: [arquivo] })) {
-            try { await navigator.share({ files: [arquivo], title: "Meu tarô do look · Eclipse Studio" }); } catch (erro) { /* a cliente desistiu de compartilhar */ }
-        } else {
-            const link = document.createElement("a");
-            link.href = URL.createObjectURL(blob);
-            link.download = arquivo.name;
-            document.body.appendChild(link);
-            link.click();
-            link.remove();
-            setTimeout(() => URL.revokeObjectURL(link.href), 4000);
-            avisar("✦ Imagem salva. É só postar no story e marcar @eclipse_studiocg");
-        }
+        await entregarImagem(tela, "meu-taro-eclipse-studio.png", "Meu tarô do look · Eclipse Studio");
     } catch (erro) {
         avisar("Não consegui montar a imagem agora. Tente de novo ou tire um print da tiragem.");
     } finally {
