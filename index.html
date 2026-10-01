@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <!-- Segurança (CSP): o navegador só roda script que é arquivo deste site e só conversa com os serviços listados.
          Se algum código malicioso conseguir entrar na página, ele não roda. Serviço novo (API, imagem, fonte)? Acrescente aqui. -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://ghchart.rshah.org https://visitor-badge.laobi.icu; connect-src 'self' data: https://api.github.com https://github-contributions-api.jogruber.de https://api.sunrise-sunset.org; frame-src 'self'; media-src 'self' data: blob:; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://ghchart.rshah.org https://visitor-badge.laobi.icu https://*.goatcounter.com; connect-src 'self' data: https://api.github.com https://github-contributions-api.jogruber.de https://api.sunrise-sunset.org https://*.goatcounter.com; frame-src 'self'; media-src 'self' data: blob:; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Samuel Mickael, desenvolvedor web e mobile em Campo Grande - MS. Crio sites, sistemas e aplicativos sob medida. Veja os projetos e peça um orçamento.">
     <meta name="theme-color" content="#161616">
@@ -26,16 +26,15 @@
     <meta name="twitter:description" content="Sites, sistemas e aplicativos sob medida. Veja meus projetos e peça um orçamento pelo WhatsApp.">
     <meta name="twitter:image" content="https://samueldevmi.github.io/portfolio/imagem/og-image-v5.jpg">
     <meta name="twitter:image:alt" content="Samuel Mickael, desenvolvedor web e mobile: sites, sistemas e apps sob medida.">
-    <script src="modo-leve.js?v=20260930virada"></script>
+    <script src="modo-leve.js?v=20260930merge"></script>
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="imagem/apple-touch-icon.png">
     <link rel="manifest" href="manifest.json">
-    <link rel="preload" as="image" href="imagem/samuel-rosto.jpg" imagesrcset="imagem/samuel-rosto-320.webp 320w, imagem/samuel-rosto.jpg 640w" imagesizes="(max-width: 999px) 92px, (max-width: 1199px) 232px, 128px" fetchpriority="high">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap">
-    <link rel="stylesheet" href="style.css?v=20260930virada">
-<link rel="stylesheet" href="acabamento.css?v=20260930virada">
+    <script src="tema.js?v=20260930merge"></script>
+    <noscript><link rel="stylesheet" href="style.css?v=20260930merge"></noscript>
     <title id="tituloPagina">Samuel Mickael | Desenvolvedor Web &amp; Mobile</title>
     <script type="application/ld+json">
     {
@@ -97,8 +96,8 @@
                 <a href="#contato">Contato</a>
             </div>
             <a class="nav-cta" href="#orcamento">Orçamento</a>
-            <button id="botaoTema" class="botao-tema" type="button" aria-pressed="false" aria-label="Trocar para o tema Homem-Aranha" title="Trocar tema">
-                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" class="ic-linha"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor" stroke="none"/></svg>
+            <button id="botaoTema" class="botao-som botao-tema" type="button" aria-label="Trocar para o tema azul" title="Tema azul">
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8"/><path class="tema-metade" d="M12 4a8 8 0 0 1 0 16z"/></svg>
             </button>
             <button id="botaoSom" class="botao-som" type="button" aria-pressed="false" aria-label="Ligar música de fundo" title="Ligar música" hidden>
                 <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="som-caixa" d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path class="som-onda som-onda1" d="M15.2 9.3a3.8 3.8 0 0 1 0 5.4"/><path class="som-onda som-onda2" d="M17.8 6.8a7.4 7.4 0 0 1 0 10.4"/><path class="som-x" d="M16 9.8l4.4 4.4M20.4 9.8 16 14.2"/></svg>
@@ -106,93 +105,69 @@
         </nav>
 
         <div class="hero-conteudo">
-            <!-- samuel-rosto-320.webp e a versao pequena (celular) de samuel-rosto.jpg: ao trocar a foto, gerar as duas de novo -->
-            <div class="hero-foto-anel">
-                <div class="campo-pixels" aria-hidden="true">
-                    <i class="pixel" style="--x:82.7%; --y:48%; --s:2px; --p:.35; --dl:.17s; --du:2.66s"></i>
-                    <i class="pixel" style="--x:79.2%; --y:60.5%; --s:4px; --p:.9; --dl:.52s; --du:1.94s"></i>
-                    <i class="pixel" style="--x:75%; --y:73.6%; --s:4px; --p:.9; --dl:1.02s; --du:3.12s"></i>
-                    <i class="pixel" style="--x:67%; --y:79.5%; --s:4px; --p:.9; --dl:2.27s; --du:2.72s"></i>
-                    <i class="pixel" style="--x:51.7%; --y:97.5%; --s:2px; --p:.35; --dl:1.34s; --du:2.01s"></i>
-                    <i class="pixel" style="--x:35.8%; --y:87.1%; --s:4px; --p:.9; --dl:.74s; --du:3.11s"></i>
-                    <i class="pixel" style="--x:24.7%; --y:81.6%; --s:2px; --p:.35; --dl:.89s; --du:2.68s"></i>
-                    <i class="pixel" style="--x:23.4%; --y:66.1%; --s:2px; --p:.35; --dl:1.19s; --du:2.65s"></i>
-                    <i class="pixel" style="--x:11.8%; --y:46.3%; --s:3px; --p:.6; --dl:.87s; --du:2.2s"></i>
-                    <i class="pixel" style="--x:7.7%; --y:37.8%; --s:2px; --p:.35; --dl:1.38s; --du:2.64s"></i>
-                    <i class="pixel" style="--x:23.7%; --y:15.8%; --s:3px; --p:.6; --dl:1.46s; --du:1.92s"></i>
-                    <i class="pixel" style="--x:37.5%; --y:19.5%; --s:3px; --p:.6; --dl:.36s; --du:2.58s"></i>
-                    <i class="pixel" style="--x:43.3%; --y:8.5%; --s:4px; --p:.9; --dl:1.38s; --du:3.2s"></i>
-                    <i class="pixel" style="--x:63.7%; --y:9.7%; --s:4px; --p:.9; --dl:1.19s; --du:3.08s"></i>
-                    <i class="pixel" style="--x:68.8%; --y:24.5%; --s:3px; --p:.6; --dl:1.14s; --du:2.86s"></i>
-                    <i class="pixel" style="--x:86.4%; --y:27.9%; --s:4px; --p:.9; --dl:2.38s; --du:3.12s"></i>
+            <div class="hero-grade">
+                <div class="hero-principal">
+                    <p class="hero-topo"><span class="status-disponivel"><i aria-hidden="true"></i>Aceitando projetos</span><span class="hero-cargo">Dev web &amp; mobile · Campo Grande - MS</span></p>
+                    <div class="hero-quem">
+                        <!-- samuel-rosto-320.webp e a versao pequena de samuel-rosto.jpg: ao trocar a foto, gerar as duas de novo -->
+                        <img class="hero-avatar" src="imagem/samuel-rosto-320.webp" srcset="imagem/samuel-rosto-320.webp 320w, imagem/samuel-rosto.jpg 640w" sizes="56px" alt="Foto de Samuel Mickael" width="56" height="56" fetchpriority="high">
+                        <p class="hero-ola">Olá! Me chamo <strong>Samuel Mickael</strong>.</p>
+                    </div>
+                    <h1>Sites e sistemas que <span>trabalham por você.</span></h1>
+                    <p class="hero-texto">Site e sistema sob medida pro seu negócio: aparece no Google, responde no WhatsApp sozinho e funciona no celular.</p>
+                    <div class="hero-acoes">
+                        <a class="botao botao-principal" href="#orcamento">Quero meu orçamento</a>
+                        <a class="hero-link" href="#projetos">ver projetos funcionando <span aria-hidden="true">↓</span></a>
+                    </div>
+                    <p class="hero-oferta"><b>⚡ Orçamento em 24h</b><span>sem compromisso · direto no WhatsApp</span></p>
+                    <a class="hero-cliente" href="./eclipse-studio/" target="_blank" rel="noopener">🖤 No ar: loja da <b>Eclipse Studio</b> <span aria-hidden="true">↗</span></a>
                 </div>
-                <div class="hero-foto-pulso" aria-hidden="true"></div>
-                <div class="hero-foto"><img src="imagem/samuel-rosto.jpg" srcset="imagem/samuel-rosto-320.webp 320w, imagem/samuel-rosto.jpg 640w" sizes="(max-width: 999px) 92px, (max-width: 1199px) 232px, 128px" alt="Samuel Mickael" width="640" height="640" fetchpriority="high" decoding="async"></div>
-            </div>
-            <!-- telas de projetos ao lado do título, só no computador (loading="lazy": escondidas no celular, nem baixam) -->
-            <div class="hero-telas" aria-hidden="true">
-                <figure class="ht ht-a"><div class="ht-barra"><i></i><i></i><i></i></div><img src="imagem/projetos/conta-a-dois.webp" alt="" width="1100" height="688" loading="lazy" decoding="async"></figure>
-                <figure class="ht ht-b"><div class="ht-barra"><i></i><i></i><i></i></div><img src="imagem/projetos/fatia-nobre.webp" alt="" width="1100" height="688" loading="lazy" decoding="async"></figure>
-                <div class="ht-cel"><img src="imagem/projetos/celular/loja-1.webp" alt="" width="280" height="606" loading="lazy" decoding="async"></div>
-            </div>
-            <p class="eyebrow"><span class="status-disponivel"><i aria-hidden="true"></i>Aceitando novos projetos</span>DESENVOLVEDOR WEB &amp; MOBILE<span class="eyebrow-sep"> · </span><span class="eyebrow-cidade">CAMPO GRANDE - MS</span><span class="eyebrow-sep"> · </span><span class="tempo-leitura">⏱ ~3 min pra conhecer o trampo</span></p>
-            <a class="promo-faixa" href="#orcamento" data-promo-ate="2026-09-30" hidden><b>40% OFF</b> pros 5 primeiros clientes que fecharem até 30/09 <span aria-hidden="true">→</span></a>
-            <p class="hero-ola">Olá! Me chamo <strong>Samuel Mickael</strong>.</p>
-            <h1>Sites e sistemas que <span>trabalham por você.</span></h1>
-            <p class="hero-texto">Do site de apresentação ao sistema com banco de dados: sob medida, simples de usar e funcionando no celular e no computador.</p>
-            <div class="hero-acoes">
-                <a class="botao botao-principal" href="#orcamento">Pedir orçamento</a>
-                <a class="botao botao-secundario" href="#projetos">Ver projetos</a>
-                <a class="botao botao-secundario" href="curriculo-samuel-mickael.pdf" download="Curriculo_Samuel_Mickael.pdf">Baixar currículo</a>
+                <!-- vitrine: um celular com a prévia do site de um cliente, trocando de ramo sozinho (script.js) -->
+                <div class="hero-vitrine" aria-label="Exemplos de site pronto, por ramo"></div>
             </div>
             <div class="hero-numeros" aria-label="Resumo do portfólio">
-                <div><strong id="statProjetos" data-contar="7" data-formato="pad2">07</strong><span>projetos em destaque</span></div>
-                <div><strong id="statTecnologias" data-contar="9" data-formato="pad2">09</strong><span>tecnologias que uso</span></div>
-                <div><strong data-contar="24" data-sufixo="h">24h</strong><span>pra responder sua mensagem</span></div>
+                <a href="#projetos"><strong id="statProjetos" data-contar="7">7</strong><span>projetos pra testar ao vivo</span></a>
+                <a href="#orcamento"><strong data-contar="250" data-prefixo="R$&nbsp;">R$&nbsp;250</strong><span>valor inicial de um site</span></a>
+                <a href="https://wa.me/5567996034205?text=Oi%2C%20Samuel%21%20Vi%20seu%20portf%C3%B3lio%20e%20queria%20pedir%20um%20or%C3%A7amento.%20Meu%20projeto%20%C3%A9%3A%20" target="_blank" rel="noopener noreferrer"><strong data-contar="24" data-sufixo="h">24h</strong><span>pra responder sua mensagem</span></a>
+            </div>
+            <div class="comparador" id="comparador" aria-label="Seu negócio sem site e com site">
+                <p class="cmp-titulo">Seu negócio <span class="cmp-ruim">sem site</span> <span class="cmp-x">×</span> <span class="cmp-bom">com site</span></p>
+                <div class="cmp-perfil">
+                    <div class="cmp-tipos" role="group" aria-label="Qual é o seu negócio?"></div>
+                    <label class="cmp-nome"><input type="text" maxlength="40" autocomplete="organization" aria-label="Nome do seu negócio (opcional)" placeholder="nome do seu negócio (opcional)"></label>
+                </div>
+                <div class="cmp-abas" role="group" aria-label="Escolha uma situação"></div>
+                <div class="cmp-lados">
+                    <section class="cmp-lado cmp-lado-sem" aria-label="Sem site">
+                        <header><b>😩 sem site</b><span>a vida como ela é</span><i class="cmp-notif" aria-hidden="true" hidden>0</i></header>
+                        <div class="cmp-palco" data-lado="sem"></div>
+                        <div class="cmp-metricas" data-lado="sem"></div>
+                    </section>
+                    <section class="cmp-lado cmp-lado-com" aria-label="Com site">
+                        <header><b>😎 com site</b><span>a vida como deveria ser</span></header>
+                        <div class="cmp-palco" data-lado="com"></div>
+                        <div class="cmp-metricas" data-lado="com"></div>
+                    </section>
+                </div>
+                <button type="button" class="cmp-previa">👀 ver como ficaria o site da <b>Sua Pizzaria</b> <span aria-hidden="true">→</span></button>
+                <details class="cmp-calc">
+                    <summary><span>💸 Quanto você perde por mês sem site?</span><span class="cmp-calc-abrir">calcular</span></summary>
+                    <div class="cmp-calc-corpo">
+                        <label class="cmp-calc-campo"><span>Mensagens de cliente por semana: <b class="cmp-calc-msgs">60</b></span><input type="range" min="5" max="300" step="5" value="60"></label>
+                        <label class="cmp-calc-campo cmp-calc-ticket">Valor médio de uma venda: R$ <input type="number" min="1" max="100000" value="60" inputmode="numeric"></label>
+                        <p class="cmp-calc-texto">Se 1 em cada 5 desiste esperando resposta, são <b class="cmp-calc-clientes">52</b> clientes por mês indo pro concorrente:</p>
+                        <p class="cmp-calc-perda" aria-live="polite">R$ 0</p>
+                        <p class="cmp-calc-sub">por mês · <b class="cmp-calc-ano">R$ 0</b> por ano</p>
+                        <p class="cmp-calc-site">O site custa a partir de <b>R$ 250</b>, uma vez só. É uma estimativa, mas a conta é essa.</p>
+                    </div>
+                </details>
+                <div class="cmp-rodape"><a class="cmp-testar" href="#projetos">ver os projetos ↓</a><button type="button" class="cmp-querer">quero isso no meu negócio →</button></div>
+                <div class="cmp-barra" aria-hidden="true"><i></i></div>
             </div>
         </div>
     </header>
 
     <main id="conteudo-principal">
-        <section id="comparador" class="secao comparador-secao">
-            <div class="titulo-secao">
-                <p class="eyebrow">ARRASTA AQUI →</p>
-                <h2>Sem site <span class="cmp-x">×</span> com site.</h2>
-                <p>Arrasta o traço pro lado e vê a diferença na prática.</p>
-            </div>
-            <div class="comparador" id="comparadorArraste" role="slider" aria-label="Arraste para comparar seu negócio sem site e com site" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" tabindex="0">
-                <div class="cmp-lado cmp-depois">
-                    <span class="cmp-tag cmp-tag-depois">COM SITE</span>
-                    <div class="cmp-tela">
-                        <div class="cmp-tela-topo"><i></i><i></i><i></i></div>
-                        <div class="cmp-tela-corpo">
-                            <p class="cmp-tela-titulo">Cardápio</p>
-                            <p class="cmp-item">Calabresa <b>R$ 42,00</b></p>
-                            <p class="cmp-item">Marguerita <b>R$ 45,00</b></p>
-                            <p class="cmp-item">Quatro queijos <b>R$ 48,00</b></p>
-                            <div class="cmp-bolha cmp-bolha-cliente">Vocês abrem hoje?</div>
-                            <div class="cmp-bolha cmp-bolha-bot">Sim! Abrimos até 23h 🍕<span>respondido automático · agora</span></div>
-                            <p class="cmp-selo">✓ Pedido confirmado</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="cmp-lado cmp-antes">
-                    <span class="cmp-tag cmp-tag-antes">SEM SITE</span>
-                    <div class="cmp-papel">
-                        <p class="cmp-rabisco">calabresa - <s>42</s> 45??</p>
-                        <p class="cmp-rabisco">marguerita - acho q 40</p>
-                        <div class="cmp-foto-borrada">foto tirada às pressas</div>
-                        <div class="cmp-bolha cmp-bolha-cliente">Vocês abrem hoje??</div>
-                        <p class="cmp-visto">visto 23:47 · sem resposta</p>
-                        <p class="cmp-post-it">onde anotei o pedido da Ana??</p>
-                    </div>
-                </div>
-                <div class="cmp-alca" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" class="ic-linha"><path d="M8 7 3 12l5 5M16 7l5 5-5 5"/></svg>
-                </div>
-            </div>
-        </section>
-
         <section id="sobre-mim" class="secao sobre">
             <div class="titulo-secao">
                 <p class="eyebrow">QUEM SOU</p>
@@ -386,7 +361,7 @@
                         <p class="tag">Lista de tarefas com prioridade</p>
                         <h3><span class="projeto-nome">TaskFlow</span> <span class="titulo-beneficio">o que é urgente fica no topo</span></h3>
                         <p class="projeto-preco"><span class="pp-base">a partir de <b>R$&nbsp;300</b></span><span class="pp-promo" data-promo-ate="2026-09-30" hidden>até 30/09: <b>R$&nbsp;150</b> com os 50% (lançamento + depoimento)</span><span class="pp-promo" data-promo-depois="2026-09-30" hidden><b>R$&nbsp;270</b> deixando um depoimento (10% off)</span></p>
-                        <p class="projeto-resumo">Anote as tarefas, marque o que é urgente e risque o que já fez. Tudo fica salvo no próprio&nbsp;aparelho.</p>
+                        <p class="projeto-resumo">Anota tudo e mesmo assim o urgente se perde no meio da lista? Aqui você marca o que é urgente e ele sobe pro topo; o que já fez, é só riscar. Tudo fica salvo no próprio&nbsp;aparelho.</p>
                         <div class="projeto-serve"><p class="projeto-rotulo">Serve pra</p><ul><li>Freelancer</li><li>Equipe pequena</li><li>Estudante</li></ul></div>
                         <p class="projeto-meta"><span class="meta-numero">3 níveis de prioridade</span><span class="meta-prazo">Prazo de algo assim: 1 a 2 semanas</span></p>
                         <div class="links-projeto"><a class="link-projeto" href="./taskflow/index.html" target="_blank" rel="noopener noreferrer">Testar agora <span aria-hidden="true">↗</span></a><button type="button" class="link-acao link-icone" data-demo="./taskflow/index.html" data-demo-titulo="TaskFlow" aria-label="Ver TaskFlow aqui, sem sair da página" title="Ver aqui, sem sair da página"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button><a class="link-codigo link-icone" href="https://github.com/SamueldevmI/portfolio/tree/main/taskflow" target="_blank" rel="noopener noreferrer" aria-label="Ver o código de TaskFlow no GitHub" title="Ver o código no GitHub"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 .5C5.65.5.5 5.65.5 12a11.5 11.5 0 0 0 7.86 10.92c.58.1.79-.25.79-.56v-2c-3.2.7-3.87-1.37-3.87-1.37-.53-1.33-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.19-3.08-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.8 1.19 1.82 1.19 3.08 0 4.41-2.69 5.38-5.25 5.67.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/></svg></a></div>
@@ -408,7 +383,7 @@
                         <p class="tag">Cronômetro de foco</p>
                         <h3><span class="projeto-nome">FocusFlow</span> <span class="titulo-beneficio">foco de 25 minutos, pausa na hora certa</span></h3>
                         <p class="projeto-preco"><span class="pp-base">a partir de <b>R$&nbsp;250</b></span><span class="pp-promo" data-promo-ate="2026-09-30" hidden>até 30/09: <b>R$&nbsp;125</b> com os 50% (lançamento + depoimento)</span><span class="pp-promo" data-promo-depois="2026-09-30" hidden><b>R$&nbsp;225</b> deixando um depoimento (10% off)</span></p>
-                        <p class="projeto-resumo">Um cronômetro que divide o trabalho em blocos de foco e pausas, e conta quantos blocos você já&nbsp;completou.</p>
+                        <p class="projeto-resumo">Senta pra trabalhar e dez minutos depois está no celular? Este cronômetro divide o trabalho em blocos de foco e pausas, e conta quantos blocos você já&nbsp;completou.</p>
                         <div class="projeto-serve"><p class="projeto-rotulo">Serve pra</p><ul><li>Estudante</li><li>Quem trabalha em casa</li><li>Curso ou escola</li></ul></div>
                         <p class="projeto-meta"><span class="meta-numero">3 modos: 25, 5 e 15 min</span><span class="meta-prazo">Prazo de algo assim: 1 semana</span></p>
                         <div class="links-projeto"><a class="link-projeto" href="./focusflow/index.html" target="_blank" rel="noopener noreferrer">Testar agora <span aria-hidden="true">↗</span></a><button type="button" class="link-acao link-icone" data-demo="./focusflow/index.html" data-demo-titulo="FocusFlow" aria-label="Ver FocusFlow aqui, sem sair da página" title="Ver aqui, sem sair da página"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button><a class="link-codigo link-icone" href="https://github.com/SamueldevmI/portfolio/tree/main/focusflow" target="_blank" rel="noopener noreferrer" aria-label="Ver o código de FocusFlow no GitHub" title="Ver o código no GitHub"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 .5C5.65.5.5 5.65.5 12a11.5 11.5 0 0 0 7.86 10.92c.58.1.79-.25.79-.56v-2c-3.2.7-3.87-1.37-3.87-1.37-.53-1.33-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.19-3.08-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.8 1.19 1.82 1.19 3.08 0 4.41-2.69 5.38-5.25 5.67.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/></svg></a></div>
@@ -430,7 +405,7 @@
                         <p class="tag">Quadro de tarefas em colunas</p>
                         <h3><span class="projeto-nome">FlowBoard</span> <span class="titulo-beneficio">do “a fazer” ao “pronto”, arrastando</span></h3>
                         <p class="projeto-preco"><span class="pp-base">a partir de <b>R$&nbsp;300</b></span><span class="pp-promo" data-promo-ate="2026-09-30" hidden>até 30/09: <b>R$&nbsp;150</b> com os 50% (lançamento + depoimento)</span><span class="pp-promo" data-promo-depois="2026-09-30" hidden><b>R$&nbsp;270</b> deixando um depoimento (10% off)</span></p>
-                        <p class="projeto-resumo">Um quadro com três colunas: a fazer, fazendo e pronto. No computador, você arrasta cada tarefa conforme ela&nbsp;anda.</p>
+                        <p class="projeto-resumo">Não sabe mais o que já andou e o que está parado? Um quadro com três colunas (a fazer, fazendo e pronto), e no computador você arrasta cada tarefa conforme ela&nbsp;anda.</p>
                         <div class="projeto-serve"><p class="projeto-rotulo">Serve pra</p><ul><li>Equipe pequena</li><li>Agência</li><li>Organizar um projeto</li></ul></div>
                         <p class="projeto-meta"><span class="meta-numero">3 colunas de trabalho</span><span class="meta-prazo">Prazo de algo assim: 1 a 2 semanas</span></p>
                         <div class="links-projeto"><a class="link-projeto" href="./flowboard/index.html" target="_blank" rel="noopener noreferrer">Testar agora <span aria-hidden="true">↗</span></a><button type="button" class="link-acao link-icone" data-demo="./flowboard/index.html" data-demo-titulo="FlowBoard" aria-label="Ver FlowBoard aqui, sem sair da página" title="Ver aqui, sem sair da página"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button><a class="link-codigo link-icone" href="https://github.com/SamueldevmI/portfolio/tree/main/flowboard" target="_blank" rel="noopener noreferrer" aria-label="Ver o código de FlowBoard no GitHub" title="Ver o código no GitHub"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 .5C5.65.5.5 5.65.5 12a11.5 11.5 0 0 0 7.86 10.92c.58.1.79-.25.79-.56v-2c-3.2.7-3.87-1.37-3.87-1.37-.53-1.33-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.19-3.08-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.8 1.19 1.82 1.19 3.08 0 4.41-2.69 5.38-5.25 5.67.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/></svg></a></div>
@@ -596,7 +571,7 @@
     <footer>© <span id="ano"></span> Samuel Mickael. Feito com dedicação. · <a href="https://github.com/SamueldevmI" target="_blank" rel="me noopener noreferrer">GitHub</a> · <a class="link-linkedin" href="https://www.linkedin.com/in/samuelrondon-dev/?utm_source=portfolio&utm_medium=footer&utm_campaign=site" target="_blank" rel="me noopener noreferrer" aria-label="LinkedIn de Samuel Mickael"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>LinkedIn</a> · <button type="button" id="botaoTour" class="link-rodape">Tour rápido</button>
         <div class="selo-brilho"><span class="selo-ponto" aria-hidden="true"></span><img class="selo-visitas" src="https://visitor-badge.laobi.icu/badge?page_id=samueldevmi.github.io.portfolio&color=8b1a1a&text_color=f6f6f6&left_text=visitas" alt="Contador de visitas do portfólio" loading="lazy" width="94" height="20"></div>
     </footer>
-    <a class="orcamento-fixo" href="#orcamento">Pedir orçamento</a>
+    <a class="orcamento-fixo" href="#orcamento">Quero meu orçamento</a>
     <a class="voltar-topo" href="#inicio" aria-label="Voltar ao topo"><span class="voltar-topo-seta" aria-hidden="true">↑</span></a>
 
     <div class="paleta-overlay" id="paletaOverlay" hidden>
@@ -662,9 +637,10 @@
     </div>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-    <script src="script.js?v=20260930virada"></script>
-<script src="acabamento.js?v=20260930virada" defer></script>
-<script src="musica.js?v=20260930virada" defer></script>
-<script src="mobile.js?v=20260930virada" defer></script>
+    <script src="estatisticas.js?v=20260930merge"></script>
+    <script src="script.js?v=20260930merge"></script>
+<script src="acabamento.js?v=20260930merge" defer></script>
+<script src="carregar-depois.js?v=20260930merge" defer></script>
+
 </body>
 </html>

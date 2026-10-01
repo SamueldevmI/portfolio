@@ -1,82 +1,60 @@
-/* Dois temas: Deadpool (padrão, vermelho-sangue/preto/branco) e Aranha (vermelho + azul elétrico).
-   A escolha fica guardada neste aparelho. Limpa o "dark-mode" de quem visitou antes do tema único. */
+/* O tema (vermelho ou azul) é escolhido no <head> do index.html; a troca fica no fim deste arquivo.
+   Limpa o "dark-mode" de quem visitou antes do tema único. */
 document.body.classList.remove("dark-mode");
 document.documentElement.classList.remove("dark-mode");
-(function () {
-    const CHAVE_TEMA = "tema";
-    const ler = () => { try { return localStorage.getItem(CHAVE_TEMA); } catch (e) { return null; } };
-    const gravar = (v) => { try { localStorage.setItem(CHAVE_TEMA, v); } catch (e) { /* sem armazenamento */ } };
-    const meta = document.querySelector('meta[name="theme-color"]');
-    const CORES = { deadpool: "#161616", aranha: "#0e1526" };
-    function aplicar(tema) {
-        document.documentElement.classList.toggle("tema-aranha", tema === "aranha");
-        if (meta) meta.setAttribute("content", CORES[tema] || CORES.deadpool);
-        const botao = document.getElementById("botaoTema");
-        if (botao) {
-            botao.setAttribute("aria-pressed", String(tema === "aranha"));
-            botao.setAttribute("aria-label", tema === "aranha" ? "Trocar para o tema Deadpool" : "Trocar para o tema Homem-Aranha");
-        }
-    }
-    const salvo = ler() === "aranha" ? "aranha" : "deadpool";
-    aplicar(salvo);
-    document.addEventListener("DOMContentLoaded", () => {
-        const botao = document.getElementById("botaoTema");
-        if (!botao) return;
-        botao.addEventListener("click", () => {
-            const novo = document.documentElement.classList.contains("tema-aranha") ? "deadpool" : "aranha";
-            aplicar(novo);
-            gravar(novo);
-            if (window.musicaSite && window.musicaSite.pode()) window.musicaSite.curtir();
-        });
-    });
-})();
 
 document.getElementById("ano").textContent = new Date().getFullYear();
 
-/* Comparador "sem site × com site": arrasta com mouse, dedo ou teclado (setas/Home/End) pra revelar
-   o antes e o depois. Um clique em qualquer ponto já pula o traço pra lá, sem precisar mirar na alça. */
-(function () {
-    const el = document.getElementById("comparadorArraste");
-    if (!el) return;
-    let arrastando = false, ultimoSom = 0;
-
-    function aplicar(pct, tocarSom) {
-        pct = Math.max(0, Math.min(100, pct));
-        el.style.setProperty("--pos", pct + "%");
-        el.setAttribute("aria-valuenow", String(Math.round(pct)));
-        if (tocarSom && window.musicaSite && window.musicaSite.pode()) {
-            const agora = performance.now();
-            if (agora - ultimoSom > 90) { ultimoSom = agora; window.musicaSite.nota(58 + pct / 3.5, 0.3); }
-        }
+/* Link personalizado de prospecção: ?para=Pizzaria do João&ramo=pizzaria (&previa=1 abre a prévia do site).
+   Gerado em prospeccao.html. O nome e o ramo vão pro comparador, pra calculadora e pras demos (ficam
+   guardados como se a pessoa tivesse digitado), a saudação do topo chama pelo nome e aparece um convite pra
+   ver a prévia do site dela. O nome só entra na página como texto (nunca como HTML). */
+const LINK_PERSONALIZADO = (function () {
+    const p = new URLSearchParams(location.search);
+    // ?nome= era o nome antigo do parâmetro: links que já foram mandados continuam funcionando
+    const para = (p.get("para") || p.get("nome") || "").replace(/\s+/g, " ").trim().slice(0, 40);
+    const RAMOS = { pizzaria: "pizzaria", barbearia: "barbearia", loja: "loja de roupa", "loja de roupa": "loja de roupa", salao: "salão", "salão": "salão", academia: "academia", clinica: "clínica", "clínica": "clínica" };
+    const ramo = RAMOS[(p.get("ramo") || "").trim().toLowerCase()] || "";
+    // o atendimento por chat (fatia-nobre) tem os próprios nomes de ramo: salão vira beleza, clínica vira saúde
+    const RAMO_DO_CHAT = { pizzaria: "pizzaria", barbearia: "barbearia", "loja de roupa": "loja", "salão": "beleza", academia: "academia", "clínica": "saude" };
+    window.nomeNegocioLink = para;
+    window.ramoNegocioLink = RAMO_DO_CHAT[ramo] || "";
+    if (!para && !ramo) return null;
+    try {
+        if (para) localStorage.setItem("portfolio-nome-negocio", para);
+        if (ramo) localStorage.setItem("portfolio-tipo-negocio", ramo);
+    } catch (e) { /* sem armazenamento: vale só nesta visita */ }
+    const campoProjetos = document.getElementById("nomeNegocio");
+    if (campoProjetos && para) campoProjetos.value = para;
+    if (para) {
+        // "Olá! Me chamo…" vira "Olá, Pizzaria do João! Me chamo…" (o acabamento.js depois troca o "Olá" por "Bom dia")
+        const linha = document.querySelector(".hero-ola");
+        const texto = linha && linha.firstChild;
+        if (texto && texto.nodeType === Node.TEXT_NODE) texto.textContent = texto.textContent.replace("Olá!", `Olá, ${para}!`);
+        document.title = `${para} × Samuel Mickael | Sites e sistemas`;
+        // convite logo acima da saudação
+        const convite = document.createElement("p");
+        convite.className = "link-convite";
+        const oi = document.createElement("span");
+        oi.append("👋 Preparei essa página pra ");
+        const b = document.createElement("b"); b.textContent = para; oi.append(b, ".");
+        const ver = document.createElement("button");
+        ver.type = "button";
+        ver.textContent = "ver como ficaria o seu site →";
+        ver.addEventListener("click", () => window.abrirPreviaSite && window.abrirPreviaSite(ramo || undefined, para));
+        convite.append(oi, ver);
+        (linha?.closest(".hero-quem") || linha)?.before(convite);
     }
-    function posDoPonteiro(evento) {
-        const r = el.getBoundingClientRect();
-        return ((evento.clientX - r.left) / r.width) * 100;
-    }
-    el.addEventListener("pointerdown", (evento) => {
-        evento.preventDefault(); // sem isso o navegador tenta selecionar o texto ao arrastar
-        arrastando = true;
-        el.classList.add("arrastando");
-        el.setPointerCapture(evento.pointerId);
-        aplicar(posDoPonteiro(evento), true);
-    });
-    el.addEventListener("pointermove", (evento) => {
-        if (!arrastando) return;
-        aplicar(posDoPonteiro(evento), true);
-    });
-    const soltar = () => { arrastando = false; el.classList.remove("arrastando"); };
-    el.addEventListener("pointerup", soltar);
-    el.addEventListener("pointercancel", soltar);
-    el.addEventListener("keydown", (evento) => {
-        const atual = Number(el.getAttribute("aria-valuenow")) || 50;
-        if (evento.key === "ArrowLeft") aplicar(atual - 8, true);
-        else if (evento.key === "ArrowRight") aplicar(atual + 8, true);
-        else if (evento.key === "Home") aplicar(0, true);
-        else if (evento.key === "End") aplicar(100, true);
-        else return;
-        evento.preventDefault();
-    });
+    if (para) window.ESTATISTICAS?.contar(`/link/${window.ESTATISTICAS.slug(para)}`, `abriu o link: ${para}`, true);
+    return { para, ramo, previa: p.get("previa") === "1", slug: para && window.ESTATISTICAS ? window.ESTATISTICAS.slug(para) : "" };
 })();
+window.ESTATISTICAS?.contar(location.pathname || "/", "Portfólio", true);
+// quem veio pelo link personalizado e tocou em WhatsApp ou orçamento (o sinal mais quente pra prospecção)
+if (LINK_PERSONALIZADO && LINK_PERSONALIZADO.slug) document.addEventListener("click", (evento) => {
+    if (evento.target.closest('a[href*="wa.me/"], [data-orcamento-tipo], .cmp-querer, .previa-quero, .botao-principal')) {
+        window.ESTATISTICAS?.contar(`/link/${LINK_PERSONALIZADO.slug}/whatsapp`, `chamou/pediu orçamento: ${LINK_PERSONALIZADO.para}`, true);
+    }
+}, true);
 
 /* ---------- Ícones próprios (em vez de emoji nativo, que muda de cara em cada aparelho) ----------
    Cada um é um <path> só, no mesmo traço fino das tech badges (.ic-linha): assim o mesmo desenho
@@ -153,81 +131,32 @@ if (heroTexto && !prefereMenosMovimento) {
         digitado.data = textoCompletoHero.slice(0, indiceCharHero);
         resto.textContent = textoCompletoHero.slice(indiceCharHero);
         indiceCharHero++;
-        if (indiceCharHero <= textoCompletoHero.length) setTimeout(digitarHero, 18);
+        if (indiceCharHero <= textoCompletoHero.length) setTimeout(digitarHero, 14);
         else heroTexto.textContent = textoCompletoHero;
     }, 320);
 }
 
-/* Link com o nome de um negócio (?nome=Pizzaria+do+Zé): pra mandar o portfólio direto pra alguém.
-   O site cumprimenta pelo nome, a loja e o chat abrem com esse nome (acabamento.js) e a mensagem do
-   WhatsApp avisa de qual link a pessoa veio. O nome só entra como texto, nunca como HTML. */
-const nomeNegocioLink = (new URLSearchParams(location.search).get("nome") || "").replace(/\s+/g, " ").trim().slice(0, 40);
-window.nomeNegocioLink = nomeNegocioLink;
-// &ramo=beleza (quando o nome não diz o ramo, ex.: "Studio Ana") segue junto pro atendimento por chat
-window.ramoNegocioLink = nomeNegocioLink ? (new URLSearchParams(location.search).get("ramo") || "").toLowerCase().replace(/[^a-z]/g, "").slice(0, 20) : "";
-/* A loja de demonstração vende roupa: com o nome de uma barbearia ou clínica ela não faz sentido. Ela só ganha o nome
-   quando o negócio é loja (mesmas palavras do ramo "loja" em fatia-nobre/script.js) ou veio &ramo=loja.
-   Os outros ramos ganham só o atendimento por chat, que muda as respostas conforme o ramo. */
+// o número de projetos acompanha os cards da página (entrou projeto novo, o número sobe sozinho)
+const statProjetos = document.getElementById("statProjetos");
+const totalProjetos = document.querySelectorAll(".card-projeto").length;
+if (statProjetos && totalProjetos) { statProjetos.dataset.contar = totalProjetos; statProjetos.textContent = totalProjetos; }
+
+/* A loja de demonstração vende roupa: com o nome de uma barbearia ou clínica ela não faz sentido. Ela só ganha o
+   nome quando o negócio é loja (ramo "loja de roupa" no link, ou palavras de loja no nome, as mesmas do ramo
+   "loja" em fatia-nobre/script.js). O atendimento por chat leva o nome sempre e muda as respostas pelo ramo. */
 const PALAVRAS_LOJA = ["loja", "lojas", "store", "shop", "moda", "boutique", "roupas", "roupa", "calcados", "sapatos", "otica", "presentes", "acessorios", "bijuterias", "semijoias", "joias", "papelaria", "cosmeticos", "perfumaria", "variedades", "magazine", "modas", "brecho", "outlet", "kids", "fitwear"];
 window.nomeEhDeLoja = (nome, ramo) => {
     if (ramo) return ramo === "loja";
     const palavras = nome.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().split(/[^a-z0-9]+/);
     return palavras.some((p) => PALAVRAS_LOJA.includes(p));
 };
-if (nomeNegocioLink) {
-    document.title = nomeNegocioLink + " · " + document.title;
-
-    // "Olá! Me chamo Samuel" vira "Olá, Pizzaria do Zé! Me chamo Samuel" (o acabamento.js ainda troca o "Olá" pelo horário)
-    const linhaOla = document.querySelector(".hero-ola");
-    const inicioOla = linhaOla ? linhaOla.firstChild : null;
-    if (inicioOla && inicioOla.nodeType === Node.TEXT_NODE && inicioOla.textContent.startsWith("Olá!")) {
-        const visitante = document.createElement("span");
-        visitante.className = "hero-visitante";
-        visitante.textContent = nomeNegocioLink;
-        inicioOla.textContent = "Olá, ";
-        inicioOla.after(visitante, "! Me chamo ");
-    }
-
-    // logo depois da saudação: no celular fica na primeira tela, sem precisar rolar
-    if (linhaOla) {
-        const convite = document.createElement("a");
-        convite.className = "hero-convite";
-        convite.href = "#demo-com-seu-nome";
-        const destaque = document.createElement("b");
-        destaque.textContent = nomeNegocioLink;
-        const seta = document.createElement("span");
-        seta.setAttribute("aria-hidden", "true");
-        seta.textContent = "→";
-        const comLoja = window.nomeEhDeLoja(nomeNegocioLink, window.ramoNegocioLink);
-        if (comLoja) convite.append("Montei a loja e o atendimento por chat com o nome ", destaque, ". Testa aí ", seta);
-        else {
-            convite.append("Montei um atendimento por chat com o nome ", destaque, ", que responde seus clientes na hora. Testa aí ", seta);
-            // abre o chat direto na janelinha de demonstração, em vez de mandar procurar o cartão no carrossel
-            convite.addEventListener("click", (evento) => {
-                const abrirChat = document.querySelector('.card-projeto [data-demo*="fatia-nobre/"]');
-                if (!abrirChat || !document.getElementById("modalOverlay")) return;
-                evento.preventDefault();
-                abrirChat.click();
-            });
-        }
-        linhaOla.after(convite);
-    }
-
-    // Links diretos pro WhatsApp: "Vi seu portfólio" vira "Vi o portfólio que você me mandou (Pizzaria do Zé)"
-    document.querySelectorAll('a[href^="https://wa.me/"]').forEach((link) => {
-        const url = new URL(link.href);
-        const texto = url.searchParams.get("text");
-        if (!texto || !texto.includes("Vi seu portfólio")) return;
-        const novo = texto.replace("Vi seu portfólio", `Vi o portfólio que você me mandou (${nomeNegocioLink})`);
-        link.href = url.origin + url.pathname + "?text=" + encodeURIComponent(novo); // %20, não "+": alguns WhatsApp mostram o "+"
-    });
-}
 
 const numerosContaveis = document.querySelectorAll("[data-contar]");
 
 if (!prefereMenosMovimento) {
     numerosContaveis.forEach((el) => {
         const alvo = Number(el.dataset.contar);
+        const prefixo = el.dataset.prefixo || "";
         const sufixo = el.dataset.sufixo || "";
         const pad2 = el.dataset.formato === "pad2";
         const duracao = 1200;
@@ -238,7 +167,7 @@ if (!prefereMenosMovimento) {
             const progresso = Math.min((tempo - inicio) / duracao, 1);
             const facilitado = 1 - Math.pow(1 - progresso, 3);
             const valor = Math.round(alvo * facilitado);
-            el.textContent = (pad2 ? String(valor).padStart(2, "0") : String(valor)) + sufixo;
+            el.textContent = prefixo + (pad2 ? String(valor).padStart(2, "0") : String(valor)) + sufixo;
             if (progresso < 1) requestAnimationFrame(passo);
         }
 
@@ -263,7 +192,8 @@ function favIconTemporario(duracaoMs) {
     const linkFavicon = document.querySelector('link[rel="icon"]');
     if (!linkFavicon) return;
     const original = linkFavicon.href;
-    linkFavicon.href = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='10' fill='%235df4d0'/%3E%3C/svg%3E";
+    const cor = getComputedStyle(document.documentElement).getPropertyValue("--cyan").trim() || "#ff2a3d"; // cor do tema atual
+    linkFavicon.href = "data:image/svg+xml," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><circle cx='12' cy='12' r='10' fill='${cor}'/></svg>`);
     setTimeout(() => { linkFavicon.href = original; }, duracaoMs);
 }
 
@@ -282,6 +212,324 @@ document.querySelectorAll(".botao").forEach((botao) => {
         ripple.addEventListener("animationend", () => ripple.remove());
     });
 });
+
+/* Comparador "sem site × com site" no topo: os dois lados rodando ao mesmo tempo (lado a lado no
+   computador, um embaixo do outro no celular). A pessoa escolhe o tipo de negócio (e, se quiser, digita o
+   nome) e a cena se adapta: Google, WhatsApp e pedidos/agenda/loja daquele ramo. Cada lado tem o seu
+   placar, a calculadora mostra quanto se perde por mês e o botão do fim fala a dor da cena (abre o
+   orçamento já preenchido). Roda sozinho, cena a cena, até a pessoa mexer. O nome é o mesmo do campo
+   "Nome do seu negócio" dos projetos (os dois ficam iguais). */
+(function comparadorSemCom() {
+    const raiz = document.getElementById("comparador");
+    if (!raiz) return;
+    const $ = (sel) => raiz.querySelector(sel);
+    const tiposEl = $(".cmp-tipos"), abas = $(".cmp-abas"), testar = $(".cmp-testar"), querer = $(".cmp-querer");
+    const palco = { sem: $('.cmp-palco[data-lado="sem"]'), com: $('.cmp-palco[data-lado="com"]') };
+    const placar = { sem: $('.cmp-metricas[data-lado="sem"]'), com: $('.cmp-metricas[data-lado="com"]') };
+    const notif = $(".cmp-notif");
+    const campoNome = $(".cmp-nome input"), campoNomeProjetos = document.getElementById("nomeNegocio");
+    const semMovimento = prefereMenosMovimento;
+    const espera = (ms) => new Promise((r) => setTimeout(r, semMovimento ? 0 : ms));
+    const ler = (k) => { try { return localStorage.getItem(k) || ""; } catch (e) { return ""; } };
+    const gravar = (k, v) => { try { v ? localStorage.setItem(k, v) : localStorage.removeItem(k); } catch (e) { /* sem armazenamento */ } };
+    const reais = (n) => "R$ " + Math.round(n).toLocaleString("pt-BR");
+
+    // Cada ramo tem as conversas dele, do jeito que chegam no WhatsApp de verdade (com um pouco de zoeira).
+    // whats: o que o cliente manda / o que o site responde sozinho. extra: a terceira cena (pedidos, loja ou
+    // agenda). ticket e mensagens: ponto de partida da calculadora.
+    const NEGOCIOS = {
+        pizzaria: { emoji: "🍕", exemplo: "Sua Pizzaria", busca: "pizzaria", extra: "pedidos", ticket: 60, mensagens: 60,
+            concorrentes: ["Pizzaria Bella Massa · ⭐ 4,8 · cardápio · WhatsApp", "Forno & Cia · ⭐ 4,6 · pedir online"],
+            whats: {
+                sem: ["boa noite, ainda tá aberto?", "quanto tá a grande de calabresa?", "entrega no Jardim dos Estados?", "tem pizza de brigadeiro com bacon?", "???"],
+                alerta: "você viu às 23h47, de chinelo 🩴. ele já tá comendo a do concorrente",
+                com: [["“ainda tá aberto?” → Até 23h30 🍕", "na hora"], ["“quanto tá a grande?” → cardápio com preço e foto", "sem digitar nada"], ["“entrega no Jardim dos Estados?” → Entrega! Taxa R$ 5", "na hora"]],
+                fim: "e você? tirando pizza do forno em paz 🔥",
+            } },
+        barbearia: { emoji: "💈", exemplo: "Sua Barbearia", busca: "barbearia", extra: "agenda", ticket: 40, mensagens: 40,
+            concorrentes: ["Barbearia Navalha · ⭐ 4,9 · agenda online", "Corte Fino · ⭐ 4,7 · WhatsApp"],
+            whats: {
+                sem: ["fala mano, tem horário hoje?", "e amanhã cedo?", "quanto tá corte + barba?", "faz o corte do Neymar?", "??"],
+                alerta: "você com a máquina na mão, respondendo com o cotovelo 💈",
+                com: [["“tem horário hoje?” → 16h30 ou 18h, escolhe no link", "na hora"], ["“corte + barba?” → R$ 55, tá na tela", "sem digitar nada"], ["“faz o do Neymar?” → Faz! Tem foto de referência no site 😎", "na hora"]],
+                fim: "e você? só na tesoura, sem largar o cliente ✂️",
+            },
+            agenda: {
+                sem: ["mano, tem como 15h?", "ah não, 15h eu não consigo", "16h então?", "vou ver aqui e te falo", "e aí, tem?"],
+                alerta: "📅 marcou o Zé e o Pedro no mesmo horário. os dois de cara feia 😬",
+                com: [["Zé escolheu sábado, 15h", "sozinho"], ["lembrete no WhatsApp 1h antes", "automático"], ["Pedro viu que 15h tava ocupado e pegou 16h", "sem briga"]],
+                fim: "cadeira cheia e zero “e aí, tem?” ✓",
+            } },
+        "loja de roupa": { emoji: "👕", exemplo: "Sua Loja", busca: "loja de roupa", extra: "loja", ticket: 150, mensagens: 50,
+            concorrentes: ["Estilo Urbano · ⭐ 4,8 · loja online", "Vitrine Store · ⭐ 4,6 · entrega"],
+            whats: {
+                sem: ["oii, esse vestido ainda tem?", "tem no M?", "e na cor preta?", "quanto fica o frete pra Dourados?", "vou pensar e te aviso 🙃"],
+                alerta: "📸 23 fotos no direct e ela ainda vai pensar",
+                com: [["“ainda tem?” → estoque na tela, sempre atualizado", "na hora"], ["“tem no M?” → P, M e G, é só escolher", "sem digitar nada"], ["“frete pra Dourados?” → calculado no carrinho", "sozinho"]],
+                fim: "e você? embalando pedido, não respondendo direct 📦",
+            } },
+        "salão": { emoji: "💇", exemplo: "Seu Salão", busca: "salão de beleza", extra: "agenda", ticket: 90, mensagens: 40,
+            concorrentes: ["Studio Bella · ⭐ 4,9 · agenda online", "Espaço Glamour · ⭐ 4,7 · WhatsApp"],
+            whats: {
+                sem: ["amiga, tem horário pra escova hoje?", "quanto tá a progressiva?", "faz unha junto?", "dá pra fazer luzes em 20 minutos?", "??"],
+                alerta: "você com a mão cheia de tinta, tentando responder com o nariz 💇",
+                com: [["“escova hoje?” → 14h ou 16h, escolhe no link", "na hora"], ["“progressiva?” → a partir de R$ 180, tá na tela", "sem digitar nada"], ["“faz unha junto?” → marca os dois no mesmo horário", "sozinho"]],
+                fim: "e você? fazendo cabelo, não virando secretária ✨",
+            },
+            agenda: {
+                sem: ["tem sábado?", "de manhã", "ah, de manhã não dá", "e se eu levar minha irmã?", "vou ver e te falo"],
+                alerta: "📅 três clientes às 9h de sábado. boa sorte 😬",
+                com: [["escova + unha, sábado 10h", "marcou sozinha"], ["a irmã pegou 10h30 no link", "sem mensagem"], ["lembrete no WhatsApp 1 dia antes", "automático"]],
+                fim: "agenda cheia e você nem pegou no celular ✓",
+            } },
+        academia: { emoji: "💪", exemplo: "Sua Academia", busca: "academia", extra: "agenda", ticket: 100, mensagens: 30,
+            concorrentes: ["Academia Força Total · ⭐ 4,8 · planos online", "Fit Center · ⭐ 4,6 · aula experimental"],
+            whats: {
+                sem: ["quanto tá a mensalidade?", "tem plano anual?", "abre domingo?", "dá pra ficar monstro até sexta?", "segunda eu começo 😅"],
+                alerta: "ele disse “segunda eu começo”. faz 3 anos 🥲",
+                com: [["“mensalidade?” → planos a partir de R$ 89, na tela", "sem digitar nada"], ["“abre domingo?” → Domingo das 8h às 12h", "na hora"], ["“tem aula experimental?” → marca no link", "sozinho"]],
+                fim: "e você? dando treino, não respondendo preço 💪",
+            },
+            agenda: {
+                sem: ["quero fazer aula experimental", "pode ser hoje?", "hoje não dá, amanhã?", "amanhã tenho coisa...", "sexta então"],
+                alerta: "📅 sexta ele sumiu. “segunda eu começo” 🥲",
+                com: [["aula experimental: quinta, 19h", "marcou sozinho"], ["lembrete no WhatsApp 2h antes", "automático"], ["ele veio. e voltou na segunda", "milagre"]],
+                fim: "aluno novo matriculado sem você largar o treino ✓",
+            } },
+        "clínica": { emoji: "🩺", exemplo: "Sua Clínica", busca: "clínica", extra: "agenda", ticket: 200, mensagens: 30,
+            concorrentes: ["Clínica Vida · ⭐ 4,9 · agendamento online", "Centro Médico Saúde · ⭐ 4,7 · convênios"],
+            whats: {
+                sem: ["bom dia, atende Unimed?", "tem horário essa semana?", "quanto é a consulta particular?", "o doutor atende por áudio?", "alô??"],
+                alerta: "a recepção respondendo 80 mensagens com o telefone tocando 📞",
+                com: [["“atende Unimed?” → convênios aceitos, na tela", "na hora"], ["“horário essa semana?” → quinta 9h ou sexta 15h, no link", "sozinho"], ["“consulta particular?” → valor e o que inclui, na tela", "sem digitar nada"]],
+                fim: "e a recepção? atendendo quem tá na sala 🩺",
+            },
+            agenda: {
+                sem: ["tem horário quinta?", "de manhã, antes do trabalho", "ah, 8h não dá", "vou ver e te ligo", "(uma semana depois) oi, ainda tem vaga?"],
+                alerta: "📅 paciente faltou sem avisar. horário vazio 🫠",
+                com: [["paciente marcou quinta, 9h", "sozinho"], ["lembrete 1 dia antes: “confirma?”", "automático"], ["desmarcou pelo link, horário liberado", "sem furo"]],
+                fim: "agenda cheia e zero falta sem aviso ✓",
+            } },
+    };
+
+    // demos que servem de "testar" (se o card existir na página)
+    const cards = [...document.querySelectorAll(".card-projeto")];
+    const demo = (nome, texto) => {
+        const card = cards.find((c) => c.querySelector(".projeto-nome")?.textContent.trim() === nome);
+        const href = card?.querySelector(".link-projeto")?.getAttribute("href");
+        return href ? { href, texto, novaAba: true } : { href: "#projetos", texto: "ver projetos parecidos ↓" };
+    };
+
+    // Linhas: [tipo, texto, detalhe]. msg = mensagem chegando; busca/resultado = Google; alerta = deu ruim;
+    // ok = resolvido (com ✓); fim = fecho. metricas: [rótulo, sem, com].
+    function cenas(tipo, nome) {
+        const n = NEGOCIOS[tipo];
+        const marca = nome || n.exemplo;
+        const lista = [
+            {
+                aba: "Google", tipoOrc: "site", cta: "quero aparecer no Google →", testar: { href: "#projetos", texto: "ver sites que eu fiz ↓" },
+                sem: nome
+                    ? [["busca", nome], ["resultado", "Nenhum resultado. Você quis dizer: concorrente?"], ["msg", "“será que fechou?” 🤔"], ["msg", "“deve ser golpe” 🧐"], ["alerta", "fechou nada, só não tem site 🥲"]]
+                    : [["busca", `${n.busca} perto de mim`], ["resultado", n.concorrentes[0]], ["resultado", n.concorrentes[1]], ["resultado", "…página 7 do Google: nem sinal de você 👻"], ["alerta", "cliente foi no concorrente. o concorrente agradece 🙏"]],
+                com: [["busca", nome || `${n.busca} perto de mim`], ["ok", `${marca} · horário · endereço · WhatsApp`, "apareceu bonitão"], ["ok", "cliente tocou em “Chamar no WhatsApp”", "sem ligar, sem sofrer"], ["fim", "cliente novo chegando e você nem penteou o cabelo 😎"]],
+                metricas: [["No Google", "fantasma 👻", "aparece ✨"], ["Horário e preço", "segredo de Estado", "na tela, 24h"], ["Cliente novo", "vai pro vizinho", "chama você"]],
+            },
+            {
+                aba: "WhatsApp", tipoOrc: "automacao", cta: "quero parar de responder a mesma coisa →", testar: demo("Fatia Nobre", "testar um atendimento automático ↗"),
+                sem: [...n.whats.sem.map((m) => ["msg", m]), ["alerta", n.whats.alerta]],
+                com: [...n.whats.com.map(([t, d]) => ["ok", t, d]), ["fim", n.whats.fim]],
+                metricas: [["Tempo de resposta", "quando der 🐢", "na hora ⚡"], ["Mesma pergunta", "47ª vez hoje", "respondida sozinha"], ["Seu celular", "não para de apitar 📳", "em paz 🧘"]],
+            },
+        ];
+        if (n.extra === "pedidos") lista.push({
+            aba: "pedidos", tipoOrc: "site", cta: "quero receber pedido pronto →", testar: demo("Glitch District", "testar uma loja com pedido no WhatsApp ↗"),
+            sem: [["msg", "quero uma calabresa grande"], ["msg", "não, média"], ["msg", "meia calabresa meia frango"], ["msg", "e uma coca... não, guaraná"], ["msg", "ah, sem cebola. na metade de frango. acho"], ["alerta", "📝 anotou errado. de novo. 🤡"]],
+            com: [["ok", "🍕 Média · ½ calabresa, ½ frango sem cebola", "R$ 52"], ["ok", "🥤 Guaraná 2L", "R$ 12"], ["ok", "✏️ obs: sem cebola na metade de frango", "anotado certinho"], ["fim", "pedido chegou certinho, sem telefone sem fio ✓"]],
+            metricas: [["Pra fechar um pedido", "15 mensagens", "1 toque"], ["Pedido errado", "toda sexta 🤡", "zero"], ["Paciência do cliente", "no limite", "intacta"]],
+        });
+        if (n.extra === "loja") lista.push({
+            aba: "loja", tipoOrc: "site", cta: "quero uma loja que vende sozinha →", testar: demo("Glitch District", "testar a loja ↗"),
+            sem: [["msg", "manda foto do moletom preto"], ["msg", "agora de costas"], ["msg", "e com luz natural?"], ["msg", "tem M?"], ["msg", "vou pensar 🙃"], ["alerta", "📸 você virou modelo, fotógrafo e vendedor… e ele vai pensar"]],
+            com: [["ok", "🛒 Moletom preto · M", "R$ 189"], ["ok", "🛒 Boné preto", "R$ 79"], ["ok", "📏 tabela de medidas na tela", "zero “tem M?”"], ["fim", "pedido de R$ 268 no WhatsApp e você nem tirou foto ✓"]],
+            metricas: [["Pra fechar um pedido", "20 mensagens", "1 toque"], ["Fotos no direct", "o dia todo", "nenhuma"], ["“Vou pensar” 🙃", "toda hora", "raridade"]],
+        });
+        if (n.extra === "agenda") lista.push({
+            aba: "agenda", tipoOrc: "sistema", cta: "quero uma agenda que se preenche sozinha →", testar: { href: "#projetos", texto: "ver sistemas que eu fiz ↓" },
+            sem: [...n.agenda.sem.map((m) => ["msg", m]), ["alerta", n.agenda.alerta]],
+            com: [...n.agenda.com.map(([t, d]) => ["ok", t, d]), ["fim", n.agenda.fim]],
+            metricas: [["Pra marcar horário", "10 mensagens", "2 toques"], ["Horário furado", "acontece 😬", "raridade"], ["A agenda fica", "no caderno (molhado)", "no celular"]],
+        });
+        return lista;
+    }
+
+    let tipo = NEGOCIOS[ler("portfolio-tipo-negocio")] ? ler("portfolio-tipo-negocio") : "pizzaria";
+    let lista = [], atual = 0, rodada = 0, automatico = true;
+    const nome = () => (campoNome?.value || "").trim().slice(0, 40);
+    const pararAuto = () => { automatico = false; raiz.classList.add("cmp-manual"); raiz.classList.remove("cmp-contando"); };
+
+    // chips de tipo de negócio
+    Object.entries(NEGOCIOS).forEach(([chaveTipo, n]) => {
+        const b = document.createElement("button");
+        b.type = "button"; b.dataset.tipo = chaveTipo; b.textContent = `${n.emoji} ${chaveTipo}`;
+        b.addEventListener("click", () => { tipo = chaveTipo; gravar("portfolio-tipo-negocio", tipo); pararAuto(); montar(); mostrar(0); calcular(true); window.ESTATISTICAS?.contar(`/evento/ramo-${window.ESTATISTICAS.slug(tipo)}`, `ramo escolhido: ${tipo}`, true); });
+        tiposEl.appendChild(b);
+    });
+
+    function montar() {
+        lista = cenas(tipo, nome());
+        [...tiposEl.children].forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.tipo === tipo)));
+        abas.replaceChildren(...lista.map((c, i) => {
+            const b = document.createElement("button");
+            b.type = "button"; b.textContent = c.aba; b.setAttribute("aria-pressed", "false");
+            b.addEventListener("click", () => { pararAuto(); mostrar(i); });
+            return b;
+        }));
+        if (campoNome) campoNome.placeholder = `nome da sua ${tipo} (opcional)`.replace("sua salão", "seu salão").replace("sua loja de roupa", "sua loja");
+    }
+
+    function linha(lado, t, texto, detalhe) {
+        const el = document.createElement("div");
+        el.className = "cmp-linha cmp-" + t;
+        const s = document.createElement("span"); s.textContent = texto; el.appendChild(s);
+        if (detalhe) { const d = document.createElement("small"); d.textContent = detalhe; el.appendChild(d); }
+        if (t === "msg") el.style.setProperty("--giro", (Math.random() * 4 - 2).toFixed(1) + "deg");
+        palco[lado].appendChild(el);
+    }
+
+    function montarPlacar(c) {
+        ["sem", "com"].forEach((lado) => placar[lado].replaceChildren(...c.metricas.map(([rotulo, sem, com]) => {
+            const m = document.createElement("div");
+            m.className = "cmp-metrica";
+            m.innerHTML = "<small></small><b></b>";
+            m.querySelector("small").textContent = rotulo;
+            m.querySelector("b").textContent = lado === "sem" ? sem : com;
+            return m;
+        })));
+    }
+    async function acenderPlacar() {
+        for (const lado of ["sem", "com"]) for (const [i, m] of [...placar[lado].children].entries()) {
+            m.classList.add("aceso");
+            if (lado === "com" && window.musicaSite && window.musicaSite.pode()) window.musicaSite.nota(79 + i * 4, 0.5);
+            await espera(110);
+        }
+    }
+
+    const botaoPrevia = $(".cmp-previa");
+    botaoPrevia?.addEventListener("click", () => { pararAuto(); window.abrirPreviaSite && window.abrirPreviaSite(tipo, nome()); });
+    function acertarRodape(c) {
+        if (botaoPrevia) botaoPrevia.querySelector("b").textContent = nome() || NEGOCIOS[tipo].exemplo;
+        querer.textContent = c.cta;
+        querer.dataset.orcamentoTipo = c.tipoOrc;
+        querer.dataset.orcamentoRef = `${nome() || tipo} — ${c.cta.replace(" →", "")}`.slice(0, 80);
+        testar.href = c.testar.href; testar.textContent = c.testar.texto;
+        if (c.testar.novaAba) { testar.target = "_blank"; testar.rel = "noopener noreferrer"; } else { testar.removeAttribute("target"); testar.removeAttribute("rel"); }
+    }
+
+    // Mostra uma cena: as linhas dos dois lados vão entrando intercaladas (o "sem" bagunçado, o "com" em ordem)
+    async function mostrar(i) {
+        const minha = ++rodada;
+        const vivo = () => minha === rodada;
+        const c = lista[i];
+        atual = i;
+        [...abas.children].forEach((b, j) => b.setAttribute("aria-pressed", String(j === i)));
+        acertarRodape(c);
+        montarPlacar(c);
+        raiz.classList.add("cmp-trocando");
+        await espera(180);
+        if (!vivo()) return false;
+        raiz.classList.remove("cmp-trocando");
+        palco.sem.innerHTML = ""; palco.com.innerHTML = "";
+        let notificacoes = 0;
+        if (notif) { notif.hidden = true; notif.textContent = "0"; }
+        const passos = Math.max(c.sem.length, c.com.length);
+        for (let p = 0; p < passos; p++) {
+            if (c.sem[p]) {
+                if (!vivo()) return false;
+                linha("sem", ...c.sem[p]);
+                if (c.sem[p][0] === "msg" && notif) { notificacoes += 1 + Math.floor(Math.random() * 4); notif.textContent = notificacoes; notif.hidden = false; notif.classList.remove("pulou"); void notif.offsetWidth; notif.classList.add("pulou"); }
+                await espera(c.sem[p][0] === "alerta" ? 500 : 380);
+            }
+            if (c.com[p]) {
+                if (!vivo()) return false;
+                linha("com", ...c.com[p]);
+                await espera(380);
+            }
+        }
+        if (!vivo()) return false;
+        await acenderPlacar();
+        return vivo();
+    }
+
+    async function rodarSozinho(i) {
+        if (!automatico) return;
+        if (!(await mostrar(i)) || semMovimento) return;
+        raiz.classList.remove("cmp-contando"); void raiz.offsetWidth; raiz.classList.add("cmp-contando");
+        await espera(5000);
+        raiz.classList.remove("cmp-contando");
+        if (automatico) rodarSozinho((i + 1) % lista.length);
+    }
+
+    // nome: o mesmo do campo dos projetos, nos dois sentidos
+    if (campoNome) {
+        campoNome.value = ler("portfolio-nome-negocio");
+        let atraso = 0;
+        campoNome.addEventListener("input", () => {
+            clearTimeout(atraso);
+            atraso = setTimeout(() => {
+                if (campoNomeProjetos) { campoNomeProjetos.value = campoNome.value; campoNomeProjetos.dispatchEvent(new Event("input")); }
+                else gravar("portfolio-nome-negocio", nome());
+                pararAuto();
+                lista = cenas(tipo, nome());
+                mostrar(0);
+            }, 350);
+        });
+        campoNome.addEventListener("focus", pararAuto);
+    }
+    campoNomeProjetos?.addEventListener("input", () => {
+        if (document.activeElement === campoNome) return;
+        campoNome.value = campoNomeProjetos.value;
+        lista = cenas(tipo, nome());
+        acertarRodape(lista[atual]);
+    });
+
+    /* Calculadora: quanto some por mês sem resposta rápida (estimativa: 1 em cada 5 desiste) */
+    const calc = $(".cmp-calc"), faixa = $(".cmp-calc input[type=range]"), ticketEl = $(".cmp-calc input[type=number]");
+    const saidaMsgs = $(".cmp-calc-msgs"), saidaClientes = $(".cmp-calc-clientes"), saidaPerda = $(".cmp-calc-perda"), saidaAno = $(".cmp-calc-ano");
+    let perdaMostrada = 0, quadroCalc = 0;
+    function calcular(reiniciar) {
+        if (!calc) return;
+        const n = NEGOCIOS[tipo];
+        if (reiniciar) { faixa.value = n.mensagens; ticketEl.value = n.ticket; }
+        const msgs = Number(faixa.value) || 0, ticket = Math.max(0, Number(ticketEl.value) || 0);
+        const clientes = Math.round((msgs * 4.3) / 5);
+        const perda = clientes * ticket;
+        saidaMsgs.textContent = msgs;
+        saidaClientes.textContent = clientes;
+        saidaAno.textContent = reais(perda * 12);
+        faixa.style.setProperty("--p", ((msgs - faixa.min) / (faixa.max - faixa.min) * 100).toFixed(1) + "%");
+        cancelAnimationFrame(quadroCalc);
+        const de = perdaMostrada, inicio = performance.now();
+        const passo = (agora) => {
+            const t = semMovimento ? 1 : Math.min((agora - inicio) / 500, 1);
+            perdaMostrada = de + (perda - de) * (1 - Math.pow(1 - t, 3));
+            saidaPerda.textContent = reais(perdaMostrada);
+            if (t < 1) quadroCalc = requestAnimationFrame(passo);
+        };
+        quadroCalc = requestAnimationFrame(passo);
+        saidaPerda.classList.remove("pulou"); void saidaPerda.offsetWidth; saidaPerda.classList.add("pulou");
+    }
+    faixa?.addEventListener("input", () => calcular(false));
+    ticketEl?.addEventListener("input", () => calcular(false));
+
+    montar();
+    calcular(true);
+    let comecou = false;
+    const comecar = () => { if (comecou) return; comecou = true; if (semMovimento) { automatico = false; mostrar(0); } else rodarSozinho(0); };
+    if ("IntersectionObserver" in window) {
+        const obs = new IntersectionObserver((e) => { if (e.some((x) => x.isIntersecting)) { obs.disconnect(); comecar(); } });
+        obs.observe(raiz);
+    } else comecar();
+})();
 
 /* Filtro de projetos por tecnologia */
 const chipsFiltro = document.querySelectorAll(".chip-filtro");
@@ -1070,7 +1318,7 @@ if (paletaOverlay) {
     document.body.append(impresso);
 
     // Links com ?origem=instagram e ?tipo=app (só valores conhecidos entram na mensagem)
-    const ORIGENS = { instagram: "Instagram", whatsapp: "WhatsApp", linkedin: "LinkedIn", github: "GitHub", facebook: "Facebook", google: "Google" };
+    const ORIGENS = { link: "link que você me mandou", instagram: "Instagram", whatsapp: "WhatsApp", linkedin: "LinkedIn", github: "GitHub", facebook: "Facebook", google: "Google" };
     const PARAMETROS = new URLSearchParams(location.search);
     const ORIGEM = ORIGENS[(PARAMETROS.get("origem") || "").toLowerCase()] || "";
 
@@ -1190,7 +1438,9 @@ if (paletaOverlay) {
     function compor() {
         const tipo = tipoAtual();
         const nome = typeof resp.nome === "string" ? resp.nome.trim() : "";
-        const deOnde = nomeNegocioLink ? `Vi o portfólio que você me mandou (${nomeNegocioLink})` : ORIGEM ? `Vim pelo ${ORIGEM}` : "Vi seu portfólio";
+        // veio pelo link personalizado: diz de onde e o nome do negócio, pra você saber qual contato respondeu
+        const negocio = window.nomeNegocioLink ? ` (${window.nomeNegocioLink})` : "";
+        const deOnde = ORIGEM ? `Vim pelo ${ORIGEM}${negocio}` : negocio ? `Vim pelo link que você me mandou${negocio}` : "Vi seu portfólio";
         const abertura = `Oi, Samuel! ${nome ? `Me chamo ${nome}. ` : ""}${deOnde} e quero pedir um orçamento.`;
         const linhas = [abertura, ""];
         if (tipo) linhas.push(`Projeto: ${tipo.rotulo}`);
@@ -1639,4 +1889,232 @@ if (paletaOverlay) {
     grafico.addEventListener("load", terminou, { once: true });
     grafico.addEventListener("error", terminou, { once: true });
     setTimeout(terminou, 15000); // se o serviço do gráfico não responder, não deixa o esqueleto brilhando para sempre
+})();
+
+/* Troca de tema (vermelho <-> azul): carrega a outra folha de estilo e só tira a antiga quando a nova
+   chegou, pra página não ficar sem estilo no meio da troca. A escolha fica guardada neste aparelho. */
+(function () {
+    const botao = document.getElementById("botaoTema");
+    if (!botao) return;
+    const raiz = document.documentElement;
+    const atualizarBotao = () => {
+        const azul = raiz.dataset.tema === "azul";
+        botao.setAttribute("aria-label", azul ? "Trocar para o tema vermelho" : "Trocar para o tema azul");
+        botao.title = azul ? "Tema vermelho" : "Tema azul";
+    };
+    // O que não vem da folha de estilo: selo de visitas (cor no link da imagem). Avisa os outros scripts
+    // (ex.: anéis dos stories no celular) com o evento "temaTrocado".
+    const pintarExtras = () => {
+        const azul = raiz.dataset.tema === "azul";
+        const selo = document.querySelector(".selo-visitas");
+        if (selo) selo.src = selo.src.replace(/color=[0-9a-f]{6}/i, "color=" + (azul ? "1a3e8b" : "8b1a1a"));
+    };
+    if (raiz.dataset.tema === "azul") pintarExtras();
+    atualizarBotao();
+    let trocando = false;
+    botao.addEventListener("click", () => {
+        if (trocando) return;
+        const atual = document.getElementById("folhaTema");
+        if (!atual) return;
+        trocando = true;
+        const novoTema = raiz.dataset.tema === "azul" ? "vermelho" : "azul";
+        const nova = document.createElement("link");
+        nova.rel = "stylesheet";
+        nova.href = atual.href.replace(/style(-azul)?\.css/, novoTema === "azul" ? "style-azul.css" : "style.css");
+        nova.onload = () => {
+            atual.remove();
+            nova.id = "folhaTema";
+            raiz.dataset.tema = novoTema;
+            const cor = document.querySelector('meta[name="theme-color"]');
+            if (cor) cor.content = novoTema === "azul" ? "#0e1422" : "#161616";
+            try { localStorage.setItem("portfolio-tema", novoTema); } catch (e) { /* sem armazenamento: só não lembra */ }
+            atualizarBotao();
+            pintarExtras();
+            document.dispatchEvent(new CustomEvent("temaTrocado", { detail: novoTema }));
+            trocando = false;
+            if (window.musicaSite && window.musicaSite.pode()) window.musicaSite.curtir();
+        };
+        nova.onerror = () => { nova.remove(); trocando = false; mostrarToast("Não deu pra trocar o tema agora. Tente de novo."); };
+        atual.after(nova);
+    });
+})();
+
+/* ---------- Prévia do site do cliente ----------
+   "Veja como ficaria o SEU site": um celular com um mini-site montado na hora, com o nome do negócio e
+   o conteúdo do ramo (cardápio, serviços, produtos, planos...). As cores ficam aqui no JS de propósito:
+   são as do ramo do cliente, não as do tema do portfólio (o gerador do tema azul não mexe nelas).
+   Abre pelo comparador, pelo convite do link personalizado ou direto com ?previa=1. */
+(function previaDoSite() {
+    const RAMOS = {
+        pizzaria: { rotulo: "pizzaria", exemplo: "Sua Pizzaria", cor: "#f08a24", fundo: "#1c1311", texto: "#fff4ee", suave: "#c9a99c",
+            chamada: "A pizza que chega quentinha 🍕", sub: "Forno a lenha · entrega em Campo Grande", secao: "Cardápio",
+            itens: [["Calabresa", "R$ 45"], ["Frango com catupiry", "R$ 49"], ["Portuguesa", "R$ 52"]],
+            info: "Ter a dom · 18h às 23h30", chips: ["Borda recheada", "Entrega grátis até 5 km"], botao: "Pedir pelo WhatsApp" },
+        barbearia: { rotulo: "barbearia", exemplo: "Sua Barbearia", cor: "#c8a15a", fundo: "#121212", texto: "#f5efe3", suave: "#a39a88",
+            chamada: "Corte na régua, sem fila ✂️", sub: "Escolha o horário em 2 toques", secao: "Serviços",
+            itens: [["Corte", "R$ 35"], ["Barba", "R$ 25"], ["Corte + barba", "R$ 55"]],
+            info: "Horários livres hoje", chips: ["16h30", "18h", "19h30"], botao: "Agendar horário" },
+        "loja de roupa": { rotulo: "loja", exemplo: "Sua Loja", cor: "#ff5c8a", fundo: "#141014", texto: "#fdf0f4", suave: "#b89aa4",
+            chamada: "Nova coleção chegou 🖤", sub: "Enviamos pra todo o MS", secao: "Destaques",
+            itens: [["Vestido midi", "R$ 129"], ["Moletom oversized", "R$ 189"], ["Boné bordado", "R$ 79"]],
+            info: "Tamanhos", chips: ["P", "M", "G", "GG"], botao: "Comprar pelo WhatsApp" },
+        "salão": { rotulo: "salão", exemplo: "Seu Salão", cor: "#e58fb4", fundo: "#1a1216", texto: "#fdeff5", suave: "#bf9fae",
+            chamada: "Seu cabelo do jeito que você sonhou ✨", sub: "Agende sem precisar mandar mensagem", secao: "Serviços",
+            itens: [["Escova", "R$ 50"], ["Progressiva", "a partir de R$ 180"], ["Unhas", "R$ 35"]],
+            info: "Horários livres amanhã", chips: ["10h", "14h", "16h"], botao: "Agendar horário" },
+        academia: { rotulo: "academia", exemplo: "Sua Academia", cor: "#f5c518", fundo: "#0f0f0f", texto: "#fbf7e6", suave: "#a8a28a",
+            chamada: "Bora treinar? 💪", sub: "Aula experimental grátis", secao: "Planos",
+            itens: [["Mensal", "R$ 99"], ["Trimestral", "R$ 89/mês"], ["Anual", "R$ 79/mês"]],
+            info: "Seg a sex 5h às 23h · sáb e dom 8h às 12h", chips: ["Musculação", "Funcional", "Spinning"], botao: "Agendar aula experimental" },
+        "clínica": { rotulo: "clínica", exemplo: "Sua Clínica", cor: "#1f9e8f", fundo: "#f3faf9", texto: "#12302c", suave: "#5b7a76",
+            chamada: "Cuidado de verdade, perto de você 🩺", sub: "Agende sua consulta online", secao: "Especialidades",
+            itens: [["Clínico geral", "seg a sex"], ["Pediatria", "ter e qui"], ["Dermatologia", "qua"]],
+            info: "Convênios", chips: ["Unimed", "Bradesco Saúde", "Particular"], botao: "Agendar consulta" },
+    };
+    const esc = (t) => String(t).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    const endereco = (nome) => (nome.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "") || "seunegocio") + ".com.br";
+    const iniciais = (nome) => nome.split(/\s+/).filter((p) => p.length > 2 || /^[A-Z]/.test(p)).slice(0, 2).map((p) => p[0]).join("").toUpperCase() || nome[0].toUpperCase();
+    const ler = (k) => { try { return localStorage.getItem(k) || ""; } catch (e) { return ""; } };
+
+    // o celular com o mini-site (usado na prévia e na vitrine do topo)
+    function celular(ramo, marca) {
+        const r = RAMOS[ramo];
+        return `
+                <div class="previa-celular" style="--p-cor:${r.cor};--p-fundo:${r.fundo};--p-texto:${r.texto};--p-suave:${r.suave}">
+                    <div class="previa-status"><span>9:41</span><span>📶 🔋</span></div>
+                    <div class="previa-url">🔒 ${esc(endereco(marca))}</div>
+                    <div class="previa-site">
+                        <header class="previa-topo"><span class="previa-logo">${esc(iniciais(marca))}</span><b>${esc(marca)}</b><span class="previa-menu">☰</span></header>
+                        <section class="previa-hero"><h4>${esc(r.chamada)}</h4><p>${esc(r.sub)}</p><button type="button" class="previa-botao">${esc(r.botao)}</button></section>
+                        <section class="previa-secao"><h5>${esc(r.secao)}</h5>${r.itens.map(([n, v]) => `<div class="previa-item"><span>${esc(n)}</span><b>${esc(v)}</b></div>`).join("")}</section>
+                        <section class="previa-secao"><h5>${esc(r.info)}</h5><div class="previa-chips">${r.chips.map((c) => `<button type="button">${esc(c)}</button>`).join("")}</div></section>
+                        <footer class="previa-rodape">📍 Campo Grande - MS · ⭐ 4,9 no Google</footer>
+                        <a class="previa-whats" aria-hidden="true">💬</a>
+                    </div>
+                    <p class="previa-aviso" role="status"></p>
+                </div>`;
+    }
+
+    function montar(ramo, nome) {
+        const r = RAMOS[ramo];
+        const marca = nome || r.exemplo;
+        return `
+            <div class="previa">
+                <div class="previa-ramos" role="group" aria-label="Trocar o ramo da prévia">${Object.keys(RAMOS).map((k) => `<button type="button" data-ramo="${esc(k)}" aria-pressed="${k === ramo}">${esc(RAMOS[k].rotulo)}</button>`).join("")}</div>
+${celular(ramo, marca)}
+                <div class="previa-lado">
+                    <p class="previa-titulo">Esse poderia ser o site da <b>${esc(marca)}</b>.</p>
+                    <p>Isso é uma prévia rápida. O seu vem com a sua cara: suas fotos, seus preços, seu jeito de falar. Funciona no celular, aparece no Google e o botão cai direto no seu WhatsApp.</p>
+                    <button type="button" class="botao botao-principal previa-quero" data-orcamento-tipo="site" data-orcamento-ref="${esc(`Prévia do site: ${marca} (${r.rotulo})`.slice(0, 80))}">quero esse site →</button>
+                    <button type="button" class="previa-mandar">mandar essa prévia pro sócio 📲</button>
+                </div>
+            </div>`;
+    }
+
+    function abrir(ramo, nome) {
+        ramo = RAMOS[ramo] ? ramo : (RAMOS[ler("portfolio-tipo-negocio")] ? ler("portfolio-tipo-negocio") : "pizzaria");
+        nome = (nome ?? ler("portfolio-nome-negocio")).trim().slice(0, 40);
+        const marca = nome || RAMOS[ramo].exemplo;
+        window.ESTATISTICAS?.contar(`/evento/previa-${window.ESTATISTICAS.slug(ramo)}`, `prévia aberta: ${RAMOS[ramo].rotulo}`, true);
+        if (typeof LINK_PERSONALIZADO !== "undefined" && LINK_PERSONALIZADO && LINK_PERSONALIZADO.slug) window.ESTATISTICAS?.contar(`/link/${LINK_PERSONALIZADO.slug}/previa`, `viu a prévia: ${LINK_PERSONALIZADO.para}`, true);
+        abrirModal(`👀 Prévia: o site da ${marca}`, montar(ramo, nome));
+        document.querySelector(".modal-caixa")?.classList.add("modal-previa");
+        const raiz = modalCorpo.querySelector(".previa");
+        const aviso = raiz.querySelector(".previa-aviso");
+        let tempoAviso = 0;
+        // tocar em qualquer coisa do mini-site mostra o que aconteceria no site de verdade
+        raiz.querySelector(".previa-site").addEventListener("click", (e) => {
+            const alvo = e.target.closest("button, .previa-whats");
+            if (!alvo) return;
+            alvo.classList.remove("apertou"); void alvo.offsetWidth; alvo.classList.add("apertou");
+            aviso.textContent = alvo.closest(".previa-chips") ? "✓ no site de verdade, isso já marca/escolhe sozinho" : `✓ no site de verdade, isso abre o WhatsApp da ${marca}`;
+            aviso.classList.add("visivel");
+            clearTimeout(tempoAviso); tempoAviso = setTimeout(() => aviso.classList.remove("visivel"), 2200);
+            if (window.musicaSite && window.musicaSite.pode()) window.musicaSite.curtir();
+        });
+        raiz.querySelectorAll(".previa-ramos button").forEach((b) => b.addEventListener("click", () => abrir(b.dataset.ramo, nome)));
+        // "quero esse site": fecha a prévia e só DEPOIS manda pro orçamento. Fechar o modal devolve a entrada do
+        // histórico (acabamento.js, botão voltar do celular) e o navegador restaura a posição antiga da página,
+        // o que desfazia a rolagem até o formulário; por isso espera esse "voltar" terminar.
+        const quero = raiz.querySelector(".previa-quero");
+        quero.addEventListener("click", (e) => {
+            e.stopPropagation();
+            const gatilho = document.createElement("button");
+            gatilho.type = "button"; gatilho.hidden = true;
+            gatilho.dataset.orcamentoTipo = quero.dataset.orcamentoTipo;
+            gatilho.dataset.orcamentoRef = quero.dataset.orcamentoRef;
+            focoAntesDoModal = null;
+            let foi = false;
+            const seguir = () => { if (foi) return; foi = true; document.body.append(gatilho); gatilho.click(); gatilho.remove(); };
+            window.addEventListener("popstate", () => setTimeout(seguir, 30), { once: true });
+            setTimeout(seguir, 450); // se não houver "voltar" nenhum
+            fecharModal();
+        });
+        raiz.querySelector(".previa-mandar").addEventListener("click", async () => {
+            const url = new URL(location.href.split("?")[0].split("#")[0]);
+            if (nome) url.searchParams.set("para", nome);
+            url.searchParams.set("ramo", ramo);
+            url.searchParams.set("previa", "1");
+            const texto = `Olha como ficaria o site da ${marca}: ${url.toString()}`;
+            try {
+                if (navigator.share) await navigator.share({ title: `Prévia: o site da ${marca}`, text: texto });
+                else { await navigator.clipboard.writeText(texto); mostrarToast("Link da prévia copiado! É só colar no WhatsApp."); }
+            } catch (e) { /* a pessoa cancelou o compartilhamento */ }
+        });
+    }
+    window.abrirPreviaSite = abrir;
+
+    // Vitrine do topo: o mesmo celular, trocando de ramo sozinho (pizzaria → barbearia → loja...). Rola devagar
+    // pelo mini-site pra mostrar que tem conteúdo, pausa com o mouse em cima e fora da tela; clicar abre a prévia.
+    (function vitrine() {
+        const caixa = document.querySelector(".hero-vitrine");
+        if (!caixa) return;
+        const ordem = Object.keys(RAMOS);
+        const salvo = ler("portfolio-tipo-negocio");
+        let i = Math.max(0, ordem.indexOf(salvo)), pausado = false, visivel = true, relogio = 0, rolagem = 0;
+        caixa.innerHTML = `
+            <div class="vitrine-ramos" role="group" aria-label="Ver exemplo de outro ramo">${ordem.map((k) => `<button type="button" data-ramo="${esc(k)}">${esc(RAMOS[k].rotulo)}</button>`).join("")}</div>
+            <div class="vitrine-palco" role="button" tabindex="0" aria-label="Abrir a prévia do site deste exemplo"></div>
+            <p class="vitrine-legenda">toca no celular pra ver com o nome do <b>seu</b> negócio 👆</p>`;
+        const palco = caixa.querySelector(".vitrine-palco");
+        const botoes = [...caixa.querySelectorAll(".vitrine-ramos button")];
+        function mostrar(n, animar) {
+            i = (n + ordem.length) % ordem.length;
+            const ramo = ordem[i];
+            const nome = ler("portfolio-nome-negocio").trim().slice(0, 40);
+            palco.innerHTML = celular(ramo, nome || RAMOS[ramo].exemplo);
+            palco.dataset.ramo = ramo;
+            if (animar && !prefereMenosMovimento) { palco.classList.remove("trocou"); void palco.offsetWidth; palco.classList.add("trocou"); }
+            botoes.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.ramo === ramo)));
+            // desce devagar pelo mini-site e volta, pra mostrar que tem cardápio/serviços lá embaixo
+            clearTimeout(rolagem);
+            const site = palco.querySelector(".previa-site");
+            if (site && !prefereMenosMovimento) rolagem = setTimeout(() => site.scrollTo({ top: 170, behavior: "smooth" }), 1600);
+        }
+        function agendar() {
+            clearTimeout(relogio);
+            if (prefereMenosMovimento) return;
+            relogio = setTimeout(() => { if (!pausado && visivel && !document.hidden) mostrar(i + 1, true); agendar(); }, 4600);
+        }
+        botoes.forEach((b) => b.addEventListener("click", () => { mostrar(ordem.indexOf(b.dataset.ramo), true); agendar(); }));
+        palco.addEventListener("click", () => abrir(palco.dataset.ramo));
+        palco.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); abrir(palco.dataset.ramo); } });
+        caixa.addEventListener("mouseenter", () => { pausado = true; });
+        caixa.addEventListener("mouseleave", () => { pausado = false; });
+        caixa.addEventListener("focusin", () => { pausado = true; });
+        caixa.addEventListener("focusout", () => { pausado = false; });
+        if ("IntersectionObserver" in window) new IntersectionObserver((e) => { visivel = e.some((x) => x.isIntersecting); }).observe(caixa);
+        mostrar(i, false);
+        agendar();
+    })();
+
+    // o modal é compartilhado com as demos: tira a marca da prévia quando fecha
+    modalOverlay?.addEventListener("click", () => { if (modalOverlay.hidden) document.querySelector(".modal-caixa")?.classList.remove("modal-previa"); });
+    new MutationObserver(() => { if (modalOverlay.hidden) document.querySelector(".modal-caixa")?.classList.remove("modal-previa"); }).observe(modalOverlay, { attributes: true, attributeFilter: ["hidden"] });
+
+    // link personalizado com &previa=1: abre sozinha depois que a página aparece
+    if (typeof LINK_PERSONALIZADO !== "undefined" && LINK_PERSONALIZADO && LINK_PERSONALIZADO.previa) {
+        const abrirDepois = () => setTimeout(() => abrir(LINK_PERSONALIZADO.ramo || undefined, LINK_PERSONALIZADO.para), 900);
+        if (document.readyState === "complete") abrirDepois(); else window.addEventListener("load", abrirDepois, { once: true });
+    }
 })();

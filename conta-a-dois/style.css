@@ -7,7 +7,7 @@
     --linha-forte: #4a3a52;
     --texto: #f5eef2;
     --mudo: #b7a6bd;
-    --mudo2: #8a7690;
+    --mudo2: #a996ae;
     --rosa: #ff6f91;
     --rosa-forte: #e14b73;
     --teal: #2dd4bf;
@@ -193,3 +193,6 @@ h1 { font: 700 clamp(1.8rem, 4.6vw, 2.5rem)/1.14 var(--titulo); letter-spacing: 
     * { animation-duration: .01ms !important; }
     html { scroll-behavior: auto; }
 }
+
+/* "Voltar ao portfólio" com área de toque de verdade no celular (tinha ~18px de altura) */
+@media (pointer: coarse) { a[href^="../index.html"] { display: inline-flex; align-items: center; min-height: 40px; } }

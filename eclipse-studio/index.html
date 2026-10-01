@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Eclipse Studio — Moda alternativa em Campo Grande - MS</title>
+    <meta name="description" content="Moda alternativa em Campo Grande - MS: roupas, bijuterias, bolsas e perfumes no estilo alt. Monte a sacola e feche o pedido pelo WhatsApp.">
+    <!-- LANÇAMENTO: quando a vitrine tiver só as peças reais, trocar por "index, follow" e pôr a loja no sitemap.xml (ver LANCAMENTO.md) -->
+    <meta name="robots" content="noindex">
+    <link rel="canonical" href="https://samueldevmi.github.io/portfolio/eclipse-studio/">
+    <meta name="theme-color" content="#171022">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Eclipse Studio — doce por fora, bruxa por dentro">
+    <meta property="og:description" content="Moda alternativa em Campo Grande, com pedido direto no WhatsApp.">
+    <meta property="og:url" content="https://samueldevmi.github.io/portfolio/eclipse-studio/">
+    <meta property="og:image" content="https://samueldevmi.github.io/portfolio/eclipse-studio/compartilhar.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Eclipse Studio: doce por fora, bruxa por dentro. Espelho com bola de cristal, gato preto e velas.">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23150c1f'/%3E%3Ccircle cx='16' cy='16' r='10' fill='%23e9c46a'/%3E%3Ccircle cx='18' cy='14.5' r='9.2' fill='%23150c1f'/%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Quicksand:wght@400;500;600;700&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "ClothingStore", "name": "Eclipse Studio", "description": "Moda alternativa em Campo Grande - MS: roupas, bijuterias, bolsas e perfumes no estilo alt, com pedido pelo WhatsApp.", "url": "https://samueldevmi.github.io/portfolio/eclipse-studio/", "image": "https://samueldevmi.github.io/portfolio/eclipse-studio/compartilhar.png", "telephone": "+55 67 99975-0866", "address": {"@type": "PostalAddress", "addressLocality": "Campo Grande", "addressRegion": "MS", "addressCountry": "BR"}, "areaServed": {"@type": "City", "name": "Campo Grande"}, "sameAs": ["https://www.instagram.com/eclipse_studiocg/"], "paymentAccepted": "Pix, cartão de crédito, cartão de débito, dinheiro", "currenciesAccepted": "BRL"}</script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <a class="pular" href="#colecao">Pular para as peças</a>
+    <div class="olhos-noite" aria-hidden="true"></div>
+
+    <div class="faixa-avisos">
+        <p class="faixa-rotativa"><span>Frete grátis acima de R$&nbsp;150</span><span aria-hidden="true">✦</span><span>Até 12x sem juros no cartão</span><span aria-hidden="true">✦</span><span>Entrega em Campo Grande</span></p>
+        <p class="faixa-demo"><b>Prévia</b> peças e preços provisórios</p>
+    </div>
+
+    <header class="topo">
+        <div class="miolo topo-in">
+            <a class="logo" href="#" aria-label="Eclipse Studio, início">
+                <svg class="logo-icone" viewBox="0 0 32 32" aria-hidden="true"><circle class="coroa" cx="16" cy="16" r="11"/><circle class="disco" cx="18" cy="14.5" r="10"/><path class="faisca" d="M7.5 21.5l1.2 -3l1.2 3l3 1.2l-3 1.2l-1.2 3l-1.2 -3l-3 -1.2z"/></svg>
+                <span data-nome-loja>Eclipse Studio</span>
+            </a>
+            <nav aria-label="Principal">
+                <a href="#colecao">Coleção</a>
+                <a href="#sobre">A marca</a>
+                <a href="#duvidas">Dúvidas</a>
+            </nav>
+            <button class="botao-sacola" id="abrirSacola" type="button" aria-label="Abrir sacola, vazia">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1.2 12.2a1 1 0 0 1-1 .8H7.2a1 1 0 0 1-1-.8z"/><path d="M9 10V7a3 3 0 0 1 6 0v3"/></svg>
+                <span class="sacola-rotulo">Sacola</span>
+                <span class="sacola-contador" id="contadorSacola" hidden>0</span>
+            </button>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="brilhos" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="miolo hero-in">
+            <div class="hero-texto">
+                <p class="eyebrow">Moda alt · Campo Grande - MS</p>
+                <h1>Doce por fora,<br><em>bruxa por dentro</em></h1>
+                <p class="hero-sub">Roupas, bijuterias, bolsas e perfumes pro seu estilo alt de todo dia: peças feitas à mão, garimpadas em brechó e escolhidas a dedo. Monte a sacola e feche o pedido direto no WhatsApp.</p>
+                <div class="hero-acoes">
+                    <a class="botao" href="#colecao">Ver a coleção</a>
+                    <a class="botao botao-linha" href="#como">Como comprar</a>
+                </div>
+            </div>
+            <div class="hero-arte" aria-hidden="true">
+                <svg viewBox="0 0 400 480">
+                    <defs>
+                        <radialGradient id="ceu" cx="50%" cy="40%" r="70%">
+                            <stop offset="0" stop-color="#f3e6ff"/>
+                            <stop offset=".5" stop-color="#b996ec"/>
+                            <stop offset="1" stop-color="#5b3d8f"/>
+                        </radialGradient>
+                        <radialGradient id="vidro" cx="42%" cy="36%" r="70%">
+                            <stop offset="0" stop-color="#fff4fb"/>
+                            <stop offset=".6" stop-color="#e2cfff"/>
+                            <stop offset="1" stop-color="#ffb8d9"/>
+                        </radialGradient>
+                        <clipPath id="espelho"><ellipse cx="200" cy="245" rx="122" ry="168"/></clipPath>
+                    </defs>
+                    <!-- espelho -->
+                    <ellipse cx="200" cy="245" rx="150" ry="196" fill="#241a33"/>
+                    <ellipse cx="200" cy="245" rx="140" ry="186" fill="#cdb4ff" stroke="#241a33" stroke-width="4"/>
+                    <ellipse cx="200" cy="245" rx="140" ry="186" fill="none" stroke="#fff4fb" stroke-width="3" stroke-dasharray="0 14" stroke-linecap="round"/>
+                    <ellipse cx="200" cy="245" rx="122" ry="168" fill="url(#ceu)" stroke="#241a33" stroke-width="4"/>
+                    <g clip-path="url(#espelho)">
+                        <!-- estrelinhas e lua -->
+                        <g fill="#e9c46a">
+                            <path transform="translate(128 150) scale(1.1)" d="M0 -10C1 -3 3 -1 10 0C3 1 1 3 0 10C-1 3 -3 1 -10 0C-3 -1 -1 -3 0 -10Z"/>
+                            <path transform="translate(294 214) scale(.8)" d="M0 -10C1 -3 3 -1 10 0C3 1 1 3 0 10C-1 3 -3 1 -10 0C-3 -1 -1 -3 0 -10Z"/>
+                            <path transform="translate(112 236) scale(.6)" d="M0 -10C1 -3 3 -1 10 0C3 1 1 3 0 10C-1 3 -3 1 -10 0C-3 -1 -1 -3 0 -10Z"/>
+                            <path transform="translate(170 110) scale(.5)" d="M0 -10C1 -3 3 -1 10 0C3 1 1 3 0 10C-1 3 -3 1 -10 0C-3 -1 -1 -3 0 -10Z"/>
+                        </g>
+                        <g class="eclipse"><circle cx="256" cy="142" r="31" fill="#ffe7a8" stroke="#241a33" stroke-width="3.5"/><circle cx="265" cy="135" r="29" fill="#241a33"/></g>
+                        <!-- chão de nuvens -->
+                        <g fill="#fff4fb" stroke="#241a33" stroke-width="3.5">
+                            <path d="M60 430a30 30 0 0 1 40-40a34 34 0 0 1 62 -4a28 28 0 0 1 40 14a30 30 0 0 1 50 -8a34 34 0 0 1 60 6a28 28 0 0 1 40 32z"/>
+                        </g>
+                        <!-- prateleira, suporte e bola de cristal com olho -->
+                        <path d="M116 350H284V362H116Z" fill="#241a33" stroke="#241a33" stroke-width="4" stroke-linejoin="round"/>
+                        <path d="M168 324Q200 334 232 324L242 350H158Z" fill="#e9c46a" stroke="#241a33" stroke-width="4" stroke-linejoin="round"/>
+                        <g class="bola">
+                            <circle cx="200" cy="264" r="62" fill="url(#vidro)" stroke="#241a33" stroke-width="4"/>
+                            <path d="M166 264Q200 238 234 264Q200 290 166 264Z" fill="#fff4fb" stroke="#241a33" stroke-width="3.5"/>
+                            <circle class="bola-iris" cx="200" cy="264" r="12" fill="#aef0d6" stroke="#241a33" stroke-width="3"/>
+                            <g class="bola-pupila">
+                                <circle cx="200" cy="264" r="5.5" fill="#241a33"/>
+                                <circle cx="204" cy="260" r="2.4" fill="#fff"/>
+                            </g>
+                            <path class="bola-raios" d="M174 254l-5 -8M187 247l-2 -9M200 245v-9M213 247l2 -9M226 254l5 -8" stroke="#241a33" stroke-width="3" stroke-linecap="round"/>
+                            <path d="M158 244Q164 222 184 212" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".8"/>
+                        </g>
+                        <!-- gato preto -->
+                        <g class="gato" transform="translate(236 302) scale(.95)" fill="#241a33" stroke="#241a33" stroke-width="2" stroke-linejoin="round">
+                            <path class="gato-cauda" d="M42 42C60 44 66 28 58 18" fill="none" stroke-width="6" stroke-linecap="round"/>
+                            <path class="gato-corpo" d="M6 50C-2 34 0 12 10 1L7 -16L18 -7C22 -8 27 -8 31 -7L42 -16L39 1C48 12 50 34 44 50Z"/>
+                            <path class="gato-olhos" d="M14 9l6 3M36 9l-6 3" stroke="#e9c46a" stroke-width="3" stroke-linecap="round"/>
+                        </g>
+                    </g>
+                    <ellipse cx="200" cy="245" rx="122" ry="168" fill="none" stroke="#241a33" stroke-width="4"/>
+                    <!-- ornamento do topo -->
+                    <g stroke="#241a33" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">
+                        <path d="M200 58C176 30 138 40 150 66C156 80 172 72 166 62" fill="none" stroke="#cdb4ff" stroke-width="7"/>
+                        <path d="M200 58C224 30 262 40 250 66C244 80 228 72 234 62" fill="none" stroke="#cdb4ff" stroke-width="7"/>
+                        <path d="M200 58C176 30 138 40 150 66C156 80 172 72 166 62M200 58C224 30 262 40 250 66C244 80 228 72 234 62" fill="none" stroke-width="2"/>
+                        <path d="M193 10h14v18h14v14h-14v20h-14v-20h-14v-14h14z" fill="#ffb8d9"/>
+                    </g>
+                    <!-- rosas negras na base -->
+                    <g stroke="#241a33" stroke-width="3.5" stroke-linejoin="round">
+                        <ellipse cx="148" cy="436" rx="20" ry="9" fill="#aef0d6" transform="rotate(-25 148 436)"/>
+                        <ellipse cx="252" cy="436" rx="20" ry="9" fill="#aef0d6" transform="rotate(25 252 436)"/>
+                        <circle cx="168" cy="430" r="20" fill="#241a33"/>
+                        <circle cx="232" cy="430" r="20" fill="#241a33"/>
+                        <circle cx="200" cy="440" r="26" fill="#241a33"/>
+                        <g fill="none" stroke="#cdb4ff" stroke-width="2.5" stroke-linecap="round">
+                            <path d="M191 440a9 9 0 1 1 9 9a16 16 0 1 1 -16 -16"/>
+                            <path d="M161 430a7 7 0 1 1 7 7a12 12 0 1 1 -12 -12"/>
+                            <path d="M225 430a7 7 0 1 1 7 7a12 12 0 1 1 -12 -12"/>
+                        </g>
+                    </g>
+                </svg>
+                <svg class="vela vela-e" viewBox="0 0 40 120"><path class="chama" d="M20 4C27 16 28 24 20 30C12 24 13 16 20 4Z"/><path d="M20 30V36" stroke="#241a33" stroke-width="2"/><rect x="11" y="36" width="18" height="62" rx="3" fill="#fff4fb" stroke="#241a33" stroke-width="3"/><path d="M11 46q4 6 6 0q3 10 6 0" fill="none" stroke="#241a33" stroke-width="2"/><path d="M4 98H36L32 112H8Z" fill="#e9c46a" stroke="#241a33" stroke-width="3" stroke-linejoin="round"/></svg>
+                <svg class="vela vela-d" viewBox="0 0 40 120"><path class="chama" d="M20 4C27 16 28 24 20 30C12 24 13 16 20 4Z"/><path d="M20 30V36" stroke="#241a33" stroke-width="2"/><rect x="11" y="36" width="18" height="62" rx="3" fill="#cdb4ff" stroke="#241a33" stroke-width="3"/><path d="M29 50q-4 6 -6 0" fill="none" stroke="#241a33" stroke-width="2"/><path d="M4 98H36L32 112H8Z" fill="#e9c46a" stroke="#241a33" stroke-width="3" stroke-linejoin="round"/></svg>
+                <svg class="morceguinho" viewBox="-30 -16 60 30"><path d="M0 -4L-4 -12L-6 -3C-12 -9 -22 -8 -26 -2C-21 -2 -19 1 -19 5C-15 2 -11 3 -9 7C-6 3 -3 4 0 8C3 4 6 3 9 7C11 3 15 2 19 5C19 1 21 -2 26 -2C22 -8 12 -9 6 -3L4 -12Z" fill="#241a33" stroke="#cdb4ff" stroke-width="1.5" stroke-linejoin="round"/><circle cx="-2.6" cy="-1" r="1.5" fill="#ffb8d9"/><circle cx="2.6" cy="-1" r="1.5" fill="#ffb8d9"/></svg>
+            </div>
+        </div>
+    </section>
+
+    <div class="cera" aria-hidden="true"></div>
+
+    <section class="vantagens" aria-label="Vantagens de comprar aqui">
+        <ul class="miolo">
+            <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7z"/><circle cx="7" cy="17.5" r="1.6"/><circle cx="17.5" cy="17.5" r="1.6"/></svg><div><b>Entrega em Campo Grande</b><span>Por Uber, 99 ou retirada combinada</span></div></li>
+            <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M3 12h18"/><circle cx="12" cy="12" r="8.5"/></svg><div><b>Frete grátis acima de R$&nbsp;150</b><span>Nas entregas em Campo Grande</span></div></li>
+            <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 3 3-3 3-3-3zM5 9l3 3-3 3-3-3zM19 9l3 3-3 3-3-3zM12 16l3 3-3 3-3-3z"/></svg><div><b>Até 5% off no Pix</b><span>Ou até 12x sem juros no cartão</span></div></li>
+            <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a8 8 0 0 1-11.8 7L4 20l1.5-4.2A8 8 0 1 1 20 11.5z"/></svg><div><b>Atendimento de gente</b><span>Direto com a Elizabeth no WhatsApp</span></div></li>
+        </ul>
+    </section>
+
+    <section class="como" id="como" aria-labelledby="comoTitulo">
+        <div class="miolo">
+            <h2 id="comoTitulo" class="titulo">Como comprar</h2>
+            <ol>
+                <li><span class="num">I</span><div><h3>Escolha</h3><p>Abra a peça e ponha na sacola. Quase tudo é tamanho único.</p></div></li>
+                <li><span class="num">II</span><div><h3>Revise</h3><p>Confira quantidades e o total. Sem cadastro e sem senha.</p></div></li>
+                <li><span class="num">III</span><div><h3>Envie no WhatsApp</h3><p>O pedido chega pronto. A gente confirma o estoque, a entrega e o pagamento na conversa.</p></div></li>
+            </ol>
+        </div>
+    </section>
+
+    <section class="estilos" aria-labelledby="estilosTitulo">
+        <div class="miolo">
+            <h2 id="estilosTitulo" class="titulo">Qual é a sua vibe?</h2>
+            <p class="sub">Escolha um estilo e a vitrine mostra só as peças dele. Ainda descobrindo o seu? Passeia por todos.</p>
+            <ul class="estilos-grade" id="estilos"></ul>
+        </div>
+    </section>
+
+    <section class="looks" aria-labelledby="looksTitulo">
+        <div class="miolo">
+            <h2 id="looksTitulo" class="titulo">Looks prontos</h2>
+            <p class="sub">Combinações que já saem casando. Um clique põe as três peças na sacola.</p>
+            <ul class="looks-grade" id="looks"></ul>
+        </div>
+    </section>
+
+    <main id="colecao" class="colecao">
+        <div class="miolo">
+            <div class="colecao-topo">
+                <h2 class="titulo">A coleção</h2>
+                <p id="contagem" class="contagem" aria-live="polite"></p>
+            </div>
+
+            <div class="ferramentas">
+                <div class="chips" id="chips" role="group" aria-label="Filtrar por categoria"></div>
+                <div class="campos">
+                    <label class="campo-busca">
+                        <span class="visualmente-oculto">Buscar peça</span>
+                        <input id="busca" type="search" placeholder="Buscar peça…" autocomplete="off">
+                    </label>
+                    <label class="campo-ordem">
+                        <span class="visualmente-oculto">Ordenar por</span>
+                        <select id="ordem">
+                            <option value="padrao">Destaques</option>
+                            <option value="menor">Menor preço</option>
+                            <option value="maior">Maior preço</option>
+                            <option value="nome">Nome (A–Z)</option>
+                        </select>
+                    </label>
+                </div>
+            </div>
+
+            <ul class="grade" id="grade"></ul>
+
+            <div class="vazio" id="vazio" hidden>
+                <p class="vazio-titulo">Nenhuma peça por aqui…</p>
+                <p>Tente outra palavra ou volte pra coleção inteira.</p>
+                <button class="botao botao-linha" id="limparFiltros" type="button">Limpar filtros</button>
+            </div>
+
+            <noscript><p class="vazio">Ative o JavaScript para ver a loja.</p></noscript>
+        </div>
+    </main>
+
+    <div class="cera" aria-hidden="true"></div>
+
+    <section class="sobre" id="sobre" aria-labelledby="sobreTitulo">
+        <div class="miolo sobre-in">
+            <div class="sobre-arte" aria-hidden="true">
+                <div class="moldura tom-r"><svg viewBox="0 0 100 100" class="arte" data-arte="colarBola"></svg></div>
+                <div class="moldura tom-m"><svg viewBox="0 0 100 100" class="arte" data-arte="brincoMorcego"></svg></div>
+                <div class="moldura tom-l"><svg viewBox="0 0 100 100" class="arte" data-arte="espartilho"></svg></div>
+            </div>
+            <div class="sobre-texto recorte">
+                <p class="recorte-jornal">Gazeta das Trevas · edição de lua cheia</p>
+                <p class="eyebrow">A marca</p>
+                <h2 id="sobreTitulo" class="titulo">Um lugar pra ser livre</h2>
+                <p class="sobre-sonho">★ uma pequena sonhadora com grandes sonhos ☆</p>
+                <p>A <span data-nome-loja>Eclipse Studio</span> é um lugar onde você pode ser livre criativamente e experimentar, até descobrir o seu próprio estilo.</p>
+                <p>São peças pra meninxs alternativas e pro dia a dia, tudo focado no estilo alt: umas feitas à mão, outras garimpadas em brechó e outras escolhidas a dedo pra revenda.</p>
+                <p class="sobre-assinatura">com carinho, Elizabeth 🖤</p>
+                <p><a class="insta" href="https://www.instagram.com/eclipse_studiocg/" target="_blank" rel="noopener noreferrer">@eclipse_studiocg no Instagram →</a></p>
+                <p class="recorte-legenda">Na foto: o colar bola de cristal, o brinco morceguinho e o espartilho rosa seca, flagrados às vésperas da lua cheia.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="duvidas" id="duvidas" aria-labelledby="duvidasTitulo">
+        <div class="miolo duvidas-in">
+            <div>
+                <h2 id="duvidasTitulo" class="titulo">Tamanhos</h2>
+                <p class="sub">Quase todas as peças são <strong>tamanho único</strong>. Quer saber se serve? Pergunta as medidas da peça no WhatsApp que a gente mede pra você.</p>
+                <div class="encomenda">
+                    <p class="encomenda-titulo">Sob encomenda ✦</p>
+                    <p>Gostou de uma peça mas queria em outra cor ou outro tamanho? A gente faz sob encomenda. É só escrever na observação do pedido.</p>
+                </div>
+                <a class="botao botao-linha" href="https://wa.me/5567999750866?text=Oi!%20Tenho%20uma%20d%C3%BAvida%20sobre%20uma%20pe%C3%A7a%20da%20Eclipse%20Studio%20%F0%9F%96%A4" target="_blank" rel="noopener noreferrer">Tirar dúvida no WhatsApp</a>
+            </div>
+            <div>
+                <h2 class="titulo">Dúvidas frequentes</h2>
+                <details name="duvida"><summary>Como funciona a entrega?</summary><p>Por enquanto a gente entrega só em Campo Grande: por Uber ou 99, ou você retira num lugar combinado. O pedido fica pronto em até 3 dias úteis depois do pagamento. Acima de R$ 150 o frete é grátis.</p></details>
+                <details name="duvida"><summary>Como funciona a troca?</summary><p>Você tem 7 dias a partir do recebimento pra trocar, com a etiqueta na peça. Roupa íntima não tem troca.</p></details>
+                <details name="duvida"><summary>Quais as formas de pagamento?</summary><p>Pix, com até 5% de desconto; cartão de crédito em até 12x sem juros, por link de pagamento; cartão de débito; ou dinheiro na retirada. Tudo é combinado no WhatsApp depois que você manda o pedido.</p></details>
+                <details name="duvida"><summary>Dá pra encomendar em outra cor ou tamanho?</summary><p>Dá, sim! Escreve na observação do pedido o que você queria e a gente combina no WhatsApp.</p></details>
+                <details name="duvida"><summary>As peças são novas?</summary><p>Tem de tudo: peças feitas à mão pela Elizabeth, peças novas de revenda e achados de brechó. Cada anúncio diz de onde a peça veio.</p></details>
+            </div>
+        </div>
+    </section>
+
+    <footer class="rodape">
+        <div class="miolo rodape-grade">
+            <div>
+                <p class="rodape-nome" data-nome-loja>Eclipse Studio</p>
+                <p>Moda alternativa em Campo Grande - MS: doce por fora, bruxa por dentro.</p>
+                <p><a class="insta" href="https://www.instagram.com/eclipse_studiocg/" target="_blank" rel="noopener noreferrer">@eclipse_studiocg</a></p>
+            </div>
+            <div>
+                <p class="rodape-titulo">Loja</p>
+                <a href="#colecao">Coleção</a>
+                <a href="#sobre">A marca</a>
+                <a href="#duvidas">Tamanhos e dúvidas</a>
+            </div>
+            <div>
+                <p class="rodape-titulo">Atendimento</p>
+                <a href="https://wa.me/5567999750866" target="_blank" rel="noopener noreferrer">WhatsApp (67) 99975-0866</a>
+                <p>Entrega em Campo Grande por Uber, 99 ou retirada</p>
+                <a href="#duvidas">Trocas e prazos</a>
+            </div>
+            <div>
+                <p class="rodape-titulo">Pagamento</p>
+                <p class="rodape-pagamento"><span>Pix</span><span>Crédito 12x</span><span>Débito</span><span>Dinheiro</span></p>
+            </div>
+        </div>
+        <div class="miolo rodape-demo">
+            <p>Prévia criada por <strong>Samuel Mickael</strong>. As peças e os preços da vitrine ainda são de exemplo, até chegarem as fotos da coleção.</p>
+        </div>
+    </footer>
+
+    <dialog id="dialogoProduto" class="dialogo-produto" aria-labelledby="produtoTitulo"></dialog>
+
+    <dialog id="sacola" class="sacola" aria-labelledby="sacolaTitulo">
+        <div class="sacola-miolo">
+            <div class="sacola-topo">
+                <h2 id="sacolaTitulo">Sua sacola</h2>
+                <button class="fechar" type="button" data-fechar aria-label="Fechar sacola">×</button>
+            </div>
+            <div class="sacola-corpo">
+                <ul class="itens" id="itens"></ul>
+                <div class="sacola-vazia" id="sacolaVazia" hidden>
+                    <p class="vazio-titulo">Sacola vazia</p>
+                    <p>Escolha uma peça e ela aparece aqui.</p>
+                    <button class="botao botao-linha" type="button" data-fechar>Continuar olhando</button>
+                </div>
+            </div>
+            <div class="sacola-rodape" id="sacolaRodape" hidden>
+                <p class="frete" id="frete"></p>
+                <div class="total"><span>Total estimado</span><strong id="total">R$ 0,00</strong></div>
+                <label class="campo" for="campoNome">Seu nome <small>(opcional)</small></label>
+                <input id="campoNome" type="text" maxlength="60" autocomplete="name" placeholder="Como a gente te chama?">
+                <label class="campo" for="campoObs">Observação <small>(opcional)</small></label>
+                <textarea id="campoObs" rows="2" maxlength="200" placeholder="Ex.: prefiro retirar / quero em outra cor"></textarea>
+                <details class="previa">
+                    <summary>Ver a mensagem que será enviada</summary>
+                    <pre id="previa"></pre>
+                </details>
+                <a class="botao botao-cheio" id="enviarZap" href="#" target="_blank" rel="noopener noreferrer">Enviar pedido pelo WhatsApp</a>
+                <div class="sacola-acoes">
+                    <button class="link-fraco" id="copiarPedido" type="button">Copiar pedido</button>
+                    <button class="link-fraco" id="esvaziar" type="button">Esvaziar sacola</button>
+                </div>
+                <p class="nota" id="nota" role="status">No WhatsApp a gente confirma o estoque, combina a entrega e manda o Pix ou o link do cartão. Este site não pede nem guarda dado de pagamento.</p>
+            </div>
+        </div>
+    </dialog>
+
+    <a class="zap-flutuante" href="https://wa.me/5567999750866?text=Oi!%20Vim%20pelo%20site%20da%20Eclipse%20Studio%20%F0%9F%96%A4" target="_blank" rel="noopener noreferrer" aria-label="Tirar dúvida no WhatsApp">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a8 8 0 0 1-11.8 7L4 20l1.5-4.2A8 8 0 1 1 20 11.5z"/><path d="M9 10.5h.01M12 10.5h.01M15 10.5h.01"/></svg>
+        <span>Dúvidas?</span>
+    </a>
+
+    <div class="avisos" id="avisos" role="status" aria-live="polite"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -154,7 +154,8 @@
             if (imagemAntiga && imagemAntiga.dataset.src && !imagemAntiga.getAttribute("src")) {
                 // Se a reserva também falhar, esconde o quadro inteiro em vez de mostrar imagem quebrada.
                 imagemAntiga.addEventListener("error", function () { desenho.parentElement.style.display = "none"; }, { once: true });
-                imagemAntiga.src = imagemAntiga.dataset.src;
+                const azul = document.documentElement.dataset.tema === "azul"; // a imagem vem com a cor no link
+                imagemAntiga.src = azul ? imagemAntiga.dataset.src.replace("/ff2a3d/", "/2e7eff/") : imagemAntiga.dataset.src;
                 imagemAntiga.hidden = false;
             }
         }
@@ -791,7 +792,7 @@
         });
     })();
 
-/* Vibração bem curta ao escolher uma opção no orçamento (celular Android; iPhone ignora sozinho). */
+    /* Vibração bem curta ao escolher uma opção no orçamento (celular Android; iPhone ignora sozinho). */
     (function vibrarNaEscolha() {
         if (!("vibrate" in navigator) || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
         document.addEventListener("click", (evento) => {
@@ -1225,6 +1226,15 @@
     document.querySelectorAll("[data-promo-ate]").forEach(function (el) {
         const fim = new Date(el.getAttribute("data-promo-ate") + "T23:59:59");
         if (!isNaN(fim) && agora <= fim) el.hidden = false;
+    });
+    // Gancho de urgência de verdade: conta os dias que faltam (só aparece na reta final, até 5 dias)
+    document.querySelectorAll("[data-prazo]").forEach(function (el) {
+        const fim = new Date(el.getAttribute("data-prazo") + "T00:00:00");
+        const hoje = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate());
+        const dias = Math.round((fim - hoje) / 86400000);
+        if (isNaN(dias) || dias < 0 || dias > 5) return;
+        el.textContent = dias === 0 ? "Último dia!" : dias === 1 ? "Termina amanhã" : "Só mais " + dias + " dias";
+        el.hidden = false;
     });
 })();
 

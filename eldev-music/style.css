@@ -825,3 +825,6 @@ body.tela-cheia .avisos, body.tela-cheia.sem-mini .avisos { bottom: auto; top: c
 .aviso-demo a:hover { text-decoration: underline; }
 @media (display-mode: standalone) { .aviso-demo { display: none; } }
 @media (max-width: 480px) { .aviso-demo span { display: none; } }
+
+/* "Voltar ao portfólio" com área de toque de verdade no celular (tinha ~18px de altura) */
+@media (pointer: coarse) { a[href^="../index.html"] { display: inline-flex; align-items: center; min-height: 40px; } }
