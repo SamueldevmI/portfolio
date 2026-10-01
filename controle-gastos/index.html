@@ -2,6 +2,9 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
+    <!-- Segurança (CSP): o navegador só roda script que é arquivo deste site e só conversa com os serviços listados.
+         Se algum código malicioso conseguir entrar na página, ele não roda. Serviço novo (API, imagem, fonte)? Acrescente aqui. -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://gastos-api-z0dt.onrender.com; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Controle de gastos pessoal desenvolvido por Samuel Mickael.">
     <meta property="og:title" content="Grana em Dia | Controle de Gastos">
@@ -107,11 +110,6 @@
 
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
     <footer>Feito por Samuel Mickael · Dados salvos numa API real (Flask + SQLAlchemy). No plano gratuito, a 1ª ação pode levar até 50s se a API estava "dormindo".</footer>
-    <script src="script.js"></script>
-    <script>
-        if ("serviceWorker" in navigator) {
-            window.addEventListener("load", () => navigator.serviceWorker.register("sw.js"));
-        }
-    </script>
+    <script src="script.js?v=20260930csp"></script>
 </body>
 </html>

@@ -67,7 +67,9 @@ function atualizarCategorias() {
         const percentual = (valor / total) * 100;
         const linha = document.createElement("div");
         linha.className = "categoria-linha";
-        linha.innerHTML = `<span>${categoria}</span><div class="barra" aria-label="${percentual.toFixed(0)}% das despesas"><i></i></div><strong>${formatoMoeda.format(valor)}</strong>`;
+        // a categoria vem da API pública (qualquer um grava): entra como texto, nunca como HTML
+        linha.innerHTML = `<span></span><div class="barra" aria-label="${percentual.toFixed(0)}% das despesas"><i></i></div><strong>${formatoMoeda.format(valor)}</strong>`;
+        linha.querySelector("span").textContent = categoria;
         linha.querySelector("i").style.width = `${percentual}%`;
         categorias.appendChild(linha);
     });
@@ -99,7 +101,10 @@ function renderizar() {
         linha.className = `transacao ${item.tipo}${item.id === editandoId ? " editando" : ""}`;
         const icone = item.tipo === "receita" ? "↗" : "↘";
         const sinal = item.tipo === "receita" ? "+" : "−";
-        linha.innerHTML = `<span class="icone" aria-hidden="true">${icone}</span><div><p class="nome"></p><p class="categoria"></p></div><strong class="valor-transacao">${sinal} ${formatoMoeda.format(item.valor)}</strong><button class="editar" type="button" aria-label="Editar ${item.descricao}" data-id="${item.id}">✎</button><button class="excluir" type="button" aria-label="Excluir ${item.descricao}" data-id="${item.id}">×</button>`;
+        linha.innerHTML = `<span class="icone" aria-hidden="true">${icone}</span><div><p class="nome"></p><p class="categoria"></p></div><strong class="valor-transacao">${sinal} ${formatoMoeda.format(item.valor)}</strong><button class="editar" type="button" data-id="${Number(item.id)}">✎</button><button class="excluir" type="button" data-id="${Number(item.id)}">×</button>`;
+        // descrição e categoria vêm da API pública: só como texto (antes a descrição ia crua no aria-label)
+        linha.querySelector(".editar").setAttribute("aria-label", `Editar ${item.descricao}`);
+        linha.querySelector(".excluir").setAttribute("aria-label", `Excluir ${item.descricao}`);
         linha.querySelector(".nome").textContent = item.descricao;
         const data = item.data ? formatoData.format(new Date(`${item.data}T12:00:00`)) : "Sem data";
         linha.querySelector(".categoria").textContent = `${item.categoria} · ${data}`;
@@ -268,3 +273,8 @@ botaoTema.addEventListener("click", () => {
 document.getElementById("data").value = new Date().toISOString().slice(0, 10);
 renderizar();
 carregarTransacoes();
+
+// Funciona sem internet (estava dentro do index.html; a CSP só deixa rodar script que é arquivo do site)
+if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => navigator.serviceWorker.register("sw.js"));
+}

@@ -2,6 +2,9 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
+    <!-- Segurança (CSP): o navegador só roda script que é arquivo deste site e só conversa com os serviços listados.
+         Se algum código malicioso conseguir entrar na página, ele não roda. Serviço novo (API, imagem, fonte)? Acrescente aqui. -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src https://gastos-api-z0dt.onrender.com; object-src 'none'; base-uri 'self'; form-action 'self'">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Conta a Dois — Gastos de casal em tempo real</title>
     <meta name="description" content="Demonstração de um controle de gastos pra casal: cada pessoa lança os gastos no próprio celular e os dois veem tudo sincronizar em tempo real, com o saldo de quem deve pra quem. Projeto de portfólio de Samuel Mickael.">

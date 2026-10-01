@@ -1,10 +1,11 @@
-import random
-import string
+import secrets
 from datetime import date, datetime, timedelta
 
 from flask import Blueprint, jsonify, request
 
+from . import validacao
 from .database import db
+from .limites import CRIAR_CASAL, codigo_errado, escrita, limiter
 from .models_casal import MAX_INTEGRANTES_POR_CASAL, Casal, GastoCasal, Integrante
 
 bp = Blueprint("casal", __name__, url_prefix="/casal")
@@ -16,7 +17,8 @@ _MAX_CASAIS = 500
 
 def _gerar_codigo() -> str:
     for _ in range(20):
-        codigo = "".join(random.choice(_ALFABETO_CODIGO) for _ in range(6))
+        # secrets, não random: o código é a única "senha" do casal e random é previsível
+        codigo = "".join(secrets.choice(_ALFABETO_CODIGO) for _ in range(6))
         if not Casal.query.filter_by(codigo=codigo).first():
             return codigo
     raise RuntimeError("Não foi possível gerar um código único.")
@@ -68,23 +70,9 @@ def _validar_gasto(dados: dict, casal: Casal) -> dict:
             erros.append("Esse 'integrante_id' não pertence a esse casal.")
     resultado["integrante_id"] = integrante_id
 
-    descricao = str(dados.get("descricao", "")).strip()
-    if not descricao:
-        erros.append("O campo 'descricao' é obrigatório.")
-    resultado["descricao"] = descricao
-
-    try:
-        valor = float(dados.get("valor"))
-        if valor <= 0:
-            erros.append("O campo 'valor' deve ser maior que zero.")
-        resultado["valor"] = valor
-    except (TypeError, ValueError):
-        erros.append("O campo 'valor' deve ser um número.")
-
-    categoria = str(dados.get("categoria", "")).strip()
-    if not categoria:
-        erros.append("O campo 'categoria' é obrigatório.")
-    resultado["categoria"] = categoria
+    resultado["descricao"] = validacao.texto(dados, "descricao", validacao.MAX_DESCRICAO, erros)
+    resultado["valor"] = validacao.valor_positivo(dados, erros)
+    resultado["categoria"] = validacao.texto(dados, "categoria", validacao.MAX_CATEGORIA, erros)
 
     try:
         resultado["data"] = _parse_data(dados.get("data"))
@@ -97,6 +85,7 @@ def _validar_gasto(dados: dict, casal: Casal) -> dict:
 
 
 @bp.post("")
+@limiter.limit(CRIAR_CASAL)
 def criar_casal():
     """Cria um casal novo e o primeiro integrante.
     ---
@@ -144,6 +133,8 @@ def criar_casal():
 
 
 @bp.post("/<codigo>/entrar")
+@escrita
+@codigo_errado
 def entrar_no_casal(codigo: str):
     """Entra num casal existente usando o código compartilhado.
     ---
@@ -195,6 +186,7 @@ def entrar_no_casal(codigo: str):
 
 
 @bp.get("/<codigo>")
+@codigo_errado
 def obter_casal(codigo: str):
     """Consulta um casal pelo código (pra saber quem já entrou).
     ---
@@ -218,6 +210,7 @@ def obter_casal(codigo: str):
 
 
 @bp.get("/<codigo>/gastos")
+@codigo_errado
 def listar_gastos_casal(codigo: str):
     """Lista os gastos do casal, mais recentes primeiro.
     ---
@@ -241,6 +234,8 @@ def listar_gastos_casal(codigo: str):
 
 
 @bp.post("/<codigo>/gastos")
+@escrita
+@codigo_errado
 def criar_gasto_casal(codigo: str):
     """Registra um gasto novo do casal.
     ---
@@ -288,6 +283,8 @@ def criar_gasto_casal(codigo: str):
 
 
 @bp.delete("/<codigo>/gastos/<int:gasto_id>")
+@escrita
+@codigo_errado
 def remover_gasto_casal(codigo: str, gasto_id: int):
     """Remove um gasto do casal.
     ---
@@ -322,6 +319,7 @@ def remover_gasto_casal(codigo: str, gasto_id: int):
 
 
 @bp.get("/<codigo>/saldo")
+@codigo_errado
 def saldo_casal(codigo: str):
     """Calcula quem deve quanto pra quem.
     ---

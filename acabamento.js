@@ -46,7 +46,7 @@
             return { soma: soma, ativos: ativos, atual: atual, recorde: recorde };
         }
 
-        function desenhar(todos, somaAno) {
+        function desenhar(todos, somaAno, provisorio) {
             const dias = janelaRecente(todos);
             const n = numeros(dias);
             const semanas = Math.round(dias.length / 7);
@@ -67,7 +67,7 @@
                 celula.className = "gh-dia";
                 celula.dataset.n = d.level;
                 const dia = data.toLocaleDateString("pt-BR", { day: "numeric", month: "long", year: "numeric" });
-                celula.title = (d.count === 0 ? "Nenhuma contribuição" : d.count + (d.count === 1 ? " contribuição" : " contribuições")) + " em " + dia;
+                if (!provisorio) celula.title = (d.count === 0 ? "Nenhuma contribuição" : d.count + (d.count === 1 ? " contribuição" : " contribuições")) + " em " + dia;
                 if (i === 0) celula.style.gridRowStart = primeiro + 1;
                 grade.appendChild(celula);
 
@@ -99,10 +99,12 @@
 
             const painel = document.createElement("div");
             painel.className = "gh-numeros";
+            // no esqueleto os números são "00" transparentes com brilho: ocupam o mesmo lugar que os de verdade
+            const num = function (v) { return provisorio ? "<b class='esqueleto-valor'>00</b>" : "<b>" + v + "</b>"; };
             painel.innerHTML =
-                "<div><b>" + n.soma + "</b><span>contribuições em " + semanas + " semanas</span></div>" +
-                "<div><b>" + n.ativos + "</b><span>dias com atividade</span></div>" +
-                "<div><b>" + n.atual + "</b><span>" + (n.atual === 1 ? "dia seguido" : "dias seguidos") + " (recorde " + n.recorde + ")</span></div>";
+                "<div>" + num(n.soma) + "<span>contribuições em " + semanas + " semanas</span></div>" +
+                "<div>" + num(n.ativos) + "<span>dias com atividade</span></div>" +
+                "<div>" + num(n.atual) + "<span>" + (n.atual === 1 ? "dia seguido" : "dias seguidos") + " (recorde " + (provisorio ? "<span class='esqueleto-valor'>00</span>" : n.recorde) + ")</span></div>";
             const mapa = document.createElement("div");
             mapa.className = "gh-mapa";
             mapa.appendChild(rolagem);
@@ -113,21 +115,42 @@
             corpo.appendChild(mapa);
 
             desenho.textContent = "";
+            desenho.classList.toggle("gh-provisorio", !!provisorio);
             desenho.setAttribute("role", "img");
-            desenho.setAttribute("aria-label", "Contribuições no GitHub de " + USUARIO + " nas últimas " + semanas + " semanas: " + n.soma + " em " + n.ativos + " dias com atividade");
+            desenho.setAttribute("aria-label", provisorio ? "Carregando a atividade no GitHub de " + USUARIO : "Contribuições no GitHub de " + USUARIO + " nas últimas " + semanas + " semanas: " + n.soma + " em " + n.ativos + " dias com atividade");
+            desenho.setAttribute("aria-busy", provisorio ? "true" : "false");
             desenho.appendChild(corpo);
             desenho.hidden = false;
             if (imagemAntiga) imagemAntiga.hidden = true;
             if (total) {
-                total.innerHTML = "<b>" + somaAno + "</b> contribuições no último ano";
+                total.innerHTML = (provisorio ? "<b class='esqueleto-valor'>000</b>" : "<b>" + somaAno + "</b>") + " contribuições no último ano";
                 total.hidden = false;
             }
             ajustar();
             rolagem.scrollLeft = rolagem.scrollWidth; // no celular começa pelo mais recente
         }
 
+        /* Esqueleto: a mesma grade (mesmas semanas, mesmos meses) já na abertura, sem os números, pra o quadro
+           nascer com a altura final. Antes ele começava vazio e crescia ~300px quando os dados chegavam: quem
+           clicava em "Projetos" no menu parava centenas de pixels depois do lugar certo.
+           Quantas semanas aparecem depende do primeiro dia com atividade (janelaRecente), por isso a data aqui. */
+        const PRIMEIRA_ATIVIDADE = "2026-08-05";
+        function esqueleto() {
+            const dois = function (x) { return String(x).padStart(2, "0"); };
+            const hoje = new Date();
+            const dias = [];
+            for (let i = 364; i >= 0; i--) {
+                const d = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate() - i, 12);
+                const data = d.getFullYear() + "-" + dois(d.getMonth() + 1) + "-" + dois(d.getDate());
+                dias.push({ date: data, count: data >= PRIMEIRA_ATIVIDADE ? 1 : 0, level: 0 });
+            }
+            desenhar(dias, 0, true);
+        }
+
         function mostrarImagemReserva() {
             // O gráfico novo não veio (sem rede, serviço fora do ar): só agora baixa a imagem de antes.
+            desenho.hidden = true;
+            if (total) total.hidden = true;
             if (imagemAntiga && imagemAntiga.dataset.src && !imagemAntiga.getAttribute("src")) {
                 // Se a reserva também falhar, esconde o quadro inteiro em vez de mostrar imagem quebrada.
                 imagemAntiga.addEventListener("error", function () { desenho.parentElement.style.display = "none"; }, { once: true });
@@ -141,13 +164,22 @@
             fetch("https://github-contributions-api.jogruber.de/v4/" + USUARIO + "?y=last")
                 .then(function (resposta) { return resposta.ok ? resposta.json() : Promise.reject(new Error("sem dados")); })
                 .then(function (dados) {
-                    const dias = dados && dados.contributions;
-                    if (!Array.isArray(dias) || dias.length < 30) { mostrarImagemReserva(); return; }
-                    const soma = (dados.total && dados.total.lastYear) || dias.reduce(function (s, d) { return s + d.count; }, 0);
+                    const brutos = dados && dados.contributions;
+                    if (!Array.isArray(brutos) || brutos.length < 30) { mostrarImagemReserva(); return; }
+                    // Serviço de terceiros: só aceita o formato esperado (data AAAA-MM-DD, números de verdade).
+                    // Os números vão pro HTML do quadro, então texto no lugar de número nunca pode passar.
+                    const inteiro = function (v, max) { const n = Math.floor(Number(v)); return n >= 0 && n <= max ? n : 0; };
+                    const dias = brutos
+                        .filter(function (d) { return d && /^\d{4}-\d{2}-\d{2}$/.test(d.date); })
+                        .map(function (d) { return { date: d.date, count: inteiro(d.count, 100000), level: inteiro(d.level, 4) }; });
+                    if (dias.length < 30) { mostrarImagemReserva(); return; }
+                    const soma = inteiro(dados.total && dados.total.lastYear, 10000000) || dias.reduce(function (s, d) { return s + d.count; }, 0);
                     desenhar(dias, soma);
                 })
                 .catch(mostrarImagemReserva);
         }
+
+        esqueleto();
 
         // Só busca quando o gráfico está perto de aparecer: no celular poupa uma conexão e dados na abertura da página.
         const caixa = desenho.parentElement;
@@ -1143,21 +1175,40 @@
     });
     // Nome da marca que aparece no visual dos cards
     const rotulos = [
-        { el: document.querySelector(".visual-loja .loja-logo"), maiusculo: true },
+        { el: document.querySelector(".visual-loja .loja-logo"), maiusculo: true, loja: true },
         { el: document.querySelector('[data-compartilhar="./fatia-nobre/index.html"]')?.closest(".projeto-visual")?.querySelector(".print-barra span"), maiusculo: false },
     ].filter(function (r) { return r.el; });
     rotulos.forEach(function (r) { r.original = r.el.textContent; });
+    // título da janelinha do chat ("Fatia Nobre — Atendimento automático") acompanha o nome
+    const botaoChat = document.querySelector('.card-projeto [data-demo*="fatia-nobre/"]');
+    const tituloChat = botaoChat ? botaoChat.getAttribute("data-demo-titulo") : "";
 
     function aplicar(salvar) {
         const nome = campo.value.trim().slice(0, 40);
-        links.forEach(function (l) { l.el.setAttribute(l.attr, nome ? l.base + "?nome=" + encodeURIComponent(nome) : l.base); });
-        rotulos.forEach(function (r) { r.el.textContent = nome ? (r.maiusculo ? nome.toUpperCase() : nome) : r.original; });
-        if (status) status.textContent = nome ? "Pronto! A loja e o atendimento por chat agora abrem como “" + nome + "”. Toque em Testar agora." : TEXTO_INICIAL;
+        const ramoDoLink = nome === window.nomeNegocioLink ? window.ramoNegocioLink || "" : "";
+        const ramo = ramoDoLink ? "&ramo=" + ramoDoLink : "";
+        // a loja (de roupa) só leva o nome quando o negócio é loja; o chat leva sempre (ele muda as respostas pelo ramo)
+        const comLoja = !window.nomeEhDeLoja || window.nomeEhDeLoja(nome, ramoDoLink);
+        links.forEach(function (l) {
+            const leva = nome && (comLoja || l.base.indexOf("loja-cyberpunk/") === -1);
+            l.el.setAttribute(l.attr, leva ? l.base + "?nome=" + encodeURIComponent(nome) + ramo : l.base);
+        });
+        rotulos.forEach(function (r) { r.el.textContent = nome && (comLoja || !r.loja) ? (r.maiusculo ? nome.toUpperCase() : nome) : r.original; });
+        if (botaoChat) botaoChat.setAttribute("data-demo-titulo", nome ? nome + " — Atendimento automático" : tituloChat);
+        if (status) status.textContent = !nome ? TEXTO_INICIAL : comLoja
+            ? "Pronto! A loja e o atendimento por chat agora abrem como “" + nome + "”. Toque em Testar agora."
+            : "Pronto! O atendimento por chat agora abre como “" + nome + "”. Toque em Testar agora.";
         if (salvar) { try { nome ? localStorage.setItem(CHAVE, nome) : localStorage.removeItem(CHAVE); } catch (e) { /* sem armazenamento: só não lembra */ } }
     }
 
-    try { campo.value = localStorage.getItem(CHAVE) || ""; } catch (e) { /* segue vazio */ }
-    if (campo.value) aplicar(false);
+    // Veio por um link com ?nome= (script.js): esse nome vale e fica guardado; senão, o que a pessoa digitou antes
+    if (window.nomeNegocioLink) {
+        campo.value = window.nomeNegocioLink;
+        aplicar(true);
+    } else {
+        try { campo.value = localStorage.getItem(CHAVE) || ""; } catch (e) { /* segue vazio */ }
+        if (campo.value) aplicar(false);
+    }
     let espera = 0;
     campo.addEventListener("input", function () { clearTimeout(espera); espera = setTimeout(function () { aplicar(true); }, 250); });
 })();
@@ -1185,4 +1236,16 @@
         el.textContent = dias === 0 ? "Último dia!" : dias === 1 ? "Termina amanhã" : "Só mais " + dias + " dias";
         el.hidden = false;
     });
+})();
+
+/* Leveza: seção que saiu da tela pausa as animações infinitas dela (brilhos, fumaça, bordas girando…).
+   Quem está olhando não percebe diferença: a folga de 300px faz tudo voltar a rodar antes de aparecer. */
+(function () {
+    "use strict";
+    if (!("IntersectionObserver" in window)) return;
+    const blocos = document.querySelectorAll("header.hero, main > section, body > footer");
+    const observador = new IntersectionObserver(function (entradas) {
+        entradas.forEach(function (entrada) { entrada.target.classList.toggle("fora-de-vista", !entrada.isIntersecting); });
+    }, { rootMargin: "300px 0px" });
+    blocos.forEach(function (bloco) { observador.observe(bloco); });
 })();

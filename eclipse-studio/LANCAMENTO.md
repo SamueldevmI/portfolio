@@ -1,5 +1,9 @@
 # Lançamento da Eclipse Studio
 
+Antes de tudo: mande pra ela a **parte 2 da ficha**, que pergunta só o que ainda falta (peça por peça, perfumes,
+estampas, horário de atendimento, retirada, entrega abaixo de R$ 150 e Google):
+https://samueldevmi.github.io/portfolio/eclipse-studio/ficha/?parte=2
+
 Quando a vitrine tiver só as peças reais (fotos, nomes e preços da Elizabeth):
 
 1. **script.js:** troque as peças de exemplo pelas reais em `PRODUTOS` (foto em `fotos/`, campo `foto`) e ajuste `ESTILOS_DAS_PECAS` e `LOOKS`.

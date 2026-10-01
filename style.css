@@ -2423,3 +2423,28 @@ html { cursor: var(--cursor-seta); }
     .hero-principal .hero-acoes .botao-principal { flex: 1 1 100%; text-align: center; }
 }
 @media (prefers-reduced-motion: reduce) { .vitrine-palco.trocou .previa-celular { animation: none; } .vitrine-palco { transition: none; } }
+
+/* ---------- Leveza: mesma aparência, menos trabalho pro navegador ---------- */
+/* Seção fora da tela pausa as animações infinitas dela (ninguém está vendo); volta de onde parou ao reaparecer.
+   A classe é posta pelo acabamento.js com folga de 300px, então tudo já está rodando antes de entrar na tela. */
+.fora-de-vista, .fora-de-vista::before, .fora-de-vista::after,
+.fora-de-vista *, .fora-de-vista *::before, .fora-de-vista *::after { animation-play-state: paused !important; }
+
+/* Brilho que passa na etiqueta de visitas: anda com transform (placa de vídeo) em vez de "left" (que refazia o layout
+   a cada quadro). 500% da própria largura (38%) = os mesmos 190% que o "left" andava, de -60% até 130%. */
+@keyframes selo-passa { 0%, 55% { transform: translateX(0) skewX(-20deg); } 100% { transform: translateX(500%) skewX(-20deg); } }
+
+/* ---------- Quadro do GitHub carregando (acabamento.js): mesma grade, quadradinhos piscando de leve ---------- */
+.gh-provisorio .gh-dia { animation: gh-carregando 1.2s ease-in-out infinite alternate; }
+.gh-provisorio .gh-dia:hover { transform: none; box-shadow: none; }
+@keyframes gh-carregando { from { opacity: .45; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .gh-provisorio .gh-dia { animation: none; opacity: .6; } }
+.hero-texto-resto { visibility: hidden; } /* texto do hero ainda por digitar: ocupa o lugar sem aparecer (script.js) */
+
+/* Convite pra ativar o som (musica.js): mesmo cartão do aviso do WhatsApp */
+.convite-som p b { color: var(--cyan); }
+/* no computador vai pro canto, como uma notificação, em vez de cobrir o hero */
+@media (min-width: 900px) {
+    .convite-som { left: auto; right: 24px; bottom: 96px; transform: translate(0, 14px); }
+    .convite-som.mostrar { transform: none; }
+}

@@ -11,9 +11,14 @@ document.getElementById("ano").textContent = new Date().getFullYear();
    ver a prévia do site dela. O nome só entra na página como texto (nunca como HTML). */
 const LINK_PERSONALIZADO = (function () {
     const p = new URLSearchParams(location.search);
-    const para = (p.get("para") || "").replace(/\s+/g, " ").trim().slice(0, 40);
+    // ?nome= era o nome antigo do parâmetro: links que já foram mandados continuam funcionando
+    const para = (p.get("para") || p.get("nome") || "").replace(/\s+/g, " ").trim().slice(0, 40);
     const RAMOS = { pizzaria: "pizzaria", barbearia: "barbearia", loja: "loja de roupa", "loja de roupa": "loja de roupa", salao: "salão", "salão": "salão", academia: "academia", clinica: "clínica", "clínica": "clínica" };
     const ramo = RAMOS[(p.get("ramo") || "").trim().toLowerCase()] || "";
+    // o atendimento por chat (fatia-nobre) tem os próprios nomes de ramo: salão vira beleza, clínica vira saúde
+    const RAMO_DO_CHAT = { pizzaria: "pizzaria", barbearia: "barbearia", "loja de roupa": "loja", "salão": "beleza", academia: "academia", "clínica": "saude" };
+    window.nomeNegocioLink = para;
+    window.ramoNegocioLink = RAMO_DO_CHAT[ramo] || "";
     if (!para && !ramo) return null;
     try {
         if (para) localStorage.setItem("portfolio-nome-negocio", para);
@@ -112,12 +117,22 @@ if (prefereMenosMovimento || !("IntersectionObserver" in window)) {
 const heroTexto = document.querySelector(".hero-texto");
 if (heroTexto && !prefereMenosMovimento) {
     const textoCompletoHero = heroTexto.textContent;
+    // O que ainda falta digitar fica na página, invisível: o parágrafo já nasce com a altura final.
+    // Antes ele crescia uma linha no meio da digitação e quem clicava num botão logo no começo parava fora do lugar.
+    const digitado = document.createTextNode("");
+    const resto = document.createElement("span");
+    resto.className = "hero-texto-resto";
+    resto.setAttribute("aria-hidden", "true");
+    resto.textContent = textoCompletoHero;
     heroTexto.textContent = "";
+    heroTexto.append(digitado, resto);
     let indiceCharHero = 0;
     setTimeout(function digitarHero() {
-        heroTexto.textContent = textoCompletoHero.slice(0, indiceCharHero);
+        digitado.data = textoCompletoHero.slice(0, indiceCharHero);
+        resto.textContent = textoCompletoHero.slice(indiceCharHero);
         indiceCharHero++;
         if (indiceCharHero <= textoCompletoHero.length) setTimeout(digitarHero, 14);
+        else heroTexto.textContent = textoCompletoHero;
     }, 320);
 }
 
@@ -125,6 +140,16 @@ if (heroTexto && !prefereMenosMovimento) {
 const statProjetos = document.getElementById("statProjetos");
 const totalProjetos = document.querySelectorAll(".card-projeto").length;
 if (statProjetos && totalProjetos) { statProjetos.dataset.contar = totalProjetos; statProjetos.textContent = totalProjetos; }
+
+/* A loja de demonstração vende roupa: com o nome de uma barbearia ou clínica ela não faz sentido. Ela só ganha o
+   nome quando o negócio é loja (ramo "loja de roupa" no link, ou palavras de loja no nome, as mesmas do ramo
+   "loja" em fatia-nobre/script.js). O atendimento por chat leva o nome sempre e muda as respostas pelo ramo. */
+const PALAVRAS_LOJA = ["loja", "lojas", "store", "shop", "moda", "boutique", "roupas", "roupa", "calcados", "sapatos", "otica", "presentes", "acessorios", "bijuterias", "semijoias", "joias", "papelaria", "cosmeticos", "perfumaria", "variedades", "magazine", "modas", "brecho", "outlet", "kids", "fitwear"];
+window.nomeEhDeLoja = (nome, ramo) => {
+    if (ramo) return ramo === "loja";
+    const palavras = nome.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().split(/[^a-z0-9]+/);
+    return palavras.some((p) => PALAVRAS_LOJA.includes(p));
+};
 
 const numerosContaveis = document.querySelectorAll("[data-contar]");
 
@@ -564,7 +589,13 @@ if (modalOverlay) {
         botao.addEventListener("click", () => {
             const src = botao.getAttribute("data-demo");
             const titulo = botao.getAttribute("data-demo-titulo") || "Demonstração";
-            abrirModal(titulo, `<iframe src="${src}" title="Demonstração — ${titulo}" loading="lazy"></iframe>`);
+            // iframe montado pelo DOM, não por HTML: o título e o endereço podem trazer o nome vindo do link (?nome=)
+            abrirModal(titulo, "");
+            const quadro = document.createElement("iframe");
+            quadro.src = src;
+            quadro.title = "Demonstração — " + titulo;
+            quadro.loading = "lazy";
+            modalCorpo.appendChild(quadro);
         });
     });
 
@@ -639,15 +670,14 @@ function atualizarBarraProgresso() {
     barraProgresso.style.width = progresso + "%";
 }
 
-/* Nav vira camada de vidro flutuante ao rolar + fundo com parallax mais lento que o conteúdo */
+/* Nav vira camada de vidro flutuante ao rolar.
+   (Aqui também se escrevia --scroll-parallax no <body> a cada quadro, mas o fundo atual (aurora-a/aurora-b no
+   acabamento.css) não lê essa variável: não mexia em nada na tela e fazia a página inteira recalcular estilo.) */
 const navEl = document.querySelector(".nav");
 
 function atualizarCamadasScroll() {
     atualizarBarraProgresso();
     if (navEl) navEl.classList.toggle("nav-flutuante", window.scrollY > 40);
-    if (!prefereMenosMovimento && !document.documentElement.classList.contains("modo-leve")) {
-        document.body.style.setProperty("--scroll-parallax", Math.min(window.scrollY * 0.04, 40) + "px");
-    }
 }
 
 /* Pontinhos do fundo: sem grade, cada um nasce num lugar aleatório, anda numa direção própria
@@ -703,6 +733,22 @@ if (!prefereMenosMovimento) {
         secoesFundo.forEach((secao) => obsFundo.observe(secao));
     }
 
+    /* Escrever a intensidade no <body> fazia o navegador recalcular o estilo da página inteira (~1200 elementos)
+       a cada mudança. Uma animação parada direto nas duas camadas do fundo muda só a opacidade delas: é a mesma conta
+       do acabamento.css (.78→1 no ::before, .7→.9 no ::after), sem tocar no resto. Navegador que não sabe animar
+       pseudo-elemento continua pelo caminho antigo. */
+    const camadasFundo = [["::before", .78, 1], ["::after", .7, .9]].map(([pseudo, de, ate]) => {
+        try {
+            const anim = document.body.animate([{ opacity: de }, { opacity: ate }], { duration: 1000, fill: "both", pseudoElement: pseudo });
+            if (anim.effect.pseudoElement !== pseudo) { anim.cancel(); return null; }
+            anim.pause();
+            anim.currentTime = nivelBaseFundo * 1000;
+            return anim;
+        } catch (e) { return null; }
+    });
+    const fundoPorAnimacao = camadasFundo.every(Boolean);
+    if (!fundoPorAnimacao) camadasFundo.forEach((anim) => anim && anim.cancel());
+
     let velocSuaveFundo = 0, ultimoYFundo = window.scrollY, ultimoTempoFundo = performance.now(), ultimaIntensidade = -1;
     setInterval(() => {
         const agora = performance.now();
@@ -714,7 +760,8 @@ if (!prefereMenosMovimento) {
         const intensidade = Math.min(1, nivelBaseFundo + velocSuaveFundo * .4);
         const arredondado = Math.round(intensidade * 50) / 50; // passos de 0.02: suave o bastante, sem escrever à toa
         if (arredondado !== ultimaIntensidade) {
-            document.body.style.setProperty("--fundo-intensidade", arredondado.toFixed(3));
+            if (fundoPorAnimacao) camadasFundo.forEach((anim) => { anim.currentTime = arredondado * 1000; });
+            else document.body.style.setProperty("--fundo-intensidade", arredondado.toFixed(3));
             ultimaIntensidade = arredondado;
         }
     }, 150);
@@ -995,9 +1042,18 @@ const suportaHover = window.matchMedia("(hover: hover) and (pointer: fine)").mat
 /* Parallax sutil no círculo do hero (scroll + mouse) */
 const heroConteudo = document.querySelector(".hero-conteudo");
 if (heroConteudo && !prefereMenosMovimento) {
+    // um cálculo por quadro, e só escreve quando o valor muda (passou de ~1070px de rolagem ele trava em 160px e para de escrever)
+    let quadroParallax = 0, ultimoParallax = -1;
     window.addEventListener("scroll", () => {
-        heroConteudo.style.setProperty("--parallax", Math.min(window.scrollY * 0.15, 160) + "px");
-    });
+        if (quadroParallax) return;
+        quadroParallax = requestAnimationFrame(() => {
+            quadroParallax = 0;
+            const valor = Math.min(window.scrollY * 0.15, 160);
+            if (valor === ultimoParallax) return;
+            ultimoParallax = valor;
+            heroConteudo.style.setProperty("--parallax", valor + "px");
+        });
+    }, { passive: true });
     heroConteudo.addEventListener("mousemove", (evento) => {
         const relativoX = evento.clientX / window.innerWidth - 0.5;
         heroConteudo.style.setProperty("--parallax-x", relativoX * -28 + "px");
@@ -1382,7 +1438,10 @@ if (paletaOverlay) {
     function compor() {
         const tipo = tipoAtual();
         const nome = typeof resp.nome === "string" ? resp.nome.trim() : "";
-        const abertura = `Oi, Samuel! ${nome ? `Me chamo ${nome}. ` : ""}${ORIGEM ? `Vim pelo ${ORIGEM}` : "Vi seu portfólio"} e quero pedir um orçamento.`;
+        // veio pelo link personalizado: diz de onde e o nome do negócio, pra você saber qual contato respondeu
+        const negocio = window.nomeNegocioLink ? ` (${window.nomeNegocioLink})` : "";
+        const deOnde = ORIGEM ? `Vim pelo ${ORIGEM}${negocio}` : negocio ? `Vim pelo link que você me mandou${negocio}` : "Vi seu portfólio";
+        const abertura = `Oi, Samuel! ${nome ? `Me chamo ${nome}. ` : ""}${deOnde} e quero pedir um orçamento.`;
         const linhas = [abertura, ""];
         if (tipo) linhas.push(`Projeto: ${tipo.rotulo}`);
         if (resp.ref) linhas.push(`Referência: projeto ${resp.ref}`);

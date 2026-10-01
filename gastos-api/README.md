@@ -38,6 +38,34 @@ A API sobe em `http://127.0.0.1:5000`. A documentação interativa (Swagger UI) 
 pytest
 ```
 
+## Segurança
+
+A API é pública e não tem login, então ela mesma se protege:
+
+- **Limite de pedidos por IP** (`app/limites.py`):
+
+  | Tipo de pedido | Limite |
+  |---|---|
+  | Leitura | 300 por minuto e 20 mil por dia |
+  | Escrita (criar, editar, apagar) | 30 por minuto e 500 por dia |
+  | Criar casal | 10 por hora |
+  | Código de casal que não existe | 30 por minuto e 200 por dia |
+
+  Acima do limite, a API responde `429`. O limite de código errado impede que alguém descubra o código de um casal chutando.
+- **Entrada validada** (`app/validacao.py`):
+  - descrição até 140 caracteres e categoria até 60;
+  - valor finito entre 0 e 1 bilhão (sem `NaN` nem `Infinity`);
+  - corpo do pedido até 16 KB.
+- **Código do casal:** gerado com `secrets`, que não é previsível.
+- **Cabeçalho:** `X-Content-Type-Options: nosniff` em todas as respostas.
+- **Modo debug:** só liga com `FLASK_DEBUG=1`.
+
+O limite é contado por IP. No Render existe um proxy na frente da API, e a variável `PROXIES_NA_FRENTE` (padrão `1`) diz quantos são, pra API enxergar o IP de quem chamou e não o do proxy. Pra rodar sem proxy nenhum, use `PROXIES_NA_FRENTE=0`.
+
+A contagem fica na memória: zera quando o servidor reinicia, e cada processo do gunicorn conta separado. Pra uma demo isso basta; num sistema de verdade, o certo é usar Redis.
+
+Os testes de tudo isso estão em `tests/test_seguranca.py` e `tests/test_limites.py`.
+
 ## Endpoints
 
 | Método | Rota | Descrição |

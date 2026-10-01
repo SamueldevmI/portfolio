@@ -2,6 +2,9 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
+    <!-- Segurança (CSP): o navegador só roda script que é arquivo deste site e só conversa com os serviços listados.
+         Se algum código malicioso conseguir entrar na página, ele não roda. Serviço novo (API, imagem, fonte)? Acrescente aqui. -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://ghchart.rshah.org https://visitor-badge.laobi.icu https://*.goatcounter.com; connect-src 'self' data: https://api.github.com https://github-contributions-api.jogruber.de https://api.sunrise-sunset.org https://*.goatcounter.com; frame-src 'self'; media-src 'self' data: blob:; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Samuel Mickael, desenvolvedor web e mobile em Campo Grande - MS. Crio sites, sistemas e aplicativos sob medida. Veja os projetos e peça um orçamento.">
     <meta name="theme-color" content="#161616">
@@ -23,38 +26,15 @@
     <meta name="twitter:description" content="Sites, sistemas e aplicativos sob medida. Veja meus projetos e peça um orçamento pelo WhatsApp.">
     <meta name="twitter:image" content="https://samueldevmi.github.io/portfolio/imagem/og-image-v5.jpg">
     <meta name="twitter:image:alt" content="Samuel Mickael, desenvolvedor web e mobile: sites, sistemas e apps sob medida.">
-    <script>
-        /* Modo leve: celular, economia de dados ou internet lenta desligam os efeitos mais pesados.
-           ?leve=1 força ligado e ?leve=0 força desligado. */
-        (function () {
-            var forcado = new URLSearchParams(location.search).get("leve");
-            var conexao = navigator.connection || {};
-            var leve = forcado === "1" || (forcado !== "0" && (matchMedia("(pointer:coarse)").matches || conexao.saveData === true || /(^|-)(2g|3g)$/.test(conexao.effectiveType || "")));
-            if (leve) document.documentElement.classList.add("modo-leve");
-        })();
-    </script>
+    <script src="modo-leve.js?v=20260930merge"></script>
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="imagem/apple-touch-icon.png">
     <link rel="manifest" href="manifest.json">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap">
-    <script>
-        /* Tema: vermelho (padrão) ou azul. Escolhido antes de desenhar a página, pra não piscar a cor errada.
-           O style-azul.css é gerado a partir do style.css (ferramentas/gerar-tema-azul.js). */
-        (function () {
-            var tema = "vermelho";
-            try {
-                var salvo = localStorage.getItem("portfolio-tema");
-                if (!salvo && localStorage.getItem("tema") === "aranha") salvo = "azul"; // quem tinha escolhido o antigo tema Aranha
-                if (salvo === "azul") tema = "azul";
-            } catch (e) { /* sem armazenamento */ }
-            document.documentElement.dataset.tema = tema;
-            if (tema === "azul") document.querySelector('meta[name="theme-color"]').content = "#0e1422";
-            document.write('<link rel="stylesheet" id="folhaTema" href="' + (tema === "azul" ? "style-azul.css" : "style.css") + '?v=20260930crm">');
-        })();
-    </script>
-    <noscript><link rel="stylesheet" href="style.css?v=20260930crm"></noscript>
+    <script src="tema.js?v=20260930merge"></script>
+    <noscript><link rel="stylesheet" href="style.css?v=20260930merge"></noscript>
     <title id="tituloPagina">Samuel Mickael | Desenvolvedor Web &amp; Mobile</title>
     <script type="application/ld+json">
     {
@@ -245,7 +225,7 @@
                     <button type="button" class="chip-surpresa" data-tipo="qualquer">Surpreenda</button>
                 </span>
             </div>
-            <div class="nome-demo">
+            <div class="nome-demo" id="demo-com-seu-nome">
                 <label for="nomeNegocio">Quer ver as demos com a cara do seu negócio?</label>
                 <div class="nome-demo-linha">
                     <input id="nomeNegocio" type="text" maxlength="40" placeholder="Nome do seu negócio (ex.: Pizzaria do João)" autocomplete="organization">
@@ -287,11 +267,11 @@
                         <button type="button" class="botao-compartilhar" data-compartilhar="./loja-cyberpunk/index.html" data-compartilhar-titulo="Glitch District — Loja cyberpunk" aria-label="Compartilhar projeto Glitch District">⤴</button>
                         <span class="loja-logo">GLITCH//DISTRICT</span>
                         <div class="loja-pecas">
-                            <img src="loja-cyberpunk/produtos/fotos/vx7.webp" alt="" width="400" height="400" loading="lazy" decoding="async" style="object-position:50% 52%">
-                            <img src="loja-cyberpunk/produtos/fotos/ghost.webp" alt="" width="400" height="400" loading="lazy" decoding="async" style="object-position:50% 50%">
-                            <img src="loja-cyberpunk/produtos/fotos/onyx.webp" alt="" width="400" height="400" loading="lazy" decoding="async" style="object-position:52% 80%">
-                            <img src="loja-cyberpunk/produtos/fotos/nightwalker.webp" alt="" width="400" height="400" loading="lazy" decoding="async" style="object-position:50% 62%">
-                            <img src="loja-cyberpunk/produtos/fotos/pulse.webp" alt="" width="400" height="400" loading="lazy" decoding="async" style="object-position:52% 50%">
+                            <img src="loja-cyberpunk/produtos/fotos/vx7-400.webp" alt="" width="400" height="400" loading="lazy" decoding="async" style="object-position:50% 52%">
+                            <img src="loja-cyberpunk/produtos/fotos/ghost-400.webp" alt="" width="400" height="400" loading="lazy" decoding="async" style="object-position:50% 50%">
+                            <img src="loja-cyberpunk/produtos/fotos/onyx-400.webp" alt="" width="400" height="400" loading="lazy" decoding="async" style="object-position:52% 80%">
+                            <img src="loja-cyberpunk/produtos/fotos/nightwalker-400.webp" alt="" width="400" height="400" loading="lazy" decoding="async" style="object-position:50% 62%">
+                            <img src="loja-cyberpunk/produtos/fotos/pulse-400.webp" alt="" width="400" height="400" loading="lazy" decoding="async" style="object-position:52% 50%">
                         </div>
                         <span class="loja-carrinho">Carrinho <b>3</b></span>
                         <div class="tela-celular" aria-hidden="true"><div class="sequencia"><img src="imagem/projetos/celular/loja-1.webp" alt="" width="280" height="606" loading="lazy" decoding="async"><img src="imagem/projetos/celular/loja-2.webp" alt="" width="280" height="606" loading="lazy" decoding="async"><img src="imagem/projetos/celular/loja-3.webp" alt="" width="280" height="606" loading="lazy" decoding="async"></div></div>
@@ -657,24 +637,10 @@
     </div>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-    <script src="estatisticas.js?v=20260930crm"></script>
-    <script src="script.js?v=20260930crm"></script>
-<script src="acabamento.js?v=20260930crm" defer></script>
-<script>
-    /* Scripts que a página não precisa pra aparecer: o mobile.js só baixa em tela de toque (no computador
-       ele não faz nada) e a música só depois que a página terminou de carregar. */
-    (function () {
-        var versao = "?v=20260930crm";
-        function carregar(arquivo) { var s = document.createElement("script"); s.src = arquivo + versao; document.body.appendChild(s); }
-        if (matchMedia("(pointer: coarse)").matches) {
-            // o pedido de "instalar app" pode chegar antes do mobile.js: fica guardado pra ele usar
-            addEventListener("beforeinstallprompt", function (e) { e.preventDefault(); window.pedidoInstalar = e; });
-            carregar("mobile.js");
-        }
-        function depois() { (window.requestIdleCallback || setTimeout)(function () { carregar("musica.js"); }); }
-        if (document.readyState === "complete") depois(); else addEventListener("load", depois, { once: true });
-    })();
-</script>
+    <script src="estatisticas.js?v=20260930merge"></script>
+    <script src="script.js?v=20260930merge"></script>
+<script src="acabamento.js?v=20260930merge" defer></script>
+<script src="carregar-depois.js?v=20260930merge" defer></script>
 
 </body>
 </html>
