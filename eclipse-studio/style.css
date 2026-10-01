@@ -154,14 +154,12 @@ a { color: var(--rosa); }
 @keyframes flutuar { 50% { transform: translateY(-10px); } }
 .bola { transform-origin: 200px 264px; animation: bola-brilho 5s ease-in-out infinite; }
 @keyframes bola-brilho { 50% { transform: scale(1.03); filter: drop-shadow(0 0 14px rgba(174, 240, 214, .75)); } }
-/* oráculo: a íris "respira" (verde mais forte/fraco), a pupila pisca de vez em quando e os raios giram devagar */
+/* oráculo: a íris "respira" (verde mais forte/fraco) e a pupila pisca de vez em quando */
 .bola-iris { transform-origin: 200px 264px; animation: iris-pulsa 3.4s ease-in-out infinite; }
 @keyframes iris-pulsa { 50% { fill: #7fe0b8; } }
 .bola-pupila { transform-origin: 200px 264px; animation: pupila-pisca 5.2s ease-in-out infinite; }
 @keyframes pupila-pisca { 0%, 92%, 100% { transform: scaleY(1); } 95% { transform: scaleY(.12); } 98% { transform: scaleY(1); } }
-.bola-raios { transform-origin: 200px 264px; animation: raios-giram 9s linear infinite; }
-@keyframes raios-giram { to { transform: rotate(360deg); } }
-@media (prefers-reduced-motion: reduce) { .bola-iris, .bola-pupila, .bola-raios { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .bola-iris, .bola-pupila { animation: none; } }
 .vela { position: absolute; bottom: 2%; width: 13%; overflow: visible; }
 .vela-e { left: -6%; }
 .vela-d { right: -6%; bottom: 7%; width: 11%; }
