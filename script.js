@@ -201,7 +201,6 @@ document.querySelectorAll(".botao").forEach((botao) => {
     const tiposEl = $(".cmp-tipos"), abas = $(".cmp-abas"), testar = $(".cmp-testar"), querer = $(".cmp-querer");
     const palco = { sem: $('.cmp-palco[data-lado="sem"]'), com: $('.cmp-palco[data-lado="com"]') };
     const placar = { sem: $('.cmp-metricas[data-lado="sem"]'), com: $('.cmp-metricas[data-lado="com"]') };
-    const notif = $(".cmp-notif");
     const campoNome = $(".cmp-nome input"), campoNomeProjetos = document.getElementById("nomeNegocio");
     const semMovimento = prefereMenosMovimento;
     const espera = (ms) => new Promise((r) => setTimeout(r, semMovimento ? 0 : ms));
@@ -414,14 +413,11 @@ document.querySelectorAll(".botao").forEach((botao) => {
         if (!vivo()) return false;
         raiz.classList.remove("cmp-trocando");
         palco.sem.innerHTML = ""; palco.com.innerHTML = "";
-        let notificacoes = 0;
-        if (notif) { notif.hidden = true; notif.textContent = "0"; }
         const passos = Math.max(c.sem.length, c.com.length);
         for (let p = 0; p < passos; p++) {
             if (c.sem[p]) {
                 if (!vivo()) return false;
                 linha("sem", ...c.sem[p]);
-                if (c.sem[p][0] === "msg" && notif) { notificacoes += 1 + Math.floor(Math.random() * 4); notif.textContent = notificacoes; notif.hidden = false; notif.classList.remove("pulou"); void notif.offsetWidth; notif.classList.add("pulou"); }
                 await espera(c.sem[p][0] === "alerta" ? 500 : 380);
             }
             if (c.com[p]) {
