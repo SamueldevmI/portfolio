@@ -69,11 +69,11 @@ section.bloco:nth-of-type(3n) h2 span{background:var(--menta)}
 legend{margin-bottom:6px}
 .ess{margin-left:.5em; padding:.1em .6em; border-radius:999px; background:rgba(233,196,106,.16); color:var(--ouro); font-size:.66rem; font-style:normal; letter-spacing:.08em; text-transform:uppercase; white-space:nowrap}
 small{color:var(--mudo); font-size:.82rem; line-height:1.4}
-input[type=text], input[type=tel], input[type=number], textarea{
+input[type=text], input[type=tel], input[type=number], textarea, select{
   width:100%; padding:11px 14px; border:2px solid var(--linha-forte); border-radius:14px; background:var(--papel-2); color:var(--texto); font:500 1rem/1.4 var(--fonte); caret-color:var(--rosa);
 }
 textarea{min-height:6em; resize:vertical; field-sizing:content; max-height:22rem}
-input:focus, textarea:focus{outline:none; border-color:var(--menta)}
+input:focus, textarea:focus, select:focus{outline:none; border-color:var(--menta)}
 ::placeholder{color:#9885b8; opacity:1}
 .opcoes__lista{display:flex; flex-wrap:wrap; gap:8px}
 .opcoes__lista label{display:flex; align-items:center; gap:8px; padding:8px 14px; border:2px solid var(--linha-forte); border-radius:999px; font-size:.9rem; line-height:1.3; cursor:pointer}
@@ -88,6 +88,16 @@ pre{margin:14px 0 0; white-space:pre-wrap; word-break:break-word; font:500 .84re
 .toast{position:fixed; left:50%; bottom:22px; translate:-50% 0; z-index:20; padding:.8em 1.3em; border:2px solid var(--tinta); border-radius:16px; background:#fff4fb; color:var(--tinta); font-weight:700; opacity:0; pointer-events:none; transition:opacity .3s}
 .toast--ver{opacity:1}
 @media (max-width:560px){ section.bloco{padding:20px 16px 24px} .barra .botao{min-height:36px; padding:0 14px; font-size:.8rem} }
+/* bloco "peça por peça" (parte 2) */
+.pecas{display:grid; gap:14px}
+.peca{display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:12px; padding:16px; border:2px dashed var(--linha-forte); border-radius:16px}
+.peca .campo:first-of-type, .peca .campo:last-of-type{grid-column:1 / -1}
+.peca__topo{grid-column:1 / -1; display:flex; align-items:center; justify-content:space-between; gap:12px}
+.peca__num{margin:0; color:var(--ouro); font-weight:800; letter-spacing:.06em; text-transform:uppercase; font-size:.78rem}
+.peca__remover{padding:6px 12px; border:1px solid var(--linha-forte); border-radius:999px; background:transparent; color:var(--mudo); font:inherit; font-size:.8rem; cursor:pointer}
+.peca__remover:hover{color:var(--rosa); border-color:var(--rosa)}
+.peca__mais{justify-self:start; margin-top:4px}
+@media (max-width:560px){ .peca{grid-template-columns:1fr} }
 </style>
 </head>
 <body>
@@ -170,14 +180,49 @@ const SECOES = [
     { id: "cliente", rotulo: "Pra quem você faz as peças", tipo: "longo", exemplo: "meninas do alt, quem ama Halloween o ano inteiro…" },
     { id: "previa", rotulo: "O que achou da prévia do site", tipo: "longo", ajuda: "O que amou, o que mudaria, o que falta." }
   ]},
-  { id: "final", titulo: "Mais alguma coisa?", intro: "", campos: [
-    { id: "obs", rotulo: "Recados, dúvidas ou a frase nova do topo", tipo: "longo" }
+  /* ----- Parte 2 (link com ?parte=2): o que ainda falta depois da primeira ficha ----- */
+  { id: "confirma", parte: 2, titulo: "Confirmações rápidas", intro: "Coisas que já estão no site. É só conferir.", campos: [
+    { id: "nomeSite", rotulo: "Nome que aparece no site pra quem atende (hoje está “Elizabeth”)", tipo: "texto", exemplo: "Elizabeth" },
+    { id: "numeros", rotulo: "Estes números do site estão certos? Pedido pronto em até 3 dias úteis · frete grátis acima de R$ 150 · até 12x sem juros · até 5% de desconto no Pix", tipo: "escolha", essencial: true, opcoes: ["Tudo certo", "Algum está errado (escrevo no fim)"] },
+    { id: "publicar", rotulo: "Quando as peças de verdade entrarem, posso tirar a faixa “Prévia” e deixar a loja aparecer no Google?", tipo: "escolha", opcoes: ["Pode", "Ainda não"] }
+  ]},
+  { id: "atendimento", parte: 2, titulo: "Atendimento e retirada", intro: "O site promete isso pras clientes, então precisa ser do seu jeito.", campos: [
+    { id: "horario", rotulo: "Em que horário você responde no WhatsApp", tipo: "texto", essencial: true, exemplo: "seg a sáb, das 9h às 19h" },
+    { id: "retirada", rotulo: "Onde a cliente retira a peça", tipo: "texto", ajuda: "Só o bairro ou um ponto de referência. Não precisa do endereço.", exemplo: "Centro, perto da Praça Ary Coelho" },
+    { id: "taxa", rotulo: "Abaixo de R$ 150, quanto fica a entrega", tipo: "texto", essencial: true, exemplo: "a cliente paga o Uber/99, ou taxa de R$ 10" },
+    { id: "esgotou", rotulo: "Quando uma peça vender, como fica", tipo: "escolha", opcoes: ["Eu te aviso e você tira do site", "Quase tudo tem várias unidades, raramente esgota", "Quero eu mesma conseguir marcar como esgotada"] },
+    { id: "google", rotulo: "Perfil da loja no Google (Google Meu Negócio)", tipo: "escolha", ajuda: "É o que faz a loja aparecer pra quem pesquisa “loja alternativa Campo Grande”.", opcoes: ["Já tenho", "Quero criar, me ajuda", "Agora não"] }
+  ]},
+  { id: "pecasReais", parte: 2, titulo: "A vitrine de verdade", intro: "Hoje a vitrine tem peças de exemplo. Aqui entram as suas: uma de cada vez. A foto você manda no WhatsApp com o mesmo nome.", campos: [
+    { id: "pecas", rotulo: "Peças", tipo: "pecas", essencial: true },
+    { id: "perfumes", rotulo: "Quais perfumes você vende, e o preço de cada", tipo: "longo", ajuda: "Hoje eles aparecem como “sob consulta”. Um por linha: nome — tamanho — preço.", exemplo: "Lua Negra — 50 ml — 89,90" },
+    { id: "estampas", rotulo: "Quais estampas de camiseta você tem agora", tipo: "longo", exemplo: "gato preto, lua, carta de tarô…" }
+  ]},
+  { id: "final", sempre: true, titulo: "Mais alguma coisa?", intro: "", campos: [
+    { id: "obs", rotulo: "Recados, dúvidas, a frase nova do topo ou o número que está errado", tipo: "longo" }
   ]}
+];
+// cada peça do bloco "A vitrine de verdade"
+const CAMPOS_PECA = [
+  { id: "nome", rotulo: "Nome da peça", exemplo: "Espartilho Rosa Seca" },
+  { id: "preco", rotulo: "Preço", exemplo: "189,90" },
+  { id: "tamanhos", rotulo: "Tamanhos", exemplo: "P, M, G ou tamanho único" },
+  { id: "origem", rotulo: "De onde veio", opcoes: ["Feita por mim", "Customizada por mim", "Revenda", "Brechó / vintage"] },
+  { id: "qtd", rotulo: "Quantas unidades", exemplo: "1", numero: true },
+  { id: "obs", rotulo: "Cor, medidas ou detalhe", exemplo: "busto 84 cm, renda preta" }
 ];
 const MEU_WHATSAPP = "5567996034205";
 
 /* ===== daqui para baixo é o funcionamento; não precisa mexer ===== */
-const CHAVE = "ficha-eclipse-v1";
+// ?parte=2: só as perguntas novas (pra quem já respondeu a primeira ficha), guardadas à parte
+const PARTE2 = new URLSearchParams(location.search).get("parte") === "2";
+const VISIVEIS = PARTE2 ? SECOES.filter(s => s.parte === 2 || s.sempre) : SECOES;
+const CHAVE = PARTE2 ? "ficha-eclipse-parte2" : "ficha-eclipse-v1";
+if (PARTE2) {
+  document.title = "Eclipse Studio · Ficha, parte 2";
+  document.querySelector(".topo h1").innerHTML = "Agora é a <em>vitrine de verdade</em>";
+  document.querySelector(".topo .lead").textContent = "A primeira ficha já voltou (obrigado!). Faltam estas coisas pra trocar as peças de exemplo pelas suas e tirar a faixa “Prévia” do site. Responda o que souber; o que ficar em branco a gente conversa depois.";
+}
 const principal = document.getElementById("formulario");
 const previa = document.getElementById("previa");
 
@@ -196,7 +241,44 @@ function entrada(c, extra = {}){
   return el("input", { ...comum, type: tipo, ...(tipo === "tel" ? { inputmode: "tel", autocomplete: "tel" } : {}), ...(tipo === "email" ? { autocomplete: "email" } : {}) });
 }
 
+/* Bloco "peça por peça": um cartão por peça, com botão de adicionar e de remover */
+const listaPecas = el("div", { class: "pecas" });
+function cartaoPeca(valores = {}){
+  const cartao = el("div", { class: "peca" });
+  const numero = el("p", { class: "peca__num" });
+  const remover = el("button", { type: "button", class: "peca__remover" }, "Remover");
+  remover.addEventListener("click", () => { cartao.remove(); renumerar(); salvar(); });
+  cartao.append(el("div", { class: "peca__topo" }, numero, remover));
+  CAMPOS_PECA.forEach(c => {
+    if (c.opcoes) {
+      const sel = el("select", { "data-p": c.id }, el("option", { value: "" }, "escolha…"), ...c.opcoes.map(o => el("option", { value: o }, o)));
+      sel.value = valores[c.id] || "";
+      cartao.append(el("label", { class: "campo" }, el("span", { class: "rot" }, c.rotulo), sel));
+    } else {
+      const inp = el("input", { type: c.numero ? "number" : "text", "data-p": c.id, placeholder: `ex.: ${c.exemplo}`, ...(c.numero ? { min: "0", inputmode: "numeric" } : {}) });
+      inp.value = valores[c.id] || "";
+      cartao.append(el("label", { class: "campo" }, el("span", { class: "rot" }, c.rotulo), inp));
+    }
+  });
+  listaPecas.append(cartao);
+  renumerar();
+  return cartao;
+}
+function renumerar(){ listaPecas.querySelectorAll(".peca__num").forEach((n, i) => { n.textContent = `Peça ${i + 1}`; }); }
+function lerPecas(){
+  return [...listaPecas.querySelectorAll(".peca")].map(cartao => {
+    const p = {};
+    cartao.querySelectorAll("[data-p]").forEach(e => { if (e.value.trim()) p[e.dataset.p] = e.value.trim(); });
+    return p;
+  }).filter(p => Object.keys(p).length);
+}
+
 function desenharCampo(c){
+  if (c.tipo === "pecas"){
+    const mais = el("button", { type: "button", class: "botao botao--claro peca__mais" }, "+ Adicionar outra peça");
+    mais.addEventListener("click", () => { cartaoPeca().querySelector("input")?.focus(); });
+    return el("div", { class: "campo campo--pecas" }, el("span", { class: "rot" }, c.rotulo, marcaEssencial(c)), listaPecas, mais);
+  }
   if (c.tipo === "escolha" || c.tipo === "varias"){
     const tipoInput = c.tipo === "escolha" ? "radio" : "checkbox";
     const lista = el("div", { class: "opcoes__lista" });
@@ -206,8 +288,8 @@ function desenharCampo(c){
   return el("label", { class: "campo" }, el("span", { class: "rot" }, c.rotulo, marcaEssencial(c)), c.ajuda ? el("small", {}, c.ajuda) : "", entrada(c, { "data-k": c.id }));
 }
 
-SECOES.forEach((s, i) => document.getElementById("indice").append(el("a", { href: `#s-${s.id}` }, `${i + 1}. ${s.titulo}`)));
-SECOES.forEach((s, i) => {
+VISIVEIS.forEach((s, i) => document.getElementById("indice").append(el("a", { href: `#s-${s.id}` }, `${i + 1}. ${s.titulo}`)));
+VISIVEIS.forEach((s, i) => {
   const bloco = el("section", { class: "bloco", id: `s-${s.id}` }, el("h2", {}, el("span", {}, String(i + 1)), s.titulo), s.intro ? el("p", { class: "intro" }, s.intro) : "");
   const campos = el("div", { class: "campos" });
   s.campos.forEach(c => campos.append(desenharCampo(c)));
@@ -223,6 +305,8 @@ function coletar(){
     else if (e.type === "radio"){ if (e.checked) dados[id] = e.value; }
     else if (e.value.trim()) dados[id] = e.value.trim();
   });
+  const pecas = lerPecas();
+  if (pecas.length) dados.pecas = pecas;
   return dados;
 }
 function devolver(dados){
@@ -232,19 +316,28 @@ function devolver(dados){
     else if (e.type === "radio") e.checked = v === e.value;
     else e.value = typeof v === "string" ? v : "";
   });
+  if (VISIVEIS.some(s => s.campos.some(c => c.tipo === "pecas"))) {
+    listaPecas.textContent = "";
+    (Array.isArray(dados.pecas) && dados.pecas.length ? dados.pecas : [{}]).forEach(p => cartaoPeca(p));
+  }
 }
 
 const preenchido = v => Array.isArray(v) ? v.length > 0 : !!v;
 
 function montarTexto(dados){
   const hoje = new Date().toLocaleDateString("pt-BR");
-  const linhas = [`FICHA DA LOJA — ECLIPSE STUDIO (preenchida em ${hoje})`, ""];
+  const linhas = [`FICHA DA LOJA — ECLIPSE STUDIO${PARTE2 ? " — PARTE 2" : ""} (preenchida em ${hoje})`, ""];
   let brancos = 0;
-  SECOES.forEach((s, i) => {
+  VISIVEIS.forEach((s, i) => {
     const partes = [];
     s.campos.forEach(c => {
       const v = dados[c.id];
       if (!preenchido(v)){ brancos++; return; }
+      if (c.tipo === "pecas") {
+        partes.push(`${v.length} ${v.length === 1 ? "peça" : "peças"}:`);
+        v.forEach((p, n) => partes.push(`${n + 1}) ` + CAMPOS_PECA.filter(cp => p[cp.id]).map(cp => cp.id === "preco" ? `R$ ${p.preco}` : cp.id === "qtd" ? `${p.qtd} un.` : p[cp.id]).join(" — ")));
+        return;
+      }
       partes.push(`${c.rotulo}: ${Array.isArray(v) ? v.join(", ") : v}`);
     });
     if (partes.length) linhas.push(`## ${i + 1}. ${s.titulo}`, ...partes, "");
@@ -256,7 +349,7 @@ function montarTexto(dados){
 function atualizar(){
   const dados = coletar();
   let total = 0, feitos = 0;
-  SECOES.forEach(s => s.campos.forEach(c => {
+  VISIVEIS.forEach(s => s.campos.forEach(c => {
     total++;
     if (preenchido(dados[c.id])) feitos++;
   }));
@@ -304,7 +397,7 @@ document.getElementById("limpar").addEventListener("click", () => {
   location.reload();
 });
 
-try { devolver(JSON.parse(localStorage.getItem(CHAVE) || "{}")); } catch (e) { /* nada guardado */ }
+try { devolver(JSON.parse(localStorage.getItem(CHAVE) || "{}")); } catch (e) { devolver({}); }
 atualizar();
 </script>
 </body>
