@@ -23,7 +23,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Quicksand:wght@400;500;600;700&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
     <script type="application/ld+json">{"@context": "https://schema.org", "@type": "ClothingStore", "name": "Eclipse Studio", "description": "Moda alternativa em Campo Grande - MS: roupas, bijuterias, bolsas e perfumes no estilo alt, com pedido pelo WhatsApp.", "url": "https://samueldevmi.github.io/portfolio/eclipse-studio/", "image": "https://samueldevmi.github.io/portfolio/eclipse-studio/compartilhar.png", "telephone": "+55 67 99975-0866", "address": {"@type": "PostalAddress", "addressLocality": "Campo Grande", "addressRegion": "MS", "addressCountry": "BR"}, "areaServed": {"@type": "City", "name": "Campo Grande"}, "sameAs": ["https://www.instagram.com/eclipse_studiocg/"], "paymentAccepted": "Pix, cartão de crédito, cartão de débito, dinheiro", "currenciesAccepted": "BRL"}</script>
-    <link rel="stylesheet" href="style.css?v=20261002juntos">
+    <link rel="manifest" href="app/manifest.webmanifest">
+    <link rel="apple-touch-icon" href="app/apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Eclipse">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="stylesheet" href="style.css?v=20261002extras">
 </head>
 <body>
     <a class="pular" href="#colecao">Pular para as peças</a>
@@ -289,6 +294,7 @@
                 <button type="button" role="tab" id="aba-horoscopo" aria-controls="horoscopo" aria-selected="false" tabindex="-1"><span aria-hidden="true">♈︎</span> Horóscopo</button>
                 <button type="button" role="tab" id="aba-grimorio" aria-controls="grimorio" aria-selected="false" tabindex="-1"><span aria-hidden="true">📖</span> Grimório</button>
                 <button type="button" role="tab" id="aba-arcanos" aria-controls="arcanos" aria-selected="false" tabindex="-1"><span aria-hidden="true">🃏</span> Arcanos</button>
+                <button type="button" role="tab" id="aba-boneca" aria-controls="boneca" aria-selected="false" tabindex="-1"><span aria-hidden="true">🪆</span> Boneca</button>
                 <button type="button" role="tab" id="aba-porta" aria-controls="porta" aria-selected="false" tabindex="-1"><span aria-hidden="true">🚪</span> Porta secreta</button>
             </div>
         </div>
@@ -349,6 +355,32 @@
                 <h2 id="arcanosTitulo" class="titulo">Coleção de arcanos</h2>
                 <p class="sub" id="arcanosSub"></p>
                 <ol class="album" id="album"></ol>
+            </div>
+        </section>
+
+        <section class="boneca mistico-painel" id="boneca" role="tabpanel" tabindex="-1" aria-labelledby="bonecaTitulo" hidden>
+            <div class="miolo">
+                <h2 id="bonecaTitulo" class="titulo">Boneca de papel</h2>
+                <p class="sub">Toque nas peças pra vestir a boneca e arraste pra arrumar. Gostou do look? Salva pro story ou põe tudo na sacola.</p>
+                <div class="boneca-mesa">
+                    <div class="boneca-palco" id="bonecaPalco" aria-label="Boneca vestida com as peças escolhidas"></div>
+                    <div class="boneca-lado">
+                        <div class="boneca-controles" id="bonecaControles" role="group" aria-label="Peça selecionada" hidden>
+                            <span id="bonecaSelecionada"></span>
+                            <button type="button" class="chip" data-boneca="menor" aria-label="Diminuir a peça">−</button>
+                            <button type="button" class="chip" data-boneca="maior" aria-label="Aumentar a peça">+</button>
+                            <button type="button" class="chip" data-boneca="tirar">Tirar</button>
+                        </div>
+                        <p class="boneca-dica">Peças <small>(toque pra vestir ou tirar)</small></p>
+                        <ul class="boneca-pecas" id="bonecaPecas"></ul>
+                        <p class="boneca-total" id="bonecaTotal"></p>
+                        <div class="boneca-acoes">
+                            <button class="botao" id="bonecaSacola" type="button">Pôr o look na sacola</button>
+                            <button class="botao botao-linha" id="bonecaStory" type="button">Salvar pro story</button>
+                            <button class="link-fraco" id="bonecaLimpar" type="button">Tirar tudo</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -565,10 +597,14 @@
 
     <div class="avisos" id="avisos" role="status" aria-live="polite"></div>
 
-    <script src="script.js?v=20261002juntos"></script>
-    <script src="magia.js?v=20261002juntos"></script>
-    <script src="encantos.js?v=20261002juntos"></script>
-    <script src="visual.js?v=20261002juntos"></script>
-    <script src="feiticos.js?v=20261002juntos"></script>
+    <script src="script.js?v=20261002extras"></script>
+    <script src="planilha.js?v=20261002extras"></script>
+    <script src="magia.js?v=20261002extras"></script>
+    <script src="encantos.js?v=20261002extras"></script>
+    <script src="visual.js?v=20261002extras"></script>
+    <script src="feiticos.js?v=20261002extras"></script>
+    <script src="boneca.js?v=20261002extras"></script>
+    <script src="contador.js?v=20261002extras"></script>
+    <script src="extras.js?v=20261002extras"></script>
 </body>
 </html>

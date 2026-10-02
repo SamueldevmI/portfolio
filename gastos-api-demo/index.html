@@ -16,6 +16,9 @@
     </script>
     <noscript><link rel="stylesheet" href="../style.css"></noscript>
     <title>Controle de Gastos — Demonstração da API</title>
+    <!-- carregado sem defer, de propósito: essa página tem um script inline no body que já
+         chama window.traduzir() na primeira linha, então o idioma.js precisa estar pronto antes -->
+    <script src="../idioma.js?v=20261002proj"></script>
     <style>
         .demo-wrap { width:min(880px,calc(100% - 44px)); margin:60px auto 100px; }
         .demo-voltar { display:inline-flex; align-items:center; gap:6px; margin-bottom:28px; color:var(--muted); font:.8rem "DM Mono",monospace; text-decoration:none; }
@@ -94,6 +97,7 @@
 
     <script>
         const API = "https://gastos-api-z0dt.onrender.com";
+        const t = (s) => (window.traduzir ? window.traduzir(s) : s);
         const listaEl = document.getElementById("lista-gastos");
         const statusEl = document.getElementById("status-lista");
         const totalEl = document.getElementById("resumo-total");
@@ -103,7 +107,7 @@
         const erroEl = document.getElementById("erro-form");
 
         function formatarMoeda(valor) {
-            return valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+            return valor.toLocaleString(document.documentElement.lang === "es" ? "es-ES" : "pt-BR", { style: "currency", currency: "BRL" });
         }
 
         function formatarData(iso) {
@@ -122,14 +126,14 @@
 
         async function carregarLista() {
             statusEl.hidden = false;
-            statusEl.textContent = "Carregando... (pode levar um tempo se a API estava dormindo)";
+            statusEl.textContent = t("Carregando... (pode levar um tempo se a API estava dormindo)");
             listaEl.innerHTML = '<li class="esqueleto-linha" aria-hidden="true"></li>'.repeat(3);
             totalEl.classList.add("esqueleto-valor");
             qtdEl.classList.add("esqueleto-valor");
             const inicio = Date.now();
             const relogio = setInterval(() => {
                 const segundos = Math.round((Date.now() - inicio) / 1000);
-                statusEl.textContent = `Carregando... ${segundos} s (a API grátis pode levar até 50 s para acordar)`;
+                statusEl.textContent = `${t("Carregando...")} ${segundos} s (${t("a API grátis pode levar até 50 s para acordar")})`;
             }, 1000);
 
             try {
@@ -139,7 +143,7 @@
                 listaEl.innerHTML = "";
 
                 if (gastos.length === 0) {
-                    statusEl.textContent = "Nenhum gasto cadastrado ainda. Adicione o primeiro ao lado.";
+                    statusEl.textContent = t("Nenhum gasto cadastrado ainda. Adicione o primeiro ao lado.");
                     statusEl.hidden = false;
                 } else {
                     statusEl.hidden = true;
@@ -153,7 +157,7 @@
                             </div>
                             <div style="display:flex;align-items:center;gap:10px;">
                                 <b>${formatarMoeda(gasto.valor)}</b>
-                                <button class="demo-remover" title="Remover" data-id="${gasto.id}">✕</button>
+                                <button class="demo-remover" title="${t("Remover")}" data-id="${gasto.id}">✕</button>
                             </div>`;
                         listaEl.appendChild(item);
                     }
@@ -166,7 +170,7 @@
                 totalEl.classList.remove("esqueleto-valor");
                 qtdEl.classList.remove("esqueleto-valor");
                 statusEl.hidden = false;
-                statusEl.textContent = "Não foi possível carregar os dados agora. Tente novamente em instantes.";
+                statusEl.textContent = t("Não foi possível carregar os dados agora. Tente novamente em instantes.");
             }
         }
 
@@ -182,7 +186,7 @@
             evento.preventDefault();
             erroEl.hidden = true;
             botaoEl.disabled = true;
-            botaoEl.textContent = "Salvando...";
+            botaoEl.textContent = t("Salvando...");
 
             const corpo = {
                 descricao: document.getElementById("campo-descricao").value,
@@ -199,7 +203,7 @@
 
                 if (!resposta.ok) {
                     const erro = await resposta.json();
-                    throw new Error(erro.erro || "Erro ao salvar.");
+                    throw new Error(erro.erro || t("Erro ao salvar."));
                 }
 
                 formEl.reset();
@@ -209,10 +213,11 @@
                 erroEl.hidden = false;
             } finally {
                 botaoEl.disabled = false;
-                botaoEl.textContent = "Adicionar gasto";
+                botaoEl.textContent = t("Adicionar gasto");
             }
         });
 
+        document.addEventListener("idiomaMudou", carregarLista);
         carregarLista();
     </script>
 </body>

@@ -3,6 +3,8 @@ const CHAVE_SESSAO = "conta-a-dois-sessao";
 const INTERVALO_POLL = 4000;
 
 const els = {};
+const t = (s) => (window.traduzir ? window.traduzir(s) : s);
+const localeAtual = () => (document.documentElement.lang === "es" ? "es-ES" : "pt-BR");
 let sessao = null;
 let pollTimer = null;
 let idsGastosConhecidos = new Set();
@@ -26,7 +28,7 @@ function escaparHtml(texto) {
 }
 
 function formatarMoeda(valor) {
-    return Number(valor).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return Number(valor).toLocaleString(localeAtual(), { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
 function formatarData(iso) {
@@ -98,7 +100,7 @@ function renderPessoas(integrantes) {
         const pill = document.createElement("span");
         pill.className = `pessoa-pill pessoa-cor-${i}${souEu ? " sou-eu" : ""}`;
         pill.innerHTML = `<span class="ponto" aria-hidden="true"></span>${escaparHtml(integ.nome)}` +
-            (souEu ? ' <span class="tag-voce">(você)</span>' : "");
+            (souEu ? ` <span class="tag-voce">(${t("você")})</span>` : "");
         els.listaPessoas.appendChild(pill);
     });
 
@@ -110,24 +112,24 @@ function renderPessoas(integrantes) {
 function renderSaldo(saldo, integrantes) {
     els.carregandoSaldo.hidden = true;
     if (integrantes.length < 2) {
-        els.cartaoSaldo.innerHTML = `<p class="saldo-texto">Assim que seu par entrar, o saldo entre vocês aparece aqui.</p>`;
+        els.cartaoSaldo.innerHTML = `<p class="saldo-texto">${t("Assim que seu par entrar, o saldo entre vocês aparece aqui.")}</p>`;
         return;
     }
 
     let numero;
     let texto;
     if (saldo.quites) {
-        numero = saldo.total > 0 ? "Vocês estão quites 🎉" : "Nenhum gasto ainda";
-        texto = saldo.total > 0 ? "Os dois pagaram a mesma parte até agora." : "Lance o primeiro gasto aí embaixo.";
+        numero = saldo.total > 0 ? t("Vocês estão quites 🎉") : t("Nenhum gasto ainda");
+        texto = saldo.total > 0 ? t("Os dois pagaram a mesma parte até agora.") : t("Lance o primeiro gasto aí embaixo.");
     } else {
         numero = `R$ ${formatarMoeda(saldo.valor_devido)}`;
-        texto = `${escaparHtml(saldo.devedor.nome)} deve pra ${escaparHtml(saldo.credor.nome)}`;
+        texto = `${escaparHtml(saldo.devedor.nome)} ${t("deve pra")} ${escaparHtml(saldo.credor.nome)}`;
     }
 
     els.cartaoSaldo.innerHTML = `
         <div class="saldo-numero">${numero}</div>
         <div class="saldo-texto">${texto}</div>
-        <div class="saldo-total">Total gasto pelo casal: R$ ${formatarMoeda(saldo.total)}</div>
+        <div class="saldo-total">${t("Total gasto pelo casal:")} R$ ${formatarMoeda(saldo.total)}</div>
     `;
 }
 
@@ -149,7 +151,7 @@ function renderGastos(gastos, integrantes) {
                 <div class="item-gasto-meta">${escaparHtml(g.integrante_nome)} · ${escaparHtml(g.categoria)} · ${formatarData(g.data)}</div>
             </div>
             <div class="item-gasto-valor">R$ ${formatarMoeda(g.valor)}</div>
-            <button type="button" class="item-gasto-remover" aria-label="Remover gasto" data-id="${g.id}">×</button>
+            <button type="button" class="item-gasto-remover" aria-label="${t("Remover gasto")}" data-id="${g.id}">×</button>
         `;
         els.listaGastos.appendChild(li);
     });
@@ -167,7 +169,7 @@ async function atualizarTudo() {
         renderPessoas(casal.integrantes);
         renderSaldo(saldo, casal.integrantes);
         renderGastos(gastos, casal.integrantes);
-        els.statusSincroniza.textContent = `Sincronizado às ${new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit", second: "2-digit" })}`;
+        els.statusSincroniza.textContent = `${t("Sincronizado às")} ${new Date().toLocaleTimeString(localeAtual(), { hour: "2-digit", minute: "2-digit", second: "2-digit" })}`;
     } catch (erro) {
         if (/código não encontrado/i.test(erro.message)) {
             pararPolling();
@@ -175,9 +177,9 @@ async function atualizarTudo() {
             els.telaApp.hidden = true;
             els.telaEntrada.hidden = false;
             mostrarAba("criar");
-            mostrarErroAuth("Essa sessão de demonstração expirou — dados de teste são limpos periodicamente. Comece de novo.");
+            mostrarErroAuth(t("Essa sessão de demonstração expirou — dados de teste são limpos periodicamente. Comece de novo."));
         } else {
-            els.statusSincroniza.textContent = "Não deu pra sincronizar agora, tentando de novo…";
+            els.statusSincroniza.textContent = t("Não deu pra sincronizar agora, tentando de novo…");
         }
     }
 }
@@ -226,7 +228,7 @@ function ligarEventos() {
 
     els.painelCriar.addEventListener("submit", comCarregando(
         els.painelCriar.querySelector("button[type=submit]"),
-        "Criando… (pode levar uns segundos)",
+        t("Criando… (pode levar uns segundos)"),
         async () => {
             const nome = els.campoNomeCriar.value.trim();
             if (!nome) return;
@@ -239,7 +241,7 @@ function ligarEventos() {
 
     els.painelEntrar.addEventListener("submit", comCarregando(
         els.painelEntrar.querySelector("button[type=submit]"),
-        "Entrando… (pode levar uns segundos)",
+        t("Entrando… (pode levar uns segundos)"),
         async () => {
             const codigo = els.campoCodigoEntrar.value.trim().toUpperCase();
             const nome = els.campoNomeEntrar.value.trim();
@@ -268,7 +270,7 @@ function ligarEventos() {
             await navigator.clipboard.writeText(sessao.codigo);
         } catch { /* alguns navegadores bloqueiam sem interação recente — o clique já conta como uma */ }
         const original = els.botaoCopiarCodigo.textContent;
-        els.botaoCopiarCodigo.textContent = "Copiado!";
+        els.botaoCopiarCodigo.textContent = t("Copiado!");
         setTimeout(() => { els.botaoCopiarCodigo.textContent = original; }, 1600);
     });
 
@@ -284,7 +286,7 @@ function ligarEventos() {
         const botao = els.formGasto.querySelector("button[type=submit]");
         const original = botao.textContent;
         botao.disabled = true;
-        botao.textContent = "Adicionando…";
+        botao.textContent = t("Adicionando…");
         const categoria = els.campoCategoria.value;
         try {
             const payload = {
@@ -350,4 +352,5 @@ async function iniciar() {
     }
 }
 
+document.addEventListener("idiomaMudou", () => { if (sessao) atualizarTudo(); });
 document.addEventListener("DOMContentLoaded", iniciar);

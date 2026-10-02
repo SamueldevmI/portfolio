@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#150c1f">
+<title>Planilha da loja — Eclipse Studio</title>
+<link rel="icon" href="../app/icone-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,700;1,700&family=Quicksand:wght@500;600;700&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
+<style>
+:root { color-scheme: dark; --bg: #150c1f; --painel: #231637; --linha: #3a2c52; --linha-forte: #5a4680; --texto: #f6eeff; --mudo: #cfc0e6; --lilas: #cdb4ff; --rosa: #ffb8d9; --menta: #aef0d6; --ouro: #e9c46a; --tinta: #241a33; }
+* { box-sizing: border-box; }
+body { margin: 0; background: radial-gradient(46% 34% at 8% 0%, rgba(160, 110, 230, .24), transparent 70%), var(--bg); color: var(--texto); font: 500 1rem/1.6 "Quicksand", system-ui, sans-serif; }
+.pagina { max-width: 780px; margin: 0 auto; padding: 40px 16px 80px; }
+.marca { display: flex; align-items: center; gap: 10px; margin: 0; font: 400 1.6rem/1 "UnifrakturMaguntia", serif; }
+.marca img { width: 32px; height: 32px; border-radius: 8px; }
+h1 { margin: 18px 0 8px; font: 700 clamp(2.2rem, 7vw, 3rem)/1.05 "Cormorant Garamond", serif; }
+h1 em { background: linear-gradient(90deg, var(--lilas), var(--rosa) 60%, var(--menta)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+h2 { margin: 36px 0 12px; font: 700 1.8rem/1.1 "Cormorant Garamond", serif; }
+p, li { color: var(--mudo); }
+b, strong { color: var(--texto); }
+ol.passos { display: grid; gap: 14px; margin: 0; padding: 0; list-style: none; counter-reset: passo; }
+ol.passos li { position: relative; padding: 16px 18px 16px 60px; border: 1px solid var(--linha); border-radius: 18px; background: var(--painel); counter-increment: passo; }
+ol.passos li::before { content: counter(passo); position: absolute; left: 16px; top: 14px; display: grid; place-items: center; width: 30px; height: 30px; border: 2px solid var(--tinta); border-radius: 50%; background: var(--lilas); color: var(--tinta); font: 700 1rem "Cormorant Garamond", serif; }
+.botao { display: inline-flex; align-items: center; min-height: 44px; margin: 6px 0; padding: 0 20px; border: 2px solid var(--tinta); border-radius: 999px; background: linear-gradient(135deg, var(--rosa), var(--lilas)); color: var(--tinta); font: 700 .92rem "Quicksand", sans-serif; text-decoration: none; }
+table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+th, td { padding: 9px 10px; border-bottom: 1px solid var(--linha); text-align: left; vertical-align: top; }
+th { color: var(--ouro); font-size: .78rem; letter-spacing: .1em; text-transform: uppercase; }
+td:first-child { color: var(--rosa); font-weight: 700; white-space: nowrap; }
+.tabela { overflow-x: auto; border: 1px solid var(--linha-forte); border-radius: 16px; }
+.dica { padding: 14px 18px; border: 1px dashed var(--ouro); border-radius: 16px; background: rgba(233, 196, 106, .08); }
+code { padding: 1px 6px; border-radius: 6px; background: rgba(255, 255, 255, .08); color: var(--texto); }
+</style>
+</head>
+<body>
+<div class="pagina">
+    <p class="marca"><img src="../app/icone-192.png" alt="" width="32" height="32">Eclipse Studio</p>
+    <h1>A loja na palma da <em>sua mão</em></h1>
+    <p>Com a planilha, você mesma coloca peça nova, muda preço, troca foto e marca “vendida”, pelo celular. O site lê a planilha sozinho: mudou lá, muda na loja em poucos minutos.</p>
+
+    <h2>Uma vez só, pra ligar</h2>
+    <ol class="passos">
+        <li>Baixe o modelo, que já vem com as peças de exemplo preenchidas:<br><a class="botao" href="modelo.csv" download="eclipse-studio-pecas.csv">Baixar o modelo da planilha</a></li>
+        <li>Abra o <b>Google Planilhas</b> (sheets.google.com), crie uma planilha em branco e vá em <b>Arquivo › Importar › Fazer upload</b>, escolhendo o arquivo baixado.</li>
+        <li>Vá em <b>Arquivo › Compartilhar › Publicar na Web</b>. Escolha a aba das peças e o formato <b>Valores separados por vírgula (.csv)</b>, e toque em <b>Publicar</b>.</li>
+        <li>Copie o link que aparecer e mande pro Samuel no WhatsApp. Ele liga a loja na sua planilha (só precisa fazer isso uma vez).</li>
+    </ol>
+
+    <h2>No dia a dia</h2>
+    <ol class="passos">
+        <li><b>Peça nova:</b> uma linha nova, com nome, preço e foto.</li>
+        <li><b>Vendeu uma peça única:</b> escreva <code>sim</code> na coluna <b>vendida</b>. A peça ganha o véu “já tem dona”.</li>
+        <li><b>Foto:</b> suba a foto no Google Drive, compartilhe como “qualquer pessoa com o link” e cole o link na coluna <b>fotos</b>. Pode colar mais de um link, separados por espaço.</li>
+        <li>A loja atualiza sozinha. Se não aparecer na hora, espere uns 5 minutos (o Google demora um pouquinho pra publicar).</li>
+    </ol>
+
+    <h2>O que vai em cada coluna</h2>
+    <div class="tabela"><table>
+        <thead><tr><th>Coluna</th><th>O que escrever</th></tr></thead>
+        <tbody>
+            <tr><td>nome</td><td>O nome da peça (obrigatório).</td></tr>
+            <tr><td>categoria</td><td>Roupas, Joias e bijuterias, Bolsas, Maquiagem e perfumes… Categoria nova vira filtro novo sozinha.</td></tr>
+            <tr><td>preco</td><td>Ex.: <code>89,90</code>. Em branco = “sob consulta”.</td></tr>
+            <tr><td>fotos</td><td>Link(s) das fotos no Google Drive.</td></tr>
+            <tr><td>resumo</td><td>Uma linha curta embaixo do nome. Ex.: “Veludo · renda · lua”.</td></tr>
+            <tr><td>descricao</td><td>O texto da janela da peça.</td></tr>
+            <tr><td>detalhes</td><td>Lista de detalhes separados por <code>;</code>. Ex.: “Veludo; Fecho ajustável”.</td></tr>
+            <tr><td>vibes</td><td>Vitoriana, Trad goth, Bruxinha e/ou Pastel goth, separadas por vírgula.</td></tr>
+            <tr><td>tamanhos</td><td>Em branco = tamanho único. Ex.: “P, M, G”.</td></tr>
+            <tr><td>unica</td><td><code>sim</code> se só existe uma (brechó).</td></tr>
+            <tr><td>vendida</td><td><code>sim</code> quando a peça única for vendida.</td></tr>
+            <tr><td>novo</td><td><code>sim</code> pra ganhar o selo “Novidade”.</td></tr>
+            <tr><td>secreta</td><td><code>sim</code> pra peça só aparecer atrás da porta secreta (close friends).</td></tr>
+            <tr><td>id e ilustracao</td><td>Pode deixar como está ou em branco: o site se vira.</td></tr>
+        </tbody>
+    </table></div>
+
+    <p class="dica">💡 Não apague a primeira linha (os títulos das colunas). E se a internet cair ou a planilha sair do ar, a loja continua mostrando as últimas peças que ela leu.</p>
+</div>
+</body>
+</html>

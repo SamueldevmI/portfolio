@@ -1,4 +1,6 @@
 const API = "https://gastos-api-z0dt.onrender.com";
+const t = (s) => (window.traduzir ? window.traduzir(s) : s);
+const localeAtual = () => (document.documentElement.lang === "es" ? "es-ES" : "pt-BR");
 
 const form = document.getElementById("formTransacao");
 const botaoSalvar = form.querySelector('button[type="submit"]');
@@ -8,8 +10,8 @@ const tituloFormulario = document.getElementById("tituloFormulario");
 const lista = document.getElementById("listaTransacoes");
 const estadoVazio = document.getElementById("estadoVazio");
 const filtro = document.getElementById("filtro");
-const formatoMoeda = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
-const formatoData = new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "short" });
+const formatoMoeda = () => new Intl.NumberFormat(localeAtual(), { style: "currency", currency: "BRL" });
+const formatoData = () => new Intl.DateTimeFormat(localeAtual(), { day: "2-digit", month: "short" });
 
 let transacoes = [];
 let carregando = true;
@@ -22,7 +24,7 @@ async function api(caminho, opcoes = {}) {
         ...opcoes,
     });
     if (!resposta.ok) {
-        let mensagem = `Erro ${resposta.status} ao falar com a API.`;
+        let mensagem = `${t("Erro")} ${resposta.status} ${t("ao falar com a API.")}`;
         try {
             const corpo = await resposta.json();
             if (corpo?.erro) mensagem = corpo.erro;
@@ -46,10 +48,12 @@ function atualizarResumo() {
     const despesas = transacoes.filter(item => item.tipo === "despesa").reduce((total, item) => total + item.valor, 0);
     const saldo = receitas - despesas;
 
-    document.getElementById("totalReceitas").textContent = formatoMoeda.format(receitas);
-    document.getElementById("totalDespesas").textContent = formatoMoeda.format(despesas);
-    document.getElementById("saldo").textContent = formatoMoeda.format(saldo);
-    document.getElementById("mensagemSaldo").textContent = transacoes.length === 0 ? "Comece adicionando uma transação." : saldo >= 0 ? "Você está no positivo." : "Atenção: saldo negativo.";
+    document.getElementById("totalReceitas").textContent = formatoMoeda().format(receitas);
+    document.getElementById("totalDespesas").textContent = formatoMoeda().format(despesas);
+    document.getElementById("saldo").textContent = formatoMoeda().format(saldo);
+    document.getElementById("mensagemSaldo").textContent = transacoes.length === 0
+        ? t("Comece adicionando uma transação.")
+        : saldo >= 0 ? t("Você está no positivo.") : t("Atenção: saldo negativo.");
 }
 
 function atualizarCategorias() {
@@ -67,7 +71,7 @@ function atualizarCategorias() {
         const percentual = (valor / total) * 100;
         const linha = document.createElement("div");
         linha.className = "categoria-linha";
-        linha.innerHTML = `<span>${categoria}</span><div class="barra" aria-label="${percentual.toFixed(0)}% das despesas"><i></i></div><strong>${formatoMoeda.format(valor)}</strong>`;
+        linha.innerHTML = `<span>${t(categoria)}</span><div class="barra" aria-label="${percentual.toFixed(0)}% ${t("das despesas")}"><i></i></div><strong>${formatoMoeda().format(valor)}</strong>`;
         linha.querySelector("i").style.width = `${percentual}%`;
         categorias.appendChild(linha);
     });
@@ -77,14 +81,14 @@ function renderizar() {
     if (carregando) {
         lista.innerHTML = "";
         estadoVazio.hidden = false;
-        estadoVazio.textContent = "Carregando transações da API… (pode levar até 50s se ela estava dormindo)";
+        estadoVazio.textContent = t("Carregando transações da API… (pode levar até 50s se ela estava dormindo)");
         return;
     }
 
     if (erroConexao) {
         lista.innerHTML = "";
         estadoVazio.hidden = false;
-        estadoVazio.textContent = "Não foi possível conectar com a API agora. Tente recarregar a página em instantes.";
+        estadoVazio.textContent = t("Não foi possível conectar com a API agora. Tente recarregar a página em instantes.");
         return;
     }
 
@@ -92,17 +96,17 @@ function renderizar() {
     const itens = transacoes.filter(item => tipoFiltro === "todos" || item.tipo === tipoFiltro);
     lista.innerHTML = "";
     estadoVazio.hidden = itens.length > 0;
-    estadoVazio.textContent = "Nenhuma transação por aqui. Adicione a primeira ao lado.";
+    estadoVazio.textContent = t("Nenhuma transação por aqui. Adicione a primeira ao lado.");
 
     itens.slice().reverse().forEach(item => {
         const linha = document.createElement("article");
         linha.className = `transacao ${item.tipo}${item.id === editandoId ? " editando" : ""}`;
         const icone = item.tipo === "receita" ? "↗" : "↘";
         const sinal = item.tipo === "receita" ? "+" : "−";
-        linha.innerHTML = `<span class="icone" aria-hidden="true">${icone}</span><div><p class="nome"></p><p class="categoria"></p></div><strong class="valor-transacao">${sinal} ${formatoMoeda.format(item.valor)}</strong><button class="editar" type="button" aria-label="Editar ${item.descricao}" data-id="${item.id}">✎</button><button class="excluir" type="button" aria-label="Excluir ${item.descricao}" data-id="${item.id}">×</button>`;
+        linha.innerHTML = `<span class="icone" aria-hidden="true">${icone}</span><div><p class="nome"></p><p class="categoria"></p></div><strong class="valor-transacao">${sinal} ${formatoMoeda().format(item.valor)}</strong><button class="editar" type="button" aria-label="${t("Editar")} ${item.descricao}" data-id="${item.id}">✎</button><button class="excluir" type="button" aria-label="${t("Excluir")} ${item.descricao}" data-id="${item.id}">×</button>`;
         linha.querySelector(".nome").textContent = item.descricao;
-        const data = item.data ? formatoData.format(new Date(`${item.data}T12:00:00`)) : "Sem data";
-        linha.querySelector(".categoria").textContent = `${item.categoria} · ${data}`;
+        const data = item.data ? formatoData().format(new Date(`${item.data}T12:00:00`)) : t("Sem data");
+        linha.querySelector(".categoria").textContent = `${t(item.categoria)} · ${data}`;
         lista.appendChild(linha);
     });
     atualizarResumo();
@@ -130,9 +134,9 @@ function entrarModoEdicao(item) {
     form.data.value = item.data;
     form.tipo.value = item.tipo;
 
-    rotuloFormulario.textContent = "EDITAR TRANSAÇÃO";
-    tituloFormulario.textContent = "Atualize o lançamento";
-    botaoSalvar.textContent = "Salvar alterações";
+    rotuloFormulario.textContent = t("EDITAR TRANSAÇÃO");
+    tituloFormulario.textContent = t("Atualize o lançamento");
+    botaoSalvar.textContent = t("Salvar alterações");
     botaoCancelarEdicao.hidden = false;
     renderizar();
     form.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -143,9 +147,9 @@ function sairModoEdicao() {
     editandoId = null;
     form.reset();
     document.getElementById("data").value = new Date().toISOString().slice(0, 10);
-    rotuloFormulario.textContent = "NOVA TRANSAÇÃO";
-    tituloFormulario.textContent = "Adicione um lançamento";
-    botaoSalvar.textContent = "Adicionar transação";
+    rotuloFormulario.textContent = t("NOVA TRANSAÇÃO");
+    tituloFormulario.textContent = t("Adicione um lançamento");
+    botaoSalvar.textContent = t("Adicionar transação");
     botaoCancelarEdicao.hidden = true;
 }
 
@@ -165,25 +169,25 @@ form.addEventListener("submit", async event => {
 
     const emEdicao = editandoId !== null;
     botaoSalvar.disabled = true;
-    botaoSalvar.textContent = "Salvando…";
+    botaoSalvar.textContent = t("Salvando…");
     try {
         if (emEdicao) {
             await api(`/gastos/${editandoId}`, { method: "PUT", body: JSON.stringify(payload) });
             sairModoEdicao();
             await carregarTransacoes();
-            mostrarToast("Transação atualizada com sucesso.");
+            mostrarToast(t("Transação atualizada com sucesso."));
         } else {
             await api("/gastos", { method: "POST", body: JSON.stringify(payload) });
             form.reset();
             document.getElementById("data").value = new Date().toISOString().slice(0, 10);
             await carregarTransacoes();
-            mostrarToast("Transação adicionada com sucesso.");
+            mostrarToast(t("Transação adicionada com sucesso."));
         }
     } catch (erro) {
         mostrarToast(erro.message);
     } finally {
         botaoSalvar.disabled = false;
-        botaoSalvar.textContent = editandoId !== null ? "Salvar alterações" : "Adicionar transação";
+        botaoSalvar.textContent = editandoId !== null ? t("Salvar alterações") : t("Adicionar transação");
     }
 });
 
@@ -207,7 +211,7 @@ lista.addEventListener("click", async event => {
         await api(`/gastos/${botao.dataset.id}`, { method: "DELETE" });
         if (editandoId === Number(botao.dataset.id)) sairModoEdicao();
         await carregarTransacoes();
-        mostrarToast("Transação removida.");
+        mostrarToast(t("Transação removida."));
     } catch (erro) {
         botao.disabled = false;
         mostrarToast(erro.message);
@@ -217,26 +221,26 @@ lista.addEventListener("click", async event => {
 filtro.addEventListener("change", renderizar);
 
 document.getElementById("limparTudo").addEventListener("click", async () => {
-    if (!transacoes.length || !confirm("Deseja apagar todas as transações?")) return;
+    if (!transacoes.length || !confirm(t("Deseja apagar todas as transações?"))) return;
     try {
         sairModoEdicao();
         await Promise.all(transacoes.map(item => api(`/gastos/${item.id}`, { method: "DELETE" })));
         await carregarTransacoes();
-        mostrarToast("Dados removidos.");
+        mostrarToast(t("Dados removidos."));
     } catch (erro) {
         mostrarToast(erro.message);
     }
 });
 
 document.getElementById("carregarExemplo").addEventListener("click", async () => {
-    if (transacoes.length && !confirm("Isso vai substituir suas transações pelos dados de exemplo. Continuar?")) return;
+    if (transacoes.length && !confirm(t("Isso vai substituir suas transações pelos dados de exemplo. Continuar?"))) return;
     const hoje = new Date().toISOString().slice(0, 10);
     const exemplos = [
-        { descricao: "Salário", valor: 3200, categoria: "Trabalho", tipo: "receita", data: hoje },
-        { descricao: "Freelance", valor: 450, categoria: "Trabalho", tipo: "receita", data: hoje },
-        { descricao: "Supermercado", valor: 385.90, categoria: "Alimentação", tipo: "despesa", data: hoje },
-        { descricao: "Aluguel", valor: 900, categoria: "Moradia", tipo: "despesa", data: hoje },
-        { descricao: "Internet", valor: 99.90, categoria: "Moradia", tipo: "despesa", data: hoje },
+        { descricao: t("Salário"), valor: 3200, categoria: "Trabalho", tipo: "receita", data: hoje },
+        { descricao: t("Freelance"), valor: 450, categoria: "Trabalho", tipo: "receita", data: hoje },
+        { descricao: t("Supermercado"), valor: 385.90, categoria: "Alimentação", tipo: "despesa", data: hoje },
+        { descricao: t("Aluguel"), valor: 900, categoria: "Moradia", tipo: "despesa", data: hoje },
+        { descricao: t("Internet"), valor: 99.90, categoria: "Moradia", tipo: "despesa", data: hoje },
         { descricao: "Uber", valor: 42.50, categoria: "Transporte", tipo: "despesa", data: hoje },
     ];
 
@@ -245,7 +249,7 @@ document.getElementById("carregarExemplo").addEventListener("click", async () =>
         await Promise.all(transacoes.map(item => api(`/gastos/${item.id}`, { method: "DELETE" })));
         await Promise.all(exemplos.map(item => api("/gastos", { method: "POST", body: JSON.stringify(item) })));
         await carregarTransacoes();
-        mostrarToast("Dados de exemplo carregados.");
+        mostrarToast(t("Dados de exemplo carregados."));
     } catch (erro) {
         mostrarToast(erro.message);
     }
@@ -256,7 +260,7 @@ function aplicarTema(escuro) {
     document.body.classList.toggle("dark-mode", escuro);
     botaoTema.textContent = escuro ? "🌙" : "☀️";
     botaoTema.setAttribute("aria-pressed", String(escuro));
-    botaoTema.setAttribute("aria-label", escuro ? "Ativar tema claro" : "Ativar tema escuro");
+    botaoTema.setAttribute("aria-label", escuro ? t("Ativar tema claro") : t("Ativar tema escuro"));
 }
 aplicarTema(localStorage.getItem("granaEmDiaTema") === "escuro");
 botaoTema.addEventListener("click", () => {
@@ -264,6 +268,8 @@ botaoTema.addEventListener("click", () => {
     aplicarTema(escuro);
     localStorage.setItem("granaEmDiaTema", escuro ? "escuro" : "claro");
 });
+
+document.addEventListener("idiomaMudou", renderizar);
 
 document.getElementById("data").value = new Date().toISOString().slice(0, 10);
 renderizar();

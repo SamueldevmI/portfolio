@@ -197,6 +197,7 @@ const LOOKS = [
 ];
 
 /* ===== Utilidades ===== */
+const t = (s) => (window.traduzir ? window.traduzir(s) : s);
 const $ = (seletor) => document.querySelector(seletor);
 const produto = (id) => PRODUTOS.find((p) => p.id === id);
 const esc = (texto) => String(texto).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -254,16 +255,18 @@ const previaEl = $("#previa");
 const enviarEl = $("#enviarZap");
 const notaEl = $("#nota");
 const avisosEl = $("#avisos");
-const NOTA_PADRAO = notaEl.textContent;
+/* Texto fixo em português (não lido do DOM): lido do elemento ele poderia já estar traduzido
+   quando este script roda, e aí t() não acharia a chave pra traduzir de volta ao trocar de idioma. */
+const NOTA_PADRAO = "No WhatsApp a gente confirma o estoque, calcula o frete e manda o Pix ou o link do cartão. Este site não pede nem guarda dado de pagamento.";
 
 document.querySelectorAll("[data-nome-loja]").forEach((el) => { el.textContent = LOJA.nome; });
 campoNome.value = ler(CHAVE_NOME, "");
 
 /* ===== Catálogo na tela ===== */
 function tamanhosHtml(p, prefixo) {
-    if (!p.tam) return `<p class="tam-unico">Tamanho único</p>`;
-    const opcoes = p.tam.map((t) => `<label class="tam"><input type="radio" name="${prefixo}-${p.id}" value="${t}"><span>${t}</span></label>`).join("");
-    return `<fieldset class="tamanhos"><legend>Tamanho</legend>${opcoes}</fieldset><p class="dica" role="alert" hidden>Escolha um tamanho.</p>`;
+    if (!p.tam) return `<p class="tam-unico">${t("Tamanho único")}</p>`;
+    const opcoes = p.tam.map((tam) => `<label class="tam"><input type="radio" name="${prefixo}-${p.id}" value="${tam}"><span>${tam}</span></label>`).join("");
+    return `<fieldset class="tamanhos"><legend>${t("Tamanho")}</legend>${opcoes}</fieldset><p class="dica" role="alert" hidden>${t("Escolha um tamanho.")}</p>`;
 }
 
 /* Enquadramento da foto no quadrado: onde focar e quanto aproximar */
@@ -273,18 +276,18 @@ function fotoEstilo(p) {
 
 function cardHtml(p, indice) {
     return `<li class="card" data-id="${p.id}" data-cat="${esc(p.cat)}" style="--i:${indice}">
-        <button class="card-imagem" type="button" data-abrir="${p.id}" aria-label="Ver detalhes de ${esc(p.nome)}${p.novo ? ", peça nova" : ""}">
+        <button class="card-imagem" type="button" data-abrir="${p.id}" aria-label="${t("Ver detalhes de")} ${esc(t(p.nome))}${p.novo ? ", " + t("peça nova") : ""}">
             <img src="produtos/${p.img}" alt="" width="400" height="400" loading="lazy" decoding="async" ${fotoEstilo(p)}>
-            ${p.novo ? '<span class="selo-novo">Novo</span>' : ""}
+            ${p.novo ? `<span class="selo-novo">${t("Novo")}</span>` : ""}
             <span class="cod">${codigo(p.id)}</span>
         </button>
         <div class="card-corpo">
-            <p class="card-cat">${esc(p.cat)}</p>
-            <h3 class="card-nome"><button type="button" class="card-nome-botao" data-abrir="${p.id}">${esc(p.nome)}</button></h3>
-            <p class="card-resumo">${esc(p.resumo)}</p>
+            <p class="card-cat">${esc(t(p.cat))}</p>
+            <h3 class="card-nome"><button type="button" class="card-nome-botao" data-abrir="${p.id}">${esc(t(p.nome))}</button></h3>
+            <p class="card-resumo">${esc(t(p.resumo))}</p>
             <p class="card-preco">${brl(p.preco)}</p>
             ${tamanhosHtml(p, "tam")}
-            <button class="botao botao-neon botao-cheio" type="button" data-add="${p.id}">Adicionar</button>
+            <button class="botao botao-neon botao-cheio" type="button" data-add="${p.id}">${t("Adicionar")}</button>
         </div>
     </li>`;
 }
@@ -293,11 +296,11 @@ function produtosVisiveis() {
     const q = normalizar(filtro.q.trim());
     const lista = PRODUTOS.filter((p) => {
         if (filtro.cat !== "todos" && p.cat !== filtro.cat) return false;
-        return !q || normalizar(`${p.nome} ${p.cat} ${p.resumo} ${p.busca}`).includes(q);
+        return !q || normalizar(`${p.nome} ${t(p.nome)} ${p.cat} ${t(p.cat)} ${p.resumo} ${t(p.resumo)} ${p.busca}`).includes(q);
     });
     if (filtro.ordem === "menor") lista.sort((a, b) => a.preco - b.preco);
     if (filtro.ordem === "maior") lista.sort((a, b) => b.preco - a.preco);
-    if (filtro.ordem === "nome") lista.sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR"));
+    if (filtro.ordem === "nome") lista.sort((a, b) => t(a.nome).localeCompare(t(b.nome), document.documentElement.lang === "es" ? "es-ES" : "pt-BR"));
     return lista;
 }
 
@@ -305,7 +308,7 @@ function renderChips() {
     const nomes = ["todos", ...CATEGORIAS];
     chipsEl.innerHTML = nomes.map((nome) => {
         const total = nome === "todos" ? PRODUTOS.length : PRODUTOS.filter((p) => p.cat === nome).length;
-        const rotulo = nome === "todos" ? "Todos" : nome;
+        const rotulo = nome === "todos" ? t("Todos") : t(nome);
         return `<button type="button" class="chip" data-cat="${nome}" aria-pressed="${filtro.cat === nome}">${rotulo}<small>${total}</small></button>`;
     }).join("");
 }
@@ -315,23 +318,23 @@ function renderGrade() {
     grade.innerHTML = lista.map(cardHtml).join("");
     grade.hidden = lista.length === 0;
     vazioEl.hidden = lista.length !== 0;
-    contagemEl.textContent = lista.length === 1 ? "1 produto" : lista.length + " produtos";
+    contagemEl.textContent = lista.length === 1 ? t("1 produto") : lista.length + " " + t("produtos");
 }
 
 /* ===== Looks prontos na tela ===== */
 const lookPrecoTotal = (look) => look.itens.reduce((soma, i) => soma + produto(i.id).preco, 0);
 
 function lookHtml(look) {
-    const imagens = look.itens.map((i) => `<img src="produtos/${produto(i.id).img}" alt="${esc(produto(i.id).nome)}" width="90" height="90" loading="lazy" ${fotoEstilo(produto(i.id))}>`).join("");
-    const nomes = look.itens.map((i) => produto(i.id).nome).join(" + ");
+    const imagens = look.itens.map((i) => `<img src="produtos/${produto(i.id).img}" alt="${esc(t(produto(i.id).nome))}" width="90" height="90" loading="lazy" ${fotoEstilo(produto(i.id))}>`).join("");
+    const nomes = look.itens.map((i) => t(produto(i.id).nome)).join(" + ");
     return `<li class="look-card">
         <div class="look-imagens">${imagens}</div>
         <div class="look-corpo">
-            <h3>${esc(look.nome)}</h3>
-            <p class="look-desc">${esc(look.desc)}</p>
+            <h3>${esc(t(look.nome))}</h3>
+            <p class="look-desc">${esc(t(look.desc))}</p>
             <p class="look-pecas">${esc(nomes)}</p>
             <p class="card-preco">${brl(lookPrecoTotal(look))}</p>
-            <button class="botao botao-neon botao-cheio" type="button" data-look-add="${look.id}">Adicionar look completo</button>
+            <button class="botao botao-neon botao-cheio" type="button" data-look-add="${look.id}">${t("Adicionar look completo")}</button>
         </div>
     </li>`;
 }
@@ -357,8 +360,8 @@ function adicionarLook(lookId) {
     botaoCarrinho.classList.remove("bump");
     void botaoCarrinho.offsetWidth;
     botaoCarrinho.classList.add("bump");
-    const rotulo = `Look adicionado: ${look.itens.length} peças${algumNoMaximo ? " (uma já estava no máximo por peça)" : ""}`;
-    avisar(rotulo, { rotulo: "Ver carrinho", fazer: () => dlgCarrinho.showModal() });
+    const rotulo = `${t("Look adicionado:")} ${look.itens.length} ${t("peças")}${algumNoMaximo ? " (" + t("uma já estava no máximo por peça") + ")" : ""}`;
+    avisar(rotulo, { rotulo: t("Ver carrinho"), fazer: () => dlgCarrinho.showModal() });
 }
 
 /* ===== Produto em detalhe ===== */
@@ -366,16 +369,16 @@ function abrirProduto(id) {
     const p = produto(id);
     if (!p) return;
     dlgProduto.innerHTML = `<div class="dp">
-        <button class="fechar" type="button" data-fechar aria-label="Fechar">×</button>
+        <button class="fechar" type="button" data-fechar aria-label="${t("Fechar")}">×</button>
         <div class="dp-imagem"><img src="produtos/${p.img}" alt="${esc(p.alt)}" width="400" height="400" ${fotoEstilo(p)}></div>
         <div class="dp-info" data-escopo>
-            <p class="card-cat">${esc(p.cat)} · ${codigo(p.id)}</p>
-            <h2 id="produtoTitulo">${esc(p.nome)}</h2>
+            <p class="card-cat">${esc(t(p.cat))} · ${codigo(p.id)}</p>
+            <h2 id="produtoTitulo">${esc(t(p.nome))}</h2>
             <p class="card-preco">${brl(p.preco)}</p>
             <p class="dp-desc">${esc(p.desc)}</p>
-            <ul class="dp-itens">${p.itens.map((t) => `<li>${esc(t)}</li>`).join("")}</ul>
+            <ul class="dp-itens">${p.itens.map((item) => `<li>${esc(item)}</li>`).join("")}</ul>
             ${tamanhosHtml(p, "dlg")}
-            <button class="botao botao-neon botao-cheio" type="button" data-add="${p.id}">Adicionar ao carrinho</button>
+            <button class="botao botao-neon botao-cheio" type="button" data-add="${p.id}">${t("Adicionar ao carrinho")}</button>
         </div>
     </div>`;
     dlgProduto.showModal();
@@ -385,41 +388,41 @@ function abrirProduto(id) {
 const chaveDe = (i) => i.id + "|" + i.tam;
 const totalCentavos = () => carrinho.reduce((soma, i) => soma + produto(i.id).preco * i.qtd, 0);
 const totalItens = () => carrinho.reduce((soma, i) => soma + i.qtd, 0);
-const rotuloTam = (i) => (i.tam ? "Tamanho " + i.tam : "Tamanho único");
+const rotuloTam = (i) => (i.tam ? t("Tamanho") + " " + i.tam : t("Tamanho único"));
 
 function montarMensagem() {
-    const linhas = [`Olá! Quero fazer este pedido na ${LOJA.nome}:`, ""];
+    const linhas = [`${t("Olá! Quero fazer este pedido na")} ${LOJA.nome}:`, ""];
     carrinho.forEach((i) => {
         const p = produto(i.id);
-        linhas.push(`• ${i.qtd}x ${p.nome}${i.tam ? " (" + i.tam + ")" : ""} — ${brl(p.preco * i.qtd)}`);
+        linhas.push(`• ${i.qtd}x ${t(p.nome)}${i.tam ? " (" + i.tam + ")" : ""} — ${brl(p.preco * i.qtd)}`);
     });
-    linhas.push("", `*Total estimado: ${brl(totalCentavos())}*`);
+    linhas.push("", `*${t("Total estimado:")} ${brl(totalCentavos())}*`);
     const nome = campoNome.value.trim();
     const obs = campoObs.value.trim();
-    if (nome) linhas.push(`Nome: ${nome}`);
-    if (obs) linhas.push(`Obs.: ${obs}`);
-    linhas.push("", "Podemos combinar o valor final, o frete e o pagamento por aqui?");
-    if (LOJA.demo) linhas.push("", "_(Pedido de teste da loja de demonstração do portfólio)_");
+    if (nome) linhas.push(`${t("Nome:")} ${nome}`);
+    if (obs) linhas.push(`${t("Obs.:")} ${obs}`);
+    linhas.push("", t("Podemos combinar o valor final, o frete e o pagamento por aqui?"));
+    if (LOJA.demo) linhas.push("", t("_(Pedido de teste da loja de demonstração do portfólio)_"));
     return linhas.join("\n");
 }
 
 function itemHtml(i) {
     const p = produto(i.id);
-    const nomeCompleto = `${p.nome}, ${rotuloTam(i)}`;
+    const nomeCompleto = `${t(p.nome)}, ${rotuloTam(i)}`;
     return `<li class="item" data-chave="${chaveDe(i)}">
         <img src="produtos/${p.img}" alt="" width="72" height="72" ${fotoEstilo(p)}>
         <div class="item-info">
-            <p class="item-nome">${esc(p.nome)}</p>
+            <p class="item-nome">${esc(t(p.nome))}</p>
             <p class="item-tam">${rotuloTam(i)} · ${brl(p.preco)}</p>
             <div class="qtd">
-                <button type="button" data-menos aria-label="Diminuir a quantidade: ${esc(nomeCompleto)}"${i.qtd <= 1 ? " disabled" : ""}>−</button>
-                <span class="qtd-valor" aria-label="Quantidade">${i.qtd}</span>
-                <button type="button" data-mais aria-label="Aumentar a quantidade: ${esc(nomeCompleto)}"${i.qtd >= MAX_POR_ITEM ? " disabled" : ""}>+</button>
+                <button type="button" data-menos aria-label="${t("Diminuir a quantidade:")} ${esc(nomeCompleto)}"${i.qtd <= 1 ? " disabled" : ""}>−</button>
+                <span class="qtd-valor" aria-label="${t("Quantidade")}">${i.qtd}</span>
+                <button type="button" data-mais aria-label="${t("Aumentar a quantidade:")} ${esc(nomeCompleto)}"${i.qtd >= MAX_POR_ITEM ? " disabled" : ""}>+</button>
             </div>
         </div>
         <div class="item-lado">
             <strong>${brl(p.preco * i.qtd)}</strong>
-            <button type="button" class="item-remover" data-remover aria-label="Remover do carrinho: ${esc(nomeCompleto)}">Remover</button>
+            <button type="button" class="item-remover" data-remover aria-label="${t("Remover do carrinho:")} ${esc(nomeCompleto)}">${t("Remover")}</button>
         </div>
     </li>`;
 }
@@ -440,7 +443,7 @@ function renderCarrinho() {
     totalEl.textContent = brl(totalCentavos());
     contadorEl.hidden = vazio;
     contadorEl.textContent = quantidade;
-    botaoCarrinho.setAttribute("aria-label", vazio ? "Abrir carrinho, vazio" : `Abrir carrinho, ${quantidade} ${quantidade === 1 ? "item" : "itens"}`);
+    botaoCarrinho.setAttribute("aria-label", vazio ? t("Abrir carrinho, vazio") : `${t("Abrir carrinho,")} ${quantidade} ${quantidade === 1 ? t("item") : t("itens")}`);
     atualizarLinkPedido();
     guardar(CHAVE_CARRINHO, carrinho);
 }
@@ -484,7 +487,7 @@ function adicionar(id, escopo) {
     const existente = carrinho.find((i) => i.id === id && i.tam === tam);
     if (existente && existente.qtd >= MAX_POR_ITEM) {
         if (dlgProduto.open) dlgProduto.close(); // o aviso fica atrás de um diálogo aberto
-        avisar(`Máximo de ${MAX_POR_ITEM} por peça. Para mais, combine no WhatsApp.`);
+        avisar(`${t("Máximo de")} ${MAX_POR_ITEM} ${t("por peça. Para mais, combine no WhatsApp.")}`);
         return;
     }
     if (existente) existente.qtd += 1; else carrinho.push({ id, tam, qtd: 1 });
@@ -493,7 +496,7 @@ function adicionar(id, escopo) {
     botaoCarrinho.classList.remove("bump");
     void botaoCarrinho.offsetWidth;
     botaoCarrinho.classList.add("bump");
-    avisar(`Adicionado: ${p.nome}${tam ? " (" + tam + ")" : ""}`, { rotulo: "Ver carrinho", fazer: () => dlgCarrinho.showModal() });
+    avisar(`${t("Adicionado:")} ${t(p.nome)}${tam ? " (" + tam + ")" : ""}`, { rotulo: t("Ver carrinho"), fazer: () => dlgCarrinho.showModal() });
 }
 
 function mudarQuantidade(chave, delta) {
@@ -583,17 +586,24 @@ $("#esvaziar").addEventListener("click", () => {
 $("#copiarPedido").addEventListener("click", async () => {
     try {
         await navigator.clipboard.writeText(montarMensagem());
-        notaEl.textContent = "Pedido copiado. Cole na conversa que quiser.";
+        notaEl.textContent = t("Pedido copiado. Cole na conversa que quiser.");
     } catch (erro) {
-        notaEl.textContent = "Não consegui copiar. Abra a mensagem acima e copie manualmente.";
+        notaEl.textContent = t("Não consegui copiar. Abra a mensagem acima e copie manualmente.");
         previaEl.closest("details").open = true;
     }
-    setTimeout(() => { notaEl.textContent = NOTA_PADRAO; }, 4000);
+    setTimeout(() => { notaEl.textContent = t(NOTA_PADRAO); }, 4000);
 });
 
 enviarEl.addEventListener("click", () => {
-    notaEl.textContent = "Abrindo o WhatsApp com o pedido pronto…";
-    setTimeout(() => { notaEl.textContent = NOTA_PADRAO; }, 4000);
+    notaEl.textContent = t("Abrindo o WhatsApp com o pedido pronto…");
+    setTimeout(() => { notaEl.textContent = t(NOTA_PADRAO); }, 4000);
+});
+
+document.addEventListener("idiomaMudou", () => {
+    renderChips();
+    renderGrade();
+    renderCarrinho();
+    notaEl.textContent = t(NOTA_PADRAO);
 });
 
 /* ===== Início ===== */
