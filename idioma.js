@@ -920,7 +920,74 @@
         "Look Ghost Run": "Look Ghost Run",
         "Moletom, óculos e mochila pra andar leve.": "Sudadera, gafas y mochila para andar ligero.",
         "Look Blackout": "Look Blackout",
-        "O trench novo com o tênis de cano alto e a máscara.": "El trench nuevo con el tenis de caña alta y la mascarilla."
+        "O trench novo com o tênis de cano alto e a máscara.": "El trench nuevo con el tenis de caña alta y la mascarilla.",
+
+        /* ---------- Case Eclipse Studio (case-eclipse.html) ---------- */
+        "← voltar pro portfólio": "← volver al portafolio",
+        "CASE · MODA ALTERNATIVA · CAMPO GRANDE - MS": "CASO · MODA ALTERNATIVA · CAMPO GRANDE - MS",
+        "A loja da": "La tienda de",
+        ", do direct pro pedido pronto": ", del mensaje directo al pedido listo",
+        "A Eclipse Studio vende moda alt pelo Instagram e pelo WhatsApp. A missão: um lugar só com a coleção inteira, a cara da marca, e onde a cliente monta a sacola e já manda o pedido pronto, sem aquele vai e volta de “tem no M?” e “quanto é?”.":
+            "Eclipse Studio vende moda alt por Instagram y WhatsApp. La misión: un solo lugar con la colección entera, la cara de la marca, y donde la clienta arma la bolsa y ya manda el pedido listo, sin ese ir y venir de “¿tienen talla M?” y “¿cuánto cuesta?”.",
+        "Ver a loja no ar ↗": "Ver la tienda en línea ↗",
+        "Quero um assim": "Quiero uno así",
+        "Em números": "En números",
+        "2 dias": "2 días",
+        "do primeiro rascunho à loja no ar": "del primer boceto a la tienda en línea",
+        "9 extras": "9 extras",
+        "além do básico, pra cliente ficar e voltar": "además de lo básico, para que la clienta se quede y vuelva",
+        "1 toque": "1 toque",
+        "pra mandar o pedido inteiro no WhatsApp": "para mandar el pedido entero por WhatsApp",
+        "R$ 0": "R$ 0",
+        "de mensalidade de plataforma ou taxa por venda": "de mensualidad de plataforma o comisión por venta",
+        "O que mudou pra cliente": "Lo que cambió para la clienta",
+        "😩 Só com o Instagram": "😩 Solo con Instagram",
+        "A cliente vê uma peça no feed, chama no direct, pergunta preço, tamanho, se tem outra cor… e a dona da loja responde tudo, uma por uma, peça por peça.":
+            "La clienta ve una pieza en el feed, escribe por mensaje directo, pregunta precio, talla, si hay otro color… y la dueña de la tienda responde todo, una por una, pieza por pieza.",
+        "🖤 Com a loja": "🖤 Con la tienda",
+        "A cliente vê a coleção inteira com preço e tamanho, monta a sacola, e o WhatsApp abre com o pedido já escrito: peças, quantidades, total e observação. É só confirmar o estoque e combinar o pagamento.":
+            "La clienta ve la colección entera con precio y talla, arma la bolsa, y WhatsApp abre con el pedido ya escrito: piezas, cantidades, total y observación. Solo falta confirmar el stock y acordar el pago.",
+        "No celular, que é onde a cliente compra": "En el celular, que es donde la clienta compra",
+        "A marca com cara própria": "La marca con cara propia",
+        "Coleção com filtro, busca e preço": "Colección con filtro, búsqueda y precio",
+        "A sacola que vira pedido no WhatsApp": "La bolsa que se vuelve pedido por WhatsApp",
+        "O que tem na loja": "Lo que tiene la tienda",
+        "Além do básico bem feito, detalhes que fazem a cliente ficar mais tempo e voltar:":
+            "Además de lo básico bien hecho, detalles que hacen que la clienta se quede más tiempo y vuelva:",
+        "🛍️ Sacola → WhatsApp": "🛍️ Bolsa → WhatsApp",
+        "O pedido chega pronto e organizado. Nada de site pedindo cartão: o pagamento é combinado na conversa.":
+            "El pedido llega listo y organizado. Nada de sitio pidiendo tarjeta: el pago se acuerda en la conversación.",
+        "🔮 Qual é a sua vibe?": "🔮 ¿Cuál es tu vibra?",
+        "A cliente escolhe o estilo dela e a vitrine mostra as peças que combinam.":
+            "La clienta elige su estilo y la vitrina muestra las piezas que combinan.",
+        "👗 Looks prontos": "👗 Looks listos",
+        "Combinações montadas que vão pra sacola de uma vez.": "Combinaciones armadas que van a la bolsa de una vez.",
+        "🃏 Tarô do look": "🃏 Tarot del look",
+        "Três cartas sorteiam um look. Brincadeira que vira venda (e print pro story).":
+            "Tres cartas sortean un look. Un juego que se vuelve venta (y captura para el story).",
+        "🌕 Drop na lua cheia": "🌕 Drop en luna llena",
+        "Contagem pra próxima leva de peças novas, com a fase da lua de verdade.":
+            "Cuenta regresiva para la próxima tanda de piezas nuevas, con la fase de la luna real.",
+        "🤍 Favoritos e link por peça": "🤍 Favoritos y link por pieza",
+        "Dá pra salvar o que gostou e mandar uma peça específica pra amiga.":
+            "Se puede guardar lo que te gustó y mandar una pieza específica a una amiga.",
+        "📏 Tamanhos e dúvidas": "📏 Tallas y preguntas",
+        "Tabela de medidas e respostas prontas pras perguntas de sempre.":
+            "Tabla de medidas y respuestas listas para las preguntas de siempre.",
+        "🐈‍⬛ Segredos escondidos": "🐈‍⬛ Secretos escondidos",
+        "Apague as velas, ache o gato preto… a loja tem easter eggs com a cara da marca.":
+            "Apaga las velas, encuentra el gato negro… la tienda tiene easter eggs con la cara de la marca.",
+        "📦 Kit de lançamento": "📦 Kit de lanzamiento",
+        "Posts e stories pro Instagram, cartões de visita pra imprimir e uma ficha simples pra cadastrar peças novas.":
+            "Posts e historias para Instagram, tarjetas de presentación para imprimir y una ficha simple para registrar piezas nuevas.",
+        "Quem usa, conta": "Quien lo usa, lo cuenta",
+        "A vitrine ainda mostra peças e preços de exemplo enquanto chegam as fotos da coleção nova. O resto já está pronto.":
+            "La vitrina todavía muestra piezas y precios de ejemplo mientras llegan las fotos de la colección nueva. El resto ya está listo.",
+        "Quer uma loja assim pro seu negócio?": "¿Quieres una tienda así para tu negocio?",
+        "Loja, cardápio, agenda de horários… Me conta como você vende hoje que eu te mando o orçamento em até 24h, sem compromisso.":
+            "Tienda, menú, agenda de horarios… Cuéntame cómo vendes hoy que te mando el presupuesto en hasta 24h, sin compromiso.",
+        "Pedir orçamento no WhatsApp": "Pedir presupuesto por WhatsApp",
+        "Ver outros projetos": "Ver otros proyectos"
     };
 
     /* Páginas e áreas com texto montado por JavaScript em tempo de execução (vitrine de sites,
