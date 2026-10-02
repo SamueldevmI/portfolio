@@ -380,7 +380,54 @@
         /* ---------- Tour guiado ---------- */
         "Pular tour": "Saltar tour",
         "Anterior": "Anterior",
-        "Próximo": "Siguiente"
+        "Próximo": "Siguiente",
+
+        /* ---------- Currículo (curriculo.html) ---------- */
+        "Salvar como PDF": "Guardar como PDF",
+        "Baixar o PDF pronto": "Descargar el PDF listo",
+        "DESENVOLVEDOR WEB & MOBILE": "DESARROLLADOR WEB Y MÓVIL",
+        "Contato": "Contacto",
+        "Tecnologias": "Tecnologías",
+        "Suporte técnico": "Soporte técnico",
+        "Redes": "Redes",
+        "Idiomas": "Idiomas",
+        "Português": "Portugués",
+        "Nativo": "Nativo",
+        "Inglês": "Inglés",
+        "Leitura técnica": "Lectura técnica",
+        "Campo Grande, MS": "Campo Grande, MS",
+        "Perfil": "Perfil",
+        "22 anos, estudante de Análise e Desenvolvimento de Sistemas (4º semestre), com experiência prévia como Técnico de computador no Exército Brasileiro. Desenvolvo projetos front-end e back-end e busco oportunidades para aplicar conhecimento, aprender e entregar soluções úteis.":
+            "22 años, estudiante de Análisis y Desarrollo de Sistemas (4º semestre), con experiencia previa como Técnico de computadoras en el Ejército Brasileño. Desarrollo proyectos front-end y back-end y busco oportunidades para aplicar conocimiento, aprender y entregar soluciones útiles.",
+        "Experiência": "Experiencia",
+        "Técnico de computador": "Técnico de computadoras",
+        "— Exército Brasileiro": "— Ejército Brasileño",
+        "Suporte técnico a usuários, atendendo solicitações e resolvendo problemas de hardware e software":
+            "Soporte técnico a usuarios, atendiendo solicitudes y resolviendo problemas de hardware y software",
+        "Manutenção de equipamentos de informática": "Mantenimiento de equipos de informática",
+        "Configuração e manutenção de rede local básica (cabeamento e roteadores)":
+            "Configuración y mantenimiento de red local básica (cableado y routers)",
+        "Formação": "Formación",
+        "Análise e Desenvolvimento de Sistemas": "Análisis y Desarrollo de Sistemas",
+        "Em andamento · 4º semestre": "En curso · 4º semestre",
+        "Projetos": "Proyectos",
+        "Controle de Gastos — API": "Control de Gastos — API",
+        "Flask · SQLAlchemy · Testes automatizados": "Flask · SQLAlchemy · Pruebas automatizadas",
+        "Backend do controle de gastos, com API REST, validação de entrada e deploy em produção.":
+            "Backend del control de gastos, con API REST, validación de entrada y despliegue en producción.",
+        "Planejador de Treino": "Planificador de Entrenamiento",
+        "Aplicação de terminal para organizar a rotina semanal de treinos, com dados em JSON e testes automatizados. Código no GitHub.":
+            "Aplicación de terminal para organizar la rutina semanal de entrenamientos, con datos en JSON y pruebas automatizadas. Código en GitHub.",
+        "Controle de Gastos": "Control de Gastos",
+        "Aplicação para registrar transações, filtrar dados e acompanhar despesas por categoria.":
+            "Aplicación para registrar transacciones, filtrar datos y seguir gastos por categoría.",
+        "Quadro Kanban com criação de tarefas, prioridade, drag and drop e persistência local.":
+            "Tablero Kanban con creación de tareas, prioridad, arrastrar y soltar, y persistencia local.",
+        "TaskFlow e FocusFlow": "TaskFlow y FocusFlow",
+        "Ferramentas de produtividade para organização de tarefas e sessões de foco.":
+            "Herramientas de productividad para organizar tareas y sesiones de enfoque.",
+        "Currículo também disponível em": "Currículum también disponible en",
+        "Ver portfólio completo": "Ver portafolio completo"
     };
 
     /* Páginas e áreas com texto montado por JavaScript em tempo de execução (vitrine de sites,
@@ -477,6 +524,25 @@
         return (navigator.language || "").toLowerCase().indexOf("es") === 0 ? "es" : "pt";
     }
 
+    function criarBotao(idioma) {
+        var botao = document.createElement("button");
+        botao.type = "button";
+        botao.id = "botaoIdioma";
+        botao.textContent = idioma === "es" ? "PT" : "ES";
+        botao.addEventListener("click", function () {
+            aplicar(document.documentElement.lang === "es" ? "pt" : "es");
+        });
+        return botao;
+    }
+
+    /* Nas páginas sem o estilo do portfólio principal (currículo, páginas de projeto), o botão
+       ganha um estilo mínimo próprio em vez de depender da classe .botao-som do site. */
+    function estiloProprio() {
+        var s = document.createElement("style");
+        s.textContent = "#botaoIdioma{display:inline-flex;align-items:center;justify-content:center;min-width:36px;height:34px;padding:0 10px;border:1px solid rgba(0,0,0,.15);border-radius:8px;background:rgba(0,0,0,.04);color:inherit;font:600 .72rem 'DM Mono',monospace;letter-spacing:.04em;cursor:pointer}";
+        document.head.appendChild(s);
+    }
+
     function iniciar() {
         montarListas();
         var idioma = idiomaInicial();
@@ -484,17 +550,18 @@
 
         var nav = document.querySelector(".nav");
         if (nav) {
-            var botao = document.createElement("button");
-            botao.type = "button";
-            botao.id = "botaoIdioma";
+            var botao = criarBotao(idioma);
             botao.className = "botao-som botao-idioma";
-            botao.textContent = idioma === "es" ? "PT" : "ES";
             var botaoTema = document.getElementById("botaoTema");
             if (botaoTema) nav.insertBefore(botao, botaoTema);
             else nav.appendChild(botao);
-            botao.addEventListener("click", function () {
-                aplicar(document.documentElement.lang === "es" ? "pt" : "es");
-            });
+            return;
+        }
+        var acoes = document.querySelector(".acoes");
+        if (acoes) {
+            estiloProprio();
+            var botao2 = criarBotao(idioma);
+            acoes.insertBefore(botao2, acoes.firstChild);
         }
     }
 
