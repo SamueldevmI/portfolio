@@ -495,7 +495,23 @@
         "TaskFlow · Seus dados ficam salvos neste navegador.": "TaskFlow · Tus datos quedan guardados en este navegador.",
         "Concluir tarefa": "Completar tarea",
         "Apagar tarefa": "Borrar tarea",
-        "Tarefa adicionada!": "¡Tarea agregada!"
+        "Tarefa adicionada!": "¡Tarea agregada!",
+
+        /* ---------- FlowBoard (flowboard/index.html) ---------- */
+        "ORGANIZE SEU FLUXO": "ORGANIZA TU FLUJO",
+        "Do plano à entrega.": "Del plan a la entrega.",
+        "+ Nova tarefa": "+ Nueva tarea",
+        "Backlog": "Pendiente",
+        "Em andamento": "En progreso",
+        "Concluído": "Completado",
+        "Nova tarefa": "Nueva tarea",
+        "Título": "Título",
+        "Ex.: Criar página inicial": "Ej.: Crear página de inicio",
+        "Cancelar": "Cancelar",
+        "Criar tarefa": "Crear tarea",
+        "Excluir": "Eliminar",
+        "tarefa": "tarea",
+        "tarefas": "tareas"
     };
 
     /* Páginas e áreas com texto montado por JavaScript em tempo de execução (vitrine de sites,
