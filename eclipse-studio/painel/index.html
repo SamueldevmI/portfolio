@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#150c1f">
+<title>Painel — Eclipse Studio</title>
+<link rel="icon" href="../app/icone-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@700&family=Quicksand:wght@500;600;700&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
+<style>
+:root { color-scheme: dark; --bg: #150c1f; --painel: #231637; --linha: #3a2c52; --linha-forte: #5a4680; --texto: #f6eeff; --mudo: #cfc0e6; --lilas: #cdb4ff; --rosa: #ffb8d9; --ouro: #e9c46a; --tinta: #241a33; }
+* { box-sizing: border-box; }
+body { margin: 0; background: radial-gradient(46% 34% at 8% 0%, rgba(160, 110, 230, .24), transparent 70%), var(--bg); color: var(--texto); font: 500 1rem/1.6 "Quicksand", system-ui, sans-serif; }
+.pagina { max-width: 860px; margin: 0 auto; padding: 40px 16px 80px; }
+.marca { display: flex; align-items: center; gap: 10px; margin: 0; font: 400 1.6rem/1 "UnifrakturMaguntia", serif; }
+.marca img { width: 32px; height: 32px; border-radius: 8px; }
+h1 { margin: 18px 0 6px; font: 700 clamp(2.2rem, 7vw, 3rem)/1.05 "Cormorant Garamond", serif; }
+h2 { margin: 34px 0 12px; font: 700 1.7rem/1.1 "Cormorant Garamond", serif; }
+p { color: var(--mudo); }
+.numeros { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.numero { padding: 16px; border: 1px solid var(--linha); border-radius: 18px; background: var(--painel); }
+.numero b { display: block; color: var(--ouro); font: 700 2.4rem/1 "Cormorant Garamond", serif; }
+.numero span { color: var(--mudo); font-size: .86rem; }
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: 9px 10px; border-bottom: 1px solid var(--linha); text-align: left; }
+th { color: var(--ouro); font-size: .76rem; letter-spacing: .1em; text-transform: uppercase; }
+td.n { color: var(--rosa); font-weight: 700; text-align: right; white-space: nowrap; }
+.tabela { overflow-x: auto; border: 1px solid var(--linha-forte); border-radius: 16px; }
+.desligado { padding: 18px 20px; border: 1px dashed var(--ouro); border-radius: 18px; background: rgba(233, 196, 106, .08); }
+.desligado ol { margin: 8px 0 0; padding-left: 20px; color: var(--mudo); }
+code { padding: 1px 6px; border-radius: 6px; background: rgba(255, 255, 255, .08); color: var(--texto); }
+</style>
+</head>
+<body>
+<div class="pagina">
+    <p class="marca"><img src="../app/icone-192.png" alt="" width="32" height="32">Eclipse Studio</p>
+    <h1>Painel da loja</h1>
+    <p>Quantas pessoas entraram, quais peças mais chamaram atenção e quantos pedidos foram pro WhatsApp. Sem cookie e sem dado de quem visitou: só números.</p>
+
+    <div class="desligado" id="desligado" hidden>
+        <b>O contador ainda está desligado.</b>
+        <ol>
+            <li>Crie a conta grátis em <b>goatcounter.com</b> (ex.: código <code>eclipsestudio</code>).</li>
+            <li>Em <b>Settings</b>, marque “Allow adding visitor counts on your website”.</li>
+            <li>Mande o código pro Samuel: ele liga e este painel começa a mostrar os números.</li>
+        </ol>
+    </div>
+
+    <div id="dados" hidden>
+        <div class="numeros">
+            <div class="numero"><b id="nVisitas">…</b><span>visitas na loja</span></div>
+            <div class="numero"><b id="nPedidos">…</b><span>pedidos enviados no WhatsApp</span></div>
+        </div>
+        <h2>Peças</h2>
+        <div class="tabela"><table>
+            <thead><tr><th>Peça</th><th class="n">Abriram</th><th class="n">Na sacola</th></tr></thead>
+            <tbody id="pecas"><tr><td colspan="3">Carregando…</td></tr></tbody>
+        </table></div>
+        <p>Os números são desde que o contador foi ligado. O histórico completo, com gráfico por dia, fica no site do GoatCounter.</p>
+    </div>
+</div>
+<script src="../contador.js"></script>
+<script>
+(async function () {
+    "use strict";
+    const c = window.CONTADOR_ECLIPSE;
+    if (!c.configurado) { document.getElementById("desligado").hidden = false; return; }
+    document.getElementById("dados").hidden = false;
+    const mostrar = (n) => (n == null ? "–" : n.toLocaleString("pt-BR"));
+    document.getElementById("nVisitas").textContent = mostrar(await c.quantos("/eclipse/"));
+    document.getElementById("nPedidos").textContent = mostrar(await c.quantos("/eclipse/pedido"));
+    /* a lista de peças vem do próprio site */
+    const texto = await (await fetch("../script.js", { cache: "no-store" })).text();
+    const pecas = [...texto.matchAll(/id: "([^"]+)", nome: "([^"]+)"/g)].map((m) => ({ id: m[1], nome: m[2] })).filter((p) => p.id !== "caixa");
+    const linhas = await Promise.all(pecas.map(async (p) => ({ ...p, abriram: await c.quantos(`/eclipse/peca/${p.id}`), sacola: await c.quantos(`/eclipse/sacola/${p.id}`) })));
+    linhas.sort((a, b) => (b.abriram ?? -1) - (a.abriram ?? -1));
+    document.getElementById("pecas").innerHTML = linhas.map((l) => `<tr><td>${l.nome.replace(/[<>&]/g, "")}</td><td class="n">${mostrar(l.abriram)}</td><td class="n">${mostrar(l.sacola)}</td></tr>`).join("");
+})();
+</script>
+</body>
+</html>
