@@ -565,7 +565,77 @@
         "Quero um desses pro meu negócio": "Quiero uno de esos para mi negocio",
         "Fatia Nobre não existe de verdade — é uma demonstração de atendimento automático. Feito por":
             "Fatia Nobre no existe de verdad — es una demostración de atención automática. Hecho por",
-        ", projeto de portfólio.": ", proyecto de portafolio."
+        ", projeto de portfólio.": ", proyecto de portafolio.",
+
+        /* ---------- Conta a Dois (conta-a-dois/) ---------- */
+        "Pular para o conteúdo": "Saltar al contenido",
+        "Dados de demonstração — o banco pode limpar casais antigos de vez em quando. Não use pra suas finanças de verdade.":
+            "Datos de demostración — la base puede borrar parejas antiguas de vez en cuando. No lo uses para tus finanzas reales.",
+        "Criar um casal": "Crear una pareja",
+        "Entrar com código": "Entrar con código",
+        "Seu nome": "Tu nombre",
+        "Ex.: Ana": "Ej.: Ana",
+        "Criar casal e gerar código": "Crear pareja y generar código",
+        "Você recebe um código de 6 letras pra compartilhar com seu par.":
+            "Recibes un código de 6 letras para compartir con tu pareja.",
+        "Código do casal": "Código de la pareja",
+        "Ex.: 7K2QXP": "Ej.: 7K2QXP",
+        "Ex.: Bruno": "Ej.: Bruno",
+        "Entrar": "Entrar",
+        "Peça o código pra quem já criou o casal.": "Pide el código a quien ya creó la pareja.",
+        "> TEMPO REAL ENTRE DOIS DISPOSITIVOS": "> TIEMPO REAL ENTRE DOS DISPOSITIVOS",
+        "Cada um lança no próprio celular. Os dois veem na hora.": "Cada uno anota en su propio celular. Los dos lo ven al instante.",
+        "Crie um casal aqui do lado, abra o código num outro dispositivo (ou numa aba nova, com o botão que aparece depois) e lance um gasto — ele aparece pro outro lado sozinho, sem apertar F5.":
+            "Crea una pareja aquí al lado, abre el código en otro dispositivo (o en una pestaña nueva, con el botón que aparece después) y anota un gasto — aparece del otro lado solo, sin apretar F5.",
+        "Cada pessoa fica ligada a um \"integrante\" só dela — os gastos ficam marcados de quem pagou.":
+            "Cada persona queda ligada a un \"integrante\" solo suyo — los gastos quedan marcados de quién pagó.",
+        "O navegador confere o servidor a cada poucos segundos e atualiza a lista sozinho, sem precisar recarregar a página.":
+            "El navegador consulta el servidor cada pocos segundos y actualiza la lista solo, sin recargar la página.",
+        "Um saldo automático soma tudo e calcula quem deve quanto pra quem, dividindo os gastos meio a meio.":
+            "Un saldo automático suma todo y calcula quién le debe cuánto a quién, dividiendo los gastos a la mitad.",
+        "Sem senha: o código de 6 letras é o que liga as duas pessoas ao mesmo casal.":
+            "Sin contraseña: el código de 6 letras es lo que une a las dos personas a la misma pareja.",
+        "Essa é uma demonstração pública, mas o mesmo esquema (backend real + sincronização) dá pra construir pro seu negócio ou uso pessoal.":
+            "Esta es una demostración pública, pero el mismo esquema (backend real + sincronización) se puede construir para tu negocio o uso personal.",
+        "Quero conversar sobre um projeto": "Quiero hablar sobre un proyecto",
+        "Código:": "Código:",
+        "Copiar": "Copiar",
+        "Abrir como o par (nova aba)": "Abrir como el otro (pestaña nueva)",
+        "Sair": "Salir",
+        "Carregando…": "Cargando…",
+        "Lançar gasto": "Anotar gasto",
+        "Descrição": "Descripción",
+        "Ex.: Mercado do mês": "Ej.: Mercado del mes",
+        "Valor (R$)": "Valor (R$)",
+        "Casa": "Casa",
+        "Mercado": "Mercado",
+        "Lazer": "Ocio",
+        "Transporte": "Transporte",
+        "Saúde": "Salud",
+        "Outros": "Otros",
+        "Data": "Fecha",
+        "Adicionar gasto": "Agregar gasto",
+        "Gastos": "Gastos",
+        "Nenhum gasto lançado ainda. Adicione o primeiro aí em cima.": "Ningún gasto anotado aún. Agrega el primero ahí arriba.",
+        "Conta a Dois é um projeto de demonstração — os dados são de teste. Feito por":
+            "Conta a Dois es un proyecto de demostración — los datos son de prueba. Hecho por",
+        "Assim que seu par entrar, o saldo entre vocês aparece aqui.": "En cuanto tu pareja entre, el saldo entre ustedes aparece aquí.",
+        "Vocês estão quites 🎉": "Están a mano 🎉",
+        "Nenhum gasto ainda": "Ningún gasto todavía",
+        "Os dois pagaram a mesma parte até agora.": "Los dos pagaron la misma parte hasta ahora.",
+        "Lance o primeiro gasto aí embaixo.": "Anota el primer gasto ahí abajo.",
+        "deve pra": "le debe a",
+        "Total gasto pelo casal:": "Total gastado por la pareja:",
+        "Remover gasto": "Eliminar gasto",
+        "Sincronizado às": "Sincronizado a las",
+        "Não deu pra sincronizar agora, tentando de novo…": "No se pudo sincronizar ahora, intentando de nuevo…",
+        "Essa sessão de demonstração expirou — dados de teste são limpos periodicamente. Comece de novo.":
+            "Esta sesión de demostración expiró — los datos de prueba se limpian periódicamente. Empieza de nuevo.",
+        "Criando… (pode levar uns segundos)": "Creando… (puede tardar unos segundos)",
+        "Entrando… (pode levar uns segundos)": "Entrando… (puede tardar unos segundos)",
+        "Copiado!": "¡Copiado!",
+        "Adicionando…": "Agregando…",
+        "você": "tú"
     };
 
     /* Páginas e áreas com texto montado por JavaScript em tempo de execução (vitrine de sites,
