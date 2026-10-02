@@ -525,7 +525,17 @@
         "Visual forte com foco em hierarquia e contraste.": "Visual fuerte con foco en jerarquía y contraste.",
         "Experiência": "Experiencia",
         "Layout responsivo pensado para todos os dispositivos.": "Diseño responsivo pensado para todos los dispositivos.",
-        "Nexus Studio · Projeto de demonstração por Samuel Mickael.": "Nexus Studio · Proyecto de demostración por Samuel Mickael."
+        "Nexus Studio · Projeto de demonstração por Samuel Mickael.": "Nexus Studio · Proyecto de demostración por Samuel Mickael.",
+
+        /* ---------- Eldev Music (eldev-music/) — só a casca estática; as telas do player são
+           montadas inteiramente via JS (telas.js) e ficam de fora por enquanto. ---------- */
+        "DEMO": "DEMO",
+        "App de demonstração do portfólio de Samuel Mickael.": "App de demostración del portafolio de Samuel Mickael.",
+        "← Voltar ao portfólio": "← Volver al portafolio",
+        "Início": "Inicio",
+        "Buscar": "Buscar",
+        "Coleção": "Colección",
+        "Configurações": "Configuración"
     };
 
     /* Páginas e áreas com texto montado por JavaScript em tempo de execução (vitrine de sites,
@@ -673,14 +683,21 @@
         }
         /* Páginas de projeto: cada uma tem seu próprio cabeçalho, então o botão entra no
            <header> da página (perto do botão de tema, se houver um) com estilo mínimo próprio. */
-        var header = document.querySelector("header");
+        var header = document.querySelector("header, nav");
         if (header) {
             estiloProprio();
             var botao3 = criarBotao(idioma);
             var botaoTemaProjeto = header.querySelector('[id*="tema" i], [class*="tema" i]');
             if (botaoTemaProjeto) botaoTemaProjeto.insertAdjacentElement("beforebegin", botao3);
             else header.appendChild(botao3);
+            return;
         }
+        /* Último recurso: nenhum cabeçalho reconhecível na página, então o botão flutua
+           fixo num canto, sempre visível. */
+        estiloProprio();
+        var botaoFlutuante = criarBotao(idioma);
+        botaoFlutuante.style.cssText = "position:fixed;top:12px;right:12px;z-index:9999";
+        document.body.appendChild(botaoFlutuante);
     }
 
     if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", iniciar);
