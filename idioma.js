@@ -427,7 +427,40 @@
         "Ferramentas de produtividade para organização de tarefas e sessões de foco.":
             "Herramientas de productividad para organizar tareas y sesiones de enfoque.",
         "Currículo também disponível em": "Currículum también disponible en",
-        "Ver portfólio completo": "Ver portafolio completo"
+        "Ver portfólio completo": "Ver portafolio completo",
+
+        /* ---------- FocusFlow (focusflow/index.html) ---------- */
+        "Alternar tema": "Cambiar tema",
+        "TEMPO COM INTENÇÃO": "TIEMPO CON INTENCIÓN",
+        "Foque no que": "Enfócate en lo que",
+        "importa.": "importa.",
+        "Use o método Pomodoro para trabalhar com mais presença e descansar na medida certa.":
+            "Usa el método Pomodoro para trabajar con más presencia y descansar en la medida justa.",
+        "Foco": "Enfoque",
+        "Pausa curta": "Pausa corta",
+        "Pausa longa": "Pausa larga",
+        "Sessão de foco": "Sesión de enfoque",
+        "Começar foco": "Empezar enfoque",
+        "Reiniciar timer": "Reiniciar temporizador",
+        "SESSÃO ATUAL": "SESIÓN ACTUAL",
+        "Seu objetivo": "Tu objetivo",
+        "No que você vai focar?": "¿En qué te vas a enfocar?",
+        "Ex.: Estudar JavaScript": "Ej.: Estudiar JavaScript",
+        "Deixe o celular longe e escolha apenas uma tarefa para esta sessão.":
+            "Deja el celular lejos y elige solo una tarea para esta sesión.",
+        "ciclos hoje": "ciclos hoy",
+        "minutos focados": "minutos enfocados",
+        "Escolha uma tarefa": "Elige una tarea",
+        "Defina uma única prioridade para não dispersar sua atenção.": "Define una sola prioridad para no dispersar tu atención.",
+        "Foque por 25 minutos": "Enfócate por 25 minutos",
+        "Trabalhe sem interrupções até o timer terminar.": "Trabaja sin interrupciones hasta que el temporizador termine.",
+        "Faça uma pausa": "Haz una pausa",
+        "Recupere a energia antes de iniciar o próximo ciclo.": "Recupera la energía antes de empezar el próximo ciclo.",
+        "FocusFlow · Um projeto de Samuel Mickael.": "FocusFlow · Un proyecto de Samuel Mickael.",
+        "Pausar timer": "Pausar temporizador",
+        "Começar pausa": "Empezar pausa",
+        "Sessão concluída! Hora de uma pausa.": "¡Sesión completada! Hora de una pausa.",
+        "Pausa concluída! Pronto para focar?": "¡Pausa completada! ¿Listo para enfocarte?"
     };
 
     /* Páginas e áreas com texto montado por JavaScript em tempo de execução (vitrine de sites,
@@ -482,6 +515,15 @@
             });
         });
     }
+
+    /* Função global pra scripts de páginas de projeto traduzirem texto que eles mesmos geram em
+       tempo real (um rótulo de botão que muda de estado, uma mensagem de toast). Esses textos não
+       passam pelo TreeWalker (são escritos depois, por código da própria página), então eles pedem
+       a tradução na hora, direto: window.traduzir("texto em português"). */
+    window.traduzir = function (textoPt) {
+        var chave = normalizar(textoPt);
+        return document.documentElement.lang === "es" && DICIONARIO[chave] ? DICIONARIO[chave] : textoPt;
+    };
 
     function aplicar(idioma) {
         listaTextos.forEach(function (item) {
@@ -562,6 +604,17 @@
             estiloProprio();
             var botao2 = criarBotao(idioma);
             acoes.insertBefore(botao2, acoes.firstChild);
+            return;
+        }
+        /* Páginas de projeto: cada uma tem seu próprio cabeçalho, então o botão entra no
+           <header> da página (perto do botão de tema, se houver um) com estilo mínimo próprio. */
+        var header = document.querySelector("header");
+        if (header) {
+            estiloProprio();
+            var botao3 = criarBotao(idioma);
+            var botaoTemaProjeto = header.querySelector('[id*="tema" i], [class*="tema" i]');
+            if (botaoTemaProjeto) botaoTemaProjeto.insertAdjacentElement("beforebegin", botao3);
+            else header.appendChild(botao3);
         }
     }
 
