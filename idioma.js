@@ -702,7 +702,35 @@
         "Aluguel": "Alquiler",
         "Internet": "Internet",
         "Dados de exemplo carregados.": "Datos de ejemplo cargados.",
-        "Ativar tema claro": "Activar tema claro"
+        "Ativar tema claro": "Activar tema claro",
+
+        /* ---------- Demonstração da API de gastos (gastos-api-demo/) ---------- */
+        "← voltar ao portfólio": "← volver al portafolio",
+        "DEMONSTRAÇÃO AO VIVO": "DEMOSTRACIÓN EN VIVO",
+        "Controle de Gastos — API": "Control de Gastos — API",
+        "Esta página consome direto a": "Esta página consume directo la",
+        "API Flask hospedada no Render": "API Flask alojada en Render",
+        ". Tudo que você adicionar ou remover aqui é salvo de verdade no banco de dados. Prefere explorar os endpoints direto? Veja a":
+            ". Todo lo que agregues o quites aquí se guarda de verdad en la base de datos. ¿Prefieres explorar los endpoints directo? Mira la",
+        "documentação interativa (Swagger)": "documentación interactiva (Swagger)",
+        "Plano gratuito: se a API estiver \"dormindo\", a primeira ação pode levar até 50 segundos. Só na primeira vez.":
+            "Plan gratuito: si la API está \"dormida\", la primera acción puede tardar hasta 50 segundos. Solo la primera vez.",
+        "Novo gasto": "Nuevo gasto",
+        "Ex: Mercado": "Ej: Mercado",
+        "Ex: alimentação": "Ej: alimentación",
+        "Resumo": "Resumen",
+        "total gasto": "total gastado",
+        "lançamentos": "registros",
+        "Lançamentos": "Registros",
+        "Carregando...": "Cargando...",
+        "Carregando... (pode levar um tempo se a API estava dormindo)": "Cargando... (puede tardar si la API estaba dormida)",
+        "a API grátis pode levar até 50 s para acordar": "la API gratuita puede tardar hasta 50 s en despertar",
+        "Nenhum gasto cadastrado ainda. Adicione o primeiro ao lado.": "Ningún gasto registrado aún. Agrega el primero al lado.",
+        "Não foi possível carregar os dados agora. Tente novamente em instantes.":
+            "No se pudieron cargar los datos ahora. Intenta de nuevo en unos instantes.",
+        "Remover": "Eliminar",
+        "Salvando...": "Guardando...",
+        "Erro ao salvar.": "Error al guardar."
     };
 
     /* Páginas e áreas com texto montado por JavaScript em tempo de execução (vitrine de sites,
@@ -766,6 +794,22 @@
         var chave = normalizar(textoPt);
         return document.documentElement.lang === "es" && DICIONARIO[chave] ? DICIONARIO[chave] : textoPt;
     };
+
+    /* O idioma é decidido aqui, de cara, assim que este arquivo carrega — não espera o <body>
+       existir. Isso importa pras páginas de projeto que têm script inline chamando
+       window.traduzir() logo na primeira linha: se esse script carregar antes do idioma.js
+       nunca saber de nada, ele sempre pegaria "pt". A passada completa (traduzir o texto já
+       escrito na página) é que precisa esperar o body — essa fica em iniciar(), mais abaixo. */
+    (function definirIdiomaCedo() {
+        var idioma = "pt";
+        try {
+            var salvo = localStorage.getItem(CHAVE);
+            if (salvo === "es" || salvo === "pt") idioma = salvo;
+            else if ((navigator.language || "").toLowerCase().indexOf("es") === 0) idioma = "es";
+        } catch (e) { /* sem armazenamento */ }
+        document.documentElement.lang = idioma === "es" ? "es" : "pt-BR";
+        document.documentElement.dataset.idioma = idioma;
+    })();
 
     function aplicar(idioma) {
         listaTextos.forEach(function (item) {
