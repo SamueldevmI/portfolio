@@ -535,7 +535,37 @@
         "Início": "Inicio",
         "Buscar": "Buscar",
         "Coleção": "Colección",
-        "Configurações": "Configuración"
+        "Configurações": "Configuración",
+
+        /* ---------- Fatia Nobre (fatia-nobre/) ---------- */
+        "Pular para o campo de mensagem": "Saltar al campo de mensaje",
+        "Atendimento automático fictício da pizzaria Fatia Nobre. As respostas são geradas aqui mesmo, na hora — nada é enviado a lugar nenhum.":
+            "Atención automática ficticia de la pizzería Fatia Nobre. Las respuestas se generan aquí mismo, al instante — nada se envía a ningún lado.",
+        "Quero um desses ↗": "Quiero uno de esos ↗",
+        "digitando…": "escribiendo…",
+        "Reiniciar": "Reiniciar",
+        "Digite uma pergunta": "Escribe una pregunta",
+        "Digite uma pergunta…": "Escribe una pregunta…",
+        "Enviar mensagem": "Enviar mensaje",
+        "> ATENDIMENTO AUTOMÁTICO": "> ATENCIÓN AUTOMÁTICA",
+        "Responde sozinho, na hora, mesmo de madrugada.": "Responde solo, al instante, hasta de madrugada.",
+        "Pergunte aí em cima o horário, o endereço, o cardápio ou como fazer um pedido. Quem reconhece a pergunta e responde é um programa, não uma pessoa digitando.":
+            "Pregunta ahí arriba el horario, la dirección, el menú o cómo hacer un pedido. Quien reconoce la pregunta y responde es un programa, no una persona escribiendo.",
+        "Como funciona por trás": "Cómo funciona por detrás",
+        "Quando alguém manda uma mensagem, o programa lê o texto e procura palavras-chave — \"horário\", \"endereço\", \"entrega\"...":
+            "Cuando alguien manda un mensaje, el programa lee el texto y busca palabras clave — \"horario\", \"dirección\", \"entrega\"...",
+        "Reconhecendo o assunto, ele responde na hora. Não precisa de ninguém acordado de madrugada.":
+            "Al reconocer el tema, responde al instante. No hace falta nadie despierto de madrugada.",
+        "Se não entende a pergunta, ele mostra os assuntos principais em botões, pra ninguém ficar sem resposta.":
+            "Si no entiende la pregunta, muestra los temas principales en botones, para que nadie se quede sin respuesta.",
+        "As perguntas e respostas ficam numa lista simples — dá pra adaptar pro seu negócio em poucos minutos.":
+            "Las preguntas y respuestas quedan en una lista simple — se puede adaptar a tu negocio en pocos minutos.",
+        "Isso aqui é só uma demonstração, mas o mesmo esquema funciona pro seu negócio de verdade, direto no seu WhatsApp.":
+            "Esto es solo una demostración, pero el mismo esquema funciona para tu negocio de verdad, directo en tu WhatsApp.",
+        "Quero um desses pro meu negócio": "Quiero uno de esos para mi negocio",
+        "Fatia Nobre não existe de verdade — é uma demonstração de atendimento automático. Feito por":
+            "Fatia Nobre no existe de verdad — es una demostración de atención automática. Hecho por",
+        ", projeto de portfólio.": ", proyecto de portafolio."
     };
 
     /* Páginas e áreas com texto montado por JavaScript em tempo de execução (vitrine de sites,
@@ -631,6 +661,9 @@
             botao.title = botao.getAttribute("aria-label");
         }
         try { localStorage.setItem(CHAVE, idioma); } catch (e) { /* sem armazenamento */ }
+        /* Avisa scripts da própria página (como um chat que precisa reiniciar a conversa no
+           idioma novo) que o idioma mudou, pra eles reagirem como acharem melhor. */
+        document.dispatchEvent(new CustomEvent("idiomaMudou", { detail: { idioma: idioma } }));
     }
 
     function idiomaInicial() {
