@@ -1310,7 +1310,101 @@
         "Blusa vitoriana, espartilho e o colar de cruz.": "Blusa victoriana, corsé y el collar de cruz.",
         "Kit Noite de Lua Cheia": "Kit Noche de Luna Llena",
         "Capa de veludo, colar bola de cristal e brinco morceguinho.":
-            "Capa de terciopelo, collar bola de cristal y arete murcielaguito."
+            "Capa de terciopelo, collar bola de cristal y arete murcielaguito.",
+
+        /* magia.js: lua de verdade */
+        "Lua nova": "Luna nueva",
+        "Lua crescente": "Luna creciente",
+        "Quarto crescente": "Cuarto creciente",
+        "Crescente gibosa": "Creciente gibosa",
+        "Minguante gibosa": "Gibosa menguante",
+        "Quarto minguante": "Cuarto menguante",
+        "Lua minguante": "Luna menguante",
+        "hoje é lua cheia!": "¡hoy es luna llena!",
+        "drop na lua cheia amanhã": "drop en la luna llena mañana",
+        "drop na lua cheia em": "drop en la luna llena en",
+        "Hoje é noite de lua cheia 🌕 Fica de olho no @eclipse_studiocg pra ver o que chegou.":
+            "Hoy es noche de luna llena 🌕 Mantente atenta a @eclipse_studiocg para ver lo que llegó.",
+        "Hoje:": "Hoy:",
+        "A próxima lua cheia é em": "La próxima luna llena es en",
+        "fica de olho no @eclipse_studiocg pra ver o que chega.":
+            "mantente atenta a @eclipse_studiocg para ver lo que llega.",
+        "Faltam": "Faltan",
+        "pra lua cheia": "para la luna llena",
+        "dias": "días",
+        "horas": "horas",
+        "minutos": "minutos",
+        "dia": "día",
+        "hora": "hora",
+        "minuto": "minuto",
+
+        /* magia.js: apague as velas e o gato preto */
+        "🕯 Mova o dedo (ou o mouse): a luz da vela revela segredos.":
+            "🕯 Mueve el dedo (o el mouse): la luz de la vela revela secretos.",
+        "Você já tinha achado! O código continua guardado no seu pedido.":
+            "¡Ya lo habías encontrado! El código sigue guardado en tu pedido.",
+        "Quem acha o gato ganha um código:": "Quien encuentra al gato gana un código:",
+        "a Elizabeth manda um mimo surpresa junto com o pedido":
+            "Elizabeth manda un detalle sorpresa junto con el pedido",
+        "Beleza": "Genial",
+        "Pôr o código no meu pedido": "Poner el código en mi pedido",
+        "Código": "Código",
+        "guardado: ele vai junto no seu pedido.": "guardado: va junto con tu pedido.",
+
+        /* magia.js: tarô do look */
+        "A Rosa": "La Rosa",
+        "O Morcego": "El Murciélago",
+        "A Lua": "La Luna",
+        "O Coração": "El Corazón",
+        "Delicadeza assombrada, feito retrato antigo: você guarda segredos em renda e escreve cartas que ninguém lê.":
+            "Delicadeza embrujada, como un retrato antiguo: guardas secretos en encaje y escribes cartas que nadie lee.",
+        "Você é de veludo e de rua. A noite inteira é sua, e a lua já sabe o seu nome.":
+            "Eres de terciopelo y de calle. La noche entera es tuya, y la luna ya sabe tu nombre.",
+        "Intuição afiada, bola de cristal na bolsa e um gato como conselheiro. Você já sabia que ia tirar essa carta.":
+            "Intuición afilada, bola de cristal en el bolso y un gato como consejero. Ya sabías que ibas a sacar esta carta.",
+        "Doce por fora, macabra por dentro: você equilibra laço e caveira sem pedir licença.":
+            "Dulce por fuera, macabra por dentro: equilibras lazo y calavera sin pedir permiso.",
+        "A Camiseta": "La Camiseta",
+        "O Perfume": "El Perfume",
+        "O Espartilho": "El Corsé",
+        "A Saia": "La Falda",
+        "O Vestido": "El Vestido",
+        "A Blusa": "La Blusa",
+        "A Capa": "La Capa",
+        "O Casaco": "El Abrigo",
+        "O Choker": "El Choker",
+        "A Rosa Vermelha": "La Rosa Roja",
+        "O Rosário": "El Rosario",
+        "O Camafeu": "El Camafeo",
+        "A Cruz": "La Cruz",
+        "Os Morcegos": "Los Murciélagos",
+        "As Cruzes": "Las Cruces",
+        "O Olho": "El Ojo",
+        "A Bola de Cristal": "La Bola de Cristal",
+        "O Caixão": "El Ataúd",
+        "Essência": "Esencia",
+        "A peça": "La pieza",
+        "O feitiço": "El hechizo",
+        "As cartas escolheram:": "Las cartas eligieron:",
+        "pra vestir, e": "para vestir, y",
+        "pra fechar o feitiço.": "para cerrar el hechizo.",
+        "Pôr as duas no caldeirão": "Poner las dos en el caldero",
+        "Salvar pro story": "Guardar para el story",
+        "Ver tudo da vibe": "Ver todo de la vibra",
+        "Tirar de novo": "Sacar de nuevo",
+        "O look do tarô caiu no caldeirão": "El look del tarot cayó en el caldero",
+        "Preparando a imagem…": "Preparando la imagen…",
+        "Meu tarô do look": "Mi tarot del look",
+        "essência": "esencia",
+        "a peça": "la pieza",
+        "o feitiço": "el hechizo",
+        "✦ tirado numa noite de {fase} ✦": "✦ sacado en una noche de {fase} ✦",
+        "tire o seu no link da bio ✦ @eclipse_studiocg": "saca el tuyo en el link de la bio ✦ @eclipse_studiocg",
+        "Meu tarô do look · Eclipse Studio": "Mi tarot del look · Eclipse Studio",
+        "Não consegui montar a imagem agora. Tente de novo ou tire um print da tiragem.":
+            "No pude armar la imagen ahora. Intenta de nuevo o toma una captura de la tirada.",
+        "✦ Imagem salva. É só postar no story e marcar @eclipse_studiocg":
+            "✦ Imagen guardada. Solo publícala en el story y marca a @eclipse_studiocg"
     };
 
     /* Páginas e áreas com texto montado por JavaScript em tempo de execução (vitrine de sites,
@@ -1407,7 +1501,7 @@
             if (idioma === "es" && DICIONARIO[chave]) item.el.setAttribute(item.atributo, DICIONARIO[chave]);
             else item.el.setAttribute(item.atributo, item.original);
         });
-        var heroTexto = document.querySelector(".hero-texto");
+        var heroTexto = document.getElementById("heroTextoDigitado");
         if (heroTexto) heroTexto.textContent = idioma === "es" ? TEXTO_HERO_ES : TEXTO_HERO_PT;
         document.documentElement.dataset.idioma = idioma;
         document.documentElement.lang = idioma === "es" ? "es" : "pt-BR";
