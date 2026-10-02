@@ -170,6 +170,14 @@ const SECOES = [
     { id: "cliente", rotulo: "Pra quem você faz as peças", tipo: "longo", exemplo: "meninas do alt, quem ama Halloween o ano inteiro…" },
     { id: "previa", rotulo: "O que achou da prévia do site", tipo: "longo", ajuda: "O que amou, o que mudaria, o que falta." }
   ]},
+  { id: "novidades", titulo: "Novidades da loja", intro: "Coisas novas que entraram no site. Responda o que souber; o resto a gente combina.", campos: [
+    { id: "taxas", rotulo: "Taxa de entrega por região de Campo Grande", tipo: "longo", ajuda: "Quanto cobra pra cada região (ou um valor só pra cidade toda). Acima do frete grátis, sai de graça.", exemplo: "Centro R$ 8 · Prosa, Segredo e Bandeira R$ 12 · Lagoa e Imbirussu R$ 14 · Anhanduizinho R$ 15" },
+    { id: "unicas", rotulo: "Quais peças são únicas (brechó, só tem uma)?", tipo: "longo", ajuda: "Essas ganham o selo dourado de “peça única” e só dá pra pôr 1 na sacola.", exemplo: "casaco de pelúcia, blusa vitoriana creme" },
+    { id: "depoimentos", rotulo: "Tem prints de clientes elogiando ou usando as peças?", tipo: "escolha", opcoes: ["Tenho, mando no WhatsApp", "Ainda não, vou pedir pras clientes", "Prefiro não mostrar"], ajuda: "Aparecem na seção “Quem já é da coven”. Só com autorização da cliente." },
+    { id: "transmissao", rotulo: "Lista do próximo drop (lua cheia)", tipo: "escolha", opcoes: ["Já tenho lista de transmissão no WhatsApp", "Vou criar uma", "Prefiro avisar só pelo Instagram"], ajuda: "No site tem o botão “Me avisa no próximo drop”: a cliente te manda mensagem e você adiciona ela na lista." },
+    { id: "caixa", rotulo: "Caixa misteriosa (3 peças surpresa de uma vibe): quanto cobraria?", tipo: "texto", exemplo: "R$ 99, ou não quero fazer caixa" },
+    { id: "mimo", rotulo: "Prêmio de quem acha o gato preto ou junta as 4 cartas de arcano", tipo: "texto", exemplo: "um adesivo de mimo, 10% off, frete grátis…" }
+  ]},
   { id: "final", titulo: "Mais alguma coisa?", intro: "", campos: [
     { id: "obs", rotulo: "Recados, dúvidas ou a frase nova do topo", tipo: "longo" }
   ]}
