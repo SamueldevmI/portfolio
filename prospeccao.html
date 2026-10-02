@@ -85,6 +85,7 @@
         <p class="eyebrow">SÓ PRA VOCÊ · NÃO APARECE NO SITE</p>
         <h1>Gerar link pra cliente</h1>
         <p>O cliente abre e vê o portfólio feito pra ele: o nome dele no topo, o comparador no ramo dele e a prévia de como ficaria o site dele.</p>
+        <p>Vai visitar pessoalmente? Use o <a href="apresentar.html" style="color:var(--acento-texto)">modo apresentação ▶</a> no seu celular.</p>
 
         <form class="gl-caixa" id="gerador" autocomplete="off">
             <div class="gl-linha">
@@ -167,7 +168,8 @@
         </section>
     </main>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
-    <script src="estatisticas.js"></script>
+    <script src="estatisticas.js?v=20261002"></script>
+    <script src="servicos.js?v=20261002"></script>
     <script>
         (function () {
             "use strict";
@@ -317,11 +319,19 @@
                 });
                 const fazer = document.createElement("button"); fazer.type = "button"; fazer.className = "crm-proposta"; fazer.textContent = c.proposta ? "refazer proposta 📄" : "fazer proposta 📄";
                 fazer.addEventListener("click", () => prepararProposta(c));
+                const indicar = document.createElement("button"); indicar.type = "button"; indicar.textContent = "link de indicação 🤝";
+                indicar.hidden = c.status !== "fechou";
+                indicar.addEventListener("click", () => {
+                    const u = new URL(base); u.searchParams.set("indicou", c.nome);
+                    copiar(`Oi, ${c.nome}! Obrigado pela confiança 🙏 Se indicar alguém que precise de site, manda esse link: quem chegar por ele ganha ${window.SERVICOS.INDICACAO.amigo}, e você ganha ${window.SERVICOS.INDICACAO.quemIndica}.\n\n${u}`, "Mensagem com o link de indicação copiada!");
+                });
+                const apresentar = document.createElement("a"); apresentar.target = "_blank"; apresentar.rel = "noopener"; apresentar.textContent = "apresentar ▶";
+                { const u = new URL("apresentar.html", base); u.searchParams.set("para", c.nome); const rk = c.ramoChave || [...ramo.options].find((o) => o.text === c.ramo)?.value; if (rk) u.searchParams.set("ramo", rk); apresentar.href = u.toString(); }
                 const abrir = document.createElement("a"); abrir.href = c.link + (c.link.includes("?") ? "&" : "?") + "teste=1"; abrir.target = "_blank"; abrir.rel = "noopener"; abrir.textContent = "abrir o link ↗";
                 const copiarL = document.createElement("button"); copiarL.type = "button"; copiarL.textContent = "copiar link"; copiarL.addEventListener("click", () => copiar(c.link, "Link copiado!"));
                 const apagar = document.createElement("button"); apagar.type = "button"; apagar.className = "crm-apagar"; apagar.textContent = "apagar";
                 apagar.addEventListener("click", () => { if (confirm(`Apagar ${c.nome} da lista?`)) { gravar(ler().filter((x) => x.id !== c.id)); desenharHistorico(); } });
-                acoes.append(cobrar, fazer, copiarL, abrir, apagar);
+                acoes.append(cobrar, fazer, indicar, apresentar, copiarL, abrir, apagar);
                 li.append(topo, ...(s.childNodes.length || (est && est.configurado) ? [s] : []), campos, acoes);
                 return li;
             }
@@ -359,8 +369,9 @@
 
             /* ---------- proposta ---------- */
             const gp = { nome: $("gpNome"), tel: $("gpTel"), pacote: $("gpPacote"), valor: $("gpValor"), prazo: $("gpPrazo"), ate: $("gpAte"), pagamento: $("gpPagamento"), obs: $("gpObs") };
-            const PACOTE_PADRAO = { site: [250, 5], pedidos: [450, 7], agenda: [450, 7], loja: [600, 10] }; // valor sugerido, prazo em dias
-            const PACOTE_DO_RAMO = { pizzaria: "pedidos", barbearia: "agenda", loja: "loja", salao: "agenda", academia: "site", clinica: "agenda" };
+            /* valor sugerido e prazo vêm do servicos.js (mesma tabela do "Monte seu site") */
+            const PACOTE_PADRAO = Object.fromEntries(Object.entries(window.SERVICOS.PACOTES).map(([k, p]) => [k, [p.preco, p.prazo]]));
+            const PACOTE_DO_RAMO = Object.fromEntries(Object.entries(window.SERVICOS.RAMOS).map(([k, r]) => [k, r.pacote]));
             const extrasMarcados = () => [...document.querySelectorAll(".gl-extras input:checked")].map((i) => i.value);
             function sugerirPacote() { const [v, d] = PACOTE_PADRAO[gp.pacote.value]; gp.valor.value = v; gp.prazo.value = d; }
             function linkProposta() {

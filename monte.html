@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monte seu site e veja o preço | Samuel Mickael</title>
+    <meta name="description" content="Escolha o tipo de site e os extras e veja o preço na hora. Sites pra negócios de Campo Grande - MS a partir de R$ 250, com pedido direto no WhatsApp.">
+    <link rel="canonical" href="https://samueldevmi.github.io/portfolio/monte.html">
+    <meta property="og:title" content="Monte seu site e veja o preço na hora">
+    <meta property="og:description" content="Escolha o tipo de site e os extras: o preço aparece na hora e vai direto pro WhatsApp.">
+    <meta property="og:url" content="https://samueldevmi.github.io/portfolio/monte.html">
+    <meta property="og:image" content="https://samueldevmi.github.io/portfolio/imagem/og-image-v5.jpg">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+    <script>
+        /* Mesmo tema escolhido no portfólio (vermelho ou azul) */
+        (function () {
+            var azul = false;
+            try { azul = localStorage.getItem("portfolio-tema") === "azul"; } catch (e) { /* sem armazenamento */ }
+            document.documentElement.dataset.tema = azul ? "azul" : "vermelho";
+            document.write('<link rel="stylesheet" href="' + (azul ? "style-azul.css" : "style.css") + '?v=20261002">');
+        })();
+    </script>
+    <noscript><link rel="stylesheet" href="style.css"></noscript>
+    <style>
+        .mt { width: min(1100px, calc(100% - 32px)); margin: 28px auto 120px; }
+        .mt .eyebrow::before { content: none; }
+        .mt-voltar { display: inline-block; margin-bottom: 18px; color: var(--muted); font-size: .9rem; text-decoration: none; }
+        .mt h1 { margin: 6px 0 8px; font-size: clamp(2rem, 6vw, 3.2rem); line-height: 1.05; letter-spacing: -.035em; }
+        .mt h2 { margin: 0 0 12px; font-size: 1.15rem; }
+        .mt h2 span { color: var(--acento-texto); font: 600 .78rem "DM Mono", monospace; letter-spacing: .1em; margin-right: 8px; }
+        .mt > p, .mt-grade p { color: var(--muted); }
+        .mt-grade { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 28px; align-items: start; margin-top: 26px; }
+        .mt-passo { margin-bottom: 26px; }
+        .mt-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+        .mt-chips button { padding: 8px 14px; border: 1px solid var(--line); border-radius: 999px; background: transparent; color: var(--text); font: 600 .9rem "Space Grotesk", Arial, sans-serif; cursor: var(--cursor-mao); }
+        .mt-chips button[aria-pressed="true"] { border-color: var(--cyan); background: rgba(var(--cyan-rgb), .15); }
+        .mt-pacotes { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .mt-pacote { position: relative; display: grid; gap: 6px; padding: 16px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); cursor: var(--cursor-mao); transition: border-color .2s, box-shadow .2s; }
+        .mt-pacote input { position: absolute; opacity: 0; }
+        .mt-pacote:has(input:checked) { border-color: var(--cyan); box-shadow: 0 0 22px -10px rgba(var(--cyan-rgb), .9); }
+        .mt-pacote:has(input:focus-visible) { outline: 2px solid var(--cyan); outline-offset: 2px; }
+        .mt-pacote b { font-size: 1.02rem; }
+        .mt-pacote .mt-preco { color: var(--ouro); font-weight: 700; }
+        .mt-pacote small { color: var(--muted); line-height: 1.45; }
+        .mt-pacote .mt-sugerido { position: absolute; top: -9px; right: 12px; padding: 2px 9px; border-radius: 999px; background: var(--cyan); color: #fff; font: 700 .68rem "Space Grotesk", Arial, sans-serif; }
+        .mt-pacote ul { margin: 4px 0 0; padding: 0; list-style: none; display: grid; gap: 3px; }
+        .mt-pacote li { color: var(--muted); font-size: .82rem; }
+        .mt-pacote li::before { content: "✓ "; color: var(--sucesso); }
+        .mt-extras { display: grid; gap: 8px; }
+        .mt-extra { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); cursor: var(--cursor-mao); }
+        .mt-extra:has(input:checked) { border-color: rgba(var(--cyan-rgb), .7); }
+        .mt-extra input { width: 18px; height: 18px; accent-color: var(--cyan); }
+        .mt-extra span small { display: block; color: var(--muted); font-size: .8rem; }
+        .mt-extra em { color: var(--ouro); font-style: normal; font-weight: 700; white-space: nowrap; }
+        .mt label.mt-campo { display: grid; gap: 6px; color: var(--muted); font-size: .86rem; }
+        .mt-campo input { width: 100%; padding: 11px 13px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--text); font: 500 1rem "Space Grotesk", Arial, sans-serif; }
+        .mt-campo input:focus { outline: none; border-color: var(--cyan); }
+        .mt-resumo { position: sticky; top: 90px; display: grid; gap: 12px; padding: 20px; border: 1px solid rgba(var(--cyan-rgb), .55); border-radius: 18px; background: linear-gradient(160deg, rgba(var(--cyan-rgb), .12), transparent 55%), var(--surface); }
+        .mt-resumo h2 { margin: 0; }
+        .mt-linhas { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; font-size: .9rem; }
+        .mt-linhas li { display: flex; justify-content: space-between; gap: 10px; color: var(--muted); }
+        .mt-linhas li b { color: var(--text); font-weight: 600; text-align: right; }
+        .mt-grade > * { min-width: 0; }
+        .mt-linhas .desconto b { color: var(--sucesso); }
+        .mt-total { display: flex; align-items: baseline; justify-content: space-between; padding-top: 10px; border-top: 1px solid var(--line); }
+        .mt-total strong { color: var(--ouro); font-size: 2rem; letter-spacing: -.03em; }
+        .mt-resumo .botao { justify-content: center; text-align: center; cursor: var(--cursor-mao); }
+        .mt-nota { margin: 0; color: var(--muted); font-size: .8rem; line-height: 1.5; }
+        .mt-previa { color: var(--acento-texto); font-weight: 600; font-size: .9rem; }
+        .mt-barra { display: none; }
+        @media (max-width: 860px) {
+            .mt-grade { grid-template-columns: minmax(0, 1fr); }
+            .mt-resumo { position: static; }
+            .mt-barra { position: fixed; left: 12px; right: 12px; bottom: max(12px, env(safe-area-inset-bottom)); z-index: 30; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 10px 10px 16px; border: 1px solid rgba(var(--cyan-rgb), .6); border-radius: 16px; background: var(--surface); box-shadow: 0 12px 30px rgba(0,0,0,.5); }
+            .mt-barra strong { color: var(--ouro); font-size: 1.25rem; }
+            .mt-barra small { display: block; color: var(--muted); font-size: .74rem; }
+            .mt-barra .botao { min-height: 44px; padding: 0 16px; }
+        }
+        @media (max-width: 560px) { .mt-pacotes { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <main class="mt">
+        <a class="mt-voltar" href="./">← voltar pro portfólio</a>
+        <p class="eyebrow">ORÇAMENTO NA HORA</p>
+        <h1>Monte seu site e veja o preço</h1>
+        <p>Escolha o tipo de site e o que mais você quer. O preço aparece na hora; é só mandar pro meu WhatsApp que eu confirmo em até 24h.</p>
+
+        <div class="mt-grade">
+            <form id="mtForm" autocomplete="off">
+                <section class="mt-passo" aria-labelledby="mtP1">
+                    <h2 id="mtP1"><span>01</span>Qual é o seu negócio?</h2>
+                    <div class="mt-chips" id="mtRamos" role="group" aria-label="Ramo do negócio"></div>
+                </section>
+                <section class="mt-passo" aria-labelledby="mtP2">
+                    <h2 id="mtP2"><span>02</span>Que tipo de site?</h2>
+                    <div class="mt-pacotes" id="mtPacotes" role="radiogroup" aria-labelledby="mtP2"></div>
+                </section>
+                <section class="mt-passo" aria-labelledby="mtP3">
+                    <h2 id="mtP3"><span>03</span>Quer algo a mais?</h2>
+                    <div class="mt-extras" id="mtExtras"></div>
+                </section>
+                <section class="mt-passo" aria-labelledby="mtP4">
+                    <h2 id="mtP4"><span>04</span>Como chama o seu negócio? <small style="color:var(--muted);font-weight:500">(opcional)</small></h2>
+                    <label class="mt-campo"><span class="v-oculto">Nome do negócio</span><input type="text" id="mtNome" maxlength="40" placeholder="Ex.: Barbearia do Zé"></label>
+                </section>
+            </form>
+
+            <aside class="mt-resumo" id="mtResumo" aria-labelledby="mtResumoTitulo">
+                <h2 id="mtResumoTitulo">Seu orçamento</h2>
+                <ul class="mt-linhas" id="mtLinhas"></ul>
+                <div class="mt-total"><span>Total estimado</span><strong id="mtTotal">R$ 0</strong></div>
+                <ul class="mt-linhas">
+                    <li><span>Prazo</span><b id="mtPrazo"></b></li>
+                    <li><span>Pagamento</span><b>50% no início, 50% na entrega</b></li>
+                    <li><span>Mensalidade</span><b>nenhuma</b></li>
+                </ul>
+                <a class="botao botao-principal" id="mtEnviar" href="#" target="_blank" rel="noopener noreferrer">Mandar pro Samuel no WhatsApp</a>
+                <a class="mt-previa" id="mtPrevia" href="./?previa=1">👀 ver como ficaria o meu site</a>
+                <p class="mt-nota">Valor estimado pelo que você escolheu. Depois de entender o seu negócio, eu confirmo o valor final; se for pra mais, te aviso antes de começar.</p>
+            </aside>
+        </div>
+    </main>
+    <div class="mt-barra" id="mtBarra"><span><small>Total estimado</small><strong id="mtBarraTotal"></strong></span><a class="botao botao-principal" href="#mtResumo">Ver e enviar</a></div>
+
+    <script src="estatisticas.js?v=20261002"></script>
+    <script src="servicos.js?v=20261002"></script>
+    <script>
+        (function () {
+            "use strict";
+            const S = window.SERVICOS, est = window.ESTATISTICAS;
+            const $ = (id) => document.getElementById(id);
+            const q = new URLSearchParams(location.search);
+            const estado = { ramo: S.RAMOS[q.get("ramo")] ? q.get("ramo") : "", pacote: S.PACOTES[q.get("pacote")] ? q.get("pacote") : "", extras: new Set((q.get("extras") || "").split(",").filter((k) => S.EXTRAS[k])) };
+            if (!estado.pacote) estado.pacote = estado.ramo ? S.RAMOS[estado.ramo].pacote : "site";
+            $("mtNome").value = (q.get("para") || "").slice(0, 40);
+            const quem = S.indicacao();
+
+            function el(tag, props, ...filhos) { const e = Object.assign(document.createElement(tag), props || {}); e.append(...filhos); return e; }
+
+            function desenharRamos() {
+                $("mtRamos").replaceChildren(...Object.entries(S.RAMOS).map(([k, r]) => {
+                    const b = el("button", { type: "button", textContent: `${r.emoji} ${r.nome}` });
+                    b.setAttribute("aria-pressed", String(estado.ramo === k));
+                    b.addEventListener("click", () => { estado.ramo = estado.ramo === k ? "" : k; if (estado.ramo) estado.pacote = r.pacote; desenhar(); });
+                    return b;
+                }));
+            }
+            function desenharPacotes() {
+                const sugerido = estado.ramo ? S.RAMOS[estado.ramo].pacote : "";
+                $("mtPacotes").replaceChildren(...Object.entries(S.PACOTES).map(([k, p]) => {
+                    const input = el("input", { type: "radio", name: "pacote", value: k, checked: estado.pacote === k });
+                    input.addEventListener("change", () => { estado.pacote = k; desenhar(); });
+                    const lab = el("label", { className: "mt-pacote" }, input, el("b", { textContent: p.nome }), el("span", { className: "mt-preco", textContent: `a partir de ${S.reais(p.preco)} · ${p.prazo} dias` }), el("small", { textContent: p.resumo }),
+                        el("ul", {}, ...p.itens.slice(1).map(([t]) => el("li", { textContent: t }))));
+                    if (k === sugerido) lab.append(el("span", { className: "mt-sugerido", textContent: `ideal pra ${S.RAMOS[estado.ramo].nome}` }));
+                    return lab;
+                }));
+            }
+            function desenharExtras() {
+                $("mtExtras").replaceChildren(...Object.entries(S.EXTRAS).map(([k, x]) => {
+                    const input = el("input", { type: "checkbox", value: k, checked: estado.extras.has(k) });
+                    input.addEventListener("change", () => { input.checked ? estado.extras.add(k) : estado.extras.delete(k); desenharResumo(); });
+                    return el("label", { className: "mt-extra" }, input, el("span", {}, x.nome, el("small", { textContent: x.desc })), el("em", { textContent: x.preco ? `+ ${S.reais(x.preco)}` : "grátis" }));
+                }));
+            }
+            function contas() {
+                const p = S.PACOTES[estado.pacote];
+                const extras = [...estado.extras].map((k) => S.EXTRAS[k]);
+                const bruto = p.preco + extras.reduce((t, x) => t + x.preco, 0);
+                const desconto = quem ? Math.round(bruto * S.INDICACAO.desconto) : 0;
+                return { p, extras, bruto, desconto, total: bruto - desconto };
+            }
+            function desenharResumo() {
+                const c = contas();
+                const linhas = [el("li", {}, el("span", { textContent: c.p.nome }), el("b", { textContent: S.reais(c.p.preco) }))];
+                c.extras.forEach((x) => linhas.push(el("li", {}, el("span", { textContent: x.nome }), el("b", { textContent: x.preco ? "+ " + S.reais(x.preco) : "grátis" }))));
+                if (c.desconto) linhas.push(el("li", { className: "desconto" }, el("span", { textContent: `🤝 Indicação de ${quem}` }), el("b", { textContent: "− " + S.reais(c.desconto) })));
+                $("mtLinhas").replaceChildren(...linhas);
+                $("mtTotal").textContent = $("mtBarraTotal").textContent = S.reais(c.total);
+                $("mtPrazo").textContent = `${c.p.prazo} dias depois de receber fotos e textos`;
+                const nome = $("mtNome").value.trim();
+                const ramo = estado.ramo ? S.RAMOS[estado.ramo] : null;
+                const texto = [`Oi, Samuel! Montei meu site no seu portfólio${nome ? ` (${nome})` : ""}:`, "",
+                    `• ${c.p.nome}: ${S.reais(c.p.preco)}`, ...c.extras.map((x) => `• ${x.nome}: ${x.preco ? S.reais(x.preco) : "grátis"}`),
+                    ...(c.desconto ? [`• Indicação de ${quem}: − ${S.reais(c.desconto)}`] : []), "", `*Total estimado: ${S.reais(c.total)}*`,
+                    ...(ramo ? [`Ramo: ${ramo.nome}`] : []), "", "Pode me confirmar o valor e como a gente começa?"].join("\n");
+                $("mtEnviar").href = S.linkWhats(texto);
+                const u = new URL("./", location.href);
+                if (nome) u.searchParams.set("para", nome);
+                if (ramo) u.searchParams.set("ramo", estado.ramo);
+                u.searchParams.set("previa", "1");
+                $("mtPrevia").href = u.toString();
+            }
+            function desenhar() { desenharRamos(); desenharPacotes(); desenharExtras(); desenharResumo(); }
+            $("mtNome").addEventListener("input", desenharResumo);
+            $("mtForm").addEventListener("submit", (e) => e.preventDefault());
+            $("mtEnviar").addEventListener("click", () => est && est.contar("/evento/monte-enviou", `Monte seu site: ${S.PACOTES[estado.pacote].curto}`, true));
+            desenhar();
+            if (est) est.contar("/monte", "Monte seu site", true);
+        })();
+    </script>
+</body>
+</html>
