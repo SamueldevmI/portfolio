@@ -1634,6 +1634,7 @@ html.sem-animacoes, html.sem-animacoes *, html.sem-animacoes *::before, html.sem
 .botao-som[aria-pressed="true"] .som-onda2 { animation-delay: .38s; }
 @keyframes som-pulsa { 0%, 100% { opacity: .35; } 50% { opacity: 1; } }
 @media (hover: hover) { .botao-som:hover { border-color: var(--cyan); color: var(--cyan); } }
+.botao-idioma { width: auto; min-width: 36px; padding: 0 9px; font: 600 .72rem "DM Mono", monospace; letter-spacing: .04em; }
 .botao-som:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
 /* Botão de tema: círculo meio preenchido com a cor do outro tema (no vermelho mostra azul e vice-versa) */
 .botao-tema svg circle { fill: none; }

@@ -108,10 +108,14 @@ if (prefereMenosMovimento || !("IntersectionObserver" in window)) {
     elementosRevelar.forEach((el) => observador.observe(el));
 }
 
-/* Efeito de digitação no texto do hero, na primeira carga */
+/* Efeito de digitação no texto do hero, na primeira carga. Usa o idioma já detectado no
+   <head> (document.documentElement.dataset.idioma) pra digitar o texto certo desde o início —
+   senão a digitação, que lê o texto original em português, apagaria a tradução do idioma.js. */
 const heroTexto = document.querySelector(".hero-texto");
 if (heroTexto && !prefereMenosMovimento) {
-    const textoCompletoHero = heroTexto.textContent;
+    const textoCompletoHero = document.documentElement.dataset.idioma === "es"
+        ? "Sitio y sistema a medida para tu negocio: aparece en Google, responde en WhatsApp solo y funciona en el celular."
+        : heroTexto.textContent;
     heroTexto.textContent = "";
     let indiceCharHero = 0;
     setTimeout(function digitarHero() {

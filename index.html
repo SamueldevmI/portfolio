@@ -53,6 +53,17 @@
             if (tema === "azul") document.querySelector('meta[name="theme-color"]').content = "#0e1422";
             document.write('<link rel="stylesheet" id="folhaTema" href="' + (tema === "azul" ? "style-azul.css" : "style.css") + '?v=20261001celular">');
         })();
+        /* Idioma: detectado cedo (antes do resto da página rodar) só pra avisar efeitos como a
+           digitação do texto do hero, que senão sobrescreveriam a tradução feita pelo idioma.js. */
+        (function () {
+            var idioma = "pt";
+            try {
+                var salvo = localStorage.getItem("portfolio-idioma");
+                if (salvo === "es" || salvo === "pt") idioma = salvo;
+                else if ((navigator.language || "").toLowerCase().indexOf("es") === 0) idioma = "es";
+            } catch (e) { /* sem armazenamento */ }
+            document.documentElement.dataset.idioma = idioma;
+        })();
     </script>
     <noscript><link rel="stylesheet" href="style.css?v=20261001celular"></noscript>
     <title id="tituloPagina">Samuel Mickael | Desenvolvedor Web &amp; Mobile</title>
@@ -677,6 +688,7 @@
     <script src="estatisticas.js?v=20261001celular"></script>
     <script src="script.js?v=20261001celular"></script>
 <script src="acabamento.js?v=20261001celular" defer></script>
+<script src="idioma.js?v=20261001celular" defer></script>
 <script>
     /* Scripts que a página não precisa pra aparecer: o mobile.js só baixa em tela de toque (no computador
        ele não faz nada) e a música só depois que a página terminou de carregar. */
