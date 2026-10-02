@@ -511,7 +511,21 @@
         "Criar tarefa": "Crear tarea",
         "Excluir": "Eliminar",
         "tarefa": "tarea",
-        "tarefas": "tareas"
+        "tarefas": "tareas",
+
+        /* ---------- Nexus Studio (primeiro-projeto/index.html) ---------- */
+        "CRIATIVIDADE + TECNOLOGIA": "CREATIVIDAD + TECNOLOGÍA",
+        "Ideias que viram presença digital.": "Ideas que se vuelven presencia digital.",
+        "Uma landing page moderna criada para apresentar marcas e serviços de forma clara, rápida e memorável.":
+            "Una landing page moderna creada para presentar marcas y servicios de forma clara, rápida y memorable.",
+        "Conhecer o projeto": "Conocer el proyecto",
+        "Estratégia": "Estrategia",
+        "Uma mensagem direta para o público certo.": "Un mensaje directo para el público correcto.",
+        "Design": "Diseño",
+        "Visual forte com foco em hierarquia e contraste.": "Visual fuerte con foco en jerarquía y contraste.",
+        "Experiência": "Experiencia",
+        "Layout responsivo pensado para todos os dispositivos.": "Diseño responsivo pensado para todos los dispositivos.",
+        "Nexus Studio · Projeto de demonstração por Samuel Mickael.": "Nexus Studio · Proyecto de demostración por Samuel Mickael."
     };
 
     /* Páginas e áreas com texto montado por JavaScript em tempo de execução (vitrine de sites,
