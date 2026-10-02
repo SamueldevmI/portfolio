@@ -122,6 +122,9 @@
                 total.innerHTML = "<b>" + somaAno + "</b> contribuições no último ano";
                 total.hidden = false;
             }
+            // a ficha de personagem (ficha.js) mostra esse mesmo número nas "missões cumpridas"
+            window.githubTotalAno = somaAno;
+            document.dispatchEvent(new CustomEvent("github:total", { detail: { total: somaAno } }));
             ajustar();
             rolagem.scrollLeft = rolagem.scrollWidth; // no celular começa pelo mais recente
         }

@@ -51,7 +51,7 @@
             } catch (e) { /* sem armazenamento */ }
             document.documentElement.dataset.tema = tema;
             if (tema === "azul") document.querySelector('meta[name="theme-color"]').content = "#0e1422";
-            document.write('<link rel="stylesheet" id="folhaTema" href="' + (tema === "azul" ? "style-azul.css" : "style.css") + '?v=20261001celular">');
+            document.write('<link rel="stylesheet" id="folhaTema" href="' + (tema === "azul" ? "style-azul.css" : "style.css") + '?v=20261002ficha">');
         })();
         /* Idioma: detectado cedo (antes do resto da página rodar) só pra avisar efeitos como a
            digitação do texto do hero, que senão sobrescreveriam a tradução feita pelo idioma.js. */
@@ -65,7 +65,7 @@
             document.documentElement.dataset.idioma = idioma;
         })();
     </script>
-    <noscript><link rel="stylesheet" href="style.css?v=20261001celular"></noscript>
+    <noscript><link rel="stylesheet" href="style.css?v=20261002ficha"></noscript>
     <title id="tituloPagina">Samuel Mickael | Desenvolvedor Web &amp; Mobile</title>
     <script type="application/ld+json">
     {
@@ -220,11 +220,68 @@
                 <h2>Sobre mim</h2>
             </div>
             <div class="sobre-conteudo">
-                <div class="foto-wrapper">
-                    <!-- minhafoto-720/1080.webp: a foto original (360x480) ampliada e tratada; trocar pela original em alta quando tiver -->
-                    <img src="imagem/minhafoto-720.webp" srcset="imagem/minhafoto-720.webp 720w, imagem/minhafoto-1080.webp 1080w" sizes="(max-width: 720px) 92vw, 330px" id="minhafoto" alt="Samuel Mickael no computador, programando" width="720" height="960" loading="lazy" decoding="async">
-                    <p class="foto-legenda">onde tudo começou</p>
-                    <div id="tooltip" class="tooltip" role="tooltip">Meu primeiro projeto usando HTML e CSS.</div>
+                <div class="ficha-area">
+                    <!-- Ficha de personagem: frente com foto e atributos, verso com superpoder e missões (ficha.js).
+                         Os atributos são de brincadeira: mude o número em --v (0 a 100) quando quiser. -->
+                    <div class="ficha" id="ficha">
+                        <div class="ficha-giro">
+                        <div class="ficha-vira">
+                            <div class="ficha-face ficha-frente">
+                                <p class="ficha-topo"><span>FICHA DE PERSONAGEM</span><span>Nº 001</span></p>
+                                <div class="foto-wrapper">
+                                    <!-- minhafoto-720/1080.webp: a foto original (360x480) ampliada e tratada; trocar pela original em alta quando tiver -->
+                                    <img src="imagem/minhafoto-720.webp" srcset="imagem/minhafoto-720.webp 720w, imagem/minhafoto-1080.webp 1080w" sizes="(max-width: 720px) 92vw, 360px" id="minhafoto" alt="Samuel Mickael no computador, programando" width="720" height="960" loading="lazy" decoding="async">
+                                    <p class="foto-legenda">onde tudo começou</p>
+                                    <div id="tooltip" class="tooltip" role="tooltip">Meu primeiro projeto usando HTML e CSS.</div>
+                                    <span class="ficha-nivel"><small>NÍVEL</small><b>22</b></span>
+                                </div>
+                                <p class="ficha-nome">Samuel Mickael</p>
+                                <p class="ficha-classe"><span>Classe: <b>Dev full-stack</b></span><span>📍 Campo Grande - MS</span></p>
+                                <ul class="ficha-atributos" aria-label="Atributos">
+                                    <li style="--v: 85"><span>Python</span><i></i><b>85</b></li>
+                                    <li style="--v: 80"><span>JavaScript</span><i></i><b>80</b></li>
+                                    <li style="--v: 75"><span>Flask</span><i></i><b>75</b></li>
+                                    <li style="--v: 95"><span>Resolver problema de cliente</span><i></i><b>95</b></li>
+                                    <li class="ficha-max" style="--v: 100"><span>Café consumido</span><i></i><b>MAX</b></li>
+                                </ul>
+                                <p class="ficha-dica" aria-hidden="true">toque pra virar ↻</p>
+                            </div>
+                            <div class="ficha-face ficha-verso">
+                                <p class="ficha-topo"><span>FICHA DE PERSONAGEM</span><span>VERSO</span></p>
+                                <div class="ficha-caixa ficha-poder">
+                                    <b>SUPERPODER</b>
+                                    <p>Transformar planilha bagunçada e atendimento lento em sistema que funciona.</p>
+                                </div>
+                                <div class="ficha-caixa">
+                                    <b>ORIGEM</b>
+                                    <p>Técnico de computador no Exército Brasileiro. Hoje, no 4º semestre de Análise e Desenvolvimento de Sistemas.</p>
+                                </div>
+                                <!-- Pra aparecer, escreva o texto e apague o "hidden" -->
+                                <div class="ficha-caixa" hidden><b>PONTO FRACO</b><p></p></div>
+                                <div class="ficha-caixa" hidden><b>NAS HORAS VAGAS</b><p></p></div>
+                                <div class="ficha-caixa ficha-missoes">
+                                    <b>MISSÕES CUMPRIDAS</b>
+                                    <ul>
+                                        <li><strong id="fichaProjetos">7</strong><span>projetos no ar pra testar</span></li>
+                                        <li id="fichaGithub" hidden><strong></strong><span>contribuições no GitHub no último ano</span></li>
+                                        <li><strong>1ª</strong><span>loja de cliente no ar: <a href="case-eclipse.html">Eclipse Studio</a></span></li>
+                                    </ul>
+                                </div>
+                                <div class="ficha-caixa ficha-inventario">
+                                    <b>INVENTÁRIO</b>
+                                    <ul><li>Python</li><li>Flask</li><li>JavaScript</li><li>SQLAlchemy</li><li>Pytest</li><li>Git</li><li>PWA</li></ul>
+                                </div>
+                                <div class="ficha-acoes">
+                                    <a class="botao botao-principal" href="#orcamento">Chamar pra missão →</a>
+                                    <button type="button" class="botao botao-secundario" id="fichaSalvar">Salvar a ficha</button>
+                                </div>
+                                <p class="ficha-dica" aria-hidden="true">toque pra virar ↻</p>
+                            </div>
+                        </div>
+                        </div>
+                        <span class="ficha-pow" aria-hidden="true"></span>
+                    </div>
+                    <button type="button" class="ficha-virar" id="fichaVirar" aria-controls="ficha" aria-pressed="false">↻ Virar a ficha</button>
                 </div>
                 <div>
                     <p>Crio sites, sistemas e aplicativos sob medida, com foco em Python, Flask e JavaScript — do primeiro rascunho até o projeto no ar. Você pode testar cada um deles abaixo, na hora, sem precisar instalar nada.</p>
@@ -240,6 +297,26 @@
                         <li data-tecnologia="pytest"><button type="button" aria-pressed="false"><svg class="ic-linha" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="m7.8 12.4 2.9 2.9 5.6-6"/></svg>Pytest</button></li>
                         <li data-tecnologia="git"><button type="button" aria-pressed="false"><svg class="ic-linha" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 3v12"/><circle cx="18" cy="6" r="2.8"/><circle cx="6" cy="18" r="2.8"/><path d="M18 8.8a9 9 0 0 1-9 9"/></svg>Git</button></li>
                     </ul>
+                    <div class="papo" id="papo">
+                        <div class="papo-topo">
+                            <img src="imagem/minhafoto-720.webp" alt="" width="40" height="40" loading="lazy" decoding="async">
+                            <p><b>Converse comigo</b><small class="papo-status" id="papoStatus">online</small></p>
+                        </div>
+                        <div class="papo-mensagens" id="papoMensagens" role="log" aria-live="polite" aria-label="Conversa">
+                            <p class="papo-msg papo-dele">Oi! Sou o Samuel 👋 Toque numa pergunta aqui embaixo que eu respondo.</p>
+                        </div>
+                        <p class="papo-resposta" id="papoTempo" hidden>Respondo em até 24h, direto no WhatsApp. E depois de entender o seu projeto, já mando o valor e o prazo.</p>
+                        <div class="papo-perguntas" role="group" aria-label="Perguntas">
+                            <button type="button" data-faq="faq-preco">Quanto custa?</button>
+                            <button type="button" data-faq="faq-prazo">Quanto tempo leva?</button>
+                            <button type="button" data-faq="papoTempo">Em quanto tempo você responde?</button>
+                            <button type="button" data-faq="faq-conteudo">Preciso ter logo e fotos?</button>
+                            <button type="button" data-faq="faq-dominio">E o domínio e a hospedagem?</button>
+                            <button type="button" data-faq="faq-suporte">Tem suporte depois?</button>
+                            <button type="button" data-faq="faq-pagamento">Como é o pagamento?</button>
+                        </div>
+                        <a class="papo-zap" href="https://wa.me/5567996034205?text=Oi%2C%20Samuel%21%20Vi%20seu%20portf%C3%B3lio%20e%20queria%20pedir%20um%20or%C3%A7amento.%20Meu%20projeto%20%C3%A9%3A%20" target="_blank" rel="noopener noreferrer">Continuar no meu WhatsApp →</a>
+                    </div>
                 </div>
                 <div class="github-atividade">
                     <div class="gh-cab"><p class="eyebrow-mini">ATIVIDADE NO GITHUB</p><span class="gh-total" id="ghTotal" hidden></span></div>
@@ -685,15 +762,16 @@
     </div>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-    <script src="estatisticas.js?v=20261001celular"></script>
-    <script src="script.js?v=20261001celular"></script>
-<script src="acabamento.js?v=20261001celular" defer></script>
-<script src="idioma.js?v=20261001celular" defer></script>
+    <script src="estatisticas.js?v=20261002ficha"></script>
+    <script src="script.js?v=20261002ficha"></script>
+<script src="acabamento.js?v=20261002ficha" defer></script>
+<script src="ficha.js?v=20261002ficha" defer></script>
+<script src="idioma.js?v=20261002ficha" defer></script>
 <script>
     /* Scripts que a página não precisa pra aparecer: o mobile.js só baixa em tela de toque (no computador
        ele não faz nada) e a música só depois que a página terminou de carregar. */
     (function () {
-        var versao = "?v=20261001celular";
+        var versao = "?v=20261002ficha";
         function carregar(arquivo) { var s = document.createElement("script"); s.src = arquivo + versao; document.body.appendChild(s); }
         if (matchMedia("(pointer: coarse)").matches) {
             // o pedido de "instalar app" pode chegar antes do mobile.js: fica guardado pra ele usar

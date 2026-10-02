@@ -104,6 +104,47 @@
             "Tengo 22 años y sigo estudiando Análisis y Desarrollo de Sistemas, pero aprendo de verdad resolviendo problemas reales. Mira los proyectos y mi trayectoria hasta aquí.",
         "ATIVIDADE NO GITHUB": "ACTIVIDAD EN GITHUB",
 
+        /* ---------- Sobre mim: ficha de personagem e "Converse comigo" (ficha.js) ---------- */
+        "FICHA DE PERSONAGEM": "FICHA DE PERSONAJE",
+        "VERSO": "REVERSO",
+        "NÍVEL": "NIVEL",
+        "Classe:": "Clase:",
+        "Atributos": "Atributos",
+        "Resolver problema de cliente": "Resolver problemas de clientes",
+        "Café consumido": "Café consumido",
+        "toque pra virar ↻": "toca para girar ↻",
+        "↻ Virar a ficha": "↻ Girar la ficha",
+        "SUPERPODER": "SUPERPODER",
+        "Transformar planilha bagunçada e atendimento lento em sistema que funciona.":
+            "Transformar planillas desordenadas y atención lenta en sistemas que funcionan.",
+        "ORIGEM": "ORIGEN",
+        "Técnico de computador no Exército Brasileiro. Hoje, no 4º semestre de Análise e Desenvolvimento de Sistemas.":
+            "Técnico de computadoras en el Ejército Brasileño. Hoy, en el 4º semestre de Análisis y Desarrollo de Sistemas.",
+        "PONTO FRACO": "PUNTO DÉBIL",
+        "NAS HORAS VAGAS": "EN LOS RATOS LIBRES",
+        "MISSÕES CUMPRIDAS": "MISIONES CUMPLIDAS",
+        "INVENTÁRIO": "INVENTARIO",
+        "projetos no ar pra testar": "proyectos en línea para probar",
+        "contribuições no GitHub no último ano": "contribuciones en GitHub en el último año",
+        "loja de cliente no ar:": "tienda de cliente en línea:",
+        "Chamar pra missão →": "Llamar a la misión →",
+        "Salvar a ficha": "Guardar la ficha",
+        "Converse comigo": "Habla conmigo",
+        "online": "en línea",
+        "Conversa": "Conversación",
+        "Perguntas": "Preguntas",
+        "Oi! Sou o Samuel 👋 Toque numa pergunta aqui embaixo que eu respondo.":
+            "¡Hola! Soy Samuel 👋 Toca una pregunta aquí abajo y te respondo.",
+        "Respondo em até 24h, direto no WhatsApp. E depois de entender o seu projeto, já mando o valor e o prazo.":
+            "Respondo en hasta 24h, directo por WhatsApp. Y después de entender tu proyecto, te envío el valor y el plazo.",
+        "Quanto custa?": "¿Cuánto cuesta?",
+        "Em quanto tempo você responde?": "¿En cuánto tiempo respondes?",
+        "Preciso ter logo e fotos?": "¿Necesito tener logo y fotos?",
+        "E o domínio e a hospedagem?": "¿Y el dominio y el hosting?",
+        "Tem suporte depois?": "¿Hay soporte después?",
+        "Como é o pagamento?": "¿Cómo es el pago?",
+        "Continuar no meu WhatsApp →": "Seguir en mi WhatsApp →",
+
         /* ---------- Projetos em destaque ---------- */
         "PORTFÓLIO": "PORTAFOLIO",
         "Projetos em destaque": "Proyectos destacados",
