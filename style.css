@@ -112,6 +112,7 @@ html { scrollbar-color:var(--surface-2) var(--bg); scrollbar-width:thin; }
 
 /* Selo de visitas no rodapé */
 .selo-visitas { display:block; margin:10px auto 0; opacity:.85; }
+.selo-legenda { margin:28px 0 0; color:var(--muted); font-size:.82rem; }
 
 /* Cross-highlight: habilidades <-> projetos */
 .habilidades li { cursor: var(--cursor-mao); transition:.25s ease; }
@@ -1633,6 +1634,7 @@ html.sem-animacoes, html.sem-animacoes *, html.sem-animacoes *::before, html.sem
 .botao-som[aria-pressed="true"] .som-onda2 { animation-delay: .38s; }
 @keyframes som-pulsa { 0%, 100% { opacity: .35; } 50% { opacity: 1; } }
 @media (hover: hover) { .botao-som:hover { border-color: var(--cyan); color: var(--cyan); } }
+.botao-idioma { width: auto; min-width: 36px; padding: 0 9px; font: 600 .72rem "DM Mono", monospace; letter-spacing: .04em; }
 .botao-som:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
 /* Botão de tema: círculo meio preenchido com a cor do outro tema (no vermelho mostra azul e vice-versa) */
 .botao-tema svg circle { fill: none; }
@@ -1689,6 +1691,20 @@ html.sem-animacoes, html.sem-animacoes *, html.sem-animacoes *::before, html.sem
 .pp-promo b { color: var(--ouro); font-size: 1rem; text-shadow: 0 0 10px rgba(var(--ouro-rgb), .4); }
 /* com desconto valendo, o preço cheio aparece riscado */
 :is(.projeto-preco, .mini-projeto-preco):has(.pp-promo:not([hidden])) .pp-base b { text-decoration: line-through; text-decoration-thickness: 2px; opacity: .65; font-size: .95rem; }
+
+/* ---------- Calculadora rápida de orçamento, na hero ---------- */
+.calc-rapida { max-width: 420px; margin-top: 28px; padding: 18px 20px; border: 1px solid var(--line); border-radius: 12px; background: rgba(255, 255, 255, .03); }
+.calc-titulo { margin: 0 0 12px; font: 600 .95rem "Space Grotesk", sans-serif; }
+.calc-tipos { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+.calc-tipo { padding: 7px 14px; border: 1px solid var(--line); border-radius: 999px; background: transparent; color: var(--muted); font: 500 .8rem "Space Grotesk", sans-serif; cursor: var(--cursor-mao); transition: .2s; }
+.calc-tipo.is-ativo { border-color: var(--cyan); background: rgba(var(--cyan-rgb), .15); color: var(--text); }
+.calc-slider { display: block; margin-bottom: 14px; color: var(--muted); font-size: .82rem; }
+.calc-slider b { color: var(--text); }
+.calc-slider input[type="range"] { display: block; width: 100%; margin-top: 8px; accent-color: var(--cyan); cursor: var(--cursor-mao); }
+.calc-resultado { margin: 0 0 14px; color: var(--muted); font-size: .9rem; }
+.calc-resultado strong { color: var(--ouro); font-size: 1.3rem; font-weight: 700; text-shadow: 0 0 10px rgba(var(--ouro-rgb), .35); }
+.calc-cta { width: 100%; }
+.calc-aviso { margin: 10px 0 0; color: var(--muted); font-size: .72rem; opacity: .8; }
 
 /* ---------- Cursor: ponto na batida + rastro de faíscas neon (musica.js) ----------
    Com mouse, o ponto É o cursor: a seta do sistema some (menos em campos de texto, onde a barrinha de

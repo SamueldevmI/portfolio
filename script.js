@@ -108,10 +108,14 @@ if (prefereMenosMovimento || !("IntersectionObserver" in window)) {
     elementosRevelar.forEach((el) => observador.observe(el));
 }
 
-/* Efeito de digitação no texto do hero, na primeira carga */
+/* Efeito de digitação no texto do hero, na primeira carga. Usa o idioma já detectado no
+   <head> (document.documentElement.dataset.idioma) pra digitar o texto certo desde o início —
+   senão a digitação, que lê o texto original em português, apagaria a tradução do idioma.js. */
 const heroTexto = document.querySelector(".hero-texto");
 if (heroTexto && !prefereMenosMovimento) {
-    const textoCompletoHero = heroTexto.textContent;
+    const textoCompletoHero = document.documentElement.dataset.idioma === "es"
+        ? "Sitio y sistema a medida para tu negocio: aparece en Google, responde en WhatsApp solo y funciona en el celular."
+        : heroTexto.textContent;
     heroTexto.textContent = "";
     let indiceCharHero = 0;
     setTimeout(function digitarHero() {
@@ -808,6 +812,48 @@ async function carregarStatsGithub() {
     }
 }
 carregarStatsGithub();
+
+/* Calculadora rápida de orçamento na hero: dá uma estimativa na hora, pelo tipo de projeto
+   e complexidade, só pra matar a curiosidade antes mesmo de chegar no formulário de orçamento. */
+(function calculadoraRapida() {
+    const raiz = document.querySelector(".calc-rapida");
+    if (!raiz) return;
+    const botoesTipo = raiz.querySelectorAll(".calc-tipo");
+    const slider = raiz.querySelector("#calcComplexidade");
+    const rotuloComplexidade = raiz.querySelector("#calcComplexidadeRotulo");
+    const valorEl = raiz.querySelector("#calcValor");
+    const cta = raiz.querySelector("#calcCta");
+    const niveis = [
+        { nome: "Simples", mult: 1 },
+        { nome: "Médio", mult: 1.5 },
+        { nome: "Avançado", mult: 2.2 },
+    ];
+
+    function atualizar() {
+        const tipoEl = raiz.querySelector(".calc-tipo.is-ativo");
+        const base = Number(tipoEl.dataset.base);
+        const nivel = niveis[Number(slider.value)];
+        rotuloComplexidade.textContent = nivel.nome;
+        slider.setAttribute("aria-valuetext", nivel.nome);
+        if (nivel.mult === 1) {
+            valorEl.textContent = `a partir de R$ ${base}`;
+        } else {
+            const preco = Math.round((base * nivel.mult) / 5) * 5;
+            valorEl.textContent = `por volta de R$ ${preco}`;
+        }
+        cta.dataset.orcamentoTipo = tipoEl.dataset.tipo;
+    }
+
+    botoesTipo.forEach((botao) => {
+        botao.addEventListener("click", () => {
+            botoesTipo.forEach((b) => b.classList.remove("is-ativo"));
+            botao.classList.add("is-ativo");
+            atualizar();
+        });
+    });
+    slider?.addEventListener("input", atualizar);
+    atualizar();
+})();
 
 /* Cross-highlight: passar o mouse (ou focar com Tab) numa competência destaca os projetos relacionados.
    Clicar ou tocar FIXA o destaque (no celular não existe "passar o mouse"); clicar de novo tira. */
