@@ -38,7 +38,9 @@
     <link rel="manifest" href="manifest.json">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+    <!-- fonte sem travar a primeira pintura: o texto aparece na fonte do sistema e troca quando ela chega -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap"></noscript>
     <script>
         /* Tema: vermelho (padrão) ou azul. Escolhido antes de desenhar a página, pra não piscar a cor errada.
            O style-azul.css é gerado a partir do style.css (ferramentas/gerar-tema-azul.js). */
@@ -150,7 +152,7 @@
                         <a class="botao botao-principal" href="#orcamento">Quero meu orçamento</a>
                         <a class="hero-link" href="#projetos">ver projetos funcionando <span aria-hidden="true">↓</span></a>
                     </div>
-                    <p class="hero-oferta"><b>⚡ Orçamento em 24h</b><span>sem compromisso · direto no WhatsApp</span></p>
+                    <p class="hero-oferta"><b>⚡ Orçamento em 24h</b><span>sem compromisso · <a href="./monte.html">ou veja o preço na hora →</a></span></p>
                     <a class="hero-cliente" href="./case-eclipse.html">🖤 No ar: loja da <b>Eclipse Studio</b> · ver o case <span aria-hidden="true">→</span></a>
                 </div>
                 <!-- vitrine: um celular com a prévia do site de um cliente, trocando de ramo sozinho (script.js) -->
@@ -209,6 +211,7 @@
                 </details>
                 <div class="cmp-rodape"><a class="cmp-testar" href="#projetos">ver os projetos ↓</a><button type="button" class="cmp-querer">quero isso no meu negócio →</button></div>
                 <div class="cmp-barra" aria-hidden="true"><i></i></div>
+                <p class="cmp-atalhos">📝 Não sabe se precisa? <a href="./teste.html">Faça o teste de 1 minuto</a> <span aria-hidden="true">·</span> <a href="./monte.html">monte o seu e veja o preço</a></p>
             </div>
         </div>
     </header>
@@ -419,7 +422,7 @@
                         <button type="button" class="botao-compartilhar" data-compartilhar="./fatia-nobre/index.html" data-compartilhar-titulo="Fatia Nobre — Atendimento automático" aria-label="Compartilhar projeto Fatia Nobre">⤴</button>
                         <figure class="print-janela">
                             <div class="print-barra"><i></i><i></i><i></i><span>Fatia Nobre</span></div>
-                            <img src="imagem/projetos/fatia-nobre.webp" alt="" width="1100" height="688" loading="lazy" decoding="async">
+                            <img src="imagem/projetos/fatia-nobre-660.webp" srcset="imagem/projetos/fatia-nobre-660.webp 660w, imagem/projetos/fatia-nobre.webp 1100w" sizes="(max-width: 720px) 82vw, 560px" alt="" width="1100" height="688" loading="lazy" decoding="async">
                             <figcaption class="v-oculto">Captura de tela: Fatia Nobre</figcaption>
                         </figure>
                         <div class="chat-bolhas" aria-hidden="true">
@@ -449,7 +452,7 @@
                         <button type="button" class="botao-compartilhar" data-compartilhar="./conta-a-dois/index.html" data-compartilhar-titulo="Conta a Dois — Gastos de casal em tempo real" aria-label="Compartilhar projeto Conta a Dois">⤴</button>
                         <figure class="print-janela">
                             <div class="print-barra"><i></i><i></i><i></i><span>Conta a Dois</span></div>
-                            <img src="imagem/projetos/conta-a-dois.webp" alt="" width="1100" height="688" loading="lazy" decoding="async">
+                            <img src="imagem/projetos/conta-a-dois-660.webp" srcset="imagem/projetos/conta-a-dois-660.webp 660w, imagem/projetos/conta-a-dois.webp 1100w" sizes="(max-width: 720px) 82vw, 560px" alt="" width="1100" height="688" loading="lazy" decoding="async">
                             <figcaption class="v-oculto">Captura de tela: Conta a Dois</figcaption>
                         </figure>
                         <div class="print-celular tela-celular" aria-hidden="true"><div class="sequencia"><img src="imagem/projetos/celular/conta-1.webp" alt="" width="280" height="606" loading="lazy" decoding="async"><img src="imagem/projetos/celular/conta-2.webp" alt="" width="280" height="606" loading="lazy" decoding="async"><img src="imagem/projetos/celular/conta-3.webp" alt="" width="280" height="606" loading="lazy" decoding="async"></div></div>
@@ -475,7 +478,7 @@
                         <button type="button" class="botao-compartilhar" data-compartilhar="./taskflow/index.html" data-compartilhar-titulo="TaskFlow" aria-label="Compartilhar projeto TaskFlow">⤴</button>
                         <figure class="print-janela">
                             <div class="print-barra"><i></i><i></i><i></i><span>TaskFlow</span></div>
-                            <img src="imagem/projetos/taskflow.webp" alt="" width="1100" height="688" loading="lazy" decoding="async">
+                            <img src="imagem/projetos/taskflow-660.webp" srcset="imagem/projetos/taskflow-660.webp 660w, imagem/projetos/taskflow.webp 1100w" sizes="(max-width: 720px) 82vw, 560px" alt="" width="1100" height="688" loading="lazy" decoding="async">
                             <figcaption class="v-oculto">Captura de tela: TaskFlow</figcaption>
                         </figure>
                         <div class="projeto-selos" aria-hidden="true"><span class="selo-categoria">App</span></div>
@@ -497,7 +500,7 @@
                         <button type="button" class="botao-compartilhar" data-compartilhar="./focusflow/index.html" data-compartilhar-titulo="FocusFlow" aria-label="Compartilhar projeto FocusFlow">⤴</button>
                         <figure class="print-janela">
                             <div class="print-barra"><i></i><i></i><i></i><span>FocusFlow</span></div>
-                            <img src="imagem/projetos/focusflow.webp" alt="" width="1100" height="688" loading="lazy" decoding="async">
+                            <img src="imagem/projetos/focusflow-660.webp" srcset="imagem/projetos/focusflow-660.webp 660w, imagem/projetos/focusflow.webp 1100w" sizes="(max-width: 720px) 82vw, 560px" alt="" width="1100" height="688" loading="lazy" decoding="async">
                             <figcaption class="v-oculto">Captura de tela: FocusFlow</figcaption>
                         </figure>
                         <div class="projeto-selos" aria-hidden="true"><span class="selo-categoria">App</span></div>
@@ -519,7 +522,7 @@
                         <button type="button" class="botao-compartilhar" data-compartilhar="./flowboard/index.html" data-compartilhar-titulo="FlowBoard" aria-label="Compartilhar projeto FlowBoard">⤴</button>
                         <figure class="print-janela">
                             <div class="print-barra"><i></i><i></i><i></i><span>FlowBoard</span></div>
-                            <img src="imagem/projetos/flowboard.webp" alt="" width="1100" height="688" loading="lazy" decoding="async">
+                            <img src="imagem/projetos/flowboard-660.webp" srcset="imagem/projetos/flowboard-660.webp 660w, imagem/projetos/flowboard.webp 1100w" sizes="(max-width: 720px) 82vw, 560px" alt="" width="1100" height="688" loading="lazy" decoding="async">
                             <figcaption class="v-oculto">Captura de tela: FlowBoard</figcaption>
                         </figure>
                         <div class="projeto-selos" aria-hidden="true"><span class="selo-categoria">Sistema</span></div>
@@ -558,6 +561,7 @@
                 <h2>O que eu posso fazer pelo seu negócio.</h2>
                 <p>Preço de partida pra você ter uma ideia agora. O valor exato vem na proposta — respondo ainda hoje.</p>
                 <p class="desconto-depoimento"><b>10% de desconto</b> se você deixar um depoimento sobre o meu serviço.</p>
+                <p class="servicos-atalho"><a class="botao botao-secundario" href="./monte.html">Monte o seu e veja o preço na hora →</a></p>
             </div>
             <div class="lista-servicos">
                 <article>
@@ -654,6 +658,16 @@
                     <summary>Como funciona o pagamento?</summary>
                     <p>A forma de pagamento é combinada na proposta, antes de começar.</p>
                 </details>
+                <details class="faq-item" name="faq" id="faq-indicacao">
+                    <summary>Indiquei alguém. Ganho alguma coisa?</summary>
+                    <p>Ganha! Quem chega pelo seu link tem <b data-indicacao="amigo">10% de desconto no primeiro site</b>, e você ganha <b data-indicacao="quemIndica">R$ 50 no Pix pra cada indicação que fechar</b>. Gere o seu link aqui:</p>
+                    <form class="indique-form" id="indiqueForm" autocomplete="off">
+                        <label class="v-oculto" for="indiqueNome">Seu nome</label>
+                        <input id="indiqueNome" type="text" maxlength="40" placeholder="Seu nome">
+                        <button class="botao botao-secundario" type="submit">Gerar meu link</button>
+                    </form>
+                    <p class="indique-link" id="indiqueLink" hidden></p>
+                </details>
                 </div>
                 </div>
             </div>
@@ -694,6 +708,7 @@
         </section>
     </main>
 
+    <nav class="rodape-ramos" aria-label="Sites por ramo">Sites para <a href="./site-para-pizzaria/">pizzaria</a> · <a href="./site-para-barbearia/">barbearia</a> · <a href="./site-para-loja-de-roupa/">loja de roupa</a> · <a href="./site-para-salao-de-beleza/">salão de beleza</a> · <a href="./site-para-academia/">academia</a> · <a href="./site-para-clinica/">clínica</a> · <a href="./monte.html">monte o seu</a> · <a href="./teste.html">teste de 1 minuto</a></nav>
     <footer>© <span id="ano"></span> Samuel Mickael. Feito com dedicação. · <a href="https://github.com/SamueldevmI" target="_blank" rel="me noopener noreferrer">GitHub</a> · <a class="link-linkedin" href="https://www.linkedin.com/in/samuelrondon-dev/?utm_source=portfolio&utm_medium=footer&utm_campaign=site" target="_blank" rel="me noopener noreferrer" aria-label="LinkedIn de Samuel Mickael"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>LinkedIn</a> · <button type="button" id="botaoTour" class="link-rodape">Tour rápido</button>
     </footer>
     <a class="orcamento-fixo" href="#orcamento">Quero meu orçamento</a>
@@ -762,8 +777,10 @@
     </div>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-    <script src="estatisticas.js?v=20261002ficha"></script>
-    <script src="script.js?v=20261002ficha"></script>
+    <script src="estatisticas.js?v=20261002ficha" defer></script>
+    <script src="servicos.js?v=20261002" defer></script>
+    <script src="previa-celular.js?v=20261002" defer></script>
+    <script src="script.js?v=20261002ficha" defer></script>
 <script src="acabamento.js?v=20261002ficha" defer></script>
 <script src="ficha.js?v=20261002ficha" defer></script>
 <script src="idioma.js?v=20261002ficha" defer></script>
@@ -773,12 +790,11 @@
     (function () {
         var versao = "?v=20261002ficha";
         function carregar(arquivo) { var s = document.createElement("script"); s.src = arquivo + versao; document.body.appendChild(s); }
-        if (matchMedia("(pointer: coarse)").matches) {
-            // o pedido de "instalar app" pode chegar antes do mobile.js: fica guardado pra ele usar
-            addEventListener("beforeinstallprompt", function (e) { e.preventDefault(); window.pedidoInstalar = e; });
-            carregar("mobile.js");
-        }
-        function depois() { (window.requestIdleCallback || setTimeout)(function () { carregar("musica.js"); }); }
+        var toque = matchMedia("(pointer: coarse)").matches;
+        // o pedido de "instalar app" pode chegar antes do mobile.js: fica guardado pra ele usar
+        if (toque) addEventListener("beforeinstallprompt", function (e) { e.preventDefault(); window.pedidoInstalar = e; });
+        // o mobile.js também espera a página aparecer: assim não disputa o processador com a primeira tela
+        function depois() { (window.requestIdleCallback || setTimeout)(function () { if (toque) carregar("mobile.js"); carregar("musica.js"); }, { timeout: 1500 }); }
         if (document.readyState === "complete") depois(); else addEventListener("load", depois, { once: true });
     })();
 </script>

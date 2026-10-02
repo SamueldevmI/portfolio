@@ -41,3 +41,4 @@ jobs:
         with:
           node-version: "22"
       - run: node ferramentas/gerar-tema-azul.js --conferir
+      - run: node ferramentas/gerar-paginas-ramo.js --conferir

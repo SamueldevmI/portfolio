@@ -117,47 +117,16 @@
             <p class="pp-validade" id="ppValidade"></p>
         </div>
     </main>
-    <script src="estatisticas.js"></script>
+    <script src="estatisticas.js?v=20261002"></script>
+    <script src="servicos.js?v=20261002"></script>
     <script>
         (function () {
             "use strict";
             const WHATS = "5567996034205";
-            /* Os pacotes ficam aqui (e não no link) pra o link ficar curto. Mesmas chaves do gerador na prospeccao.html. */
-            const PACOTES = {
-                site: { nome: "Site de apresentação", itens: [
-                    ["Site com a cara do seu negócio", "logo, cores, fotos e textos seus"],
-                    ["Funciona no celular e no computador", "a maioria dos clientes vai abrir pelo celular"],
-                    ["Botão direto pro seu WhatsApp", "o cliente chama já sabendo do que se trata"],
-                    ["Endereço, mapa e horário de funcionamento", "chega de “onde fica?” e “tá aberto?”"],
-                    ["Coloco no ar pra você", "com um link pronto pra divulgar"],
-                ] },
-                pedidos: { nome: "Site + cardápio com pedido no WhatsApp", itens: [
-                    ["Tudo do site de apresentação", "cara do negócio, celular, WhatsApp, mapa e horário"],
-                    ["Cardápio/catálogo com fotos e preços", "fácil de trocar quando mudar algo"],
-                    ["Carrinho que manda o pedido pronto", "itens, quantidades, total e observação direto no seu WhatsApp"],
-                    ["Coloco no ar pra você", "com um link pronto pra divulgar"],
-                ] },
-                agenda: { nome: "Site + agendamento pelo WhatsApp", itens: [
-                    ["Tudo do site de apresentação", "cara do negócio, celular, WhatsApp, mapa e horário"],
-                    ["Lista de serviços com preço e duração", "o cliente já sabe quanto custa antes de chamar"],
-                    ["Pedido de horário pronto", "o cliente escolhe serviço, dia e horário e te manda tudo no WhatsApp"],
-                    ["Coloco no ar pra você", "com um link pronto pra divulgar"],
-                ] },
-                loja: { nome: "Loja online com pedido no WhatsApp", itens: [
-                    ["Tudo do site de apresentação", "cara da marca, celular, WhatsApp e informações"],
-                    ["Vitrine com filtro por categoria e busca", "a cliente acha a peça rapidinho"],
-                    ["Sacola que vira pedido no WhatsApp", "peças, tamanhos, total e observação, sem taxa por venda"],
-                    ["Favoritos e link por peça", "pra cliente salvar e mandar pra amiga"],
-                    ["Tabela de tamanhos e dúvidas frequentes", "menos pergunta repetida no direct"],
-                    ["Coloco no ar pra você", "com um link pronto pra divulgar"],
-                ] },
-            };
-            const EXTRAS = {
-                dominio: ["Endereço próprio (.com.br)", "configuro o domínio; o registro fica no seu nome (cerca de R$ 40/ano, pago direto no Registro.br)"],
-                google: ["Perfil no Google Meu Negócio", "pra aparecer no Google Maps quando procurarem seu ramo na região"],
-                kit: ["Kit de lançamento pro Instagram", "post e story anunciando o site"],
-                ajustes: ["30 dias de ajustes depois de entregar", "mudou preço, trocou foto? eu arrumo sem custo"],
-            };
+            /* Pacotes e extras vêm do servicos.js (mesma tabela do "Monte seu site" e da prospecção). */
+            const S = window.SERVICOS;
+            const PACOTES = Object.fromEntries(Object.entries(S.PACOTES).map(([k, p]) => [k, { nome: p.nome, itens: p.itens }]));
+            const EXTRAS = Object.fromEntries(Object.entries(S.EXTRAS).map(([k, x]) => [k, [x.nome, x.desc]]));
             const $ = (id) => document.getElementById(id);
             const q = new URLSearchParams(location.search);
             const para = (q.get("para") || "").trim().slice(0, 40);

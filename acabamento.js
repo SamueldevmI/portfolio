@@ -277,11 +277,12 @@
         }, { passive: true });
         /* o filtro por tecnologia esconde e mostra cards: refaz os pontos quando a contagem muda */
         new MutationObserver(function () {
+            if (visiveis().length === quantos) return; // só refaz quando o filtro muda quantos cards aparecem
             cancelAnimationFrame(quadro);
             quadro = requestAnimationFrame(montar);
         }).observe(lista, { subtree: true, attributes: true, attributeFilter: ["class"] });
         celular.addEventListener("change", montar);
-        montar();
+        (window.requestIdleCallback || setTimeout)(montar);
     })();
 
     /* ---------- "Não abriu o WhatsApp?" perto de qualquer botão que leve pra lá ----------
@@ -794,7 +795,7 @@
         }
         chipsFiltro.forEach((chip) => chip.addEventListener("click", () => requestAnimationFrame(mover)));
         window.addEventListener("resize", () => requestAnimationFrame(mover));
-        mover();
+        (window.requestIdleCallback || setTimeout)(mover);
     })();
 
     /* Sombra nas bordas do carrossel de projetos no celular, avisando que dá pra arrastar mais. */
