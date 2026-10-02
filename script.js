@@ -503,10 +503,12 @@ document.querySelectorAll(".botao").forEach((botao) => {
     faixa?.addEventListener("input", () => calcular(false));
     ticketEl?.addEventListener("input", () => calcular(false));
 
-    montar();
-    calcular("inicio");
+    // monta as cenas quando o processador estiver livre: a primeira tela aparece antes
+    let montado = false;
+    const montarJa = () => { if (montado) return; montado = true; montar(); calcular("inicio"); };
+    (window.requestIdleCallback || ((f) => setTimeout(f, 200)))(montarJa, { timeout: 1500 });
     let comecou = false;
-    const comecar = () => { if (comecou) return; comecou = true; if (semMovimento) { automatico = false; mostrar(0); } else rodarSozinho(0); };
+    const comecar = () => { if (comecou) return; comecou = true; montarJa(); if (semMovimento) { automatico = false; mostrar(0); } else rodarSozinho(0); };
     if ("IntersectionObserver" in window) {
         const obs = new IntersectionObserver((e) => { if (e.some((x) => x.isIntersecting)) { obs.disconnect(); comecar(); } });
         obs.observe(raiz);
@@ -710,12 +712,15 @@ if (!prefereMenosMovimento) {
         secoesFundo.forEach((secao) => obsFundo.observe(secao));
     }
 
-    let velocSuaveFundo = 0, ultimoYFundo = window.scrollY, ultimoTempoFundo = performance.now(), ultimaIntensidade = -1;
+    // a posição de rolagem vem do evento de scroll (ler scrollY dentro do timer forçava o navegador a recalcular a página)
+    let yAtualFundo = window.scrollY;
+    window.addEventListener("scroll", () => { yAtualFundo = window.scrollY; }, { passive: true });
+    let velocSuaveFundo = 0, ultimoYFundo = yAtualFundo, ultimoTempoFundo = performance.now(), ultimaIntensidade = -1;
     setInterval(() => {
         const agora = performance.now();
         const dt = Math.max(16, agora - ultimoTempoFundo);
-        const veloc = Math.min(1, (Math.abs(window.scrollY - ultimoYFundo) / dt * 16) / 40);
-        ultimoYFundo = window.scrollY;
+        const veloc = Math.min(1, (Math.abs(yAtualFundo - ultimoYFundo) / dt * 16) / 40);
+        ultimoYFundo = yAtualFundo;
         ultimoTempoFundo = agora;
         velocSuaveFundo += (veloc - velocSuaveFundo) * .18;
         const intensidade = Math.min(1, nivelBaseFundo + velocSuaveFundo * .4);
