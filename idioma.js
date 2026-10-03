@@ -1542,9 +1542,13 @@
 
     /* Nas páginas sem o estilo do portfólio principal (currículo, páginas de projeto), o botão
        ganha um estilo mínimo próprio em vez de depender da classe .botao-som do site. */
+    /* Mesma cara do botão de idioma da home (fundo carvão, borda e destaque vermelho-neon #ff2a3d),
+       pra ficar reconhecível em qualquer página do site, mesmo nas que não usam a paleta do portfólio. */
     function estiloProprio() {
         var s = document.createElement("style");
-        s.textContent = "#botaoIdioma{display:inline-flex;align-items:center;justify-content:center;min-width:36px;height:34px;padding:0 10px;border:1px solid rgba(0,0,0,.15);border-radius:8px;background:rgba(0,0,0,.04);color:inherit;font:600 .72rem 'DM Mono',monospace;letter-spacing:.04em;cursor:pointer}";
+        s.textContent = "#botaoIdioma{display:inline-flex;align-items:center;justify-content:center;min-width:36px;height:34px;padding:0 9px;border:1px solid rgba(255,255,255,.14);border-radius:8px;background:rgba(22,22,22,.72);color:rgba(255,255,255,.86);font:600 .72rem 'DM Mono',monospace;letter-spacing:.04em;cursor:pointer;transition:border-color .25s ease,color .25s ease,background .25s ease}"
+            + "#botaoIdioma:hover{border-color:#ff2a3d;color:#ff2a3d}"
+            + "#botaoIdioma:focus-visible{outline:2px solid #ff2a3d;outline-offset:2px}";
         document.head.appendChild(s);
     }
 
@@ -1570,14 +1574,25 @@
             return;
         }
         /* Páginas de projeto: cada uma tem seu próprio cabeçalho, então o botão entra no
-           <header> da página (perto do botão de tema, se houver um) com estilo mínimo próprio. */
+           <header> da página (perto do botão de tema, se houver um), com a mesma cara do botão
+           da home. Em headers com um wrapper interno (.miolo etc.), gruda antes do primeiro botão
+           de verdade em vez de cair fora da fileira de ações — senão fica flutuando torto. */
         var header = document.querySelector("header, nav");
         if (header) {
             estiloProprio();
             var botao3 = criarBotao(idioma);
             var botaoTemaProjeto = header.querySelector('[id*="tema" i], [class*="tema" i]');
-            if (botaoTemaProjeto) botaoTemaProjeto.insertAdjacentElement("beforebegin", botao3);
-            else header.appendChild(botao3);
+            if (botaoTemaProjeto) {
+                botaoTemaProjeto.insertAdjacentElement("beforebegin", botao3);
+            } else {
+                /* acha a fileira de verdade (o wrapper interno da logo, tipo .miolo.topo-in),
+                   não o <header> por fora — senão o botão cai fora da fileira de ações e fica torto */
+                var logoEl = header.querySelector("a.logo, .logo, .marca, header > b, header b");
+                var linha = (logoEl && logoEl.parentElement) || header;
+                var primeiroBotao = linha.querySelector("button");
+                if (primeiroBotao) primeiroBotao.insertAdjacentElement("beforebegin", botao3);
+                else linha.appendChild(botao3);
+            }
             return;
         }
         /* Último recurso: nenhum cabeçalho reconhecível na página, então o botão flutua
