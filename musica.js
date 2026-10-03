@@ -692,6 +692,7 @@
     // Sons que o mobile.js usa (gestos do celular). Só tocam com o áudio liberado.
     window.musicaSite = {
         pode: () => podeTocarEfeito(),
+        tocando: () => tocando, // a música de fundo está ligada (o filme do celular do topo só faz som assim)
         acorde() { if (!podeTocarEfeito()) return; const t = agoraMais(); acordeAgora().notas.forEach((n, i) => marimba(n + 12, t + i * 0.012, 0.8, efeitos)); sino(acordeAgora().notas[3] + 24, t + 0.05, 1.2, 0.4, efeitos); },
         arpejo() { if (!podeTocarEfeito()) return; const t = agoraMais(); const ns = acordeAgora().notas; [...ns, ...ns.map((n) => n + 12)].forEach((n, i) => marimba(n + 12, t + i * 0.07, 0.8, efeitos)); },
         subida() { if (!podeTocarEfeito()) return; const t = agoraMais(); [0, 3, 7, 12].forEach((d, i) => sino(72 + d, t + i * 0.09, 1.5, 0.6, efeitos)); },

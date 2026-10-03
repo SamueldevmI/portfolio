@@ -2023,34 +2023,63 @@ ${celular(ramo, marca)}
         if (!caixa) return;
         const ordem = Object.keys(RAMOS);
         const salvo = ler("portfolio-tipo-negocio");
-        let i = Math.max(0, ordem.indexOf(salvo)), pausado = false, visivel = true, relogio = 0, rolagem = 0;
+        const filme = !prefereMenosMovimento && window.FilmeCelular; // filme-celular.js: o cliente comprando de madrugada
+        let i = Math.max(0, ordem.indexOf(salvo)), pausado = false, visivel = true, relogio = 0, rolagem = 0, cena = null, geracao = 0;
+        const LEGENDA = "digite o nome do seu negócio aqui embaixo, ou toque no celular pra prévia completa 👆";
         caixa.innerHTML = `
             <div class="vitrine-ramos" role="group" aria-label="Ver exemplo de outro ramo">${ordem.map((k) => `<button type="button" data-ramo="${esc(k)}">${esc(RAMOS[k].rotulo)}</button>`).join("")}</div>
             <div class="vitrine-palco" role="button" tabindex="0" aria-label="Abrir a prévia do site deste exemplo"></div>
-            <p class="vitrine-legenda">toca no celular pra ver com o nome do <b>seu</b> negócio 👆</p>`;
+            <p class="vitrine-legenda">${LEGENDA}</p>
+            <label class="vitrine-nome"><span aria-hidden="true">✏️</span><input type="text" maxlength="40" placeholder="Digite o nome do seu negócio" autocomplete="organization" enterkeyhint="done" aria-label="Nome do seu negócio, pra ver no celular"></label>`;
         const palco = caixa.querySelector(".vitrine-palco");
+        const legenda = caixa.querySelector(".vitrine-legenda");
+        const campoNome = caixa.querySelector(".vitrine-nome input");
         const botoes = [...caixa.querySelectorAll(".vitrine-ramos button")];
+        campoNome.value = ler("portfolio-nome-negocio").trim().slice(0, 40);
+        const nomeAtual = () => campoNome.value.trim() || RAMOS[ordem[i]].exemplo;
         function mostrar(n, animar) {
             i = (n + ordem.length) % ordem.length;
             const ramo = ordem[i];
-            const nome = ler("portfolio-nome-negocio").trim().slice(0, 40);
-            palco.innerHTML = celular(ramo, nome || RAMOS[ramo].exemplo);
+            const minha = ++geracao;
+            cena?.cancelar();
+            palco.innerHTML = celular(ramo, nomeAtual());
             palco.dataset.ramo = ramo;
             if (animar && !prefereMenosMovimento) { palco.classList.remove("trocou"); void palco.offsetWidth; palco.classList.add("trocou"); }
             botoes.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.ramo === ramo)));
-            // desce devagar pelo mini-site e volta, pra mostrar que tem cardápio/serviços lá embaixo
             clearTimeout(rolagem);
             const site = palco.querySelector(".previa-site");
-            if (site && !prefereMenosMovimento) rolagem = setTimeout(() => site.scrollTo({ top: 170, behavior: "smooth" }), 1600);
+            if (filme) {
+                // terminou a história: passa pro próximo ramo quando a vitrine estiver livre (sem mouse, na tela)
+                const proximo = () => { if (minha !== geracao) return; if (pausado || !visivel || document.hidden) relogio = setTimeout(proximo, 600); else mostrar(i + 1, true); };
+                cena = filme.rodar(palco, ramo, { marca: nomeAtual, ativo: () => visivel && !document.hidden, legenda: (html) => { legenda.innerHTML = html; }, fim: proximo });
+            } else if (site && !prefereMenosMovimento) {
+                // desce devagar pelo mini-site e volta, pra mostrar que tem cardápio/serviços lá embaixo
+                rolagem = setTimeout(() => site.scrollTo({ top: 170, behavior: "smooth" }), 1600);
+            }
         }
         function agendar() {
             clearTimeout(relogio);
-            if (prefereMenosMovimento) return;
+            if (prefereMenosMovimento || filme) return;
             relogio = setTimeout(() => { if (!pausado && visivel && !document.hidden) mostrar(i + 1, true); agendar(); }, 4600);
         }
+        // o nome digitado aparece na hora no celular (site, conversa e notificações) e fica guardado pra prévia
+        let guardar = 0;
+        campoNome.addEventListener("input", () => {
+            const nome = nomeAtual();
+            const ini = iniciais(nome);
+            palco.querySelectorAll(".previa-topo b, .filme-zap-topo b, .filme-aviso b").forEach((el) => { el.textContent = nome; });
+            palco.querySelectorAll(".previa-logo, .filme-zap-logo, .filme-aviso-logo").forEach((el) => { el.textContent = ini; });
+            const url = palco.querySelector(".previa-url");
+            if (url && url.lastChild) url.lastChild.textContent = endereco(nome);
+            const marcaLegenda = legenda.querySelector("b[data-marca]");
+            if (marcaLegenda) marcaLegenda.textContent = nome;
+            clearTimeout(guardar);
+            guardar = setTimeout(() => { try { localStorage.setItem("portfolio-nome-negocio", campoNome.value.trim().slice(0, 40)); } catch (e) { /* sem armazenamento */ } }, 400);
+        });
+        campoNome.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); campoNome.blur(); } });
         botoes.forEach((b) => b.addEventListener("click", () => { mostrar(ordem.indexOf(b.dataset.ramo), true); agendar(); }));
-        palco.addEventListener("click", () => abrir(palco.dataset.ramo));
-        palco.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); abrir(palco.dataset.ramo); } });
+        palco.addEventListener("click", () => abrir(palco.dataset.ramo, campoNome.value));
+        palco.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); abrir(palco.dataset.ramo, campoNome.value); } });
         caixa.addEventListener("mouseenter", () => { pausado = true; });
         caixa.addEventListener("mouseleave", () => { pausado = false; });
         caixa.addEventListener("focusin", () => { pausado = true; });
