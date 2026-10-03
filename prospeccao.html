@@ -99,7 +99,7 @@
         <p class="eyebrow">SÓ PRA VOCÊ · NÃO APARECE NO SITE</p>
         <h1>Gerar link pra cliente</h1>
         <p>O cliente abre e vê o portfólio feito pra ele: o nome dele no topo, o comparador no ramo dele e a prévia de como ficaria o site dele.</p>
-        <p>Vai visitar pessoalmente? Use o <a href="apresentar.html" style="color:var(--acento-texto)">modo apresentação ▶</a> no seu celular.</p>
+        <p>Vai visitar pessoalmente? Use o <a href="apresentar.html" style="color:var(--acento-texto)">modo apresentação ▶</a> no seu celular. Quer ver o que está funcionando? <a href="painel.html" style="color:var(--acento-texto)">Meus números 📊</a></p>
 
         <form class="gl-caixa" id="gerador" autocomplete="off">
             <div class="gl-linha">
@@ -164,7 +164,7 @@
                     <label>Prazo (dias)<input type="number" id="gpPrazo" min="1" max="90" step="1" inputmode="numeric"></label>
                     <label>Valor vale até<input type="date" id="gpAte"></label>
                 </div>
-                <label>Pagamento<input type="text" id="gpPagamento" maxlength="80" value="50% pra começar e 50% na entrega"></label>
+                <label>Pagamento<input type="text" id="gpPagamento" maxlength="80" value="50% ao aprovar a prévia, 50% na entrega"></label>
                 <fieldset class="gl-extras">
                     <legend>Incluir também</legend>
                     <label class="gl-check"><input type="checkbox" value="ajustes"> 30 dias de ajustes</label>
@@ -178,6 +178,7 @@
                     <button type="button" class="botao botao-principal" id="gpWhats">Enviar no WhatsApp</button>
                     <button type="button" class="botao botao-secundario" id="gpCopiar">Copiar link</button>
                     <a class="botao botao-secundario" id="gpVer" href="proposta.html" target="_blank" rel="noopener">Ver como fica ↗</a>
+                    <a class="botao botao-secundario" id="gpContrato" href="contrato.html" target="_blank" rel="noopener">Contrato 📝</a>
                 </div>
             </form>
         </section>
@@ -546,6 +547,7 @@
                 const l = linkProposta();
                 $("gpLink").textContent = propostaPronta() ? l : "preencha o nome e o valor…";
                 $("gpVer").href = l + "&teste=1";
+                { const u = new URL(l); u.pathname = u.pathname.replace("proposta.html", "contrato.html"); $("gpContrato").href = u.toString(); }
             }
             // vindo de um card do CRM: preenche e rola até o formulário
             function prepararProposta(c) {

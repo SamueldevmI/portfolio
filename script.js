@@ -43,7 +43,11 @@ const LINK_PERSONALIZADO = (function () {
     if (para) window.ESTATISTICAS?.contar(`/link/${window.ESTATISTICAS.slug(para)}`, `abriu o link: ${para}`, true);
     return { para, ramo, previa: p.get("previa") === "1", slug: para && window.ESTATISTICAS ? window.ESTATISTICAS.slug(para) : "" };
 })();
-window.ESTATISTICAS?.contar(location.pathname || "/", "Portfólio", true);
+window.ESTATISTICAS?.contar("/", "Portfólio", true);
+// qualquer toque num botão que leve pro meu WhatsApp (o fim do funil no painel)
+document.addEventListener("click", (evento) => {
+    if (evento.target.closest('a[href*="wa.me/5567996034205"], [data-orcamento-tipo], .cmp-querer, .previa-quero')) window.ESTATISTICAS?.contar("/evento/whatsapp", "tocou no WhatsApp/orçamento", true);
+}, true);
 // quem veio pelo link personalizado e tocou em WhatsApp ou orçamento (o sinal mais quente pra prospecção)
 if (LINK_PERSONALIZADO && LINK_PERSONALIZADO.slug) document.addEventListener("click", (evento) => {
     if (evento.target.closest('a[href*="wa.me/"], [data-orcamento-tipo], .cmp-querer, .previa-quero, .botao-principal')) {

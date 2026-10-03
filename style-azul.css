@@ -2646,3 +2646,8 @@ html { cursor: var(--cursor-seta); }
 .filme-aviso small { align-self: flex-start; color: rgba(255,255,255,.55); font-size: .58rem; }
 .filme-resumo { margin: auto 0 0; padding: 8px 14px; border: 1px solid rgba(61,220,132,.55); border-radius: 999px; background: rgba(61,220,132,.16); color: #c6f7da; font-size: .74rem; font-weight: 700; text-align: center; opacity: 0; transform: scale(.9); transition: opacity .35s ease, transform .45s cubic-bezier(.2, 1.4, .4, 1); }
 .filme-resumo.chegou { opacity: 1; transform: none; }
+
+/* garantia: só paga se gostar da prévia */
+.hero-garantia { margin: 8px 0 0; color: var(--muted); font-size: .88rem; }
+.hero-garantia b { color: var(--sucesso); font-weight: 600; }
+.hero-garantia a { margin-left: 4px; color: var(--muted); text-decoration: underline; text-underline-offset: 3px; }
