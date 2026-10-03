@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,600&family=Quicksand:wght@500;700&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
+<script src="../../idioma.js?v=20261003proj" defer></script>
 <style>
 :root { --tinta: #241a33; --ouro: #e9c46a; --creme: #fff4fb; --marfim: #f4ead6; --lilas: #cdb4ff; --rosa: #ffb8d9; --vinho: #a3203f; }
 * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
@@ -214,9 +215,10 @@ body { margin: 0; background: #0e0816; color: #f6eeff; font: 500 16px/1.5 "Quick
 </main>
 <script>
     const folha = document.getElementById("folha"), botao = document.getElementById("trocar");
+    const t = (s) => (window.traduzir ? window.traduzir(s) : s);
     botao.addEventListener("click", () => {
         const clara = folha.classList.toggle("clara");
-        botao.textContent = clara ? "Versão escura" : "Versão clara (gasta menos tinta)";
+        botao.textContent = clara ? t("Versão escura") : t("Versão clara (gasta menos tinta)");
     });
     if (location.hash === "#clara") botao.click();
 </script>
