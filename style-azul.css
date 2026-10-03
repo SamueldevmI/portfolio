@@ -2651,3 +2651,11 @@ html { cursor: var(--cursor-seta); }
 .hero-garantia { margin: 8px 0 0; color: var(--muted); font-size: .88rem; }
 .hero-garantia b { color: var(--sucesso); font-weight: 600; }
 .hero-garantia a { margin-left: 4px; color: var(--muted); text-decoration: underline; text-underline-offset: 3px; }
+
+/* Velocidade: as seções abaixo da primeira tela só são montadas pelo navegador quando chegam perto
+   (content-visibility). A altura estimada evita que a barra de rolagem pule; "auto" lembra a real depois. */
+main > section.secao, main > .secao { content-visibility: auto; contain-intrinsic-size: auto 1100px; }
+@media (max-width: 720px) { main > section.secao, main > .secao { contain-intrinsic-size: auto 1600px; } }
+@media print { main > section.secao, main > .secao { content-visibility: visible; } }
+/* na primeira navegação por link interno, monta tudo de uma vez pra o pulo cair no lugar certo */
+html.secoes-montadas main > section.secao, html.secoes-montadas main > .secao { content-visibility: visible; }

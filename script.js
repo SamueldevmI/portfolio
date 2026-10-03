@@ -43,6 +43,17 @@ const LINK_PERSONALIZADO = (function () {
     if (para) window.ESTATISTICAS?.contar(`/link/${window.ESTATISTICAS.slug(para)}`, `abriu o link: ${para}`, true);
     return { para, ramo, previa: p.get("previa") === "1", slug: para && window.ESTATISTICAS ? window.ESTATISTICAS.slug(para) : "" };
 })();
+/* As seções de baixo usam content-visibility (o navegador só monta quando chegam perto), o que deixa a abertura
+   bem mais leve. Mas pulos por link interno precisam da altura real: no primeiro clique que leva pra uma seção,
+   monta tudo antes de rolar. Também vale pra quem já chega com #algo no endereço. */
+{
+    const montarSecoes = () => document.documentElement.classList.add("secoes-montadas");
+    if (location.hash.length > 1) montarSecoes();
+    document.addEventListener("click", (e) => {
+        if (e.target.closest('a[href^="#"], a[href^="./#"], [data-orcamento-tipo], .cmp-querer, .previa-quero, .cmp-testar')) montarSecoes();
+    }, true);
+    window.addEventListener("hashchange", montarSecoes);
+}
 window.ESTATISTICAS?.contar("/", "Portfólio", true);
 // qualquer toque num botão que leve pro meu WhatsApp (o fim do funil no painel)
 document.addEventListener("click", (evento) => {
