@@ -226,6 +226,36 @@
         });
     })();
 
+    /* ---------- Mais projetos como conquistas: desbloqueiam uma a uma quando a seção aparece ---------- */
+    (function conquistas() {
+        const lista = document.querySelector(".lista-conquistas");
+        if (!lista) return;
+        const todas = [...lista.querySelectorAll(".conquista")];
+        const feitas = todas.filter((li) => !li.classList.contains("conquista-bloqueada"));
+        const barra = document.querySelector(".conquistas-barra i");
+        const contador = document.getElementById("conquistasFeitas");
+        document.getElementById("conquistasTotal").textContent = todas.length;
+        const progresso = (n) => {
+            contador.textContent = n;
+            if (barra) barra.style.setProperty("--p", (n / todas.length).toFixed(3));
+        };
+        if (semMovimento || !("IntersectionObserver" in window)) { progresso(feitas.length); return; }
+        lista.classList.add("conquistas-animar");
+        progresso(0);
+        const NOTAS = [79, 84, 88, 91];
+        const olho = new IntersectionObserver((entradas) => {
+            if (!entradas.some((e) => e.isIntersecting)) return;
+            olho.disconnect();
+            feitas.forEach((li, n) => setTimeout(() => {
+                li.classList.add("desbloqueada", "desbloqueando");
+                progresso(n + 1);
+                const m = window.musicaSite; // "plim" só com a música do site ligada
+                if (m && m.tocando && m.tocando()) m.nota(NOTAS[n % NOTAS.length], .6);
+            }, 300 + n * 420));
+        }, { threshold: .2 });
+        olho.observe(lista);
+    })();
+
     /* ---------- Converse comigo ---------- */
     (function papo() {
         const raiz = document.getElementById("papo");

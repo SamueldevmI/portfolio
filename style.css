@@ -2645,3 +2645,44 @@ html { cursor: var(--cursor-seta); }
 .filme-aviso small { align-self: flex-start; color: rgba(255,255,255,.55); font-size: .58rem; }
 .filme-resumo { margin: auto 0 0; padding: 8px 14px; border: 1px solid rgba(61,220,132,.55); border-radius: 999px; background: rgba(61,220,132,.16); color: #c6f7da; font-size: .74rem; font-weight: 700; text-align: center; opacity: 0; transform: scale(.9); transition: opacity .35s ease, transform .45s cubic-bezier(.2, 1.4, .4, 1); }
 .filme-resumo.chegou { opacity: 1; transform: none; }
+
+/* ---------- Mais projetos como conquistas de videogame (ficha.js desbloqueia uma a uma) ---------- */
+.conquistas-progresso { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; margin: -16px 0 22px; }
+.conquistas-progresso p { margin: 0; color: var(--muted); font: .76rem "DM Mono", monospace; letter-spacing: .08em; text-transform: uppercase; }
+.conquistas-progresso b { color: var(--ouro); font-size: 1rem; }
+.conquistas-barra { flex: 1 1 200px; max-width: 420px; height: 10px; overflow: hidden; border: 1px solid rgba(var(--ouro-rgb), .45); border-radius: 999px; background: rgba(255,255,255,.05); }
+.conquistas-barra i { display: block; height: 100%; background: linear-gradient(90deg, #b9821f, var(--ouro)); box-shadow: 0 0 10px rgba(var(--ouro-rgb), .5); transform-origin: left; transform: scaleX(var(--p, .8)); transition: transform 1s cubic-bezier(.2, .8, .2, 1); }
+.lista-conquistas { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; border-top: 0; }
+.lista-conquistas li { border-bottom: 0; }
+.lista-conquistas .mini-projeto, .conquista-trava { position: relative; display: grid; grid-template-columns: 58px minmax(0, 1fr); align-items: start; gap: 14px; height: 100%; padding: 18px; overflow: hidden; border: 1px solid var(--line); border-radius: 16px; background: rgba(29,29,29,.55); color: var(--text); text-decoration: none; transition: border-color .25s ease, transform .25s ease, opacity .25s ease; }
+@media (hover: hover) {
+    .lista-conquistas .mini-projeto:hover, .conquista-trava:hover { border-color: rgba(var(--ouro-rgb), .6); color: var(--text); transform: translateY(-3px); }
+}
+.conquista-icone { display: grid; place-items: center; width: 58px; height: 58px; border-radius: 14px; background: radial-gradient(circle at 30% 25%, rgba(var(--ouro-rgb), .32), rgba(0,0,0,.45) 72%); box-shadow: inset 0 0 0 2px rgba(var(--ouro-rgb), .7), 0 0 18px rgba(var(--ouro-rgb), .22); font-size: 1.7rem; line-height: 1; transition: transform .55s cubic-bezier(.2, 1.6, .4, 1), opacity .3s ease, filter .3s ease; }
+.conquista-corpo { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.conquista-selo { color: var(--ouro); font: 500 .64rem "DM Mono", monospace; letter-spacing: .1em; text-transform: uppercase; transition: color .3s ease; }
+.conquista-titulo { font: 700 1.2rem/1.15 "Space Grotesk", sans-serif; letter-spacing: -.02em; }
+.lista-conquistas .mini-projeto-cabecalho { gap: 4px 12px; }
+.lista-conquistas .mini-projeto-nome { color: var(--muted); font-size: .86rem; }
+.conquista-xp { align-self: flex-start; padding: 3px 10px; border-radius: 999px; background: rgba(var(--ouro-rgb), .1); color: #f7d58c; font: .7rem/1.4 "DM Mono", monospace; }
+.lista-conquistas .mini-projeto-preco { margin-top: 4px; }
+.lista-conquistas .mini-projeto::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(105deg, transparent 35%, rgba(255,230,170,.16) 50%, transparent 65%); transform: translateX(-100%); }
+.conquista.desbloqueando .mini-projeto::after { animation: conquista-brilho 1s ease-out; }
+@keyframes conquista-brilho { to { transform: translateX(100%); } }
+.conquistas-animar .conquista:not(.desbloqueada):not(.conquista-bloqueada) .conquista-icone { opacity: .4; filter: grayscale(1); transform: scale(.75); }
+.conquistas-animar .conquista:not(.desbloqueada):not(.conquista-bloqueada) .conquista-selo { color: var(--muted); }
+.conquista-bloqueada { grid-column: 1 / -1; }
+.conquista-trava { border-style: dashed; border-color: rgba(255,255,255,.22); background: transparent; }
+.conquista-bloqueada .conquista-icone { filter: grayscale(1); box-shadow: inset 0 0 0 2px rgba(255,255,255,.2); }
+.conquista-bloqueada .conquista-selo { color: var(--muted); }
+.conquista-desbloquear { color: var(--acento-texto); font-weight: 700; }
+@media (max-width: 720px) {
+    .lista-conquistas { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+    .lista-conquistas .mini-projeto, .conquista-trava { grid-template-columns: 46px minmax(0, 1fr); gap: 12px; padding: 14px; }
+    .conquista-icone { width: 46px; height: 46px; border-radius: 12px; font-size: 1.35rem; }
+    .conquista-titulo { font-size: 1.08rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .conquistas-barra i, .conquista-icone, .lista-conquistas .mini-projeto, .conquista-trava { transition: none; }
+    .conquista.desbloqueando .mini-projeto::after { animation: none; }
+}
