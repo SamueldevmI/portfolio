@@ -461,12 +461,13 @@ const LOOKS = [
 ];
 
 /* ===== Utilidades ===== */
+const t = (s) => (window.traduzir ? window.traduzir(s) : s);
 const $ = (seletor) => document.querySelector(seletor);
 const produto = (id) => PRODUTOS.find((p) => p.id === id);
 const esc = (texto) => String(texto).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-const brl = (centavos) => (centavos / 100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }).replace(/ /g, " ");
+const brl = (centavos) => (centavos / 100).toLocaleString(document.documentElement.lang === "es" ? "es-ES" : "pt-BR", { style: "currency", currency: "BRL" }).replace(/ /g, " ");
 const normalizar = (texto) => String(texto).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
-const precoTexto = (p, qtd = 1) => (p.preco == null ? "Sob consulta" : brl(p.preco * qtd));
+const precoTexto = (p, qtd = 1) => (p.preco == null ? t("Sob consulta") : brl(p.preco * qtd));
 const codigo = (id) => "ES-" + String(PRODUTOS.findIndex((p) => p.id === id) + 1).padStart(2, "0");
 
 function ler(chave, padrao) {
@@ -492,7 +493,7 @@ const maxDe = (p) => (p && p.unica ? 1 : MAX_POR_ITEM);
 const fotosDe = (p) => p.fotos || (p.foto ? [p.foto] : []);
 
 /* peça vendida: em vez de botão morto, um pedido pra Elizabeth avisar se chegar algo parecido */
-const avisaParecida = (p) => `<a class="botao botao-cheio botao-avisa" href="${linkWhats(`Oi! Vi que ${p.nome} (${codigo(p.id)}) já tem dona 🕯 Me avisa se chegar algo parecido?`)}" target="_blank" rel="noopener noreferrer">Me avisa se chegar parecida</a>`;
+const avisaParecida = (p) => `<a class="botao botao-cheio botao-avisa" href="${linkWhats(`Oi! Vi que ${p.nome} (${codigo(p.id)}) já tem dona 🕯 Me avisa se chegar algo parecido?`)}" target="_blank" rel="noopener noreferrer">${t("Me avisa se chegar parecida")}</a>`;
 
 /* peça única que já foi vendida não pode ir pra sacola; caixa e drop secreto ficam fora da vitrine */
 const disponivel = (p) => !p.vendida;
@@ -535,23 +536,25 @@ const contadorEl = $("#contadorSacola");
 const campoNome = $("#campoNome");
 const campoObs = $("#campoObs");
 const campoEntrega = $("#campoEntrega");
-campoEntrega.innerHTML = '<option value="">Escolher depois, no WhatsApp</option>'
-    + LOJA.entregas.map((e) => `<option value="${e.id}">${esc(e.nome)}${e.taxa ? " · " + brl(e.taxa) : " · sem custo"}</option>`).join("");
+campoEntrega.innerHTML = `<option value="">${t("Escolher depois, no WhatsApp")}</option>`
+    + LOJA.entregas.map((e) => `<option value="${e.id}">${esc(t(e.nome))}${e.taxa ? " · " + brl(e.taxa) : " · " + t("sem custo")}</option>`).join("");
 campoEntrega.value = LOJA.entregas.some((e) => e.id === ler(CHAVE_ENTREGA, "")) ? ler(CHAVE_ENTREGA, "") : "";
 const previaEl = $("#previa");
 const enviarEl = $("#enviarZap");
 const notaEl = $("#nota");
 const avisosEl = $("#avisos");
-const NOTA_PADRAO = notaEl.textContent;
+/* Fixo em português (não lido do DOM): lido do elemento ele poderia já estar traduzido quando
+   este script roda, e aí t() não acharia a chave pra traduzir de volta ao trocar de idioma. */
+const NOTA_PADRAO = "No WhatsApp a gente confirma o estoque, combina a entrega e manda o Pix ou o link do cartão. Este site não pede nem guarda dado de pagamento.";
 
 document.querySelectorAll("[data-nome-loja]").forEach((el) => { el.textContent = LOJA.nome; });
 campoNome.value = ler(CHAVE_NOME, "");
 
 /* ===== Catálogo na tela ===== */
 function tamanhosHtml(p, prefixo) {
-    if (!p.tam) return `<p class="tam-unico">Tamanho único</p>`;
-    const opcoes = p.tam.map((t) => `<label class="tam"><input type="radio" name="${prefixo}-${p.id}" value="${t}"><span>${t}</span></label>`).join("");
-    return `<fieldset class="tamanhos"><legend>Tamanho</legend>${opcoes}</fieldset><p class="dica" role="alert" hidden>Escolha um tamanho.</p>`;
+    if (!p.tam) return `<p class="tam-unico">${t("Tamanho único")}</p>`;
+    const opcoes = p.tam.map((tam) => `<label class="tam"><input type="radio" name="${prefixo}-${p.id}" value="${tam}"><span>${tam}</span></label>`).join("");
+    return `<fieldset class="tamanhos"><legend>${t(p.rotulo || "Tamanho")}</legend>${opcoes}</fieldset><p class="dica" role="alert" hidden>${t("Escolha um tamanho.")}</p>`;
 }
 
 const romano = (n) => [[10, "X"], [9, "IX"], [5, "V"], [4, "IV"], [1, "I"]].reduce((r, [v, l]) => { while (n >= v) { r += l; n -= v; } return r; }, "");
@@ -560,20 +563,20 @@ function cardHtml(p, indice) {
     const numero = romano(PRODUTOS.indexOf(p) + 1);
     return `<li class="card${p.vendida ? " vendida" : ""}" data-id="${p.id}" style="--i:${indice}">
         <span class="card-num" aria-hidden="true">${numero}</span>
-        <button class="card-imagem tom-${p.tom}${fotosDe(p).length > 1 ? " duas-fotos" : ""}" type="button" data-abrir="${p.id}" aria-label="Ver detalhes de ${esc(p.nome)}${p.novo ? ", peça nova" : ""}${p.unica ? ", peça única" : ""}${p.vendida ? ", já vendida" : ""}">
+        <button class="card-imagem tom-${p.tom}${fotosDe(p).length > 1 ? " duas-fotos" : ""}" type="button" data-abrir="${p.id}" aria-label="${t("Ver detalhes de")} ${esc(t(p.nome))}${p.novo ? ", " + t("peça nova") : ""}${p.unica ? ", " + t("peça única") : ""}${p.vendida ? ", " + t("já vendida") : ""}">
             ${arte(p)}
             ${fotosDe(p).length > 1 && !p.vendida ? `<img class="foto foto-2" src="${esc(fotosDe(p)[1])}" alt="" width="400" height="400" loading="lazy" decoding="async">` : ""}
-            ${p.vendida ? '<span class="veu" aria-hidden="true"><b>já tem dona</b><small>🕯</small></span>' : p.novo ? '<span class="selo-novo">Novidade</span>' : ""}
+            ${p.vendida ? `<span class="veu" aria-hidden="true"><b>${t("já tem dona")}</b><small>🕯</small></span>` : p.novo ? `<span class="selo-novo">${t("Novidade")}</span>` : ""}
         </button>
         ${favBotao(p)}
         <div class="card-corpo">
-            <p class="card-cat">${esc(p.cat)}</p>
-            <h3 class="card-nome"><button type="button" class="card-nome-botao" data-abrir="${p.id}">${esc(p.nome)}</button></h3>
-            <p class="card-resumo">${esc(p.resumo)}</p>
-            ${p.unica ? '<p class="selo-unica">🕯 Peça única<span class="selo-extra"> · só existe uma</span></p>' : ""}
+            <p class="card-cat">${esc(t(p.cat))}</p>
+            <h3 class="card-nome"><button type="button" class="card-nome-botao" data-abrir="${p.id}">${esc(t(p.nome))}</button></h3>
+            <p class="card-resumo">${esc(t(p.resumo))}</p>
+            ${p.unica ? `<p class="selo-unica">🕯 ${t("Peça única")}<span class="selo-extra"> · ${t("só existe uma")}</span></p>` : ""}
             <p class="card-preco">${precoTexto(p)}</p>
             ${p.vendida ? "" : tamanhosHtml(p, "tam")}
-            ${p.vendida ? avisaParecida(p) : `<button class="botao botao-cheio" type="button" data-add="${p.id}">Pôr na sacola</button>`}
+            ${p.vendida ? avisaParecida(p) : `<button class="botao botao-cheio" type="button" data-add="${p.id}">${t("Pôr na sacola")}</button>`}
         </div>
     </li>`;
 }
@@ -589,26 +592,26 @@ function produtosVisiveis() {
             if (p.preco == null || (de != null && p.preco < de) || (ate != null && p.preco > ate)) return false;
         }
         if (filtro.tam && !(filtro.tam === "unico" ? !p.tam : p.tam && p.tam.includes(filtro.tam))) return false;
-        return !q || normalizar(`${p.nome} ${p.cat} ${p.resumo} ${p.busca}`).includes(q);
+        return !q || normalizar(`${p.nome} ${t(p.nome)} ${p.cat} ${t(p.cat)} ${p.resumo} ${t(p.resumo)} ${p.busca}`).includes(q);
     });
     if (filtro.ordem === "menor") lista.sort((a, b) => (a.preco ?? Infinity) - (b.preco ?? Infinity));
     if (filtro.ordem === "maior") lista.sort((a, b) => (b.preco ?? -1) - (a.preco ?? -1));
-    if (filtro.ordem === "nome") lista.sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR"));
+    if (filtro.ordem === "nome") lista.sort((a, b) => t(a.nome).localeCompare(t(b.nome), document.documentElement.lang === "es" ? "es-ES" : "pt-BR"));
     return lista;
 }
 
 function renderChips() {
     const nomes = ["todos", ...CATEGORIAS];
     const chipEstilo = filtro.estilo
-        ? `<button type="button" class="chip chip-estilo" data-limpar-estilo aria-label="Tirar o filtro de estilo ${esc(estilo(filtro.estilo).nome)}">✦ ${esc(estilo(filtro.estilo).nome)}<span aria-hidden="true">×</span></button>`
+        ? `<button type="button" class="chip chip-estilo" data-limpar-estilo aria-label="${t("Tirar o filtro de estilo")} ${esc(t(estilo(filtro.estilo).nome))}">✦ ${esc(t(estilo(filtro.estilo).nome))}<span aria-hidden="true">×</span></button>`
         : "";
     chipsEl.innerHTML = chipEstilo + nomes.map((nome) => {
         const vitrine = PRODUTOS.filter(naVitrine);
         const total = nome === "todos" ? vitrine.length : vitrine.filter((p) => p.cat === nome).length;
-        const rotulo = nome === "todos" ? "Tudo" : nome;
+        const rotulo = nome === "todos" ? t("Tudo") : t(nome);
         return `<button type="button" class="chip" data-cat="${nome}" aria-pressed="${filtro.cat === nome}">${rotulo}<small>${total}</small></button>`;
     }).join("") + (favoritos.length || filtro.cat === "favoritos"
-        ? `<button type="button" class="chip chip-fav" data-cat="favoritos" aria-pressed="${filtro.cat === "favoritos"}">${CORACAO_ICONE}Favoritos<small>${favoritos.length}</small></button>`
+        ? `<button type="button" class="chip chip-fav" data-cat="favoritos" aria-pressed="${filtro.cat === "favoritos"}">${CORACAO_ICONE}${t("Favoritos")}<small>${favoritos.length}</small></button>`
         : "");
 }
 
@@ -617,7 +620,7 @@ function renderGrade() {
     grade.innerHTML = lista.map(cardHtml).join("");
     grade.hidden = lista.length === 0;
     vazioEl.hidden = lista.length !== 0;
-    contagemEl.textContent = (lista.length === 1 ? "1 peça" : lista.length + " peças") + (filtro.estilo ? ` · ${estilo(filtro.estilo).nome}` : "");
+    contagemEl.textContent = (lista.length === 1 ? t("1 peça") : lista.length + " " + t("peças")) + (filtro.estilo ? ` · ${t(estilo(filtro.estilo).nome)}` : "");
     contagemEl.dataset.total = lista.length;
     renderEstilos();
 }
@@ -630,9 +633,9 @@ function renderEstilos() {
         const artes = e.artes.map((id) => `<span class="estilo-arte tom-${produto(id).tom}">${arte(produto(id))}</span>`).join("");
         return `<li><button type="button" class="estilo estilo-${e.id}" data-estilo="${e.id}" aria-pressed="${filtro.estilo === e.id}">
             <span class="estilo-foto" aria-hidden="true">${artes}</span>
-            <span class="estilo-nome">${esc(e.nome)}</span>
-            <span class="estilo-desc">${esc(e.desc)}</span>
-            <span class="estilo-total">${total} peças →</span>
+            <span class="estilo-nome">${esc(t(e.nome))}</span>
+            <span class="estilo-desc">${esc(t(e.desc))}</span>
+            <span class="estilo-total">${total} ${t("peças")} →</span>
         </button></li>`;
     }).join("");
 }
@@ -650,15 +653,15 @@ const lookPrecoTotal = (look) => look.itens.reduce((soma, i) => soma + (produto(
 
 function lookHtml(look) {
     const imagens = look.itens.map((i) => `<span class="look-arte tom-${produto(i.id).tom}">${arte(produto(i.id))}</span>`).join("");
-    const nomes = look.itens.map((i) => produto(i.id).nome + (i.tam ? ` (${i.tam})` : "")).join(" + ");
+    const nomes = look.itens.map((i) => t(produto(i.id).nome) + (i.tam ? ` (${i.tam})` : "")).join(" + ");
     return `<li class="look-card">
         <div class="look-imagens">${imagens}</div>
         <div class="look-corpo">
-            <h3>${esc(look.nome)}</h3>
-            <p class="look-desc">${esc(look.desc)}</p>
+            <h3>${esc(t(look.nome))}</h3>
+            <p class="look-desc">${esc(t(look.desc))}</p>
             <p class="look-pecas">${esc(nomes)}</p>
             <p class="card-preco">${brl(lookPrecoTotal(look))}</p>
-            <button class="botao botao-cheio" type="button" data-look-add="${look.id}">Pôr o look inteiro na sacola</button>
+            <button class="botao botao-cheio" type="button" data-look-add="${look.id}">${t("Pôr o look inteiro na sacola")}</button>
         </div>
     </li>`;
 }
@@ -693,8 +696,8 @@ function adicionarLook(lookId, origem) {
     });
     renderSacola();
     balancarSacola();
-    const rotulo = `✦ Look no caldeirão: ${look.itens.length} peças${algumNoMaximo ? " (uma já estava na sacola e não dá pra pôr mais)" : ""}`;
-    avisar(rotulo, { rotulo: "Ver sacola", fazer: () => dlgSacola.showModal() });
+    const rotulo = `✦ ${t("Look no caldeirão:")} ${look.itens.length} ${t("peças")}${algumNoMaximo ? " (" + t("uma já estava na sacola e não dá pra pôr mais") + ")" : ""}`;
+    avisar(rotulo, { rotulo: t("Ver sacola"), fazer: () => dlgSacola.showModal() });
 }
 
 /* ===== Peça em detalhe ===== */
@@ -702,21 +705,21 @@ function abrirProduto(id) {
     const p = produto(id);
     if (!p) return;
     dlgProduto.innerHTML = `<div class="dp">
-        <button class="fechar" type="button" data-fechar aria-label="Fechar">×</button>
+        <button class="fechar" type="button" data-fechar aria-label="${t("Fechar")}">×</button>
         ${galeriaHtml(p)}
         <div class="dp-info" data-escopo>
-            <p class="card-cat">${esc(p.cat)} · ${codigo(p.id)}</p>
-            <h2 id="produtoTitulo">${esc(p.nome)}</h2>
+            <p class="card-cat">${esc(t(p.cat))} · ${codigo(p.id)}</p>
+            <h2 id="produtoTitulo">${esc(t(p.nome))}</h2>
             <p class="card-preco">${precoTexto(p)}</p>
             <p class="dp-desc">${esc(p.desc)}</p>
-            <ul class="dp-itens">${p.itens.map((t) => `<li>${esc(t)}</li>`).join("")}</ul>
-            ${p.unica ? `<p class="selo-unica">🕯 Peça única · ${p.vendida ? "essa já encontrou a dona dela" : "só existe uma"}</p>` : ""}
+            <ul class="dp-itens">${p.itens.map((item) => `<li>${esc(item)}</li>`).join("")}</ul>
+            ${p.unica ? `<p class="selo-unica">🕯 ${t("Peça única")} · ${p.vendida ? t("essa já encontrou a dona dela") : t("só existe uma")}</p>` : ""}
             ${p.vendida ? "" : tamanhosHtml(p, "dlg")}
-            ${p.vendida ? avisaParecida(p) : `<button class="botao botao-cheio" type="button" data-add="${p.id}">Pôr na sacola</button>`}
+            ${p.vendida ? avisaParecida(p) : `<button class="botao botao-cheio" type="button" data-add="${p.id}">${t("Pôr na sacola")}</button>`}
             <div class="dp-extras">
                 ${favBotao(p, "fav-texto")}
-                ${p.vendida ? "" : `<a class="link-fraco" href="${linkWhats(`Oi! Quais são as medidas da peça ${p.nome} (${codigo(p.id)})? 🖤`)}" target="_blank" rel="noopener noreferrer">Pedir as medidas</a>`}
-                <button class="link-fraco" type="button" data-compartilhar="${p.id}">Compartilhar</button>
+                ${p.vendida ? "" : `<a class="link-fraco" href="${linkWhats(`${t("Oi! Quais são as medidas da peça")} ${t(p.nome)} (${codigo(p.id)})? 🖤`)}" target="_blank" rel="noopener noreferrer">${t("Pedir as medidas")}</a>`}
+                <button class="link-fraco" type="button" data-compartilhar="${p.id}">${t("Compartilhar")}</button>
             </div>
             ${combinaHtml(p)}
         </div>
@@ -736,7 +739,7 @@ const linkWhats = (texto) => `https://wa.me/${LOJA.whatsapp.replace(/\D/g, "")}?
 function galeriaHtml(p) {
     const fotos = fotosDe(p);
     if (fotos.length < 2) return `<div class="dp-imagem tom-${p.tom}" role="img" aria-label="${esc(p.alt)}">${arte(p)}</div>`;
-    return `<div class="dp-imagem dp-galeria tom-${p.tom}" role="group" aria-label="Fotos de ${esc(p.nome)}">
+    return `<div class="dp-imagem dp-galeria tom-${p.tom}" role="group" aria-label="${t("Fotos de")} ${esc(t(p.nome))}">
         <div class="dp-trilho">${fotos.map((f, k) => `<img class="foto" src="${esc(f)}" alt="${k ? "" : esc(p.alt)}" width="400" height="400" loading="${k ? "lazy" : "eager"}" decoding="async">`).join("")}</div>
         <span class="dp-pontos" aria-hidden="true">${fotos.map((_, k) => `<i${k ? "" : ' class="ativo"'}></i>`).join("")}</span>
     </div>`;
@@ -748,7 +751,7 @@ function combinaHtml(p) {
         .sort((a, b) => (a.cat === p.cat) - (b.cat === p.cat))
         .slice(0, 3);
     if (!lista.length) return "";
-    return `<div class="dp-combina"><p>Combina com</p><ul>${lista.map((x) => `<li><button type="button" data-abrir="${x.id}"><span class="dp-combina-arte tom-${x.tom}">${arte(x)}</span><span>${esc(x.nome)}</span><b>${precoTexto(x)}</b></button></li>`).join("")}</ul></div>`;
+    return `<div class="dp-combina"><p>${t("Combina com")}</p><ul>${lista.map((x) => `<li><button type="button" data-abrir="${x.id}"><span class="dp-combina-arte tom-${x.tom}">${arte(x)}</span><span>${esc(t(x.nome))}</span><b>${precoTexto(x)}</b></button></li>`).join("")}</ul></div>`;
 }
 
 /* ===== Link de cada peça: eclipse-studio/#peca-espartilho abre a peça direto ===== */
@@ -763,14 +766,14 @@ async function compartilhar(id) {
     const p = produto(id);
     const url = linkDaPeca(id);
     if (navigator.share) {
-        try { await navigator.share({ title: `${p.nome} · ${LOJA.nome}`, text: p.preco == null ? `${p.nome} na ${LOJA.nome}` : `${p.nome} por ${brl(p.preco)} na ${LOJA.nome}`, url }); return; }
+        try { await navigator.share({ title: `${t(p.nome)} · ${LOJA.nome}`, text: p.preco == null ? `${t(p.nome)} na ${LOJA.nome}` : `${t(p.nome)} ${t("por")} ${brl(p.preco)} na ${LOJA.nome}`, url }); return; }
         catch (erro) { if (erro.name === "AbortError") return; }
     }
     try {
         await navigator.clipboard.writeText(url);
-        avisar("Link da peça copiado. É só colar na conversa.");
+        avisar(t("Link da peça copiado. É só colar na conversa."));
     } catch (erro) {
-        prompt("Copie o link da peça:", url);
+        prompt(t("Copie o link da peça:"), url);
     }
 }
 
@@ -784,7 +787,7 @@ function alternarFavorito(id) {
     if (naVitrineDeFavoritos && !favoritos.length) filtro.cat = "todos";
     renderChips();
     if (naVitrineDeFavoritos) renderGrade();
-    if (agora) avisar(`♥ ${produto(id).nome} nos favoritos`, dlgProduto.open ? null : { rotulo: "Ver favoritos", fazer: verFavoritos });
+    if (agora) avisar(`♥ ${t(produto(id).nome)} ${t("nos favoritos")}`, dlgProduto.open ? null : { rotulo: t("Ver favoritos"), fazer: verFavoritos });
 }
 
 function verFavoritos() {
@@ -809,49 +812,49 @@ function renderBarraSacola(vazia, quantidade) {
     barraSacola.hidden = vazia;
     document.body.classList.toggle("tem-sacola", !vazia);
     if (vazia) return;
-    $("#barraQtd").textContent = quantidade === 1 ? "1 peça" : quantidade + " peças";
+    $("#barraQtd").textContent = quantidade === 1 ? t("1 peça") : quantidade + " " + t("peças");
     $("#barraTotal").textContent = brl(totalCentavos() + taxaEntrega()) + (temSobConsulta() ? " +" : "");
-    barraSacola.setAttribute("aria-label", `Sacola: ${$("#barraQtd").textContent}, ${$("#barraTotal").textContent}. Fechar pedido`);
+    barraSacola.setAttribute("aria-label", `${t("Sacola:")} ${$("#barraQtd").textContent}, ${$("#barraTotal").textContent}. ${t("Fechar pedido")}`);
 }
-const rotuloTam = (i) => (i.tam ? `${produto(i.id).rotulo || "Tamanho"} ${i.tam}` : "Tamanho único");
+const rotuloTam = (i) => (i.tam ? `${t(produto(i.id).rotulo || "Tamanho")} ${i.tam}` : t("Tamanho único"));
 
 function montarMensagem() {
-    const linhas = [`Oi! 🔮 Quero encomendar esta poção na ${LOJA.nome} 🖤`, "", "*Ingredientes:*"];
+    const linhas = [`${t("Oi! 🔮 Quero encomendar esta poção na")} ${LOJA.nome} 🖤`, "", `*${t("Ingredientes:")}*`];
     sacola.forEach((i) => {
         const p = produto(i.id);
-        linhas.push(`• ${i.qtd}x ${p.nome}${i.tam ? " (" + i.tam + ")" : ""} — ${p.preco == null ? "valor a combinar" : brl(p.preco * i.qtd)}`);
+        linhas.push(`• ${i.qtd}x ${t(p.nome)}${i.tam ? " (" + i.tam + ")" : ""} — ${p.preco == null ? t("valor a combinar") : brl(p.preco * i.qtd)}`);
     });
     const entrega = entregaEscolhida();
-    if (entrega) linhas.push("", `Entrega: ${entrega.nome}${entrega.taxa === 0 ? "" : taxaEntrega() ? ` (taxa ${brl(taxaEntrega())})` : " (frete grátis ✦)"}`);
-    linhas.push("", `*Total estimado: ${brl(totalCentavos() + taxaEntrega())}*${temSobConsulta() ? " + itens a combinar" : ""}`);
+    if (entrega) linhas.push("", `${t("Entrega:")} ${t(entrega.nome)}${entrega.taxa === 0 ? "" : taxaEntrega() ? ` (${t("taxa")} ${brl(taxaEntrega())})` : ` (${t("frete grátis")} ✦)`}`);
+    linhas.push("", `*${t("Total estimado:")} ${brl(totalCentavos() + taxaEntrega())}*${temSobConsulta() ? " " + t("+ itens a combinar") : ""}`);
     const nome = campoNome.value.trim();
     const obs = campoObs.value.trim();
-    if (nome) linhas.push(`Nome: ${nome}`);
-    if (obs) linhas.push(`Obs.: ${obs}`);
-    if (ler(CHAVE_GATO, false)) linhas.push(`🐈‍⬛ Achei o gato preto no site: código ${LOJA.segredo.codigo}`);
-    if (ler("es-arcanos", { cartas: [] }).cartas?.length >= 4) linhas.push(`🃏 Completei a coleção de arcanos: código ${LOJA.colecao.codigo}`);
-    linhas.push("", "Podemos combinar a entrega e o pagamento por aqui?");
-    if (LOJA.demo) linhas.push("", "_(Pedido de teste da prévia do site)_");
+    if (nome) linhas.push(`${t("Nome:")} ${nome}`);
+    if (obs) linhas.push(`${t("Obs.:")} ${obs}`);
+    if (ler(CHAVE_GATO, false)) linhas.push(`🐈‍⬛ ${t("Achei o gato preto no site: código")} ${LOJA.segredo.codigo}`);
+    if (ler("es-arcanos", { cartas: [] }).cartas?.length >= 4) linhas.push(`🃏 ${t("Completei a coleção de arcanos: código")} ${LOJA.colecao.codigo}`);
+    linhas.push("", t("Podemos combinar a entrega e o pagamento por aqui?"));
+    if (LOJA.demo) linhas.push("", t("_(Pedido de teste da prévia do site)_"));
     return linhas.join("\n");
 }
 
 function itemHtml(i) {
     const p = produto(i.id);
-    const nomeCompleto = `${p.nome}, ${rotuloTam(i)}`;
+    const nomeCompleto = `${t(p.nome)}, ${rotuloTam(i)}`;
     return `<li class="item" data-chave="${chaveDe(i)}">
         <span class="item-arte tom-${p.tom}">${arte(p)}</span>
         <div class="item-info">
-            <p class="item-nome">${esc(p.nome)}</p>
-            <p class="item-tam">${rotuloTam(i)} · ${precoTexto(p)}${p.unica ? " · peça única" : ""}</p>
+            <p class="item-nome">${esc(t(p.nome))}</p>
+            <p class="item-tam">${rotuloTam(i)} · ${precoTexto(p)}${p.unica ? " · " + t("peça única") : ""}</p>
             <div class="qtd">
-                <button type="button" data-menos aria-label="Diminuir a quantidade: ${esc(nomeCompleto)}"${i.qtd <= 1 ? " disabled" : ""}>−</button>
-                <span class="qtd-valor" aria-label="Quantidade">${i.qtd}</span>
-                <button type="button" data-mais aria-label="Aumentar a quantidade: ${esc(nomeCompleto)}"${i.qtd >= maxDe(p) ? " disabled" : ""}>+</button>
+                <button type="button" data-menos aria-label="${t("Diminuir a quantidade:")} ${esc(nomeCompleto)}"${i.qtd <= 1 ? " disabled" : ""}>−</button>
+                <span class="qtd-valor" aria-label="${t("Quantidade")}">${i.qtd}</span>
+                <button type="button" data-mais aria-label="${t("Aumentar a quantidade:")} ${esc(nomeCompleto)}"${i.qtd >= maxDe(p) ? " disabled" : ""}>+</button>
             </div>
         </div>
         <div class="item-lado">
             <strong>${precoTexto(p, i.qtd)}</strong>
-            <button type="button" class="item-remover" data-remover aria-label="Tirar da sacola: ${esc(nomeCompleto)}">Tirar</button>
+            <button type="button" class="item-remover" data-remover aria-label="${t("Tirar da sacola:")} ${esc(nomeCompleto)}">${t("Tirar")}</button>
         </div>
     </li>`;
 }
@@ -874,13 +877,13 @@ function renderSacola() {
     if (temSobConsulta()) totalEl.insertAdjacentHTML("beforeend", "<small>+ itens a combinar</small>");
     const falta = LOJA.freteGratis - totalCentavos();
     const entrega = entregaEscolhida();
-    freteEl.textContent = falta <= 0 ? "✦ Frete grátis na entrega em Campo Grande"
-        : entrega && entrega.taxa ? `Entrega no ${entrega.nome}: ${brl(entrega.taxa)}. Faltam ${brl(falta)} pro frete grátis ✦`
-        : entrega ? "Retirada sem custo ✦" : `Faltam ${brl(falta)} pro frete grátis ✦`;
+    freteEl.textContent = falta <= 0 ? `✦ ${t("Frete grátis na entrega em Campo Grande")}`
+        : entrega && entrega.taxa ? `${t("Entrega no")} ${t(entrega.nome)}: ${brl(entrega.taxa)}. ${t("Faltam")} ${brl(falta)} ${t("pro frete grátis")} ✦`
+        : entrega ? `${t("Retirada sem custo")} ✦` : `${t("Faltam")} ${brl(falta)} ${t("pro frete grátis")} ✦`;
     renderBarraSacola(vazia, quantidade);
     contadorEl.hidden = vazia;
     contadorEl.textContent = quantidade;
-    botaoSacola.setAttribute("aria-label", vazia ? "Abrir sacola, vazia" : `Abrir sacola, ${quantidade} ${quantidade === 1 ? "peça" : "peças"}`);
+    botaoSacola.setAttribute("aria-label", vazia ? t("Abrir sacola, vazia") : `${t("Abrir sacola,")} ${quantidade} ${quantidade === 1 ? t("peça") : t("peças")}`);
     atualizarLinkPedido();
     guardar(CHAVE_SACOLA, sacola);
 }
@@ -925,7 +928,7 @@ function adicionar(id, escopo) {
     const existente = sacola.find((i) => i.id === id && i.tam === tam);
     if (existente && existente.qtd >= maxDe(p)) {
         if (dlgProduto.open) dlgProduto.close(); // o aviso fica atrás de um diálogo aberto
-        avisar(p.unica ? `${p.nome} é peça única: ela já está na sua sacola 🖤` : `Máximo de ${MAX_POR_ITEM} por peça. Pra mais, combine no WhatsApp.`, { rotulo: "Ver sacola", fazer: () => dlgSacola.showModal() });
+        avisar(p.unica ? `${t(p.nome)} ${t("é peça única: ela já está na sua sacola 🖤")}` : `${t("Máximo de")} ${MAX_POR_ITEM} ${t("por peça. Pra mais, combine no WhatsApp.")}`, { rotulo: t("Ver sacola"), fazer: () => dlgSacola.showModal() });
         return;
     }
     if (existente) existente.qtd += 1; else sacola.push({ id, tam, qtd: 1 });
@@ -934,7 +937,7 @@ function adicionar(id, escopo) {
     if (dlgProduto.open) dlgProduto.close();
     renderSacola();
     balancarSacola();
-    avisar(`✦ ${p.nome}${tam ? " (" + tam + ")" : ""} caiu no caldeirão`, { rotulo: "Ver sacola", fazer: () => dlgSacola.showModal() });
+    avisar(`✦ ${t(p.nome)}${tam ? " (" + tam + ")" : ""} ${t("caiu no caldeirão")}`, { rotulo: t("Ver sacola"), fazer: () => dlgSacola.showModal() });
 }
 
 function mudarQuantidade(chave, delta) {
@@ -1025,7 +1028,7 @@ tamanhoEl.addEventListener("change", () => { filtro.tam = tamanhoEl.value; rende
 (function montarFiltroTamanho() {
     const tams = ROUPA.filter((t) => PRODUTOS.some((p) => naVitrine(p) && p.tam && p.tam.includes(t)));
     if (!tams.length) return;
-    tamanhoEl.insertAdjacentHTML("beforeend", tams.map((t) => `<option value="${t}">Tamanho ${t}</option>`).join("") + '<option value="unico">Tamanho único</option>');
+    tamanhoEl.insertAdjacentHTML("beforeend", tams.map((tam) => `<option value="${tam}">${t("Tamanho")} ${tam}</option>`).join("") + `<option value="unico">${t("Tamanho único")}</option>`);
     $("#campoTamanho").hidden = false;
 })();
 $("#limparFiltros").addEventListener("click", () => {
@@ -1058,17 +1061,17 @@ $("#esvaziar").addEventListener("click", () => {
 $("#copiarPedido").addEventListener("click", async () => {
     try {
         await navigator.clipboard.writeText(montarMensagem());
-        notaEl.textContent = "Pedido copiado. Cole na conversa que quiser.";
+        notaEl.textContent = t("Pedido copiado. Cole na conversa que quiser.");
     } catch (erro) {
-        notaEl.textContent = "Não consegui copiar. Abra a mensagem acima e copie à mão.";
+        notaEl.textContent = t("Não consegui copiar. Abra a mensagem acima e copie à mão.");
         previaEl.closest("details").open = true;
     }
-    setTimeout(() => { notaEl.textContent = NOTA_PADRAO; }, 4000);
+    setTimeout(() => { notaEl.textContent = t(NOTA_PADRAO); }, 4000);
 });
 
 enviarEl.addEventListener("click", () => {
-    notaEl.textContent = "Abrindo o WhatsApp com o pedido pronto…";
-    setTimeout(() => { notaEl.textContent = NOTA_PADRAO; }, 4000);
+    notaEl.textContent = t("Abrindo o WhatsApp com o pedido pronto…");
+    setTimeout(() => { notaEl.textContent = t(NOTA_PADRAO); }, 4000);
 });
 
 /* ===== Olhos de gato no escuro: surgem em lugares aleatórios, piscam e somem ===== */
@@ -1115,11 +1118,11 @@ enviarEl.addEventListener("click", () => {
     if (!botao) return;
     const atualizar = () => {
         const nome = campoNome.value.trim();
-        botao.href = linkWhats(`Oi! 🌕 Quero entrar na lista do próximo drop da lua cheia da ${LOJA.nome}${nome ? `. Aqui é a ${nome}` : ""} 🖤`);
+        botao.href = linkWhats(`${t("Oi! 🌕 Quero entrar na lista do próximo drop da lua cheia da")} ${LOJA.nome}${nome ? `. ${t("Aqui é a")} ${nome}` : ""} 🖤`);
     };
     atualizar();
     campoNome.addEventListener("input", atualizar);
-    botao.addEventListener("click", () => avisar("✦ Manda a mensagem que você entra na lista do drop"));
+    botao.addEventListener("click", () => avisar(t("✦ Manda a mensagem que você entra na lista do drop")));
 })();
 
 /* ===== Quem já é da coven: depoimentos (a seção só aparece quando tiver algum) ===== */
@@ -1176,6 +1179,14 @@ const abrirAbaMistica = (function cantinhoMistico() {
     if (location.hash && porId(location.hash.slice(1))) addEventListener("load", () => document.getElementById("magias").scrollIntoView());
     return porId;
 })();
+
+document.addEventListener("idiomaMudou", () => {
+    renderChips();
+    renderGrade();
+    renderSacola();
+    renderLooks();
+    notaEl.textContent = t(NOTA_PADRAO);
+});
 
 /* ===== Início ===== */
 document.querySelectorAll("svg[data-arte]").forEach((svg) => { svg.innerHTML = ARTE[svg.dataset.arte]; });

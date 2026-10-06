@@ -45,9 +45,10 @@
 
     if (semMovimento) return;
 
-    /* ---------- Legendas, balões, retícula e o "Fim?": aparecem quando entram na tela ---------- */
+    /* ---------- Legendas, balões, retícula e o "Fim?": aparecem quando entram na tela ----------
+       A classe "gibi-anima" já foi ligada cedo, num script síncrono no <head> (antes da primeira
+       pintura), pra não piscar — aqui só falta mesmo observar os elementos. */
     if ("IntersectionObserver" in window) {
-        raiz.classList.add("gibi-anima");
         const olho = new IntersectionObserver((entradas) => entradas.forEach((e) => {
             if (!e.isIntersecting) return;
             e.target.classList.add("gibi-visivel");

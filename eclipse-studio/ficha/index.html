@@ -19,6 +19,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,700;1,700&family=Quicksand:wght@500;600;700&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
+<script src="../../idioma.js?v=20261003proj" defer></script>
 <style>
 :root{
   color-scheme:dark;
@@ -188,6 +189,7 @@ const MEU_WHATSAPP = "5567996034205";
 const CHAVE = "ficha-eclipse-v1";
 const principal = document.getElementById("formulario");
 const previa = document.getElementById("previa");
+const t = (s) => (window.traduzir ? window.traduzir(s) : s);
 
 function el(tag, atributos = {}, ...filhos){
   const e = document.createElement(tag);
@@ -271,7 +273,7 @@ function atualizar(){
   document.getElementById("qtd").textContent = feitos;
   document.getElementById("total").textContent = total;
   document.getElementById("trilho").style.setProperty("--p", total ? feitos / total : 0);
-  previa.textContent = feitos ? montarTexto(dados) : "Nada respondido ainda.";
+  previa.textContent = feitos ? montarTexto(dados) : t("Nada respondido ainda.");
   return dados;
 }
 function salvar(){
@@ -291,13 +293,13 @@ function toast(texto){
 }
 async function copiar(){
   const texto = montarTexto(atualizar());
-  try { await navigator.clipboard.writeText(texto); toast("Copiado! Agora é só colar na conversa."); }
+  try { await navigator.clipboard.writeText(texto); toast(t("Copiado! Agora é só colar na conversa.")); }
   catch (e) {
     const area = el("textarea", { style: "position:fixed; opacity:0" });
     area.value = texto; document.body.append(area); area.select();
     let ok = false; try { ok = document.execCommand("copy"); } catch (e2) { /* sem cópia */ }
     area.remove();
-    toast(ok ? "Copiado! Agora é só colar na conversa." : "Não deu para copiar. Copie manualmente.");
+    toast(ok ? t("Copiado! Agora é só colar na conversa.") : t("Não deu para copiar. Copie manualmente."));
   }
 }
 function enviarPeloWhats(){
@@ -307,13 +309,14 @@ function enviarPeloWhats(){
 ["copiar", "copiar2"].forEach(id => document.getElementById(id).addEventListener("click", copiar));
 ["whats", "whats2"].forEach(id => document.getElementById(id).addEventListener("click", enviarPeloWhats));
 document.getElementById("limpar").addEventListener("click", () => {
-  if (!confirm("Apagar tudo o que você preencheu neste aparelho e recomeçar?")) return;
+  if (!confirm(t("Apagar tudo o que você preencheu neste aparelho e recomeçar?"))) return;
   try { localStorage.removeItem(CHAVE); } catch (e) { /* sem armazenamento */ }
   location.reload();
 });
 
 try { devolver(JSON.parse(localStorage.getItem(CHAVE) || "{}")); } catch (e) { /* nada guardado */ }
 atualizar();
+document.addEventListener("idiomaMudou", atualizar);
 </script>
 </body>
 </html>

@@ -15,7 +15,7 @@ const LUA = (() => {
         [16.61, "Lua cheia"], [20.3, "Minguante gibosa"], [23.99, "Quarto minguante"], [27.68, "Lua minguante"], [Infinity, "Lua nova"],
     ];
     const idade = (t) => ((((t - LUA_NOVA_REFERENCIA) / DIA) % SINODICO) + SINODICO) % SINODICO;
-    const fase = (t) => FASES.find(([limite]) => idade(t) < limite)[1];
+    const fase = (tempo) => t(FASES.find(([limite]) => idade(tempo) < limite)[1]);
     const inicioDoDia = (d) => new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
 
     function proximaCheia(t) {
@@ -45,26 +45,27 @@ const LUA = (() => {
     const grande = document.getElementById("ritualLua");
     const quandoEl = document.getElementById("ritualQuando");
     const contagem = document.getElementById("contagemLua");
-    const dataLonga = (d) => d.toLocaleDateString("pt-BR", { day: "numeric", month: "long" });
+    const dataLonga = (d) => d.toLocaleDateString(document.documentElement.lang === "es" ? "es-ES" : "pt-BR", { day: "numeric", month: "long" });
 
     function atualizar() {
         const agora = Date.now();
         const cheia = LUA.proximaCheia(agora);
-        const quando = cheia.hoje ? "hoje é lua cheia!" : cheia.dias === 1 ? "drop na lua cheia amanhã" : `drop na lua cheia em ${cheia.dias} dias`;
+        const quando = cheia.hoje ? t("hoje é lua cheia!") : cheia.dias === 1 ? t("drop na lua cheia amanhã") : `${t("drop na lua cheia em")} ${cheia.dias} ${t("dias")}`;
         if (pilula) pilula.innerHTML = `${LUA.desenho(agora)}<span><b>${LUA.fase(agora)}</b> · ${quando}</span>`;
         if (grande) grande.innerHTML = LUA.desenho(agora, true);
         if (quandoEl) quandoEl.textContent = cheia.hoje
-            ? "Hoje é noite de lua cheia 🌕 Fica de olho no @eclipse_studiocg pra ver o que chegou."
-            : `Hoje: ${LUA.fase(agora).toLowerCase()}. A próxima lua cheia é em ${dataLonga(cheia.quando)}: fica de olho no @eclipse_studiocg pra ver o que chega.`;
+            ? t("Hoje é noite de lua cheia 🌕 Fica de olho no @eclipse_studiocg pra ver o que chegou.")
+            : `${t("Hoje:")} ${LUA.fase(agora).toLowerCase()}. ${t("A próxima lua cheia é em")} ${dataLonga(cheia.quando)}: ${t("fica de olho no @eclipse_studiocg pra ver o que chega.")}`;
         if (contagem) {
             const min = Math.floor(cheia.ms / 6e4);
             const partes = [[Math.floor(min / 1440), "dias"], [Math.floor(min / 60) % 24, "horas"], [min % 60, "minutos"]];
-            contagem.innerHTML = cheia.hoje ? "" : partes.map(([n, r]) => `<div><b>${n}</b><span>${n === 1 ? r.slice(0, -1) : r}</span></div>`).join("");
-            contagem.setAttribute("aria-label", cheia.hoje ? "" : `Faltam ${partes.map(([n, r]) => `${n} ${r}`).join(", ")} pra lua cheia`);
+            contagem.innerHTML = cheia.hoje ? "" : partes.map(([n, r]) => `<div><b>${n}</b><span>${n === 1 ? t(r.slice(0, -1)) : t(r)}</span></div>`).join("");
+            contagem.setAttribute("aria-label", cheia.hoje ? "" : `${t("Faltam")} ${partes.map(([n, r]) => `${n} ${t(r)}`).join(", ")} ${t("pra lua cheia")}`);
         }
     }
     atualizar();
     setInterval(() => { if (!document.hidden) atualizar(); }, 30000);
+    document.addEventListener("idiomaMudou", atualizar);
 })();
 
 /* ========== 2. Apague as velas: o site fica no escuro e a luz da vela revela segredos ========== */
@@ -106,7 +107,7 @@ const LUA = (() => {
             raiz.classList.add("escuro");
             acender.hidden = false;
             acender.focus({ preventScroll: true });
-            avisar("🕯 Mova o dedo (ou o mouse): a luz da vela revela segredos.");
+            avisar(t("🕯 Mova o dedo (ou o mouse): a luz da vela revela segredos."));
         }, semMovimento ? 0 : 650);
     }
     function reacender() {
@@ -122,17 +123,17 @@ const LUA = (() => {
     gato.addEventListener("click", () => {
         const jaAchou = ler(CHAVE_GATO, false);
         document.getElementById("gatoTexto").textContent = jaAchou
-            ? "Você já tinha achado! O código continua guardado no seu pedido."
-            : `Quem acha o gato ganha um código: ${premio}.`;
+            ? t("Você já tinha achado! O código continua guardado no seu pedido.")
+            : `${t("Quem acha o gato ganha um código:")} ${t(premio)}.`;
         document.getElementById("gatoCodigo").textContent = codigo;
-        document.getElementById("gatoUsar").textContent = jaAchou ? "Beleza" : "Pôr o código no meu pedido";
+        document.getElementById("gatoUsar").textContent = jaAchou ? t("Beleza") : t("Pôr o código no meu pedido");
         dialogo.showModal();
     });
     document.getElementById("gatoUsar").addEventListener("click", () => {
         if (!ler(CHAVE_GATO, false)) {
             guardar(CHAVE_GATO, true);
             atualizarLinkPedido();
-            avisar(`🐈‍⬛ Código ${codigo} guardado: ele vai junto no seu pedido.`);
+            avisar(`🐈‍⬛ ${t("Código")} ${codigo} ${t("guardado: ele vai junto no seu pedido.")}`);
         }
         dialogo.close();
         reacender();
@@ -160,15 +161,17 @@ const NOMES_NO_TARO = {
     capa: "A Capa", casaco: "O Casaco", choker: "O Choker", chokerRosa: "A Rosa Vermelha", rosario: "O Rosário", camafeu: "O Camafeu",
     colarCruz: "A Cruz", brincoMorcego: "Os Morcegos", brincoCruz: "As Cruzes", anel: "O Olho", colarBola: "A Bola de Cristal", bolsaCaixao: "O Caixão",
 };
-const nomeNoTaro = (p) => NOMES_NO_TARO[p.id] || p.nome;
+const nomeNoTaro = (p) => t(NOMES_NO_TARO[p.id] || p.nome);
 
 (function taroDoLook() {
     const mesa = document.getElementById("taroCartas");
     const leitura = document.getElementById("taroLeitura");
     const botao = document.getElementById("taroTirar");
     if (!mesa) return;
-    const PAPEIS = ["Essência", "A peça", "O feitiço"];
+    const papeis = () => ["Essência", "A peça", "O feitiço"].map(t);
+    let PAPEIS = papeis();
     let tiragem = null;
+    let revelado = false;
 
     const verso = `<div class="carta-verso"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="11" class="coroa"/><circle cx="18" cy="14.5" r="10" class="disco"/></svg></div>`;
     const frente = ({ numero, titulo, sub, tom, desenho }) => `<div class="carta-frente">
@@ -179,6 +182,7 @@ const nomeNoTaro = (p) => NOMES_NO_TARO[p.id] || p.nome;
     </div>`;
 
     function mostrarVersos() {
+        revelado = false;
         mesa.innerHTML = PAPEIS.map((papel) => `<li class="taro-carta"><span class="carta-papel">${papel}</span><div class="carta"><div class="carta-dentro">${verso}</div></div></li>`).join("");
     }
 
@@ -211,17 +215,18 @@ const nomeNoTaro = (p) => NOMES_NO_TARO[p.id] || p.nome;
             const itens = [...mesa.children];
             itens.forEach((li, i) => setTimeout(() => li.classList.add("virada"), semMovimento ? 0 : 300 + i * 450));
             setTimeout(() => {
-                leitura.innerHTML = `<h3>${esc(arcano.nome)} <span>· ${esc(estilo.nome)}</span></h3>
-                    <p class="leitura-texto">${esc(arcano.leitura)}</p>
-                    <p class="leitura-look">As cartas escolheram: <b>${esc(peca.nome)}</b> (${precoTexto(peca)}) pra vestir, e <b>${esc(feitico.nome)}</b> (${precoTexto(feitico)}) pra fechar o feitiço.</p>
+                leitura.innerHTML = `<h3>${esc(t(arcano.nome))} <span>· ${esc(t(estilo.nome))}</span></h3>
+                    <p class="leitura-texto">${esc(t(arcano.leitura))}</p>
+                    <p class="leitura-look">${t("As cartas escolheram:")} <b>${esc(t(peca.nome))}</b> (${precoTexto(peca)}) ${t("pra vestir, e")} <b>${esc(t(feitico.nome))}</b> (${precoTexto(feitico)}) ${t("pra fechar o feitiço.")}</p>
                     <div class="leitura-acoes">
-                        <button class="botao" type="button" data-taro-sacola>Pôr as duas no caldeirão</button>
-                        <button class="botao botao-linha" type="button" data-taro-story>Salvar pro story</button>
-                        <button class="botao botao-linha" type="button" data-estilo="${estilo.id}">Ver tudo da vibe ${esc(estilo.nome)}</button>
+                        <button class="botao" type="button" data-taro-sacola>${t("Pôr as duas no caldeirão")}</button>
+                        <button class="botao botao-linha" type="button" data-taro-story>${t("Salvar pro story")}</button>
+                        <button class="botao botao-linha" type="button" data-estilo="${estilo.id}">${t("Ver tudo da vibe")} ${esc(t(estilo.nome))}</button>
                     </div>`;
                 leitura.hidden = false;
+                revelado = true;
                 botao.disabled = false;
-                botao.textContent = "Tirar de novo";
+                botao.textContent = t("Tirar de novo");
             }, semMovimento ? 0 : 300 + 3 * 450 + 200);
         }, espera);
     }
@@ -237,7 +242,7 @@ const nomeNoTaro = (p) => NOMES_NO_TARO[p.id] || p.nome;
         caiuNoCaldeirao(pecas.map((p) => p.id), mesa.getBoundingClientRect());
         renderSacola();
         balancarSacola();
-        avisar("✦ O look do tarô caiu no caldeirão", { rotulo: "Ver sacola", fazer: () => dlgSacola.showModal() });
+        avisar(`✦ ${t("O look do tarô caiu no caldeirão")}`, { rotulo: t("Ver sacola"), fazer: () => dlgSacola.showModal() });
     }
 
     botao.addEventListener("click", revelar);
@@ -246,6 +251,28 @@ const nomeNoTaro = (p) => NOMES_NO_TARO[p.id] || p.nome;
         if (e.target.closest("[data-taro-story]")) salvarStory(tiragem, e.target.closest("button"));
     });
     mostrarVersos();
+
+    document.addEventListener("idiomaMudou", () => {
+        PAPEIS = papeis();
+        if (!tiragem || !revelado) { mostrarVersos(); return; }
+        const { estilo, arcano, peca, feitico } = tiragem;
+        const cartas = [
+            { numero: arcano.numero, titulo: arcano.nome, sub: estilo.nome, tom: arcano.tom, desenho: `<svg class="arte" viewBox="0 0 100 100" aria-hidden="true">${ARTE[arcano.arte]}</svg>` },
+            { numero: "✦", titulo: nomeNoTaro(peca), sub: precoTexto(peca), tom: peca.tom, desenho: arte(peca) },
+            { numero: "✦", titulo: nomeNoTaro(feitico), sub: precoTexto(feitico), tom: feitico.tom, desenho: arte(feitico) },
+        ];
+        mesa.innerHTML = cartas.map((c, i) => `<li class="taro-carta virada" aria-label="${PAPEIS[i]}: ${esc(c.titulo)}"><span class="carta-papel">${PAPEIS[i]}</span><div class="carta"><div class="carta-dentro">${verso}${frente(c)}</div></div></li>`).join("");
+        if (!leitura.hidden) {
+            leitura.innerHTML = `<h3>${esc(t(arcano.nome))} <span>· ${esc(t(estilo.nome))}</span></h3>
+                <p class="leitura-texto">${esc(t(arcano.leitura))}</p>
+                <p class="leitura-look">${t("As cartas escolheram:")} <b>${esc(t(peca.nome))}</b> (${precoTexto(peca)}) ${t("pra vestir, e")} <b>${esc(t(feitico.nome))}</b> (${precoTexto(feitico)}) ${t("pra fechar o feitiço.")}</p>
+                <div class="leitura-acoes">
+                    <button class="botao" type="button" data-taro-sacola>${t("Pôr as duas no caldeirão")}</button>
+                    <button class="botao botao-linha" type="button" data-taro-story>${t("Salvar pro story")}</button>
+                    <button class="botao botao-linha" type="button" data-estilo="${estilo.id}">${t("Ver tudo da vibe")} ${esc(t(estilo.nome))}</button>
+                </div>`;
+        }
+    });
 })();
 
 /* imagem 1080 × 1920 da tiragem, desenhada num canvas com as mesmas fontes e ilustrações da loja */
@@ -308,14 +335,14 @@ async function entregarImagem(tela, nomeArquivo, titulo) {
     link.click();
     link.remove();
     setTimeout(() => URL.revokeObjectURL(link.href), 4000);
-    avisar("✦ Imagem salva. É só postar no story e marcar @eclipse_studiocg");
+    avisar(t("✦ Imagem salva. É só postar no story e marcar @eclipse_studiocg"));
 }
 
-async function salvarStory(t, botao) {
-    if (!t) return;
+async function salvarStory(tiragem, botao) {
+    if (!tiragem) return;
     const textoOriginal = botao.textContent;
     botao.disabled = true;
-    botao.textContent = "Preparando a imagem…";
+    botao.textContent = t("Preparando a imagem…");
     try {
         await Promise.all(FONTES_STORY.map((f) => document.fonts.load(f)));
         const W = 1080, H = 1920;
@@ -325,17 +352,17 @@ async function salvarStory(t, botao) {
 
         pintarFundoStory(ctx, W, H);
 
-        ctx.font = '700 92px "Cormorant Garamond"'; ctx.fillText("Meu tarô do look", W / 2, 330);
+        ctx.font = '700 92px "Cormorant Garamond"'; ctx.fillText(t("Meu tarô do look"), W / 2, 330);
         const degrade = ctx.createLinearGradient(W / 2 - 260, 0, W / 2 + 260, 0);
         degrade.addColorStop(0, "#cdb4ff"); degrade.addColorStop(.55, "#ffb8d9"); degrade.addColorStop(1, "#aef0d6");
         ctx.fillStyle = degrade; ctx.font = 'italic 700 76px "Cormorant Garamond"';
-        ctx.fillText(`${t.arcano.nome} · ${t.estilo.nome}`, W / 2, 425);
+        ctx.fillText(`${tiragem.arcano.nome} · ${tiragem.estilo.nome}`, W / 2, 425);
 
         /* as três cartas */
         const cartas = [
-            { papel: "essência", numero: t.arcano.numero, nome: t.arcano.nome, tom: t.arcano.tom, img: await imagemDaArte(ARTE[t.arcano.arte], t.arcano.tom) },
-            { papel: "a peça", numero: "✦", nome: nomeNoTaro(t.peca), tom: t.peca.tom, img: t.peca.foto ? await carregarImagem(t.peca.foto) : await imagemDaArte(ARTE[t.peca.arte], t.peca.tom) },
-            { papel: "o feitiço", numero: "✦", nome: nomeNoTaro(t.feitico), tom: t.feitico.tom, img: t.feitico.foto ? await carregarImagem(t.feitico.foto) : await imagemDaArte(ARTE[t.feitico.arte], t.feitico.tom) },
+            { papel: t("essência"), numero: tiragem.arcano.numero, nome: tiragem.arcano.nome, tom: tiragem.arcano.tom, img: await imagemDaArte(ARTE[tiragem.arcano.arte], tiragem.arcano.tom) },
+            { papel: t("a peça"), numero: "✦", nome: nomeNoTaro(tiragem.peca), tom: tiragem.peca.tom, img: tiragem.peca.foto ? await carregarImagem(tiragem.peca.foto) : await imagemDaArte(ARTE[tiragem.peca.arte], tiragem.peca.tom) },
+            { papel: t("o feitiço"), numero: "✦", nome: nomeNoTaro(tiragem.feitico), tom: tiragem.feitico.tom, img: tiragem.feitico.foto ? await carregarImagem(tiragem.feitico.foto) : await imagemDaArte(ARTE[tiragem.feitico.arte], tiragem.feitico.tom) },
         ];
         const cw = 300, ch = 520, y0 = 520;
         cartas.forEach((c, i) => {
@@ -361,20 +388,20 @@ async function salvarStory(t, botao) {
 
         /* a leitura */
         ctx.fillStyle = "#f6eeff"; ctx.font = 'italic 700 50px "Cormorant Garamond"';
-        const linhas = quebrarLinhas(ctx, `“${t.arcano.leitura}”`, 900);
+        const linhas = quebrarLinhas(ctx, `“${tiragem.arcano.leitura}”`, 900);
         linhas.forEach((l, n) => ctx.fillText(l, W / 2, 1230 + n * 64));
         const yLook = 1230 + linhas.length * 64 + 60;
         ctx.fillStyle = "#ffb8d9"; ctx.font = '700 38px "Quicksand"';
-        quebrarLinhas(ctx, `${t.peca.nome} + ${t.feitico.nome}`, 920).forEach((l, n) => ctx.fillText(l, W / 2, yLook + n * 50));
+        quebrarLinhas(ctx, `${tiragem.peca.nome} + ${tiragem.feitico.nome}`, 920).forEach((l, n) => ctx.fillText(l, W / 2, yLook + n * 50));
 
         ctx.fillStyle = "#cfc0e6"; ctx.font = 'italic 600 42px "Cormorant Garamond"';
-        ctx.fillText(`✦ tirado numa noite de ${LUA.fase(Date.now()).toLowerCase()} ✦`, W / 2, H - 260);
+        ctx.fillText(t("✦ tirado numa noite de {fase} ✦").replace("{fase}", t(LUA.fase(Date.now())).toLowerCase()), W / 2, H - 260);
         ctx.fillStyle = "#e9c46a"; ctx.font = '700 40px "Quicksand"';
-        ctx.fillText("tire o seu no link da bio ✦ @eclipse_studiocg", W / 2, H - 120);
+        ctx.fillText(t("tire o seu no link da bio ✦ @eclipse_studiocg"), W / 2, H - 120);
 
-        await entregarImagem(tela, "meu-taro-eclipse-studio.png", "Meu tarô do look · Eclipse Studio");
+        await entregarImagem(tela, "meu-taro-eclipse-studio.png", t("Meu tarô do look · Eclipse Studio"));
     } catch (erro) {
-        avisar("Não consegui montar a imagem agora. Tente de novo ou tire um print da tiragem.");
+        avisar(t("Não consegui montar a imagem agora. Tente de novo ou tire um print da tiragem."));
     } finally {
         botao.disabled = false;
         botao.textContent = textoOriginal;

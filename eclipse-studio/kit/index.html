@@ -10,6 +10,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,700;1,700&family=Quicksand:wght@500;600;700&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
+<script src="../../idioma.js?v=20261003proj" defer></script>
 <style>
 :root { color-scheme: dark; --bg: #150c1f; --painel: #231637; --linha: #3a2c52; --linha-forte: #5a4680; --texto: #f6eeff; --mudo: #cfc0e6; --lilas: #cdb4ff; --rosa: #ffb8d9; --menta: #aef0d6; --ouro: #e9c46a; --tinta: #241a33; }
 * { box-sizing: border-box; }
@@ -104,6 +105,7 @@ No site dá pra filtrar as peças pelo seu estilo. Link na bio ✦</p>
 <p class="toast" id="toast" role="status"></p>
 <script>
     const toast = document.getElementById("toast");
+    const t = (s) => (window.traduzir ? window.traduzir(s) : s);
     let tempo;
     document.addEventListener("click", async (e) => {
         const botao = e.target.closest("[data-copiar]");
@@ -111,7 +113,7 @@ No site dá pra filtrar as peças pelo seu estilo. Link na bio ✦</p>
         const texto = document.getElementById(botao.dataset.copiar).textContent;
         let ok = true;
         try { await navigator.clipboard.writeText(texto); } catch (erro) { ok = false; }
-        toast.textContent = ok ? "Legenda copiada ✦" : "Não deu pra copiar: segure o dedo no texto e copie.";
+        toast.textContent = ok ? t("Legenda copiada ✦") : t("Não deu pra copiar: segure o dedo no texto e copie.");
         toast.classList.add("ver");
         clearTimeout(tempo);
         tempo = setTimeout(() => toast.classList.remove("ver"), 2400);

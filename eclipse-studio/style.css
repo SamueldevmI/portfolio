@@ -249,6 +249,8 @@ a { color: var(--rosa); }
 .fav-texto { position: static; width: auto; height: 36px; padding: 0 14px 0 10px; border-radius: 999px; font: 700 .84rem var(--fonte); gap: 6px; grid-auto-flow: column; }
 .fav-texto::after { content: "Favoritar"; }
 .fav-texto[aria-pressed="true"]::after { content: "Nos favoritos"; }
+html[lang="es"] .fav-texto::after { content: "Favorito"; }
+html[lang="es"] .fav-texto[aria-pressed="true"]::after { content: "En favoritos"; }
 .chip-fav { display: inline-flex; align-items: center; gap: 6px; }
 .chip-fav svg { width: 15px; height: 15px; fill: var(--rosa); }
 .chip-fav[aria-pressed="true"] svg { fill: var(--tinta); }
