@@ -2838,3 +2838,106 @@ header.hero { overflow-x: clip; }
 @media (max-width: 720px) { .github-atividade.gh-carregando { min-height: 396px; } }
 .ficha-missoes li.ficha-esperando { visibility: hidden; }
 .cmp-linha.cmp-esperando { visibility: hidden; animation: none; }
+
+/* Numeração das seções fixa por seção: com content-visibility cada seção isola o próprio contador
+   (todas viravam "01"), então o número vem daqui */
+#sobre-mim .eyebrow::before { content: "01 / "; }
+#projetos .eyebrow::before { content: "02 / "; }
+#mais-projetos .eyebrow::before { content: "03 / "; }
+#servicos .eyebrow::before { content: "04 / "; }
+#orcamento .eyebrow::before { content: "05 / "; }
+#jornada .eyebrow::before { content: "06 / "; }
+#contato .eyebrow::before { content: "07 / "; }
+/* o balão é branco: o texto fica sempre escuro, mesmo onde a seção pinta os parágrafos de branco */
+.gibi-nota { color: #0b101b !important; }
+
+/* ---------- Títulos com "erro de impressão" de gibi antigo: vermelho e azul desalinhados que se
+   ajeitam quando a seção chega (gibi.js marca .gibi-visivel). Só text-shadow, uma vez por título. ---------- */
+.gibi-anima .titulo-secao h2, .gibi-anima .contato > h2 { text-shadow: -6px 3px 0 rgba(46,126,255,.7), 6px -3px 0 rgba(0,190,255,.55); transition: text-shadow 1s cubic-bezier(.2, .8, .2, 1) .2s; }
+.gibi-anima .titulo-secao.gibi-visivel h2, .gibi-anima .contato > h2.gibi-visivel { text-shadow: -2px 1px 0 rgba(46,126,255,.5), 2px -1px 0 rgba(0,190,255,.35); }
+
+/* ---------- Projetos que saem do quadro: no mouse (computador) ou quando o card chega no meio da tela
+   (celular), o print cresce e passa por cima da borda do card, com contorno de nanquim ---------- */
+.lista-projetos .card-projeto .projeto-visual { position: relative; z-index: 1; transition: transform .45s cubic-bezier(.2, 1.4, .4, 1), box-shadow .3s ease, border-radius .3s ease; }
+@media (hover: hover) and (pointer: fine) {
+    .lista-projetos .card-projeto:hover { overflow: visible; }
+    .lista-projetos .card-projeto:hover .projeto-visual { z-index: 3; border-radius: 10px; box-shadow: 0 0 0 3px #0b101b, 0 0 0 6px #eff1f5, 10px 12px 0 6px #0b101b; transform: translate(-12px, -26px) rotate(-1.6deg) scale(1.04); }
+    .lista-projetos .card-projeto[data-largo]:hover .projeto-visual { transform: translate(-10px, -22px) rotate(-.6deg) scale(1.02); }
+}
+@media (max-width: 720px) {
+    .destaques { padding-top: 18px; margin-top: -18px; }
+    .lista-projetos .card-projeto.saindo-do-quadro { overflow: visible; }
+    .lista-projetos .card-projeto.saindo-do-quadro .projeto-visual { z-index: 3; border-radius: 10px; box-shadow: 0 0 0 3px #0b101b, 0 0 0 5px #eff1f5, 6px 8px 0 5px #0b101b; transform: translate(-6px, -14px) rotate(-1.4deg) scale(1.03); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .lista-projetos .card-projeto .projeto-visual { transition: none; }
+    .lista-projetos .card-projeto:hover .projeto-visual, .lista-projetos .card-projeto.saindo-do-quadro .projeto-visual { transform: none; }
+}
+
+/* ---------- Minha jornada em tirinha: no computador, uma página de gibi (quadros com fundo de papel);
+   no celular, uma tirinha de arrastar pro lado. A data vira a legenda amarela de cada quadro. ---------- */
+#jornada .lista-jornada.linha-tempo { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); align-items: stretch; gap: 14px; max-width: none; margin: 0; padding: 14px; border: 3px solid #0b101b; border-radius: 4px; background: #efe9dc; box-shadow: 9px 9px 0 rgba(46,126,255,.5); }
+#jornada .linha-tempo::before, #jornada .lista-jornada.linha-tempo article::before, #jornada .lista-jornada.linha-tempo article::after { display: none; }
+#jornada .lista-jornada.linha-tempo > li { margin: 0; }
+#jornada .lista-jornada.linha-tempo article { display: flex; flex-direction: column; height: 100%; margin: 0; padding: 40px 16px 16px; border: 3px solid #0b101b; border-radius: 3px; background: radial-gradient(circle, rgba(46,126,255,.1) 1.2px, transparent 1.6px) 0 0 / 9px 9px, #121a2c; box-shadow: none; }
+#jornada .lista-jornada.linha-tempo article:hover { transform: none; border-color: #0b101b; }
+#jornada .linha-tempo .lt-data { position: absolute; top: -3px; left: -3px; padding: 5px 10px 4px; border: 3px solid #0b101b; background: #ffe14d; color: #0b101b; font: 400 .95rem/1 "Bangers", Impact, sans-serif; letter-spacing: .05em; }
+#jornada .linha-tempo .lt-data b { display: inline; margin-right: 5px; font: inherit; }
+#jornada .linha-tempo h3 { font-size: 1.05rem; line-height: 1.25; }
+#jornada .linha-tempo p { font-size: .86rem; line-height: 1.55; }
+#jornada .linha-tempo .lt-tags { margin-top: auto; padding-top: 12px; }
+#jornada .lista-jornada.linha-tempo article.lt-agora { background: radial-gradient(circle, rgba(0,0,0,.25) 1.2px, transparent 1.6px) 0 0 / 9px 9px, #1a3e8b; }
+#jornada .lista-jornada.linha-tempo article.lt-agora .lt-data { background: #ffffff; }
+#jornada .linha-tempo article.lt-agora p { color: rgba(255,255,255,.92); }
+.tirinha-dica { display: none; }
+@media (max-width: 999px) { #jornada .lista-jornada.linha-tempo { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 720px) {
+    #jornada .lista-jornada.linha-tempo { display: flex; gap: 10px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; padding: 12px; scrollbar-width: none; box-shadow: 6px 6px 0 rgba(46,126,255,.5); }
+    #jornada .lista-jornada.linha-tempo::-webkit-scrollbar { display: none; }
+    #jornada .lista-jornada.linha-tempo > li { flex: 0 0 80%; scroll-snap-align: center; }
+    #jornada .lista-jornada.linha-tempo article { padding: 38px 14px 14px; }
+    .tirinha-dica { display: block; margin: 12px 0 0; color: var(--muted); font: .74rem "DM Mono", monospace; text-align: right; }
+}
+
+/* ---------- O sinal no céu (Contato): faixa de céu noturno no topo da seção, um holofote no canto de
+   baixo e o logo "SM." projetado nas nuvens. gibi.js gira o feixe e move a luz (só transform). ---------- */
+#contato { padding-top: 250px; --sinal-ang: -12deg; --sinal-x: 50%; --sinal-y: 110px; }
+#contato > :not(.sinal):not(.eyebrow) { position: relative; z-index: 1; }
+#contato > .eyebrow { z-index: 1; }
+.sinal { position: absolute; inset: 0; z-index: 0; overflow: hidden; border-radius: inherit; pointer-events: none; }
+.sinal-ceu { position: absolute; left: 0; right: 0; top: 0; height: 300px;
+    background: radial-gradient(1.2px 1.2px at 12% 22%, #ffffff, transparent), radial-gradient(1px 1px at 28% 60%, rgba(255,255,255,.8), transparent), radial-gradient(1.4px 1.4px at 44% 14%, #ffffff, transparent), radial-gradient(1px 1px at 63% 42%, rgba(255,255,255,.7), transparent), radial-gradient(1.3px 1.3px at 78% 18%, #ffffff, transparent), radial-gradient(1px 1px at 90% 55%, rgba(255,255,255,.8), transparent), radial-gradient(1px 1px at 6% 70%, rgba(255,255,255,.6), transparent),
+        radial-gradient(ellipse 34% 22% at 22% 40%, rgba(100,116,150,.28), transparent 70%), radial-gradient(ellipse 30% 18% at 72% 30%, rgba(100,116,150,.24), transparent 70%), radial-gradient(ellipse 40% 20% at 52% 62%, rgba(92,107,138,.2), transparent 70%),
+        linear-gradient(to bottom, #07060c 0%, rgba(9,7,14,.92) 55%, transparent 100%); }
+.sinal-feixe { position: absolute; left: 12%; bottom: 0; width: 230px; height: 1500px; margin-left: -115px; transform-origin: 50% 100%; transform: rotate(var(--sinal-ang)); clip-path: polygon(47% 100%, 53% 100%, 100% 0, 0 0); background: linear-gradient(to top, rgba(255,236,190,.22), rgba(255,236,190,.1) 45%, rgba(255,236,190,0) 85%); }
+.sinal-luz { position: absolute; left: 0; top: 0; display: grid; place-items: center; width: 170px; height: 104px; margin: -52px 0 0 -85px; border-radius: 50%; background: radial-gradient(ellipse at center, #fff7dc 0%, #ffeaa8 46%, rgba(255,224,140,.6) 62%, rgba(255,224,140,0) 72%); transform: translate(var(--sinal-x), var(--sinal-y)); }
+.sinal-luz b { color: #0b101b; font: 400 2.3rem/1 "Bangers", Impact, sans-serif; letter-spacing: .06em; opacity: .88; }
+.sinal-holofote { position: absolute; left: 12%; bottom: -30px; width: 120px; height: 60px; margin-left: -60px; border-radius: 50%; background: radial-gradient(ellipse at 50% 0%, rgba(255,236,190,.55), rgba(255,236,190,0) 70%); }
+.sinal-frase { position: absolute; right: 22px; top: 22px; margin: 0; padding: 6px 12px 5px; border: 2px solid #0b101b; background: #ffe14d; color: #0b101b !important; font: 400 1rem/1.1 "Bangers", Impact, sans-serif; letter-spacing: .05em; box-shadow: 3px 3px 0 #0b101b; transform: rotate(2deg); }
+.gibi-anima .sinal { opacity: 0; }
+.gibi-anima .sinal.aceso { animation: sinal-acende 1.3s steps(1, end) forwards; }
+@keyframes sinal-acende { 0% { opacity: 0; } 15% { opacity: .8; } 25% { opacity: .1; } 40% { opacity: 1; } 50% { opacity: .35; } 62%, 100% { opacity: 1; } }
+@media (max-width: 720px) {
+    #contato { padding-top: 210px; --sinal-y: 92px; }
+    .sinal-ceu { height: 250px; }
+    .sinal-luz { width: 128px; height: 80px; margin: -40px 0 0 -64px; }
+    .sinal-luz b { font-size: 1.75rem; }
+    .sinal-frase { right: auto; left: 14px; top: 14px; font-size: .85rem; }
+}
+
+/* ---------- Sua foto desenhada: a versão de HQ (gerada com ferramentas/foto-hq.html) fica por cima da
+   foto de verdade e some no mouse ou no toque. Duas imagens paradas: troca só a opacidade. ---------- */
+.avatar-hq { position: relative; flex-shrink: 0; display: block; width: 56px; height: 56px; border-radius: 50%; cursor: var(--cursor-mao, pointer); }
+.avatar-desenho { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 50%; object-fit: cover; object-position: 50% 30%; border: 2px solid var(--cyan); transition: opacity .35s ease; pointer-events: none; }
+@media (hover: hover) { .avatar-hq:hover .avatar-desenho { opacity: 0; } }
+.avatar-hq.real .avatar-desenho { opacity: 0; }
+.ficha .foto-wrapper .foto-desenho { position: absolute; z-index: 0; left: 0; top: 0; width: 100%; aspect-ratio: 4 / 3.3; object-fit: cover; object-position: 50% 32%; border: 3px solid #0b101b; border-radius: 8px; transition: opacity .4s ease; pointer-events: none; }
+.ficha .foto-wrapper .foto-legenda, .ficha .foto-wrapper .tooltip, .ficha .foto-wrapper .ficha-nivel { z-index: 2; }
+@media (hover: hover) { .ficha .foto-wrapper:hover .foto-desenho { opacity: 0; } }
+.ficha .foto-wrapper.real .foto-desenho { opacity: 0; }
+@media (max-width: 720px) {
+    .avatar-hq { width: 46px; height: 46px; }
+    .ficha .foto-wrapper .foto-desenho { aspect-ratio: 4 / 3; }
+}
+@media (prefers-reduced-motion: reduce) { .avatar-desenho, .ficha .foto-wrapper .foto-desenho { transition: none; } }
+.ficha .foto-wrapper .foto-desenho, .ficha .foto-wrapper:hover .foto-desenho { height: auto; filter: none; }
