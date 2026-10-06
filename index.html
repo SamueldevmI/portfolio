@@ -53,7 +53,7 @@
             } catch (e) { /* sem armazenamento */ }
             document.documentElement.dataset.tema = tema;
             if (tema === "azul") document.querySelector('meta[name="theme-color"]').content = "#0e1422";
-            document.write('<link rel="stylesheet" id="folhaTema" href="' + (tema === "azul" ? "style-azul.css" : "style.css") + '?v=20261003gibi">');
+            document.write('<link rel="stylesheet" id="folhaTema" href="' + (tema === "azul" ? "style-azul.css" : "style.css") + '?v=20261003orcamento">');
         })();
         /* Idioma: detectado cedo (antes do resto da página rodar) só pra avisar efeitos como a
            digitação do texto do hero, que senão sobrescreveriam a tradução feita pelo idioma.js. */
@@ -67,7 +67,7 @@
             document.documentElement.dataset.idioma = idioma;
         })();
     </script>
-    <noscript><link rel="stylesheet" href="style.css?v=20261003gibi"></noscript>
+    <noscript><link rel="stylesheet" href="style.css?v=20261003orcamento"></noscript>
     <title id="tituloPagina">Samuel Mickael | Desenvolvedor Web &amp; Mobile</title>
     <script type="application/ld+json">
     {
@@ -615,7 +615,6 @@
                     <p class="eyebrow">ORÇAMENTO</p>
                     <h2>Conte seu projeto em 1&nbsp;minuto.</h2>
                     <p>Responda algumas perguntas rapidinho — a mensagem já sai pronta pro WhatsApp, sem digitar nada.</p>
-                    <p class="gibi-nota" aria-hidden="true">leu até aqui? então já é quase cliente 😏</p>
                 </div>
                 <p class="orcamento-direto">Prefere falar direto? <a href="https://wa.me/5567996034205?text=Oi%2C%20Samuel%21%20Vi%20seu%20portf%C3%B3lio%20e%20queria%20pedir%20um%20or%C3%A7amento.%20Meu%20projeto%20%C3%A9%3A%20" target="_blank" rel="noopener noreferrer">Chamar no WhatsApp ↗</a></p>
             </div>
@@ -798,20 +797,20 @@
     </div>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-    <script src="estatisticas.js?v=20261003gibi" defer></script>
+    <script src="estatisticas.js?v=20261003orcamento" defer></script>
     <script src="servicos.js?v=20261002" defer></script>
-    <script src="previa-celular.js?v=20261003gibi" defer></script>
-    <script src="filme-celular.js?v=20261003gibi" defer></script>
-    <script src="script.js?v=20261003gibi" defer></script>
-<script src="acabamento.js?v=20261003gibi" defer></script>
-<script src="ficha.js?v=20261003gibi" defer></script>
-<script src="gibi.js?v=20261003gibi" defer></script>
-<script src="idioma.js?v=20261003gibi" defer></script>
+    <script src="previa-celular.js?v=20261003orcamento" defer></script>
+    <script src="filme-celular.js?v=20261003orcamento" defer></script>
+    <script src="script.js?v=20261003orcamento" defer></script>
+<script src="acabamento.js?v=20261003orcamento" defer></script>
+<script src="ficha.js?v=20261003orcamento" defer></script>
+<script src="gibi.js?v=20261003orcamento" defer></script>
+<script src="idioma.js?v=20261003orcamento" defer></script>
 <script>
     /* Scripts que a página não precisa pra aparecer: o mobile.js só baixa em tela de toque (no computador
        ele não faz nada) e a música só depois que a página terminou de carregar. */
     (function () {
-        var versao = "?v=20261003gibi";
+        var versao = "?v=20261003orcamento";
         function carregar(arquivo) { var s = document.createElement("script"); s.src = arquivo + versao; document.body.appendChild(s); }
         var toque = matchMedia("(pointer: coarse)").matches;
         // o pedido de "instalar app" pode chegar antes do mobile.js: fica guardado pra ele usar

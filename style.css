@@ -2716,18 +2716,19 @@ html { cursor: var(--cursor-seta); }
 .contato .gibi-legenda { margin-bottom: 18px; }
 .gibi-legenda span { text-shadow: none; display: inline-block; padding: 9px 18px 8px; border: 3px solid #111111; background: #ffe14d; color: #111111; font: 400 clamp(1.1rem, 2vw, 1.45rem)/1.1 "Bangers", Impact, sans-serif; letter-spacing: .05em; box-shadow: 5px 5px 0 #111111, 5px 5px 0 2px rgba(255,255,255,.25); transform: rotate(-1.6deg); }
 
-.gibi-anima .gibi-legenda span { opacity: 0; transform: translateX(-40px) rotate(-8deg) scale(.8); transition: opacity .35s ease, transform .55s cubic-bezier(.2, 1.5, .4, 1); }
+.gibi-anima .gibi-legenda span { opacity: 0; transform: translateX(-28px) rotate(-1.6deg); transition: opacity .4s ease, transform .5s cubic-bezier(.2, .8, .2, 1); }
 .gibi-anima .gibi-legenda.gibi-visivel span { opacity: 1; transform: rotate(-1.6deg); }
 
 /* balões: o Samuel falando direto com quem lê */
 .gibi-nota { text-shadow: none; filter: none; position: relative; display: block; width: fit-content; max-width: 250px; margin: 14px 0 6px 10px; padding: 9px 14px; border: 3px solid #111111; border-radius: 18px; background: #ffffff; color: #111111; font: 600 .84rem/1.3 "Space Grotesk", sans-serif; box-shadow: 4px 4px 0 #111111; transform: rotate(-2deg); pointer-events: none; }
 .gibi-nota::after { content: ""; position: absolute; left: 22px; top: -12px; width: 16px; height: 12px; background: #111111; clip-path: polygon(0 100%, 30% 0, 100% 100%); }
-.gibi-anima .gibi-nota { opacity: 0; transform: rotate(-8deg) scale(.5); transition: opacity .3s ease, transform .5s cubic-bezier(.2, 1.7, .4, 1); }
+.gibi-anima .gibi-nota { opacity: 0; transform: translateY(10px) rotate(-2deg); transition: opacity .45s ease .15s, transform .45s ease .15s; }
 .gibi-anima .gibi-nota.gibi-visivel { opacity: 1; transform: rotate(-2deg); }
 .hero-acoes .gibi-nota-hero { display: none; }
 @media (min-width: 1000px) {
     /* no computador, os balões saem pro lado, no espaço vazio ao lado dos títulos */
     .titulo-secao .gibi-nota { position: absolute; left: calc(100% + 30px); top: 92px; width: max-content; max-width: 240px; margin: 0; transform: rotate(3deg); }
+    .gibi-anima .titulo-secao .gibi-nota, .gibi-anima .hero-acoes .gibi-nota-hero { transform: translateY(10px) rotate(3deg); }
     .titulo-secao .gibi-nota::after { left: -13px; top: 18px; width: 14px; height: 16px; clip-path: polygon(100% 0, 0 50%, 100% 100%); }
     .gibi-anima .titulo-secao .gibi-nota.gibi-visivel { transform: rotate(3deg); }
     .hero-acoes { position: relative; }
@@ -2772,10 +2773,43 @@ html { cursor: var(--cursor-seta); }
     .gibi-explosao { top: 40px; right: -8px; width: 126px; height: 126px; padding: 28px; font-size: .92rem; }
     .gibi-legenda { margin-bottom: 16px; }
     .gibi-legenda span { font-size: 1.05rem; }
-    .gibi-anima .gibi-legenda span { transform: translateX(-60px) rotate(-6deg); }
     .gibi-nota { max-width: 230px; font-size: .8rem; }
     .titulo-secao::after { left: -30px; width: 260px; height: 180px; }
     .gibi-fim { margin-bottom: 40px; }
 }
 @media (prefers-reduced-motion: reduce) { .gibi-explosao { animation: none; } }
 @media print { .gibi-legenda, .gibi-nota, .gibi-fim, .gibi-pow, .gibi-velocidade, .gibi-explosao { display: none !important; } }
+
+/* ---------- Orçamento em quadrinho: a caixa vira um quadro de HQ, a pergunta vira balão de fala
+   e as respostas viram botões de gibi (contorno de nanquim, sombra dura, amarelo no mouse). ---------- */
+#orcamento .orcamento-caixa { border: 3px solid #111111; border-radius: 8px; animation: none;
+    background: radial-gradient(circle, rgba(255,42,61,.13) 1.3px, transparent 1.7px) 0 0 / 10px 10px, #1a1a1a;
+    box-shadow: 0 0 0 4px #f2f2f2, 0 0 0 7px #111111, 12px 12px 0 7px rgba(255,42,61,.55); }
+#orcamento .orcamento-caixa::after { display: none; }
+#orcamento .orc-progresso { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
+#orcamento .orc-etapa { display: inline-block; margin: 0; padding: 5px 12px 4px; border: 2px solid #111111; background: #ffe14d; color: #111111; font: 400 1rem/1 "Bangers", Impact, sans-serif; letter-spacing: .06em; box-shadow: 3px 3px 0 #111111; transform: rotate(-2deg); }
+#orcamento .orc-trilho { flex: 1 1 140px; height: 14px; overflow: hidden; border: 2px solid #ffffff; border-radius: 999px; background: #111111; }
+#orcamento .orc-trilho span { background: repeating-linear-gradient(-45deg, #ff2a3d 0 8px, #c41f2a 8px 16px); box-shadow: none; }
+#orcamento .orc-passo { margin-top: 22px; }
+#orcamento .orc-pergunta { position: relative; display: block; width: fit-content; max-width: 100%; margin: 0 0 18px; padding: 12px 20px 11px; border: 3px solid #111111; border-radius: 26px; background: #ffffff; color: #111111; font: 400 clamp(1.35rem, 2.6vw, 1.75rem)/1.1 "Bangers", Impact, sans-serif; letter-spacing: .03em; box-shadow: 5px 5px 0 #111111, 5px 5px 0 2px rgba(255,255,255,.2); }
+#orcamento .orc-pergunta::after { content: ""; position: absolute; left: 30px; bottom: -17px; width: 22px; height: 16px; background: #111111; clip-path: polygon(0 0, 100% 0, 10% 100%); }
+#orcamento .orc-pergunta::before { content: ""; position: absolute; z-index: 1; left: 33px; bottom: -10px; width: 15px; height: 11px; background: #ffffff; clip-path: polygon(0 0, 100% 0, 10% 100%); }
+#orcamento .orc-pergunta-icone { filter: none; }
+#orcamento .orc-ajuda { margin-top: 4px; }
+#orcamento .orc-opcoes { gap: 12px; }
+#orcamento .orc-opcao { border: 3px solid #111111; border-radius: 6px; background: #ffffff; color: #111111; font: 700 .95rem/1.3 "Space Grotesk", sans-serif; text-align: left; box-shadow: 4px 4px 0 #ff2a3d; transform: rotate(-.5deg); transition: transform .15s ease, box-shadow .15s ease, background-color .15s ease; }
+#orcamento .orc-opcao:nth-child(even) { transform: rotate(.5deg); }
+@media (hover: hover) { #orcamento .orc-opcao:hover { background: #ffe14d; border-color: #111111; transform: translate(-2px, -2px) rotate(0deg); box-shadow: 6px 6px 0 #ff2a3d; } }
+#orcamento .orc-opcao:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0 #ff2a3d; }
+#orcamento .orc-opcao[aria-pressed="true"] { background: #ff2a3d; border-color: #111111; color: #ffffff; box-shadow: 4px 4px 0 #111111; }
+#orcamento .orc-opcao[aria-pressed="true"]::after { content: "✓"; right: 14px; color: #ffffff; font: 400 1.3rem "Bangers", Impact, sans-serif; }
+#orcamento .orc-campo { border: 3px solid #111111; border-radius: 6px; background: #ffffff; color: #111111; box-shadow: 4px 4px 0 #ff2a3d; }
+#orcamento .orc-campo::placeholder { color: #6b6b6b; }
+#orcamento .orc-rotulo { color: #ffffff; }
+#orcamento .orc-retomado { border: 2px solid #111111; border-left-width: 2px; background: #ffe14d; color: #111111; }
+#orcamento .orc-retomado .orc-link { color: #111111; }
+@media (max-width: 720px) {
+    #orcamento .orcamento-caixa { box-shadow: 0 0 0 3px #f2f2f2, 0 0 0 5px #111111, 7px 7px 0 5px rgba(255,42,61,.55); }
+    #orcamento .orc-pergunta { padding: 10px 16px 9px; }
+}
+@media (prefers-reduced-motion: reduce) { #orcamento .orc-opcao { transition: none; } }
