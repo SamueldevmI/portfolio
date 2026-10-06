@@ -49,8 +49,24 @@ const LINK_PERSONALIZADO = (function () {
 {
     const montarSecoes = () => document.documentElement.classList.add("secoes-montadas");
     if (location.hash.length > 1) montarSecoes();
+    // se a rolagem terminar longe do alvo (seções que mudam de tamanho no caminho), completa o pulo uma vez
+    const corrigirPulo = (alvo) => {
+        let feito = false;
+        const conferir = () => {
+            if (feito) return; feito = true;
+            const margem = parseFloat(getComputedStyle(alvo).scrollMarginTop) || 0;
+            if (Math.abs(alvo.getBoundingClientRect().top - margem) > 40) alvo.scrollIntoView({ behavior: prefereMenosMovimento ? "auto" : "smooth" });
+        };
+        window.addEventListener("scrollend", conferir, { once: true });
+        setTimeout(conferir, 1800);
+    };
     document.addEventListener("click", (e) => {
-        if (e.target.closest('a[href^="#"], a[href^="./#"], [data-orcamento-tipo], .cmp-querer, .previa-quero, .cmp-testar')) montarSecoes();
+        if (!e.target.closest('a[href^="#"], a[href^="./#"], [data-orcamento-tipo], .cmp-querer, .previa-quero, .cmp-testar')) return;
+        montarSecoes();
+        const link = e.target.closest('a[href^="#"]');
+        const id = link && link.getAttribute("href").slice(1);
+        const alvo = id && document.getElementById(id);
+        if (alvo) corrigirPulo(alvo);
     }, true);
     window.addEventListener("hashchange", montarSecoes);
 }
