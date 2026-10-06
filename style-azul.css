@@ -2439,7 +2439,7 @@ html { cursor: var(--cursor-seta); }
 .vitrine-palco { display: block; padding: 0; border: 0; background: none; cursor: var(--cursor-mao); border-radius: 48px; transition: transform .3s ease; }
 .vitrine-palco .previa-celular { animation: none; }
 .vitrine-palco .previa-site { height: 400px; pointer-events: none; }
-.vitrine-palco.trocou .previa-celular { animation: vitrine-troca .5s cubic-bezier(.2,.9,.3,1.2); }
+.vitrine-palco.trocou .previa-celular { animation: vitrine-troca .4s ease-out; }
 @keyframes vitrine-troca { 0% { opacity: 0; transform: translateY(10px) scale(.97) rotate(-1.5deg); } }
 @media (hover: hover) { .vitrine-palco:hover { transform: translateY(-4px) rotate(-1deg); } }
 .vitrine-palco:focus-visible { outline: 2px solid var(--cyan); outline-offset: 6px; }
