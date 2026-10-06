@@ -47,6 +47,8 @@
         .pp-passos li { counter-increment: passo; display: grid; grid-template-columns: 30px 1fr; gap: 10px; align-items: start; color: var(--muted); line-height: 1.5; }
         .pp-passos li::before { content: counter(passo); display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: rgba(var(--cyan-rgb), .16); color: var(--text); font-weight: 700; font-size: .85rem; }
         .pp-passos b { color: var(--text); }
+        .pp-links { margin: 12px 0 0; font-size: .9rem; }
+        .pp-links a { color: var(--acento-texto); font-weight: 600; }
         .pp-exemplo { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
         .pp-exemplo p { margin: 0; }
         .pp-exemplo a { color: var(--acento-texto); font-weight: 600; }
@@ -100,9 +102,10 @@
                 <h2 id="ppComo">Como funciona</h2>
                 <ol class="pp-passos">
                     <li><span><b>Você aceita</b> e me manda as fotos, os preços e o que quiser no site.</span></li>
-                    <li><span><b>Eu monto</b> e te mando uma prévia pra você ver no celular e pedir ajustes.</span></li>
-                    <li><span><b>Coloco no ar</b> e te ensino a divulgar o link no Instagram e no WhatsApp.</span></li>
+                    <li><span><b>Eu monto a prévia</b> e te mando pra ver no celular. <b>Só paga os primeiros 50% se gostar</b>; se não gostar, não deve nada.</span></li>
+                    <li><span><b>Coloco no ar</b>, você paga o restante e eu te ensino a divulgar o link no Instagram e no WhatsApp.</span></li>
                 </ol>
+                <p class="pp-links"><a href="./como-trabalho.html" target="_blank" rel="noopener">Como eu trabalho ↗</a> · <a id="ppContrato" href="./contrato.html" target="_blank" rel="noopener">Ver o contrato ↗</a></p>
             </section>
 
             <section class="pp-caixa pp-exemplo" aria-label="Exemplo real">
@@ -136,7 +139,7 @@
 
             const reais = (n) => n.toLocaleString("pt-BR", { style: "currency", currency: "BRL", minimumFractionDigits: n % 1 ? 2 : 0 });
             const prazo = Math.max(1, Math.min(90, parseInt(q.get("d"), 10) || 7));
-            const pagamento = (q.get("pg") || "50% pra começar e 50% na entrega").slice(0, 80);
+            const pagamento = (q.get("pg") || S.GARANTIA.pagamento).slice(0, 80);
             const obs = (q.get("obs") || "").slice(0, 600);
             const extras = (q.get("x") || "").split(",").filter((k) => EXTRAS[k]);
             const ate = /^\d{4}-\d{2}-\d{2}$/.test(q.get("ate") || "") ? new Date(q.get("ate") + "T23:59:59") : null;
@@ -167,6 +170,7 @@
             const whats = (texto) => `https://wa.me/${WHATS}?text=${encodeURIComponent(texto)}`;
             $("ppAceito").href = whats(`Oi, Samuel! Aqui é da ${para}. Aceito a proposta: ${pacote.nome}, ${reais(valor)}. Como a gente começa? ✅`);
             $("ppAjustar").href = whats(`Oi, Samuel! Aqui é da ${para}. Vi a proposta (${pacote.nome}) e queria ajustar uma coisa: `);
+            { const u = new URL("contrato.html", location.href); ["para", "p", "v", "d", "x"].forEach((k) => q.get(k) && u.searchParams.set(k, q.get(k))); $("ppContrato").href = u.toString(); }
             $("ppConteudo").hidden = false;
 
             const est = window.ESTATISTICAS;

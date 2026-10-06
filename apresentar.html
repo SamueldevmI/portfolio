@@ -60,6 +60,8 @@
         .ap-preco ul { display: grid; gap: 6px; margin: 4px 0 0; padding: 0; list-style: none; }
         .ap-preco li { color: var(--muted); }
         .ap-preco li::before { content: "✓ "; color: var(--sucesso); }
+        .ap-garantia { margin: 2px 0 0; padding: 10px 12px; border-radius: 12px; background: rgba(var(--sucesso-rgb), .1); color: var(--text); font-size: .95rem; }
+        .ap-garantia b { color: var(--sucesso); }
         .ap-tags { display: flex; flex-wrap: wrap; gap: 6px; }
         .ap-tags span { padding: 4px 10px; border-radius: 999px; background: rgba(255,255,255,.07); color: var(--text); font-size: .82rem; font-weight: 600; }
         .ap-qr { display: grid; justify-items: center; gap: 10px; padding: 18px; border-radius: 22px; background: #fff; color: #111; text-shadow: none; }
@@ -131,6 +133,7 @@
                     <section class="ap-slide"><p class="ap-kicker">Quanto custa</p><h2>Menos do que um cliente perdido por semana</h2>
                         <div class="ap-preco"><span>${esc(p.nome)}</span><b class="ap-valor">a partir de ${S.reais(p.preco)}</b>
                         <div class="ap-tags"><span>pagamento único</span><span>sem mensalidade</span><span>pronto em ~${p.prazo} dias</span></div>
+                        <p class="ap-garantia">🛡️ <b>${esc(S.GARANTIA.titulo)}:</b> eu monto antes, você só paga se aprovar.</p>
                         <ul>${p.itens.slice(0, 4).map(([t]) => `<li>${esc(t)}</li>`).join("")}</ul></div></section>
                     <section class="ap-slide"><p class="ap-kicker">Bora?</p><h2>Aponta a câmera e me chama</h2>
                         <div class="ap-qr">${$("apQr").innerHTML}<small>WhatsApp do Samuel · (67) 99603-4205</small></div>

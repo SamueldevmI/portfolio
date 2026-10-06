@@ -68,6 +68,8 @@
         .mt-total { display: flex; align-items: baseline; justify-content: space-between; padding-top: 10px; border-top: 1px solid var(--line); }
         .mt-total strong { color: var(--ouro); font-size: 2rem; letter-spacing: -.03em; }
         .mt-resumo .botao { justify-content: center; text-align: center; cursor: var(--cursor-mao); }
+        .mt-garantia { margin: 0; padding: 10px 12px; border: 1px solid rgba(var(--sucesso-rgb), .45); border-radius: 12px; background: rgba(var(--sucesso-rgb), .08); color: var(--muted); font-size: .86rem; line-height: 1.45; }
+        .mt-garantia b { color: var(--sucesso); }
         .mt-nota { margin: 0; color: var(--muted); font-size: .8rem; line-height: 1.5; }
         .mt-previa { color: var(--acento-texto); font-weight: 600; font-size: .9rem; }
         .mt-barra { display: none; }
@@ -115,11 +117,12 @@
                 <div class="mt-total"><span>Total estimado</span><strong id="mtTotal">R$ 0</strong></div>
                 <ul class="mt-linhas">
                     <li><span>Prazo</span><b id="mtPrazo"></b></li>
-                    <li><span>Pagamento</span><b>50% no início, 50% na entrega</b></li>
+                    <li><span>Pagamento</span><b>50% ao aprovar a prévia, 50% na entrega</b></li>
                     <li><span>Mensalidade</span><b>nenhuma</b></li>
                 </ul>
                 <a class="botao botao-principal" id="mtEnviar" href="#" target="_blank" rel="noopener noreferrer">Mandar pro Samuel no WhatsApp</a>
                 <a class="mt-previa" id="mtPrevia" href="./?previa=1">👀 ver como ficaria o meu site</a>
+                <p class="mt-garantia"><b>🛡️ Só paga se gostar da prévia.</b> Eu monto a primeira versão antes de você pagar qualquer coisa.</p>
                 <p class="mt-nota">Valor estimado pelo que você escolheu. Depois de entender o seu negócio, eu confirmo o valor final; se for pra mais, te aviso antes de começar.</p>
             </aside>
         </div>

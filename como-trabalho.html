@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Como eu trabalho | Samuel Mickael</title>
+    <meta name="description" content="Do primeiro “oi” ao site no ar: prévia grátis antes de pagar, prazos, o que eu preciso de você e o que acontece se der problema depois.">
+    <link rel="canonical" href="https://samueldevmi.github.io/portfolio/como-trabalho.html">
+    <meta property="og:title" content="Como eu trabalho: do primeiro “oi” ao site no ar">
+    <meta property="og:description" content="Prévia grátis antes de pagar, prazos claros e o site no seu nome.">
+    <meta property="og:url" content="https://samueldevmi.github.io/portfolio/como-trabalho.html">
+    <meta property="og:image" content="https://samueldevmi.github.io/portfolio/imagem/og-image-v5.jpg">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+    <script>
+        (function () {
+            var azul = false;
+            try { azul = localStorage.getItem("portfolio-tema") === "azul"; } catch (e) { /* sem armazenamento */ }
+            document.documentElement.dataset.tema = azul ? "azul" : "vermelho";
+            document.write('<link rel="stylesheet" href="' + (azul ? "style-azul.css" : "style.css") + '?v=20261003">');
+        })();
+    </script>
+    <noscript><link rel="stylesheet" href="style.css"></noscript>
+    <style>
+        .ct { width: min(820px, calc(100% - 32px)); margin: 28px auto 90px; }
+        .ct .eyebrow::before { content: none; }
+        .ct-voltar { display: inline-block; margin-bottom: 18px; color: var(--muted); font-size: .9rem; text-decoration: none; }
+        .ct h1 { margin: 6px 0 10px; font-size: clamp(2.1rem, 6.4vw, 3.4rem); line-height: 1.04; letter-spacing: -.04em; }
+        .ct h2 { margin: 0 0 14px; font-size: clamp(1.4rem, 4vw, 1.9rem); letter-spacing: -.03em; }
+        .ct p, .ct li { color: var(--muted); line-height: 1.6; }
+        .ct-garantia { margin: 22px 0 0; padding: 16px 18px; border: 1px solid rgba(var(--sucesso-rgb), .5); border-radius: 16px; background: rgba(var(--sucesso-rgb), .08); }
+        .ct-garantia b { color: var(--sucesso); }
+        .ct-bloco { margin-top: 56px; }
+        .ct-linha { position: relative; display: grid; gap: 18px; margin: 0; padding: 0 0 0 34px; list-style: none; counter-reset: passo; }
+        .ct-linha::before { content: ""; position: absolute; left: 13px; top: 8px; bottom: 8px; width: 2px; background: linear-gradient(var(--cyan), rgba(var(--cyan-rgb), .1)); }
+        .ct-linha li { position: relative; counter-increment: passo; }
+        .ct-linha li::before { content: counter(passo); position: absolute; left: -34px; top: 0; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--cyan); color: #fff; font: 700 .85rem "Space Grotesk", Arial, sans-serif; }
+        .ct-linha b { display: block; color: var(--text); font-size: 1.05rem; }
+        .ct-linha small { color: var(--acento-texto); font: 600 .74rem "DM Mono", monospace; letter-spacing: .08em; text-transform: uppercase; }
+        .ct-grade { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .ct-cartao { padding: 18px; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); }
+        .ct-cartao h3 { margin: 0 0 8px; font-size: 1.05rem; }
+        .ct-cartao ul { margin: 0; padding-left: 18px; }
+        .ct-acoes { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+        .ct-acoes .botao { cursor: var(--cursor-mao); }
+        .ct-fim { margin-top: 56px; padding: 26px; border: 1px solid rgba(var(--cyan-rgb), .5); border-radius: 18px; background: var(--surface); text-align: center; }
+        .ct-fim .ct-acoes { justify-content: center; }
+        @media (max-width: 640px) { .ct-grade { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <main class="ct">
+        <a class="ct-voltar" href="./">← voltar pro portfólio</a>
+        <p class="eyebrow">SEM SURPRESA</p>
+        <h1>Como eu trabalho</h1>
+        <p>Do primeiro “oi” até o site no ar, tudo combinado antes, por escrito, e você vendo o resultado antes de pagar.</p>
+        <p class="ct-garantia"><b>🛡️ Só paga se gostar da prévia.</b> <span id="ctGarantia">Eu monto a primeira versão do seu site antes de você pagar qualquer coisa. Gostou? Aí você paga os primeiros 50% e eu termino. Não gostou? Não paga nada.</span></p>
+
+        <section class="ct-bloco" aria-labelledby="ctPassos">
+            <h2 id="ctPassos">Passo a passo</h2>
+            <ol class="ct-linha">
+                <li><small>dia 0</small><b>Você me conta como atende hoje</b>Pelo WhatsApp: o que vende, como o cliente pede, o que mais te dá trabalho. Respondo com o orçamento em até 24h.</li>
+                <li><small>dias 1 a 3</small><b>Eu monto a prévia, de graça</b>Uma primeira versão com o nome, as cores e os produtos do seu negócio, pra você abrir no celular e mostrar pra quem quiser.</li>
+                <li><small>quando você aprovar</small><b>Você paga os primeiros 50%</b>Por Pix ou como combinarmos. Se a prévia não te convencer, a gente encerra aqui e você não deve nada.</li>
+                <li><small>até o prazo da proposta</small><b>Eu termino o site e te mostro</b>Com suas fotos, preços e textos. Você pede os ajustes que quiser; a proposta diz quantas rodadas estão incluídas.</li>
+                <li><small>entrega</small><b>Coloco no ar e você paga os outros 50%</b>Te mando o link, te ensino a divulgar no Instagram e no WhatsApp e passo todos os acessos.</li>
+                <li><small>depois</small><b>Continuo por perto</b>Se aparecer erro do site, eu corrijo. Mudança nova (produto, preço, seção) a gente combina na hora, sem enrolação.</li>
+            </ol>
+        </section>
+
+        <section class="ct-bloco ct-grade" aria-label="O que eu preciso e o que você recebe">
+            <div class="ct-cartao">
+                <h3>📦 O que eu preciso de você</h3>
+                <ul>
+                    <li>Logo (se tiver) e as cores da marca</li>
+                    <li>Fotos dos produtos, do espaço ou do seu trabalho</li>
+                    <li>Preços, horários, endereço e formas de pagamento</li>
+                    <li>O WhatsApp que vai receber os pedidos</li>
+                    <li>Um tempinho pra responder minhas dúvidas</li>
+                </ul>
+            </div>
+            <div class="ct-cartao">
+                <h3>🔑 O que é seu</h3>
+                <ul>
+                    <li>O site, com os seus textos e fotos</li>
+                    <li>O domínio (.com.br), registrado no seu nome</li>
+                    <li>Os acessos de tudo, entregues por escrito</li>
+                    <li>Nenhuma mensalidade obrigatória comigo</li>
+                </ul>
+            </div>
+            <div class="ct-cartao">
+                <h3>🧯 E se der problema?</h3>
+                <ul>
+                    <li>Erro meu no site: eu corrijo, sem custo</li>
+                    <li>Site fora do ar: eu olho em até 24h</li>
+                    <li>Mudou algo no negócio: a gente combina o ajuste</li>
+                </ul>
+            </div>
+            <div class="ct-cartao">
+                <h3>🚫 O que não está incluso</h3>
+                <ul>
+                    <li>Pagamento online no próprio site (o pedido vai pro WhatsApp)</li>
+                    <li>App nas lojas da Apple e do Google</li>
+                    <li>Fotos profissionais e anúncios pagos</li>
+                </ul>
+                <p style="margin:8px 0 0;font-size:.9rem">Precisa de algum desses? Dá pra orçar à parte.</p>
+            </div>
+        </section>
+
+        <section class="ct-bloco" aria-labelledby="ctContrato">
+            <h2 id="ctContrato">Tudo por escrito</h2>
+            <p>Antes de começar, a gente assina um contrato simples, de uma página, com o que está incluso, o valor, o prazo e a garantia da prévia. Dá pra ver o modelo agora:</p>
+            <div class="ct-acoes"><a class="botao botao-secundario" href="./contrato.html" target="_blank" rel="noopener">Ver o modelo de contrato ↗</a></div>
+        </section>
+
+        <section class="ct-fim" aria-labelledby="ctFim">
+            <h2 id="ctFim">Bora começar pela prévia?</h2>
+            <p>Me conta do seu negócio. A prévia é por minha conta.</p>
+            <div class="ct-acoes">
+                <a class="botao botao-principal" href="https://wa.me/5567996034205?text=Oi%2C%20Samuel!%20Li%20como%20voc%C3%AA%20trabalha%20e%20quero%20a%20pr%C3%A9via%20do%20meu%20site." target="_blank" rel="noopener noreferrer">Quero minha prévia</a>
+                <a class="botao botao-secundario" href="./monte.html">Montar e ver o preço</a>
+            </div>
+        </section>
+    </main>
+    <script src="estatisticas.js?v=20261003"></script>
+    <script src="servicos.js?v=20261003"></script>
+    <script>
+        if (window.SERVICOS) document.getElementById("ctGarantia").textContent = window.SERVICOS.GARANTIA.texto;
+        window.ESTATISTICAS && window.ESTATISTICAS.contar("/como-trabalho", "Como eu trabalho", true);
+    </script>
+</body>
+</html>

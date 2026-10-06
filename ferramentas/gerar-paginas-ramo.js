@@ -44,6 +44,8 @@ const CSS = `
         .rp-preco li::before { content: "✓ "; color: var(--sucesso); }
         .rp-tags { display: flex; flex-wrap: wrap; gap: 6px; }
         .rp-tags span { padding: 4px 10px; border-radius: 999px; background: rgba(255,255,255,.07); color: var(--text); font-size: .82rem; font-weight: 600; }
+        .rp-garantia { max-width: 560px; margin: 14px 0 0; padding: 12px 14px; border: 1px solid rgba(var(--sucesso-rgb), .45); border-radius: 14px; background: rgba(var(--sucesso-rgb), .08); }
+        .rp-garantia b { color: var(--sucesso); }
         .rp-faq details { padding: 14px 0; border-bottom: 1px solid var(--line); }
         .rp-faq summary { color: var(--text); font-weight: 600; cursor: var(--cursor-mao); }
         .rp-faq p { margin: 8px 0 0; }
@@ -139,17 +141,19 @@ ${r.com.map((t) => `                    <li>${esc(t)}</li>`).join("\n")}
             <div class="rp-preco">
                 <span>${esc(p.nome)}</span>
                 <strong>a partir de ${S.reais(p.preco)}</strong>
-                <div class="rp-tags"><span>pagamento único</span><span>sem mensalidade</span><span>pronto em ~${p.prazo} dias</span><span>50% no início, 50% na entrega</span></div>
+                <div class="rp-tags"><span>pagamento único</span><span>sem mensalidade</span><span>pronto em ~${p.prazo} dias</span><span>${esc(S.GARANTIA.pagamento)}</span></div>
                 <ul>
 ${p.itens.map(([t, d]) => `                    <li>${esc(t)}: ${esc(d)}</li>`).join("\n")}
                 </ul>
             </div>
+            <p class="rp-garantia"><b>${esc(S.GARANTIA.curto)}.</b> ${esc(S.GARANTIA.texto)}</p>
             <p style="margin-top:14px">Quer ver um que já está no ar? <a href="../case-eclipse.html" style="color:var(--acento-texto)">A loja da Eclipse Studio</a>, aqui de Campo Grande.</p>
         </section>
 
         <section class="rp-bloco rp-faq" aria-labelledby="rpFaq">
             <h2 id="rpFaq">Perguntas de quem tem ${esc(r.nome)}</h2>
 ${r.faq.map(([q, a]) => `            <details><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join("\n")}
+            <details><summary>E se eu não gostar?</summary><p>${esc(S.GARANTIA.texto)}</p></details>
             <details><summary>Quanto tempo leva?</summary><p>Em torno de ${p.prazo} dias depois de você me mandar fotos, preços e textos. Eu te mostro uma prévia antes de colocar no ar.</p></details>
         </section>
 

@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Contrato de criação de site | Samuel Mickael</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <style>
+        :root { --tinta: #1b1b1b; --suave: #5a5a5a; --linha: #dcdcdc; --destaque: #c41e2e; --campo: #fff6d6; }
+        * { box-sizing: border-box; }
+        body { margin: 0; background: #ececec; color: var(--tinta); font: 15px/1.6 Georgia, "Times New Roman", serif; }
+        .barra { position: sticky; top: 0; z-index: 2; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; padding: 10px 16px; background: #1b1b1b; color: #fff; font: 600 .9rem Arial, sans-serif; }
+        .barra button, .barra a { padding: 8px 14px; border: 0; border-radius: 8px; background: var(--destaque); color: #fff; font: 600 .9rem Arial, sans-serif; text-decoration: none; cursor: pointer; }
+        .barra a { background: #3a3a3a; }
+        .folha { width: min(800px, calc(100% - 24px)); margin: 20px auto 60px; padding: clamp(22px, 5vw, 56px); background: #fff; box-shadow: 0 10px 40px rgba(0,0,0,.12); }
+        h1 { margin: 0 0 4px; font-size: 1.5rem; text-align: center; letter-spacing: .02em; }
+        .sub { margin: 0 0 22px; color: var(--suave); text-align: center; font-size: .9rem; }
+        h2 { margin: 20px 0 6px; font-size: 1rem; text-transform: uppercase; letter-spacing: .06em; }
+        p { margin: 0 0 8px; }
+        ul { margin: 4px 0 8px; padding-left: 22px; }
+        [contenteditable] { padding: 0 3px; border-bottom: 1px dashed #b49b2c; background: var(--campo); outline: none; }
+        [contenteditable]:focus { background: #ffe9a3; }
+        .assinaturas { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 48px; }
+        .assinaturas div { padding-top: 8px; border-top: 1px solid var(--tinta); text-align: center; font-size: .9rem; }
+        .aviso { margin-top: 26px; color: var(--suave); font-size: .78rem; font-style: italic; }
+        @media (max-width: 560px) { .assinaturas { grid-template-columns: 1fr; } }
+        @media print {
+            body { background: #fff; }
+            .barra, .aviso { display: none; }
+            .folha { width: auto; margin: 0; padding: 0; box-shadow: none; }
+            [contenteditable] { border: 0; background: none; padding: 0; }
+            @page { margin: 18mm; }
+        }
+    </style>
+</head>
+<body>
+    <div class="barra"><span>✏️ Toque nos campos amarelos pra preencher</span><span><a href="./como-trabalho.html">← como eu trabalho</a> <button type="button" onclick="window.print()">Salvar em PDF / imprimir</button></span></div>
+    <article class="folha">
+        <h1>Contrato de criação de site</h1>
+        <p class="sub">Campo Grande - MS, <span contenteditable id="cData"></span></p>
+
+        <h2>1. As partes</h2>
+        <p><b>Contratante:</b> <span contenteditable id="cCliente">nome do negócio</span>, representado por <span contenteditable>nome do responsável</span>, CPF/CNPJ <span contenteditable>000.000.000-00</span>.</p>
+        <p><b>Contratado:</b> Samuel Mickael, desenvolvedor, CPF <span contenteditable>000.000.000-00</span>, WhatsApp (67) 99603-4205.</p>
+
+        <h2>2. O que vai ser feito</h2>
+        <p><b id="cPacote">Site de apresentação</b>, com:</p>
+        <ul id="cItens"></ul>
+
+        <h2>3. Prévia e garantia</h2>
+        <p>Antes de qualquer pagamento, o Contratado entrega uma prévia do site. Se o Contratante não aprovar a prévia, o contrato se encerra sem nenhum custo pra nenhuma das partes.</p>
+
+        <h2>4. Valor e pagamento</h2>
+        <p>Valor total de <b contenteditable id="cValor">R$ 0</b>, pago em duas partes: <b>50% quando o Contratante aprovar a prévia</b> e <b>50% na entrega</b>, com o site no ar. Forma de pagamento: <span contenteditable>Pix</span>. Não há mensalidade.</p>
+
+        <h2>5. Prazo e ajustes</h2>
+        <p>O site fica pronto em até <b contenteditable id="cPrazo">7</b> dias úteis depois que o Contratante enviar fotos, textos e preços. Estão incluídas <span contenteditable>2</span> rodadas de ajustes antes da entrega. Atrasos no envio do material adiam o prazo na mesma medida.</p>
+
+        <h2>6. Conteúdo</h2>
+        <p>O Contratante fornece as fotos, textos, preços e logotipo, e garante que tem o direito de usá-los. O Contratado pode ajustar textos pra deixá-los mais claros, sempre com a aprovação do Contratante.</p>
+
+        <h2>7. Propriedade e acessos</h2>
+        <p>Depois do pagamento final, o site e seus textos e imagens pertencem ao Contratante. O domínio (se houver) é registrado no nome do Contratante, e todos os acessos são entregues por escrito. O Contratado pode mostrar o site no seu portfólio.</p>
+
+        <h2>8. Depois da entrega</h2>
+        <p>Erros de funcionamento causados pelo Contratado são corrigidos sem custo por <span contenteditable>30</span> dias após a entrega. Mudanças novas (produtos, seções, funções) são combinadas e orçadas à parte.</p>
+
+        <h2>9. Cancelamento</h2>
+        <p>Depois de aprovada a prévia, qualquer parte pode encerrar o contrato avisando por escrito. O valor já pago cobre o trabalho feito até ali e não é devolvido; nada mais é cobrado.</p>
+
+        <h2>10. Foro</h2>
+        <p>Fica eleito o foro da comarca de Campo Grande - MS pra resolver qualquer questão deste contrato.</p>
+
+        <div class="assinaturas">
+            <div>Contratante<br><span id="cAssCliente">nome do negócio</span></div>
+            <div>Contratado<br>Samuel Mickael</div>
+        </div>
+        <p class="aviso">Modelo simples pra deixar o combinado por escrito. Não substitui orientação de um advogado em casos específicos.</p>
+    </article>
+    <script src="servicos.js?v=20261003"></script>
+    <script>
+        (function () {
+            "use strict";
+            const S = window.SERVICOS, q = new URLSearchParams(location.search);
+            const $ = (id) => document.getElementById(id);
+            $("cData").textContent = new Date().toLocaleDateString("pt-BR", { day: "numeric", month: "long", year: "numeric" });
+            const p = S.PACOTES[q.get("p")] || S.PACOTES.site;
+            $("cPacote").textContent = p.nome;
+            const extras = (q.get("x") || "").split(",").filter((k) => S.EXTRAS[k]).map((k) => S.EXTRAS[k].nome);
+            $("cItens").replaceChildren(...p.itens.map(([t]) => t).concat(extras).map((t) => Object.assign(document.createElement("li"), { textContent: t })));
+            const para = (q.get("para") || "").trim().slice(0, 60);
+            if (para) { $("cCliente").textContent = para; $("cAssCliente").textContent = para; }
+            const v = Number(String(q.get("v") || "").replace(",", "."));
+            $("cValor").textContent = S.reais(v > 0 ? v : p.preco);
+            $("cPrazo").textContent = String(parseInt(q.get("d"), 10) || p.prazo);
+            $("cCliente").addEventListener("input", () => { $("cAssCliente").textContent = $("cCliente").textContent; });
+            if (para) document.title = `Contrato · ${para}`;
+        })();
+    </script>
+</body>
+</html>

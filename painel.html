@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Meus números | Samuel Mickael</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+    <script>
+        (function () {
+            var azul = false;
+            try { azul = localStorage.getItem("portfolio-tema") === "azul"; } catch (e) { /* sem armazenamento */ }
+            document.documentElement.dataset.tema = azul ? "azul" : "vermelho";
+            document.write('<link rel="stylesheet" href="' + (azul ? "style-azul.css" : "style.css") + '?v=20261003">');
+        })();
+    </script>
+    <noscript><link rel="stylesheet" href="style.css"></noscript>
+    <style>
+        .pn { width: min(980px, calc(100% - 32px)); margin: 32px auto 80px; }
+        .pn .eyebrow::before { content: none; }
+        .pn h1 { margin: 6px 0 6px; font-size: clamp(1.9rem, 6vw, 2.8rem); letter-spacing: -.035em; }
+        .pn h2 { margin: 0 0 12px; font-size: 1.15rem; }
+        .pn p { color: var(--muted); }
+        .pn-aviso { padding: 16px 18px; border-left: 3px solid var(--cyan); border-radius: 0 14px 14px 0; background: rgba(var(--cyan-rgb), .07); color: var(--muted); line-height: 1.6; }
+        .pn-aviso b { color: var(--text); }
+        .pn-aviso ol { margin: 8px 0 0; padding-left: 20px; }
+        .pn-bloco { margin-top: 30px; padding: 20px; border: 1px solid var(--line); border-radius: 18px; background: var(--surface); }
+        .pn-funil { display: grid; gap: 10px; }
+        .pn-etapa { display: grid; grid-template-columns: minmax(150px, 230px) 1fr auto; gap: 12px; align-items: center; }
+        .pn-etapa span { color: var(--text); font-size: .94rem; }
+        .pn-etapa small { display: block; color: var(--muted); font-size: .78rem; }
+        .pn-barra { height: 14px; border-radius: 99px; background: rgba(255,255,255,.06); overflow: hidden; }
+        .pn-barra i { display: block; height: 100%; width: 0; border-radius: 99px; background: linear-gradient(90deg, var(--cyan), rgba(var(--cyan-rgb), .55)); transition: width .6s ease; }
+        .pn-etapa b { min-width: 64px; color: var(--text); font: 700 1.05rem "DM Mono", monospace; text-align: right; }
+        .pn-etapa em { display: block; color: var(--muted); font: 500 .74rem "Space Grotesk", Arial, sans-serif; font-style: normal; text-align: right; }
+        .pn-grade { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+        .pn-num { padding: 14px; border: 1px solid var(--line); border-radius: 14px; background: var(--bg); }
+        .pn-num b { display: block; color: var(--text); font: 700 1.6rem "DM Mono", monospace; }
+        .pn-num span { color: var(--muted); font-size: .84rem; }
+        .pn-dica { margin: 14px 0 0; padding: 12px 14px; border-radius: 12px; background: rgba(var(--ouro-rgb), .1); color: var(--text) !important; font-size: .92rem; }
+        .pn-rodape { margin-top: 18px; font-size: .84rem; }
+        .pn-rodape a { color: var(--acento-texto); }
+        @media (max-width: 560px) { .pn-etapa { grid-template-columns: 1fr auto; } .pn-barra { grid-column: 1 / -1; grid-row: 2; } }
+    </style>
+</head>
+<body>
+    <main class="pn">
+        <p class="eyebrow">SÓ PRA VOCÊ · NÃO APARECE NO SITE</p>
+        <h1>Meus números</h1>
+        <p>O caminho de quem visita o portfólio, do primeiro clique até o WhatsApp. Os números são desde o começo da contagem.</p>
+        <div class="pn-aviso" id="pnAviso" hidden></div>
+
+        <section class="pn-bloco" aria-labelledby="pnFunilT">
+            <h2 id="pnFunilT">🔻 Do visitante ao WhatsApp</h2>
+            <div class="pn-funil" id="pnFunil"></div>
+            <p class="pn-dica" id="pnDica" hidden></p>
+        </section>
+
+        <section class="pn-bloco" aria-labelledby="pnPagT">
+            <h2 id="pnPagT">📄 Páginas</h2>
+            <div class="pn-grade" id="pnPaginas"></div>
+        </section>
+
+        <section class="pn-bloco" aria-labelledby="pnRamoT">
+            <h2 id="pnRamoT">🏷️ Prévias abertas por ramo</h2>
+            <div class="pn-funil" id="pnRamos"></div>
+        </section>
+
+        <section class="pn-bloco" aria-labelledby="pnTesteT">
+            <h2 id="pnTesteT">📝 Notas no teste de 1 minuto</h2>
+            <div class="pn-funil" id="pnNotas"></div>
+        </section>
+
+        <section class="pn-bloco" aria-labelledby="pnCrmT">
+            <h2 id="pnCrmT">📇 Sua prospecção (neste aparelho)</h2>
+            <div class="pn-grade" id="pnCrm"></div>
+        </section>
+
+        <p class="pn-rodape"><a href="prospeccao.html">← prospecção</a> · <a href="./">portfólio</a> · <a href="#" id="pnAtualizar">atualizar números</a></p>
+    </main>
+    <script src="estatisticas.js?v=20261003"></script>
+    <script src="servicos.js?v=20261003"></script>
+    <script src="previa-celular.js?v=20261003"></script>
+    <script>
+        (function () {
+            "use strict";
+            const est = window.ESTATISTICAS, S = window.SERVICOS, P = window.PreviaCelular;
+            const $ = (id) => document.getElementById(id);
+            const el = (tag, props, ...filhos) => { const e = Object.assign(document.createElement(tag), props || {}); e.append(...filhos); return e; };
+            const fmt = new Intl.NumberFormat("pt-BR");
+            const n = (v) => (v == null ? "—" : fmt.format(v));
+
+            function barras(alvo, itens, base) {
+                const maximo = Math.max(1, ...itens.map((x) => x.v || 0));
+                $(alvo).replaceChildren(...itens.map((x, k) => {
+                    const i = el("i");
+                    const pct = base && k > 0 && itens[0].v ? ` · ${Math.round(((x.v || 0) / itens[0].v) * 100)}% das visitas` : "";
+                    const linha = el("div", { className: "pn-etapa" }, el("span", {}, x.rotulo, ...(x.sub ? [el("small", { textContent: x.sub })] : [])), el("div", { className: "pn-barra" }, i), el("b", {}, n(x.v), ...(pct ? [el("em", { textContent: pct.slice(3) })] : [])));
+                    requestAnimationFrame(() => { i.style.width = `${((x.v || 0) / maximo) * 100}%`; });
+                    return linha;
+                }));
+            }
+
+            function prospeccao() {
+                let lista = [];
+                try { lista = JSON.parse(localStorage.getItem("prospeccao-historico")) || []; } catch (e) { /* vazio */ }
+                const conta = (f) => lista.filter(f).length;
+                const enviados = conta((c) => c.status && c.status !== "fila");
+                const abriram = conta((c) => ["abriu", "respondeu", "negociando", "fechou"].includes(c.status));
+                const fecharam = conta((c) => c.status === "fechou");
+                const valor = lista.filter((c) => c.status === "fechou").reduce((t, c) => t + (Number(c.valor) || 0), 0);
+                const itens = [["📤", "enviados", enviados], ["👀", "abriram", abriram], ["💬", "responderam", conta((c) => ["respondeu", "negociando", "fechou"].includes(c.status))], ["✅", "fecharam", fecharam], ["🗂️", "na fila", conta((c) => c.status === "fila")]];
+                $("pnCrm").replaceChildren(...itens.map(([e, t, v]) => el("div", { className: "pn-num" }, el("b", { textContent: n(v) }), el("span", { textContent: `${e} ${t}` }))),
+                    el("div", { className: "pn-num" }, el("b", { textContent: enviados ? Math.round((fecharam / enviados) * 100) + "%" : "—" }), el("span", { textContent: "🎯 taxa de fechamento" })),
+                    el("div", { className: "pn-num" }, el("b", { textContent: valor ? S.reais(valor) : "—" }), el("span", { textContent: "💰 fechado em propostas" })));
+            }
+
+            async function carregar() {
+                prospeccao();
+                if (!est || !est.configurado) {
+                    const aviso = $("pnAviso");
+                    aviso.hidden = false;
+                    aviso.innerHTML = "🔌 <b>Os números do site aparecem quando o GoatCounter estiver ligado.</b><ol><li>Crie a conta grátis em <b>goatcounter.com</b> (o código é o nome que você escolher, tipo <b>samueldevmi</b>).</li><li>Em <b>Settings</b>, marque <b>“Allow adding visitor counts on your website”</b>.</li><li>Me mande o código: eu coloco no <b>estatisticas.js</b> e este painel acende sozinho.</li></ol>";
+                    barras("pnFunil", [{ rotulo: "Visitas no portfólio" }, { rotulo: "Abriram uma prévia" }, { rotulo: "Montaram o site" }, { rotulo: "Tocaram no WhatsApp" }]);
+                    return;
+                }
+                const q = (c) => est.quantos(c);
+                const ramos = Object.entries(S.RAMOS);
+                const [visitas, previas, monte, monteEnviou, whats, teste, testeZap, comoTrab, caseEc, ...resto] = await Promise.all([
+                    q("/"), Promise.all(ramos.map(([, r]) => q(`/evento/previa-${est.slug(r.previa)}`))), q("/monte"), q("/evento/monte-enviou"), q("/evento/whatsapp"), q("/teste"), q("/evento/teste-whatsapp"), q("/como-trabalho"), q("/case-eclipse"),
+                    ...ramos.map(([k]) => q(`/site-para-${{ loja: "loja-de-roupa", salao: "salao-de-beleza" }[k] || k}/`)),
+                    ...Array.from({ length: 11 }, (_, i) => q(`/evento/teste-nota-${i}`)),
+                ]);
+                const paginasRamo = resto.slice(0, ramos.length), notas = resto.slice(ramos.length);
+                const soma = (lista) => lista.reduce((t, v) => t + (v || 0), 0);
+                const totalPrevias = soma(previas);
+                barras("pnFunil", [
+                    { rotulo: "Visitas no portfólio", v: visitas },
+                    { rotulo: "Abriram uma prévia", sub: "do celular, com o nome do negócio", v: totalPrevias },
+                    { rotulo: "Montaram o site", sub: "abriram o “Monte seu site”", v: monte },
+                    { rotulo: "Tocaram no WhatsApp", sub: "qualquer botão de contato do portfólio", v: (whats || 0) + (monteEnviou || 0) },
+                ], true);
+                // a maior queda do funil vira a dica
+                const etapas = [["visitas", "prévia", visitas, totalPrevias, "Pouca gente abre a prévia: vale deixar o celular do topo ainda mais chamativo ou citar a prévia na mensagem de prospecção."], ["prévia", "WhatsApp", totalPrevias, (whats || 0) + (monteEnviou || 0), "Muita gente vê a prévia e não chama: experimente deixar o botão “quero esse site” mais forte ou lembrar da garantia logo abaixo dele."]];
+                const pior = etapas.filter(([, , a]) => a > 20).sort((x, y) => (x[3] / x[2]) - (y[3] / y[2]))[0];
+                if (pior) { $("pnDica").hidden = false; $("pnDica").textContent = "💡 " + pior[4]; }
+                $("pnPaginas").replaceChildren(...[["Portfólio", visitas], ["Monte seu site", monte], ["Teste de 1 minuto", teste], ["Chamaram pelo teste", testeZap], ["Como eu trabalho", comoTrab], ["Case Eclipse", caseEc], ...ramos.map(([, r], i) => [`Site para ${r.nome}`, paginasRamo[i]])]
+                    .map(([t, v]) => el("div", { className: "pn-num" }, el("b", { textContent: n(v) }), el("span", { textContent: t }))));
+                barras("pnRamos", ramos.map(([, r], i) => ({ rotulo: `${r.emoji} ${r.nome}`, v: previas[i] })).sort((a, b) => (b.v || 0) - (a.v || 0)));
+                barras("pnNotas", notas.map((v, i) => ({ rotulo: `nota ${i}`, v })).filter((x) => x.v));
+                if (!notas.some(Boolean)) $("pnNotas").replaceChildren(el("p", { textContent: "Ninguém fez o teste ainda." }));
+            }
+            $("pnAtualizar").addEventListener("click", (e) => { e.preventDefault(); carregar(); });
+            carregar();
+        })();
+    </script>
+</body>
+</html>

@@ -43,7 +43,38 @@ const LINK_PERSONALIZADO = (function () {
     if (para) window.ESTATISTICAS?.contar(`/link/${window.ESTATISTICAS.slug(para)}`, `abriu o link: ${para}`, true);
     return { para, ramo, previa: p.get("previa") === "1", slug: para && window.ESTATISTICAS ? window.ESTATISTICAS.slug(para) : "" };
 })();
-window.ESTATISTICAS?.contar(location.pathname || "/", "Portfólio", true);
+/* As seções de baixo usam content-visibility (o navegador só monta quando chegam perto), o que deixa a abertura
+   bem mais leve. Mas pulos por link interno precisam da altura real: no primeiro clique que leva pra uma seção,
+   monta tudo antes de rolar. Também vale pra quem já chega com #algo no endereço. */
+{
+    const montarSecoes = () => document.documentElement.classList.add("secoes-montadas");
+    if (location.hash.length > 1) montarSecoes();
+    // se a rolagem terminar longe do alvo (seções que mudam de tamanho no caminho), completa o pulo uma vez
+    const corrigirPulo = (alvo) => {
+        let feito = false;
+        const conferir = () => {
+            if (feito) return; feito = true;
+            const margem = parseFloat(getComputedStyle(alvo).scrollMarginTop) || 0;
+            if (Math.abs(alvo.getBoundingClientRect().top - margem) > 40) alvo.scrollIntoView({ behavior: prefereMenosMovimento ? "auto" : "smooth" });
+        };
+        window.addEventListener("scrollend", conferir, { once: true });
+        setTimeout(conferir, 1800);
+    };
+    document.addEventListener("click", (e) => {
+        if (!e.target.closest('a[href^="#"], a[href^="./#"], [data-orcamento-tipo], .cmp-querer, .previa-quero, .cmp-testar')) return;
+        montarSecoes();
+        const link = e.target.closest('a[href^="#"]');
+        const id = link && link.getAttribute("href").slice(1);
+        const alvo = id && document.getElementById(id);
+        if (alvo) corrigirPulo(alvo);
+    }, true);
+    window.addEventListener("hashchange", montarSecoes);
+}
+window.ESTATISTICAS?.contar("/", "Portfólio", true);
+// qualquer toque num botão que leve pro meu WhatsApp (o fim do funil no painel)
+document.addEventListener("click", (evento) => {
+    if (evento.target.closest('a[href*="wa.me/5567996034205"], [data-orcamento-tipo], .cmp-querer, .previa-quero')) window.ESTATISTICAS?.contar("/evento/whatsapp", "tocou no WhatsApp/orçamento", true);
+}, true);
 // quem veio pelo link personalizado e tocou em WhatsApp ou orçamento (o sinal mais quente pra prospecção)
 if (LINK_PERSONALIZADO && LINK_PERSONALIZADO.slug) document.addEventListener("click", (evento) => {
     if (evento.target.closest('a[href*="wa.me/"], [data-orcamento-tipo], .cmp-querer, .previa-quero, .botao-principal')) {
@@ -522,8 +553,11 @@ document.querySelectorAll(".botao").forEach((botao) => {
     ticketEl?.addEventListener("input", () => calcular(false));
 
     // monta as cenas quando o processador estiver livre: a primeira tela aparece antes
+    // as abas entram na hora (senão a fileira aparece depois e empurra a página); a calculadora, que fica
+    // fechada num "abrir", só é preenchida quando o processador estiver livre
+    montar();
     let montado = false;
-    const montarJa = () => { if (montado) return; montado = true; montar(); calcular("inicio"); };
+    const montarJa = () => { if (montado) return; montado = true; calcular("inicio"); };
     (window.requestIdleCallback || ((f) => setTimeout(f, 200)))(montarJa, { timeout: 1500 });
     let comecou = false;
     const comecar = () => { if (comecou) return; comecou = true; montarJa(); if (semMovimento) { automatico = false; mostrar(0); } else rodarSozinho(0); };

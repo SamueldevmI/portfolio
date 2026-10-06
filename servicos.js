@@ -91,6 +91,11 @@
             faq: [["Mostra os convênios aceitos?", "Mostra, com a lista atualizada sempre que você mudar."], ["Guarda dado de paciente?", "Não. O pedido vai direto pro WhatsApp da recepção; o site não guarda informação de saúde."], ["Serve pra mais de um profissional?", "Serve: cada especialidade ou profissional com seus dias de atendimento."]] },
     };
 
+    /* Garantia: a prévia vem antes de qualquer pagamento. */
+    const GARANTIA = { titulo: "Só paga se gostar da prévia", curto: "🛡️ Só paga se gostar da prévia",
+        texto: "Eu monto a primeira versão do seu site antes de você pagar qualquer coisa. Gostou? Aí você paga os primeiros 50% e eu termino. Não gostou? Não paga nada.",
+        pagamento: "50% ao aprovar a prévia, 50% na entrega" };
+
     /* Indique e ganhe: link ?indicou=Nome. VALORES SUGERIDOS: confirme antes de divulgar. */
     const INDICACAO = { desconto: 0.10, amigo: "10% de desconto no primeiro site", quemIndica: "R$ 50 no Pix pra cada indicação que fechar" };
 
@@ -116,7 +121,7 @@
         return `https://wa.me/${WHATS}?text=${encodeURIComponent(final)}`;
     }
 
-    return { WHATS, SITE, PACOTES, EXTRAS, RAMOS, INDICACAO, reais, slug, indicacao, linkWhats };
+    return { WHATS, SITE, PACOTES, EXTRAS, RAMOS, GARANTIA, INDICACAO, reais, slug, indicacao, linkWhats };
 });
 
 /* Em qualquer página que carregar este arquivo: quem veio por indicação leva o nome de quem indicou
