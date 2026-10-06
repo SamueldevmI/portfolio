@@ -2829,3 +2829,11 @@ html.secoes-montadas main > section.secao, html.secoes-montadas main > .secao { 
 
 /* o brilho pontilhado do celular do topo passa um pouco das bordas: corta o que sai pela lateral (sem barra de rolagem) */
 header.hero { overflow-x: clip; }
+/* ---------- Nada muda de altura acima de quem está lendo (no celular a página pulava) ----------
+   O gráfico do GitHub já reserva o tamanho que vai ter, e a linha dele na ficha fica guardada invisível. */
+.github-atividade.gh-carregando { min-height: 340px; }
+@media (max-width: 1199px) { .github-atividade.gh-carregando { min-height: 305px; } }
+@media (max-width: 999px) { .github-atividade.gh-carregando { min-height: 425px; } }
+@media (max-width: 720px) { .github-atividade.gh-carregando { min-height: 396px; } }
+.ficha-missoes li.ficha-esperando { visibility: hidden; }
+.cmp-linha.cmp-esperando { visibility: hidden; animation: none; }

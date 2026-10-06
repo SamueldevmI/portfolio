@@ -53,7 +53,7 @@
             } catch (e) { /* sem armazenamento */ }
             document.documentElement.dataset.tema = tema;
             if (tema === "azul") document.querySelector('meta[name="theme-color"]').content = "#0e1422";
-            document.write('<link rel="stylesheet" id="folhaTema" href="' + (tema === "azul" ? "style-azul.css" : "style.css") + '?v=20261006">');
+            document.write('<link rel="stylesheet" id="folhaTema" href="' + (tema === "azul" ? "style-azul.css" : "style.css") + '?v=20261006b">');
         })();
         /* Idioma: detectado cedo (antes do resto da página rodar) só pra avisar efeitos como a
            digitação do texto do hero, que senão sobrescreveriam a tradução feita pelo idioma.js. */
@@ -67,7 +67,7 @@
             document.documentElement.dataset.idioma = idioma;
         })();
     </script>
-    <noscript><link rel="stylesheet" href="style.css?v=20261006"></noscript>
+    <noscript><link rel="stylesheet" href="style.css?v=20261006b"></noscript>
     <title id="tituloPagina">Samuel Mickael | Desenvolvedor Web &amp; Mobile</title>
     <script type="application/ld+json">
     {
@@ -275,7 +275,7 @@
                                     <b>MISSÕES CUMPRIDAS</b>
                                     <ul>
                                         <li><strong id="fichaProjetos">7</strong><span>projetos no ar pra testar</span></li>
-                                        <li id="fichaGithub" hidden><strong></strong><span>contribuições no GitHub no último ano</span></li>
+                                        <li id="fichaGithub" class="ficha-esperando"><strong></strong><span>contribuições no GitHub no último ano</span></li>
                                         <li><strong>1ª</strong><span>loja de cliente no ar: <a href="case-eclipse.html">Eclipse Studio</a></span></li>
                                     </ul>
                                 </div>
@@ -798,20 +798,20 @@
     </div>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-    <script src="estatisticas.js?v=20261006" defer></script>
+    <script src="estatisticas.js?v=20261006b" defer></script>
     <script src="servicos.js?v=20261002" defer></script>
-    <script src="previa-celular.js?v=20261006" defer></script>
-    <script src="filme-celular.js?v=20261006" defer></script>
-    <script src="script.js?v=20261006" defer></script>
-<script src="acabamento.js?v=20261006" defer></script>
-<script src="ficha.js?v=20261006" defer></script>
-<script src="gibi.js?v=20261006" defer></script>
-<script src="idioma.js?v=20261006" defer></script>
+    <script src="previa-celular.js?v=20261006b" defer></script>
+    <script src="filme-celular.js?v=20261006b" defer></script>
+    <script src="script.js?v=20261006b" defer></script>
+<script src="acabamento.js?v=20261006b" defer></script>
+<script src="ficha.js?v=20261006b" defer></script>
+<script src="gibi.js?v=20261006b" defer></script>
+<script src="idioma.js?v=20261006b" defer></script>
 <script>
     /* Scripts que a página não precisa pra aparecer: o mobile.js só baixa em tela de toque (no computador
        ele não faz nada) e a música só depois que a página terminou de carregar. */
     (function () {
-        var versao = "?v=20261006";
+        var versao = "?v=20261006b";
         function carregar(arquivo) { var s = document.createElement("script"); s.src = arquivo + versao; document.body.appendChild(s); }
         var toque = matchMedia("(pointer: coarse)").matches;
         // o pedido de "instalar app" pode chegar antes do mobile.js: fica guardado pra ele usar

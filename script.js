@@ -381,6 +381,16 @@ document.querySelectorAll(".botao").forEach((botao) => {
         return lista;
     }
 
+    // O comparador fica lá no topo: se ele muda de altura enquanto a pessoa lê mais embaixo, a página
+    // inteira pula (no iPhone o navegador não compensa). Então ele só troca de cena quando está na tela,
+    // e os dois lados nunca encolhem de uma cena pra outra (a altura só cresce até a maior cena).
+    let naTela = true;
+    if ("IntersectionObserver" in window) new IntersectionObserver((e) => { naTela = e.some((x) => x.isIntersecting); }).observe(raiz);
+    const quandoNaTela = () => new Promise((ok) => { (function ver() { if (naTela && !document.hidden) ok(); else setTimeout(ver, 500); })(); });
+    const segurarAltura = () => ["sem", "com"].forEach((lado) => { const el = palco[lado]; el.style.minHeight = Math.max(el.offsetHeight, parseFloat(el.style.minHeight) || 0) + "px"; });
+    let larguraAntes = innerWidth;
+    addEventListener("resize", () => { if (innerWidth === larguraAntes) return; larguraAntes = innerWidth; palco.sem.style.minHeight = palco.com.style.minHeight = ""; });
+
     let tipo = NEGOCIOS[ler("portfolio-tipo-negocio")] ? ler("portfolio-tipo-negocio") : "pizzaria";
     let lista = [], atual = 0, rodada = 0, automatico = true;
     const nome = () => (campoNome?.value || "").trim().slice(0, 40);
@@ -413,6 +423,7 @@ document.querySelectorAll(".botao").forEach((botao) => {
         if (detalhe) { const d = document.createElement("small"); d.textContent = detalhe; el.appendChild(d); }
         if (t === "msg") el.style.setProperty("--giro", (Math.random() * 4 - 2).toFixed(1) + "deg");
         palco[lado].appendChild(el);
+        return el;
     }
 
     function montarPlacar(c) {
@@ -457,19 +468,21 @@ document.querySelectorAll(".botao").forEach((botao) => {
         await espera(180);
         if (!vivo()) return false;
         raiz.classList.remove("cmp-trocando");
+        segurarAltura();
         palco.sem.innerHTML = ""; palco.com.innerHTML = "";
+        // todas as linhas da cena entram de uma vez, escondidas, e vão aparecendo uma a uma: assim o
+        // comparador já nasce do tamanho final e não empurra a página enquanto as mensagens chegam
         const passos = Math.max(c.sem.length, c.com.length);
+        const fila = [];
         for (let p = 0; p < passos; p++) {
-            if (c.sem[p]) {
-                if (!vivo()) return false;
-                linha("sem", ...c.sem[p]);
-                await espera(c.sem[p][0] === "alerta" ? 500 : 380);
-            }
-            if (c.com[p]) {
-                if (!vivo()) return false;
-                linha("com", ...c.com[p]);
-                await espera(380);
-            }
+            if (c.sem[p]) fila.push([linha("sem", ...c.sem[p]), c.sem[p][0] === "alerta" ? 500 : 380]);
+            if (c.com[p]) fila.push([linha("com", ...c.com[p]), 380]);
+        }
+        if (!semMovimento) fila.forEach(([el]) => el.classList.add("cmp-esperando"));
+        for (const [el, tempo] of fila) {
+            if (!vivo()) return false;
+            el.classList.remove("cmp-esperando");
+            await espera(tempo);
         }
         if (!vivo()) return false;
         await acenderPlacar();
@@ -482,6 +495,7 @@ document.querySelectorAll(".botao").forEach((botao) => {
         raiz.classList.remove("cmp-contando"); void raiz.offsetWidth; raiz.classList.add("cmp-contando");
         await espera(5000);
         raiz.classList.remove("cmp-contando");
+        await quandoNaTela();
         if (automatico) rodarSozinho((i + 1) % lista.length);
     }
 
@@ -539,11 +553,23 @@ document.querySelectorAll(".botao").forEach((botao) => {
     ticketEl?.addEventListener("input", () => calcular(false));
 
     // monta as cenas quando o processador estiver livre: a primeira tela aparece antes
+    // as abas entram na hora (senão a fileira aparece depois e empurra a página); a calculadora, que fica
+    // fechada num "abrir", só é preenchida quando o processador estiver livre
+    montar();
     let montado = false;
-    const montarJa = () => { if (montado) return; montado = true; montar(); calcular("inicio"); };
+    const montarJa = () => { if (montado) return; montado = true; calcular("inicio"); };
     (window.requestIdleCallback || ((f) => setTimeout(f, 200)))(montarJa, { timeout: 1500 });
     let comecou = false;
     const comecar = () => { if (comecou) return; comecou = true; montarJa(); if (semMovimento) { automatico = false; mostrar(0); } else rodarSozinho(0); };
+    // A primeira cena já entra escondida no carregamento: o comparador nasce do tamanho final, em vez de
+    // crescer quando aparece na tela (o que empurrava a página no celular)
+    (function reservarEspaco() {
+        const c = cenas(tipo, nome())[0];
+        if (!c) return;
+        montarPlacar(c);
+        c.sem.forEach((x) => linha("sem", ...x).classList.add("cmp-esperando"));
+        c.com.forEach((x) => linha("com", ...x).classList.add("cmp-esperando"));
+    })();
     if ("IntersectionObserver" in window) {
         const obs = new IntersectionObserver((e) => { if (e.some((x) => x.isIntersecting)) { obs.disconnect(); comecar(); } });
         obs.observe(raiz);
