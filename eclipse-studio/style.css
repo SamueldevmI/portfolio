@@ -249,6 +249,8 @@ a { color: var(--rosa); }
 .fav-texto { position: static; width: auto; height: 36px; padding: 0 14px 0 10px; border-radius: 999px; font: 700 .84rem var(--fonte); gap: 6px; grid-auto-flow: column; }
 .fav-texto::after { content: "Favoritar"; }
 .fav-texto[aria-pressed="true"]::after { content: "Nos favoritos"; }
+html[lang="es"] .fav-texto::after { content: "Favorito"; }
+html[lang="es"] .fav-texto[aria-pressed="true"]::after { content: "En favoritos"; }
 .chip-fav { display: inline-flex; align-items: center; gap: 6px; }
 .chip-fav svg { width: 15px; height: 15px; fill: var(--rosa); }
 .chip-fav[aria-pressed="true"] svg { fill: var(--tinta); }
@@ -1293,24 +1295,12 @@ html.varinha :is(input[type="text"], input[type="search"], textarea) { cursor: t
 .instalar-app .botao { min-height: 40px; padding: 0 16px; font-size: .86rem; }
 .instalar-app small { display: block; max-width: 34ch; color: var(--mudo); font-size: .8rem; }
 
-/* botão PT | ES (idioma-loja.js) */
-.botao-idioma { display: inline-flex; align-items: center; gap: 4px; flex: none; height: 42px; padding: 0 12px; border: 2px solid var(--linha-forte); border-radius: 999px; background: transparent; color: var(--mudo); font: 700 .78rem var(--fonte); letter-spacing: .04em; cursor: pointer; transition: border-color .2s, color .2s; }
-.botao-idioma:hover { border-color: var(--menta); }
-.botao-idioma i { opacity: .4; font-style: normal; }
-.botao-idioma .ativo { color: var(--menta); }
-.botao-idioma:focus-visible { outline: 3px solid var(--menta); outline-offset: 2px; }
-/* até tablet: só o idioma pra onde o botão troca, redondo como os outros do topo */
-@media (max-width: 1100px) {
-    .botao-idioma { justify-content: center; width: 42px; padding: 0; }
-    .botao-idioma i, .botao-idioma .ativo { display: none; }
-    .botao-idioma span { color: var(--texto); }
-}
 /* celular bem estreito (até 360px): topo mais compacto pra caber logo, idioma, som e sacola com contador */
 @media (max-width: 360px) {
     .topo-in { gap: 8px; }
     .logo { gap: 6px; font-size: 1.35rem; }
     .logo-icone { width: 26px; height: 26px; }
-    .botao-idioma, .botao-som { width: 38px; height: 38px; }
+    .botao-som { width: 38px; height: 38px; }
     .botao-sacola { min-height: 38px; padding: 0 10px; gap: 6px; }
 }
 @media (max-width: 960px) { .topo nav { gap: 14px; } .topo-in { gap: 14px; } }
