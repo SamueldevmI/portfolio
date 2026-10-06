@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#111111">
+    <title>Apresentação | Samuel Mickael</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+    <script>
+        (function () {
+            var azul = false;
+            try { azul = localStorage.getItem("portfolio-tema") === "azul"; } catch (e) { /* sem armazenamento */ }
+            document.documentElement.dataset.tema = azul ? "azul" : "vermelho";
+            document.write('<link rel="stylesheet" href="' + (azul ? "style-azul.css" : "style.css") + '?v=20261002">');
+        })();
+    </script>
+    <noscript><link rel="stylesheet" href="style.css"></noscript>
+    <style>
+        html, body { height: 100%; }
+        body { overflow: hidden; }
+        .ap-config { width: min(520px, calc(100% - 32px)); margin: 40px auto; }
+        .ap-config .eyebrow::before { content: none; }
+        .ap-config h1 { margin: 6px 0 8px; font-size: clamp(1.8rem, 6vw, 2.4rem); letter-spacing: -.03em; }
+        .ap-config p { color: var(--muted); }
+        .ap-config form { display: grid; gap: 14px; margin-top: 18px; padding: 20px; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); }
+        .ap-config label { display: grid; gap: 6px; color: var(--muted); font-size: .86rem; }
+        .ap-config input, .ap-config select { width: 100%; padding: 12px 13px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--text); font: 500 1rem "Space Grotesk", Arial, sans-serif; }
+        .ap-config .botao { justify-content: center; cursor: var(--cursor-mao); }
+        .ap-config small { color: var(--muted); }
+        body.config { overflow: auto; }
+
+        .ap { position: fixed; inset: 0; display: grid; grid-template-rows: 1fr auto; background: radial-gradient(70% 50% at 50% 0%, rgba(var(--cyan-rgb), .14), transparent 70%), var(--bg); }
+        .ap[hidden] { display: none; }
+        .ap-slide { display: none; height: 100%; overflow: hidden; padding: max(28px, env(safe-area-inset-top)) 22px 12px; }
+        .ap-slide.ativo { display: grid; align-content: center; justify-items: center; gap: 16px; text-align: center; animation: ap-entra .4s cubic-bezier(.2,.8,.2,1); }
+        @keyframes ap-entra { from { opacity: 0; transform: translateY(14px); } }
+        .ap-kicker { margin: 0; color: var(--acento-texto); font: 600 .8rem "DM Mono", monospace; letter-spacing: .14em; text-transform: uppercase; }
+        .ap h2 { margin: 0; max-width: 18ch; font-size: clamp(2rem, 8vw, 3.6rem); line-height: 1.04; letter-spacing: -.04em; }
+        .ap h2 em { color: var(--cyan); font-style: normal; }
+        .ap-sub { margin: 0; max-width: 34ch; color: var(--muted); font-size: clamp(1rem, 3.6vw, 1.25rem); line-height: 1.45; }
+        .ap-emoji { font-size: clamp(3.4rem, 14vw, 5rem); line-height: 1; }
+        .ap-chat { display: grid; gap: 8px; width: min(420px, 100%); }
+        .ap-msg { justify-self: start; max-width: 85%; padding: 10px 14px; border-radius: 16px 16px 16px 4px; background: var(--surface-2); color: var(--text); font-size: 1.02rem; text-align: left; opacity: 0; animation: ap-msg .35s ease forwards; }
+        .ap-msg:nth-child(even) { justify-self: end; border-radius: 16px 16px 4px 16px; }
+        .ap-msg:nth-child(1) { animation-delay: .2s; } .ap-msg:nth-child(2) { animation-delay: .7s; } .ap-msg:nth-child(3) { animation-delay: 1.2s; } .ap-msg:nth-child(4) { animation-delay: 1.7s; }
+        @keyframes ap-msg { from { opacity: 0; transform: translateY(8px) scale(.96); } to { opacity: 1; transform: none; } }
+        .ap-alerta { margin: 4px 0 0; padding: 10px 14px; border: 1px dashed rgba(var(--cyan-rgb), .6); border-radius: 12px; color: var(--text); font-weight: 600; opacity: 0; animation: ap-msg .35s ease 2.3s forwards; }
+        .ap-com { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 26px; align-items: center; text-align: left; }
+        .ap-com ul { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; max-width: 32ch; }
+        .ap-com li { padding-left: 28px; position: relative; color: var(--text); font-size: 1.1rem; line-height: 1.4; }
+        .ap-com li::before { content: "✓"; position: absolute; left: 0; color: var(--sucesso); font-weight: 700; }
+        .ap .previa-site { height: min(430px, calc(100dvh - 330px)); min-height: 240px; pointer-events: none; }
+        .ap .previa-celular { animation: none; }
+        .ap-preco { display: grid; gap: 10px; width: min(440px, 100%); padding: 22px; border: 1px solid rgba(var(--cyan-rgb), .55); border-radius: 20px; background: var(--surface); text-align: left; }
+        .ap-preco b.ap-valor { color: var(--ouro); font-size: clamp(2.4rem, 10vw, 3.4rem); letter-spacing: -.04em; line-height: 1; }
+        .ap-preco ul { display: grid; gap: 6px; margin: 4px 0 0; padding: 0; list-style: none; }
+        .ap-preco li { color: var(--muted); }
+        .ap-preco li::before { content: "✓ "; color: var(--sucesso); }
+        .ap-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+        .ap-tags span { padding: 4px 10px; border-radius: 999px; background: rgba(255,255,255,.07); color: var(--text); font-size: .82rem; font-weight: 600; }
+        .ap-qr { display: grid; justify-items: center; gap: 10px; padding: 18px; border-radius: 22px; background: #fff; color: #111; text-shadow: none; }
+        .ap-qr-svg { width: min(240px, 56vw, 34dvh); height: auto; display: block; }
+        .ap-qr small { font: 600 .9rem "Space Grotesk", Arial, sans-serif; }
+        .ap-acoes { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+        .ap-acoes .botao { cursor: var(--cursor-mao); }
+        .ap-nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 16px max(14px, env(safe-area-inset-bottom)); }
+        .ap-nav button { min-width: 48px; min-height: 48px; padding: 0 16px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--text); font: 600 1rem "Space Grotesk", Arial, sans-serif; cursor: var(--cursor-mao); }
+        .ap-nav button:disabled { opacity: .35; }
+        .ap-pontos { display: flex; gap: 6px; }
+        .ap-pontos i { width: 8px; height: 8px; border-radius: 50%; background: var(--line); transition: background .2s, transform .2s; }
+        .ap-pontos i.ativo { background: var(--cyan); transform: scale(1.3); }
+        .ap-sair { position: fixed; top: max(10px, env(safe-area-inset-top)); right: 12px; z-index: 2; padding: 6px 12px; border: 0; border-radius: 999px; background: rgba(0,0,0,.35); color: var(--muted); font: 500 .8rem "Space Grotesk", Arial, sans-serif; cursor: var(--cursor-mao); }
+        @media (max-width: 760px) {
+            .ap-com { grid-template-columns: 1fr; justify-items: center; gap: 12px; }
+            .ap-com ul { display: none; }
+        }
+        @media (prefers-reduced-motion: reduce) { .ap-slide.ativo, .ap-msg, .ap-alerta { animation: none; opacity: 1; } }
+    </style>
+</head>
+<body class="config">
+    <main class="ap-config" id="apConfig">
+        <p class="eyebrow">SÓ PRA VOCÊ · MODO APRESENTAÇÃO</p>
+        <h1>Mostrar pro cliente, ao vivo</h1>
+        <p>Preencha na porta do negócio e entregue o celular: são 5 telas, passa tocando do lado direito ou arrastando.</p>
+        <form id="apForm" autocomplete="off">
+            <label>Nome do negócio<input id="apNome" type="text" maxlength="40" placeholder="Ex.: Barbearia do Zé" required></label>
+            <label>Ramo<select id="apRamo"></select></label>
+            <button class="botao botao-principal" type="submit">Começar apresentação ▶</button>
+            <small>Dica: adicione esta página à tela inicial do celular pra abrir em tela cheia.</small>
+        </form>
+    </main>
+
+    <div class="ap" id="ap" hidden>
+        <button class="ap-sair" id="apSair" type="button">sair ✕</button>
+        <div id="apSlides"></div>
+        <nav class="ap-nav" aria-label="Navegar pela apresentação">
+            <button type="button" id="apAnterior" aria-label="Tela anterior">←</button>
+            <span class="ap-pontos" id="apPontos" aria-hidden="true"></span>
+            <button type="button" id="apProxima">Próximo →</button>
+        </nav>
+    </div>
+
+    <template id="apQr"><svg class="ap-qr-svg" role="img" aria-label="QR code do WhatsApp do Samuel" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 43 43" shape-rendering="crispEdges"><path fill="#ffffff" d="M0 0h43v43H0z"/><path stroke="#111111" d="M1 1.5h7m3 0h2m1 0h1m1 0h2m1 0h1m3 0h1m1 0h1m2 0h1m2 0h1m1 0h1m1 0h7M1 2.5h1m5 0h1m4 0h1m1 0h2m3 0h1m3 0h3m4 0h1m1 0h2m1 0h1m5 0h1M1 3.5h1m1 0h3m1 0h1m1 0h2m2 0h1m1 0h1m1 0h1m2 0h1m6 0h5m1 0h1m1 0h1m1 0h3m1 0h1M1 4.5h1m1 0h3m1 0h1m1 0h1m1 0h6m2 0h2m1 0h4m2 0h2m5 0h1m1 0h3m1 0h1M1 5.5h1m1 0h3m1 0h1m1 0h1m2 0h3m2 0h2m2 0h2m3 0h4m3 0h1m1 0h1m1 0h3m1 0h1M1 6.5h1m5 0h1m1 0h3m1 0h1m2 0h1m3 0h1m1 0h6m1 0h2m1 0h1m2 0h1m5 0h1M1 7.5h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7M9 8.5h1m1 0h1m3 0h1m2 0h1m2 0h1m1 0h1m3 0h3m3 0h1M1 9.5h1m1 0h5m2 0h1m1 0h1m1 0h2m5 0h1m3 0h1m2 0h1m1 0h1m2 0h1m1 0h5M5 10.5h2m6 0h3m2 0h1m1 0h2m1 0h2m2 0h1m2 0h5m4 0h1M2 11.5h2m2 0h6m3 0h1m1 0h1m1 0h2m1 0h1m1 0h1m2 0h3m1 0h1m1 0h1m2 0h2M1 12.5h3m1 0h2m1 0h1m1 0h2m3 0h1m1 0h3m4 0h1m1 0h8m1 0h1m1 0h2m2 0h1M2 13.5h4m1 0h1m2 0h1m1 0h2m1 0h1m1 0h1m4 0h2m4 0h1m3 0h8m1 0h1M3 14.5h1m6 0h4m2 0h2m1 0h1m1 0h1m3 0h1m1 0h5m2 0h2m4 0h1M1 15.5h3m2 0h4m2 0h3m4 0h2m1 0h2m8 0h3m2 0h1m2 0h2M1 16.5h1m3 0h1m5 0h2m3 0h1m1 0h6m1 0h3m1 0h2m4 0h5M2 17.5h3m2 0h1m3 0h1m1 0h1m2 0h1m1 0h3m2 0h1m7 0h4m1 0h1m1 0h2M3 18.5h1m1 0h1m3 0h1m3 0h1m1 0h1m1 0h2m1 0h1m1 0h2m1 0h4m6 0h4M1 19.5h5m1 0h1m1 0h4m3 0h1m1 0h1m3 0h1m1 0h4m1 0h2m1 0h2m3 0h1m3 0h1M1 20.5h1m1 0h3m2 0h2m1 0h1m4 0h1m1 0h7m1 0h1m1 0h1m1 0h2m2 0h1m2 0h1m1 0h1M1 21.5h1m3 0h7m3 0h2m3 0h3m4 0h3m2 0h2m1 0h1m1 0h2m1 0h1M1 22.5h1m2 0h3m2 0h1m1 0h2m4 0h1m1 0h1m2 0h2m1 0h1m5 0h1m2 0h1m1 0h2m1 0h3M6 23.5h2m2 0h4m2 0h2m1 0h2m2 0h3m3 0h1m1 0h2m3 0h2M1 24.5h2m3 0h1m6 0h1m2 0h3m2 0h1m6 0h2m3 0h1m2 0h2m2 0h2M2 25.5h1m3 0h2m1 0h2m1 0h1m1 0h3m2 0h1m1 0h2m2 0h2m1 0h1m1 0h3m2 0h1m1 0h1m3 0h1M3 26.5h1m2 0h1m1 0h1m5 0h3m3 0h1m1 0h2m3 0h1m1 0h1m1 0h2m1 0h1m1 0h1m1 0h1m2 0h1M1 27.5h1m2 0h2m1 0h2m2 0h1m1 0h1m3 0h1m1 0h2m1 0h1m1 0h2m1 0h3m1 0h1m1 0h1m1 0h1m1 0h1m2 0h1M1 28.5h3m2 0h1m3 0h1m1 0h1m5 0h1m3 0h2m2 0h4m2 0h2m4 0h1m1 0h1M4 29.5h6m1 0h3m1 0h1m1 0h1m3 0h6m5 0h1m2 0h1m2 0h3M1 30.5h3m4 0h2m2 0h2m1 0h1m3 0h1m2 0h2m2 0h3m2 0h1m1 0h1m4 0h1M1 31.5h1m1 0h2m2 0h2m1 0h4m1 0h1m1 0h2m2 0h6m1 0h1m5 0h5m2 0h1M1 32.5h1m4 0h1m1 0h1m1 0h2m1 0h1m2 0h1m1 0h1m3 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h5M1 33.5h1m1 0h1m1 0h4m7 0h2m1 0h1m4 0h1m1 0h6m1 0h7m1 0h1M9 34.5h6m1 0h2m3 0h1m6 0h2m3 0h1m3 0h2m1 0h2M1 35.5h7m3 0h2m1 0h1m4 0h1m1 0h1m1 0h1m1 0h1m3 0h1m3 0h1m1 0h1m1 0h1m3 0h1M1 36.5h1m5 0h1m1 0h2m1 0h5m3 0h1m4 0h1m1 0h2m1 0h1m1 0h2m3 0h3M1 37.5h1m1 0h3m1 0h1m1 0h1m4 0h1m4 0h2m1 0h4m5 0h7M1 38.5h1m1 0h3m1 0h1m1 0h2m2 0h1m2 0h1m1 0h1m1 0h1m1 0h1m2 0h1m1 0h2m1 0h3m1 0h1m1 0h1m3 0h1M1 39.5h1m1 0h3m1 0h1m1 0h3m2 0h2m2 0h1m1 0h3m1 0h4m1 0h2m3 0h4m1 0h2M1 40.5h1m5 0h1m2 0h1m1 0h2m5 0h1m2 0h2m1 0h1m2 0h2m1 0h1m2 0h2m1 0h2m1 0h1M1 41.5h7m1 0h2m4 0h3m1 0h5m1 0h2m3 0h1m5 0h2m1 0h1"/></svg></template>
+
+    <script src="estatisticas.js?v=20261002"></script>
+    <script src="servicos.js?v=20261002"></script>
+    <script src="previa-celular.js?v=20261002"></script>
+    <script>
+        (function () {
+            "use strict";
+            const S = window.SERVICOS, P = window.PreviaCelular, est = window.ESTATISTICAS;
+            const $ = (id) => document.getElementById(id);
+            const esc = P.esc;
+            const q = new URLSearchParams(location.search);
+            $("apRamo").innerHTML = Object.entries(S.RAMOS).map(([k, r]) => `<option value="${k}">${r.emoji} ${esc(r.titulo)}</option>`).join("");
+            if (S.RAMOS[q.get("ramo")]) $("apRamo").value = q.get("ramo");
+            $("apNome").value = (q.get("para") || "").slice(0, 40);
+            let atual = 0, slides = [];
+
+            function montar(nome, k) {
+                const r = S.RAMOS[k], p = S.PACOTES[r.pacote];
+                const linkPrevia = new URL("./", location.href); linkPrevia.searchParams.set("para", nome); linkPrevia.searchParams.set("ramo", k); linkPrevia.searchParams.set("previa", "1"); linkPrevia.searchParams.set("origem", "link");
+                $("apSlides").innerHTML = `
+                    <section class="ap-slide"><span class="ap-emoji" aria-hidden="true">${r.emoji}</span><p class="ap-kicker">1 minutinho</p><h2>Oi, <em>${esc(nome)}</em>! 👋</h2><p class="ap-sub">Posso te mostrar como a ${esc(nome)} pode parar de ${esc(r.dor)} e vender mais pelo celular?</p></section>
+                    <section class="ap-slide"><p class="ap-kicker">Hoje, no seu WhatsApp</p><h2>Conhece essas?</h2><div class="ap-chat">${r.sem.map((m) => `<p class="ap-msg">${esc(m)}</p>`).join("")}<p class="ap-alerta">${esc(r.alerta)}</p></div></section>
+                    <section class="ap-slide"><p class="ap-kicker">Agora imagina assim</p><h2>O site da <em>${esc(nome)}</em></h2><div class="ap-com">${P.celular(r.previa, nome)}<ul>${r.com.map((t) => `<li>${esc(t)}</li>`).join("")}</ul></div></section>
+                    <section class="ap-slide"><p class="ap-kicker">Quanto custa</p><h2>Menos do que um cliente perdido por semana</h2>
+                        <div class="ap-preco"><span>${esc(p.nome)}</span><b class="ap-valor">a partir de ${S.reais(p.preco)}</b>
+                        <div class="ap-tags"><span>pagamento único</span><span>sem mensalidade</span><span>pronto em ~${p.prazo} dias</span></div>
+                        <ul>${p.itens.slice(0, 4).map(([t]) => `<li>${esc(t)}</li>`).join("")}</ul></div></section>
+                    <section class="ap-slide"><p class="ap-kicker">Bora?</p><h2>Aponta a câmera e me chama</h2>
+                        <div class="ap-qr">${$("apQr").innerHTML}<small>WhatsApp do Samuel · (67) 99603-4205</small></div>
+                        <div class="ap-acoes"><button class="botao botao-secundario" type="button" id="apMandar">Te mando a prévia por link</button></div></section>`;
+                slides = [...document.querySelectorAll(".ap-slide")];
+                $("apPontos").innerHTML = slides.map(() => "<i></i>").join("");
+                $("apMandar").addEventListener("click", async () => {
+                    const texto = `Oi! Aqui é o Samuel, te mostrei agora há pouco a prévia do site da ${nome}. Dá uma olhada com calma: ${linkPrevia}`;
+                    try { if (navigator.share) await navigator.share({ title: `Prévia: o site da ${nome}`, text: texto }); else { await navigator.clipboard.writeText(texto); $("apMandar").textContent = "Link copiado ✓"; } } catch (e) { /* cancelou */ }
+                });
+                ir(0);
+            }
+            function ir(n) {
+                atual = Math.max(0, Math.min(slides.length - 1, n));
+                slides.forEach((s, k) => s.classList.toggle("ativo", k === atual));
+                [...$("apPontos").children].forEach((p, k) => p.classList.toggle("ativo", k === atual));
+                $("apAnterior").disabled = atual === 0;
+                $("apProxima").textContent = atual === slides.length - 1 ? "Recomeçar ↺" : "Próximo →";
+                const site = slides[atual].querySelector(".previa-site");
+                if (site && !matchMedia("(prefers-reduced-motion: reduce)").matches) setTimeout(() => site.scrollTo({ top: 170, behavior: "smooth" }), 1400);
+            }
+            const proxima = () => (atual === slides.length - 1 ? ir(0) : ir(atual + 1));
+            $("apProxima").addEventListener("click", proxima);
+            $("apAnterior").addEventListener("click", () => ir(atual - 1));
+            $("apSlides").addEventListener("click", (e) => {
+                if (e.target.closest("button, a")) return;
+                e.clientX > innerWidth * 0.4 ? proxima() : ir(atual - 1);
+            });
+            let toqueX = null;
+            $("apSlides").addEventListener("touchstart", (e) => { toqueX = e.touches[0].clientX; }, { passive: true });
+            $("apSlides").addEventListener("touchend", (e) => { if (toqueX == null) return; const dx = e.changedTouches[0].clientX - toqueX; if (Math.abs(dx) > 50) { dx < 0 ? proxima() : ir(atual - 1); } toqueX = null; });
+            addEventListener("keydown", (e) => { if ($("ap").hidden) return; if (["ArrowRight", " ", "PageDown"].includes(e.key)) { e.preventDefault(); proxima(); } if (["ArrowLeft", "PageUp"].includes(e.key)) ir(atual - 1); if (e.key === "Escape") sair(); });
+            function sair() { $("ap").hidden = true; $("apConfig").hidden = false; document.body.classList.add("config"); if (document.fullscreenElement) document.exitFullscreen().catch(() => {}); }
+            $("apSair").addEventListener("click", sair);
+            $("apForm").addEventListener("submit", (e) => {
+                e.preventDefault();
+                const nome = $("apNome").value.trim(); if (!nome) return $("apNome").focus();
+                const k = $("apRamo").value;
+                montar(nome, k);
+                $("apConfig").hidden = true; $("ap").hidden = false; document.body.classList.remove("config");
+                document.documentElement.requestFullscreen?.().catch(() => {});
+                const u = new URL(location.href); u.searchParams.set("para", nome); u.searchParams.set("ramo", k); history.replaceState(null, "", u);
+                if (est) est.contar(`/evento/apresentacao-${k}`, `Apresentação: ${S.RAMOS[k].nome}`);
+            });
+        })();
+    </script>
+</body>
+</html>

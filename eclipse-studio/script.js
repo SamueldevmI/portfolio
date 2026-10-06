@@ -492,6 +492,9 @@ const MAX_POR_ITEM = 9;
 const maxDe = (p) => (p && p.unica ? 1 : MAX_POR_ITEM);
 const fotosDe = (p) => p.fotos || (p.foto ? [p.foto] : []);
 
+/* peça vendida: em vez de botão morto, um pedido pra Elizabeth avisar se chegar algo parecido */
+const avisaParecida = (p) => `<a class="botao botao-cheio botao-avisa" href="${linkWhats(`Oi! Vi que ${p.nome} (${codigo(p.id)}) já tem dona 🕯 Me avisa se chegar algo parecido?`)}" target="_blank" rel="noopener noreferrer">${t("Me avisa se chegar parecida")}</a>`;
+
 /* peça única que já foi vendida não pode ir pra sacola; caixa e drop secreto ficam fora da vitrine */
 const disponivel = (p) => !p.vendida;
 const naVitrine = (p) => !p.secreto && !p.oculto;
@@ -573,7 +576,7 @@ function cardHtml(p, indice) {
             ${p.unica ? `<p class="selo-unica">🕯 ${t("Peça única")}<span class="selo-extra"> · ${t("só existe uma")}</span></p>` : ""}
             <p class="card-preco">${precoTexto(p)}</p>
             ${p.vendida ? "" : tamanhosHtml(p, "tam")}
-            ${p.vendida ? `<button class="botao botao-cheio" type="button" disabled>${t("Já tem dona")}</button>` : `<button class="botao botao-cheio" type="button" data-add="${p.id}">${t("Pôr na sacola")}</button>`}
+            ${p.vendida ? avisaParecida(p) : `<button class="botao botao-cheio" type="button" data-add="${p.id}">${t("Pôr na sacola")}</button>`}
         </div>
     </li>`;
 }
@@ -712,7 +715,7 @@ function abrirProduto(id) {
             <ul class="dp-itens">${p.itens.map((item) => `<li>${esc(item)}</li>`).join("")}</ul>
             ${p.unica ? `<p class="selo-unica">🕯 ${t("Peça única")} · ${p.vendida ? t("essa já encontrou a dona dela") : t("só existe uma")}</p>` : ""}
             ${p.vendida ? "" : tamanhosHtml(p, "dlg")}
-            ${p.vendida ? `<button class="botao botao-cheio" type="button" disabled>${t("Já tem dona")}</button>` : `<button class="botao botao-cheio" type="button" data-add="${p.id}">${t("Pôr na sacola")}</button>`}
+            ${p.vendida ? avisaParecida(p) : `<button class="botao botao-cheio" type="button" data-add="${p.id}">${t("Pôr na sacola")}</button>`}
             <div class="dp-extras">
                 ${favBotao(p, "fav-texto")}
                 ${p.vendida ? "" : `<a class="link-fraco" href="${linkWhats(`${t("Oi! Quais são as medidas da peça")} ${t(p.nome)} (${codigo(p.id)})? 🖤`)}" target="_blank" rel="noopener noreferrer">${t("Pedir as medidas")}</a>`}

@@ -32,13 +32,23 @@
             var leve = forcado === "1" || (forcado !== "0" && (matchMedia("(pointer:coarse)").matches || conexao.saveData === true || /(^|-)(2g|3g)$/.test(conexao.effectiveType || "")));
             if (leve) document.documentElement.classList.add("modo-leve");
         })();
+        /* Edição de gibi: a classe que esconde balão/legenda pra animar ao rolar precisa entrar
+           ANTES da primeira pintura — senão o balão aparece visível um instante e depois "pisca"
+           sumindo pra só então voltar (gibi.js só roda depois, com defer). */
+        (function () {
+            if ("IntersectionObserver" in window && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+                document.documentElement.classList.add("gibi-anima");
+            }
+        })();
     </script>
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="imagem/apple-touch-icon.png">
     <link rel="manifest" href="manifest.json">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+    <!-- fonte sem travar a primeira pintura: o texto aparece na fonte do sistema e troca quando ela chega -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bangers&family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bangers&family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap"></noscript>
     <script>
         /* Tema: vermelho (padrão) ou azul. Escolhido antes de desenhar a página, pra não piscar a cor errada.
            O style-azul.css é gerado a partir do style.css (ferramentas/gerar-tema-azul.js). */
@@ -51,7 +61,7 @@
             } catch (e) { /* sem armazenamento */ }
             document.documentElement.dataset.tema = tema;
             if (tema === "azul") document.querySelector('meta[name="theme-color"]').content = "#0e1422";
-            document.write('<link rel="stylesheet" id="folhaTema" href="' + (tema === "azul" ? "style-azul.css" : "style.css") + '?v=20261001celular">');
+            document.write('<link rel="stylesheet" id="folhaTema" href="' + (tema === "azul" ? "style-azul.css" : "style.css") + '?v=20261006semPulo">');
         })();
         /* Idioma: detectado cedo (antes do resto da página rodar) só pra avisar efeitos como a
            digitação do texto do hero, que senão sobrescreveriam a tradução feita pelo idioma.js. */
@@ -65,7 +75,7 @@
             document.documentElement.dataset.idioma = idioma;
         })();
     </script>
-    <noscript><link rel="stylesheet" href="style.css?v=20261001celular"></noscript>
+    <noscript><link rel="stylesheet" href="style.css?v=20261006semPulo"></noscript>
     <title id="tituloPagina">Samuel Mickael | Desenvolvedor Web &amp; Mobile</title>
     <script type="application/ld+json">
     {
@@ -136,6 +146,12 @@
         </nav>
 
         <div class="hero-conteudo">
+            <!-- Edição de gibi (gibi.js): a capa da revista "Samuel Mickael #1" -->
+            <div class="gibi-capa">
+                <span class="gibi-edicao" aria-hidden="true"><b>#1</b><small id="gibiMes">OUT · 2026</small></span>
+                <div class="gibi-titulo" aria-hidden="true"><p class="gibi-logo">Samuel Mickael</p><p class="gibi-sub">Edição de estreia · Campo Grande - MS</p></div>
+                <a class="gibi-codigo" href="https://wa.me/5567996034205?text=Oi%2C%20Samuel%21%20Vi%20seu%20portf%C3%B3lio%20e%20queria%20pedir%20um%20or%C3%A7amento.%20Meu%20projeto%20%C3%A9%3A%20" target="_blank" rel="noopener noreferrer" aria-label="Chamar no WhatsApp"><svg viewBox="0 0 64 24" aria-hidden="true"><rect x="2" y="1" width="1.5" height="22"/><rect x="4.5" y="1" width="2" height="22"/><rect x="7.5" y="1" width="1" height="22"/><rect x="9.5" y="1" width="1.5" height="22"/><rect x="12.0" y="1" width="2.5" height="22"/><rect x="15.5" y="1" width="1" height="22"/><rect x="17.5" y="1" width="2" height="22"/><rect x="21.5" y="1" width="1" height="22"/><rect x="23.5" y="1" width="1" height="22"/><rect x="26.5" y="1" width="1" height="22"/><rect x="28.5" y="1" width="1" height="22"/><rect x="30.5" y="1" width="2.5" height="22"/><rect x="35.0" y="1" width="1" height="22"/><rect x="37.0" y="1" width="1" height="22"/><rect x="39.0" y="1" width="1.5" height="22"/><rect x="42.5" y="1" width="1" height="22"/><rect x="44.5" y="1" width="2.5" height="22"/><rect x="48.5" y="1" width="2.5" height="22"/><rect x="52.0" y="1" width="1" height="22"/><rect x="54.0" y="1" width="1.5" height="22"/><rect x="56.5" y="1" width="2.5" height="22"/></svg><small>a partir de R$&nbsp;250</small></a>
+            </div>
             <div class="hero-grade">
                 <div class="hero-principal">
                     <p class="hero-topo"><span class="status-disponivel"><i aria-hidden="true"></i>Aceitando projetos</span><span class="hero-cargo">Dev web &amp; mobile · Campo Grande - MS</span></p>
@@ -149,8 +165,9 @@
                     <div class="hero-acoes">
                         <a class="botao botao-principal" href="#orcamento">Quero meu orçamento</a>
                         <a class="hero-link" href="#projetos">ver projetos funcionando <span aria-hidden="true">↓</span></a>
+                        <span class="gibi-nota gibi-nota-hero" aria-hidden="true">sim, esse botão funciona. eu testei.</span>
                     </div>
-                    <p class="hero-oferta"><b>⚡ Orçamento em 24h</b><span>sem compromisso · direto no WhatsApp</span></p>
+                    <p class="hero-oferta"><b>⚡ Orçamento em 24h</b><span>sem compromisso · <a href="./monte.html">ou veja o preço na hora →</a></span></p>
                     <a class="hero-cliente" href="./case-eclipse.html">🖤 No ar: loja da <b>Eclipse Studio</b> · ver o case <span aria-hidden="true">→</span></a>
                 </div>
                 <!-- vitrine: um celular com a prévia do site de um cliente, trocando de ramo sozinho (script.js) -->
@@ -209,6 +226,7 @@
                 </details>
                 <div class="cmp-rodape"><a class="cmp-testar" href="#projetos">ver os projetos ↓</a><button type="button" class="cmp-querer">quero isso no meu negócio →</button></div>
                 <div class="cmp-barra" aria-hidden="true"><i></i></div>
+                <p class="cmp-atalhos">📝 Não sabe se precisa? <a href="./teste.html">Faça o teste de 1 minuto</a> <span aria-hidden="true">·</span> <a href="./monte.html">monte o seu e veja o preço</a></p>
             </div>
         </div>
     </header>
@@ -216,15 +234,73 @@
     <main id="conteudo-principal">
         <section id="sobre-mim" class="secao sobre">
             <div class="titulo-secao">
+                <div class="gibi-legenda" aria-hidden="true"><span>Enquanto isso, em Campo Grande…</span></div>
                 <p class="eyebrow">QUEM SOU</p>
                 <h2>Sobre mim</h2>
             </div>
             <div class="sobre-conteudo">
-                <div class="foto-wrapper">
-                    <!-- minhafoto-720/1080.webp: a foto original (360x480) ampliada e tratada; trocar pela original em alta quando tiver -->
-                    <img src="imagem/minhafoto-720.webp" srcset="imagem/minhafoto-720.webp 720w, imagem/minhafoto-1080.webp 1080w" sizes="(max-width: 720px) 92vw, 330px" id="minhafoto" alt="Samuel Mickael no computador, programando" width="720" height="960" loading="lazy" decoding="async">
-                    <p class="foto-legenda">onde tudo começou</p>
-                    <div id="tooltip" class="tooltip" role="tooltip">Meu primeiro projeto usando HTML e CSS.</div>
+                <div class="ficha-area">
+                    <!-- Ficha de personagem: frente com foto e atributos, verso com superpoder e missões (ficha.js).
+                         Os atributos são de brincadeira: mude o número em --v (0 a 100) quando quiser. -->
+                    <div class="ficha" id="ficha">
+                        <div class="ficha-giro">
+                        <div class="ficha-vira">
+                            <div class="ficha-face ficha-frente">
+                                <p class="ficha-topo"><span>FICHA DE PERSONAGEM</span><span>Nº 001</span></p>
+                                <div class="foto-wrapper">
+                                    <!-- minhafoto-720/1080.webp: a foto original (360x480) ampliada e tratada; trocar pela original em alta quando tiver -->
+                                    <img src="imagem/minhafoto-720.webp" srcset="imagem/minhafoto-720.webp 720w, imagem/minhafoto-1080.webp 1080w" sizes="(max-width: 720px) 92vw, 360px" id="minhafoto" alt="Samuel Mickael no computador, programando" width="720" height="960" loading="lazy" decoding="async">
+                                    <p class="foto-legenda">onde tudo começou</p>
+                                    <div id="tooltip" class="tooltip" role="tooltip">Meu primeiro projeto usando HTML e CSS.</div>
+                                    <span class="ficha-nivel"><small>NÍVEL</small><b>22</b></span>
+                                </div>
+                                <p class="ficha-nome">Samuel Mickael</p>
+                                <p class="ficha-classe"><span>Classe: <b>Dev full-stack</b></span><span>📍 Campo Grande - MS</span></p>
+                                <ul class="ficha-atributos" aria-label="Atributos">
+                                    <li style="--v: 85"><span>Python</span><i></i><b>85</b></li>
+                                    <li style="--v: 80"><span>JavaScript</span><i></i><b>80</b></li>
+                                    <li style="--v: 75"><span>Flask</span><i></i><b>75</b></li>
+                                    <li style="--v: 95"><span>Resolver problema de cliente</span><i></i><b>95</b></li>
+                                    <li class="ficha-max" style="--v: 100"><span>Café consumido</span><i></i><b>MAX</b></li>
+                                </ul>
+                                <p class="ficha-dica" aria-hidden="true">toque pra virar ↻</p>
+                            </div>
+                            <div class="ficha-face ficha-verso">
+                                <p class="ficha-topo"><span>FICHA DE PERSONAGEM</span><span>VERSO</span></p>
+                                <div class="ficha-caixa ficha-poder">
+                                    <b>SUPERPODER</b>
+                                    <p>Transformar planilha bagunçada e atendimento lento em sistema que funciona.</p>
+                                </div>
+                                <div class="ficha-caixa">
+                                    <b>ORIGEM</b>
+                                    <p>Técnico de computador no Exército Brasileiro. Hoje, no 4º semestre de Análise e Desenvolvimento de Sistemas.</p>
+                                </div>
+                                <!-- Pra aparecer, escreva o texto e apague o "hidden" -->
+                                <div class="ficha-caixa" hidden><b>PONTO FRACO</b><p></p></div>
+                                <div class="ficha-caixa" hidden><b>NAS HORAS VAGAS</b><p></p></div>
+                                <div class="ficha-caixa ficha-missoes">
+                                    <b>MISSÕES CUMPRIDAS</b>
+                                    <ul>
+                                        <li><strong id="fichaProjetos">7</strong><span>projetos no ar pra testar</span></li>
+                                        <li id="fichaGithub" class="ficha-esperando"><strong></strong><span>contribuições no GitHub no último ano</span></li>
+                                        <li><strong>1ª</strong><span>loja de cliente no ar: <a href="case-eclipse.html">Eclipse Studio</a></span></li>
+                                    </ul>
+                                </div>
+                                <div class="ficha-caixa ficha-inventario">
+                                    <b>INVENTÁRIO</b>
+                                    <ul><li>Python</li><li>Flask</li><li>JavaScript</li><li>SQLAlchemy</li><li>Pytest</li><li>Git</li><li>PWA</li></ul>
+                                </div>
+                                <div class="ficha-acoes">
+                                    <a class="botao botao-principal" href="#orcamento">Chamar pra missão →</a>
+                                    <button type="button" class="botao botao-secundario" id="fichaSalvar">Salvar a ficha</button>
+                                </div>
+                                <p class="ficha-dica" aria-hidden="true">toque pra virar ↻</p>
+                            </div>
+                        </div>
+                        </div>
+                        <span class="ficha-pow" aria-hidden="true"></span>
+                    </div>
+                    <button type="button" class="ficha-virar" id="fichaVirar" aria-controls="ficha" aria-pressed="false">↻ Virar a ficha</button>
                 </div>
                 <div>
                     <p>Crio sites, sistemas e aplicativos sob medida, com foco em Python, Flask e JavaScript — do primeiro rascunho até o projeto no ar. Você pode testar cada um deles abaixo, na hora, sem precisar instalar nada.</p>
@@ -240,6 +316,26 @@
                         <li data-tecnologia="pytest"><button type="button" aria-pressed="false"><svg class="ic-linha" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="m7.8 12.4 2.9 2.9 5.6-6"/></svg>Pytest</button></li>
                         <li data-tecnologia="git"><button type="button" aria-pressed="false"><svg class="ic-linha" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 3v12"/><circle cx="18" cy="6" r="2.8"/><circle cx="6" cy="18" r="2.8"/><path d="M18 8.8a9 9 0 0 1-9 9"/></svg>Git</button></li>
                     </ul>
+                    <div class="papo" id="papo">
+                        <div class="papo-topo">
+                            <img src="imagem/minhafoto-720.webp" alt="" width="40" height="40" loading="lazy" decoding="async">
+                            <p><b>Converse comigo</b><small class="papo-status" id="papoStatus">online</small></p>
+                        </div>
+                        <div class="papo-mensagens" id="papoMensagens" role="log" aria-live="polite" aria-label="Conversa">
+                            <p class="papo-msg papo-dele">Oi! Sou o Samuel 👋 Toque numa pergunta aqui embaixo que eu respondo.</p>
+                        </div>
+                        <p class="papo-resposta" id="papoTempo" hidden>Respondo em até 24h, direto no WhatsApp. E depois de entender o seu projeto, já mando o valor e o prazo.</p>
+                        <div class="papo-perguntas" role="group" aria-label="Perguntas">
+                            <button type="button" data-faq="faq-preco">Quanto custa?</button>
+                            <button type="button" data-faq="faq-prazo">Quanto tempo leva?</button>
+                            <button type="button" data-faq="papoTempo">Em quanto tempo você responde?</button>
+                            <button type="button" data-faq="faq-conteudo">Preciso ter logo e fotos?</button>
+                            <button type="button" data-faq="faq-dominio">E o domínio e a hospedagem?</button>
+                            <button type="button" data-faq="faq-suporte">Tem suporte depois?</button>
+                            <button type="button" data-faq="faq-pagamento">Como é o pagamento?</button>
+                        </div>
+                        <a class="papo-zap" href="https://wa.me/5567996034205?text=Oi%2C%20Samuel%21%20Vi%20seu%20portf%C3%B3lio%20e%20queria%20pedir%20um%20or%C3%A7amento.%20Meu%20projeto%20%C3%A9%3A%20" target="_blank" rel="noopener noreferrer">Continuar no meu WhatsApp →</a>
+                    </div>
                 </div>
                 <div class="github-atividade">
                     <div class="gh-cab"><p class="eyebrow-mini">ATIVIDADE NO GITHUB</p><span class="gh-total" id="ghTotal" hidden></span></div>
@@ -252,9 +348,11 @@
 
         <section id="projetos" class="secao projetos">
             <div class="titulo-secao">
+                <div class="gibi-legenda" aria-hidden="true"><span>Mais tarde, no laboratório…</span></div>
                 <p class="eyebrow">PORTFÓLIO</p>
                 <h2>Projetos em destaque</h2>
                 <p>Teste agora, direto no navegador — sem instalar nada. São parecidos com o que você pode encomendar.</p>
+                <p class="gibi-nota" aria-hidden="true">pode clicar em tudo: é tudo de verdade 👇</p>
             </div>
             <div class="filtros-projetos" role="group" aria-label="Filtrar projetos por tipo">
                 <button type="button" class="chip-filtro is-ativo" data-filtro="todos">Todos</button>
@@ -342,7 +440,7 @@
                         <button type="button" class="botao-compartilhar" data-compartilhar="./fatia-nobre/index.html" data-compartilhar-titulo="Fatia Nobre — Atendimento automático" aria-label="Compartilhar projeto Fatia Nobre">⤴</button>
                         <figure class="print-janela">
                             <div class="print-barra"><i></i><i></i><i></i><span>Fatia Nobre</span></div>
-                            <img src="imagem/projetos/fatia-nobre.webp" alt="" width="1100" height="688" loading="lazy" decoding="async">
+                            <img src="imagem/projetos/fatia-nobre-660.webp" srcset="imagem/projetos/fatia-nobre-660.webp 660w, imagem/projetos/fatia-nobre.webp 1100w" sizes="(max-width: 720px) 82vw, 560px" alt="" width="1100" height="688" loading="lazy" decoding="async">
                             <figcaption class="v-oculto">Captura de tela: Fatia Nobre</figcaption>
                         </figure>
                         <div class="chat-bolhas" aria-hidden="true">
@@ -372,7 +470,7 @@
                         <button type="button" class="botao-compartilhar" data-compartilhar="./conta-a-dois/index.html" data-compartilhar-titulo="Conta a Dois — Gastos de casal em tempo real" aria-label="Compartilhar projeto Conta a Dois">⤴</button>
                         <figure class="print-janela">
                             <div class="print-barra"><i></i><i></i><i></i><span>Conta a Dois</span></div>
-                            <img src="imagem/projetos/conta-a-dois.webp" alt="" width="1100" height="688" loading="lazy" decoding="async">
+                            <img src="imagem/projetos/conta-a-dois-660.webp" srcset="imagem/projetos/conta-a-dois-660.webp 660w, imagem/projetos/conta-a-dois.webp 1100w" sizes="(max-width: 720px) 82vw, 560px" alt="" width="1100" height="688" loading="lazy" decoding="async">
                             <figcaption class="v-oculto">Captura de tela: Conta a Dois</figcaption>
                         </figure>
                         <div class="print-celular tela-celular" aria-hidden="true"><div class="sequencia"><img src="imagem/projetos/celular/conta-1.webp" alt="" width="280" height="606" loading="lazy" decoding="async"><img src="imagem/projetos/celular/conta-2.webp" alt="" width="280" height="606" loading="lazy" decoding="async"><img src="imagem/projetos/celular/conta-3.webp" alt="" width="280" height="606" loading="lazy" decoding="async"></div></div>
@@ -398,7 +496,7 @@
                         <button type="button" class="botao-compartilhar" data-compartilhar="./taskflow/index.html" data-compartilhar-titulo="TaskFlow" aria-label="Compartilhar projeto TaskFlow">⤴</button>
                         <figure class="print-janela">
                             <div class="print-barra"><i></i><i></i><i></i><span>TaskFlow</span></div>
-                            <img src="imagem/projetos/taskflow.webp" alt="" width="1100" height="688" loading="lazy" decoding="async">
+                            <img src="imagem/projetos/taskflow-660.webp" srcset="imagem/projetos/taskflow-660.webp 660w, imagem/projetos/taskflow.webp 1100w" sizes="(max-width: 720px) 82vw, 560px" alt="" width="1100" height="688" loading="lazy" decoding="async">
                             <figcaption class="v-oculto">Captura de tela: TaskFlow</figcaption>
                         </figure>
                         <div class="projeto-selos" aria-hidden="true"><span class="selo-categoria">App</span></div>
@@ -420,7 +518,7 @@
                         <button type="button" class="botao-compartilhar" data-compartilhar="./focusflow/index.html" data-compartilhar-titulo="FocusFlow" aria-label="Compartilhar projeto FocusFlow">⤴</button>
                         <figure class="print-janela">
                             <div class="print-barra"><i></i><i></i><i></i><span>FocusFlow</span></div>
-                            <img src="imagem/projetos/focusflow.webp" alt="" width="1100" height="688" loading="lazy" decoding="async">
+                            <img src="imagem/projetos/focusflow-660.webp" srcset="imagem/projetos/focusflow-660.webp 660w, imagem/projetos/focusflow.webp 1100w" sizes="(max-width: 720px) 82vw, 560px" alt="" width="1100" height="688" loading="lazy" decoding="async">
                             <figcaption class="v-oculto">Captura de tela: FocusFlow</figcaption>
                         </figure>
                         <div class="projeto-selos" aria-hidden="true"><span class="selo-categoria">App</span></div>
@@ -442,7 +540,7 @@
                         <button type="button" class="botao-compartilhar" data-compartilhar="./flowboard/index.html" data-compartilhar-titulo="FlowBoard" aria-label="Compartilhar projeto FlowBoard">⤴</button>
                         <figure class="print-janela">
                             <div class="print-barra"><i></i><i></i><i></i><span>FlowBoard</span></div>
-                            <img src="imagem/projetos/flowboard.webp" alt="" width="1100" height="688" loading="lazy" decoding="async">
+                            <img src="imagem/projetos/flowboard-660.webp" srcset="imagem/projetos/flowboard-660.webp 660w, imagem/projetos/flowboard.webp 1100w" sizes="(max-width: 720px) 82vw, 560px" alt="" width="1100" height="688" loading="lazy" decoding="async">
                             <figcaption class="v-oculto">Captura de tela: FlowBoard</figcaption>
                         </figure>
                         <div class="projeto-selos" aria-hidden="true"><span class="selo-categoria">Sistema</span></div>
@@ -463,24 +561,30 @@
 
         <section id="mais-projetos" class="secao mais-projetos">
             <div class="titulo-secao">
+                <div class="gibi-legenda" aria-hidden="true"><span>Nos bastidores…</span></div>
                 <p class="eyebrow">TAMBÉM NO GITHUB</p>
-                <h2>Mais projetos</h2>
-                <p>Fora da vitrine principal, mas ainda no ar. Dá uma espiada nos bastidores.</p>
+                <h2>Conquistas desbloqueadas</h2>
+                <p>Os projetos de bastidores, do primeiro site ao primeiro banco de dados. Cada um destravou uma coisa nova.</p>
             </div>
-            <ul class="lista-mini-projetos">
-                <li><a class="mini-projeto" data-tecnologias="javascript html css git" data-schema-categoria="WebApplication" data-schema-os="Web" href="./primeiro-projeto/index.html" target="_blank" rel="noopener noreferrer"><span class="mini-projeto-cabecalho"><span class="mini-projeto-nome">Meu primeiro site</span><span class="mini-projeto-tag">HTML · CSS · JavaScript</span><span class="mini-projeto-seta" aria-hidden="true">↗</span></span><span class="mini-projeto-desc">Uma landing page: página única pra apresentar uma marca. Serve pra quando alguém tá começando um negócio e precisa de um lugar profissional pra mandar o link, além da rede social.</span><span class="mini-projeto-preco"><span class="pp-base">a partir de <b>R$&nbsp;250</b></span><span class="pp-promo" data-promo-ate="2026-09-29" hidden>até 30/09: <b>R$&nbsp;125</b> com os 50% (lançamento + depoimento)</span><span class="pp-promo" data-promo-depois="2026-09-29" hidden><b>R$&nbsp;225</b> deixando um depoimento (10% off)</span></span></a></li>
-                <li><a class="mini-projeto" data-tecnologias="javascript api flask" data-schema-categoria="FinanceApplication" data-schema-os="Web, Android, iOS" href="./controle-gastos/index.html" target="_blank" rel="noopener noreferrer"><span class="mini-projeto-cabecalho"><span class="mini-projeto-nome">Controle de gastos</span><span class="mini-projeto-tag">JavaScript · API Flask</span><span class="mini-projeto-seta" aria-hidden="true">↗</span></span><span class="mini-projeto-desc">Um app pra anotar receitas e despesas do dia a dia. Serve pra quando você quer parar de chegar no fim do mês sem saber pra onde o dinheiro foi.</span><span class="mini-projeto-preco"><span class="pp-base">a partir de <b>R$&nbsp;300</b></span><span class="pp-promo" data-promo-ate="2026-09-29" hidden>até 30/09: <b>R$&nbsp;150</b> com os 50% (lançamento + depoimento)</span><span class="pp-promo" data-promo-depois="2026-09-29" hidden><b>R$&nbsp;270</b> deixando um depoimento (10% off)</span></span></a></li>
-                <li><a class="mini-projeto" data-tecnologias="python api flask sqlalchemy pytest" data-schema-categoria="DeveloperApplication" data-schema-os="Web" href="./gastos-api-demo/index.html" target="_blank" rel="noopener noreferrer"><span class="mini-projeto-cabecalho"><span class="mini-projeto-nome">Controle de Gastos — API</span><span class="mini-projeto-tag">Python · Flask · SQLAlchemy</span><span class="mini-projeto-seta" aria-hidden="true">↗</span></span><span class="mini-projeto-desc">O banco de dados real por trás do app acima. Sem ele, os gastos sumiriam ao fechar a aba — é o que separa um site simples de um sistema que guarda informação de verdade.</span></a></li>
-                <li><a class="mini-projeto" data-tecnologias="python cli pytest" data-schema-categoria="HealthApplication" data-schema-os="CLI / Python" href="https://github.com/SamueldevmI/portfolio/tree/main/treino-planner" target="_blank" rel="noopener noreferrer"><span class="mini-projeto-cabecalho"><span class="mini-projeto-nome">Planejador de Treino</span><span class="mini-projeto-tag">Python · Rich · Pytest</span><span class="mini-projeto-seta" aria-hidden="true">↗</span></span><span class="mini-projeto-desc">Um programa de terminal pra organizar a semana de treino. Mais um exercício técnico (testes automatizados, código organizado) do que uma ferramenta pronta pro dia a dia.</span></a></li>
+            <div class="conquistas-progresso"><p><b id="conquistasFeitas">4</b> de <b id="conquistasTotal">5</b> conquistas</p><div class="conquistas-barra" aria-hidden="true"><i></i></div></div>
+            <!-- Cada projeto é uma conquista (ficha.js anima quando a seção aparece). A data é a do primeiro commit da pasta. -->
+            <ul class="lista-mini-projetos lista-conquistas">
+                <li class="conquista"><a class="mini-projeto" data-tecnologias="javascript html css git" data-schema-categoria="WebApplication" data-schema-os="Web" href="./primeiro-projeto/index.html" target="_blank" rel="noopener noreferrer"><span class="conquista-icone" aria-hidden="true">🌐</span><span class="conquista-corpo"><span class="conquista-selo">🏆 Conquista desbloqueada · <time datetime="2026-08-05">05/08/2026</time></span><span class="conquista-titulo">Primeiro site no ar</span><span class="mini-projeto-cabecalho"><span class="mini-projeto-nome">Meu primeiro site</span><span class="mini-projeto-tag">HTML · CSS · JavaScript</span><span class="mini-projeto-seta" aria-hidden="true">↗</span></span><span class="mini-projeto-desc">Uma landing page: página única pra apresentar uma marca. Serve pra quando alguém tá começando um negócio e precisa de um lugar profissional pra mandar o link, além da rede social.</span><span class="conquista-xp">8 commits · onde tudo começou</span><span class="mini-projeto-preco"><span class="pp-base">a partir de <b>R$&nbsp;250</b></span><span class="pp-promo" data-promo-ate="2026-09-29" hidden>até 30/09: <b>R$&nbsp;125</b> com os 50% (lançamento + depoimento)</span><span class="pp-promo" data-promo-depois="2026-09-29" hidden><b>R$&nbsp;225</b> deixando um depoimento (10% off)</span></span></span></a></li>
+                <li class="conquista"><a class="mini-projeto" data-tecnologias="javascript api flask" data-schema-categoria="FinanceApplication" data-schema-os="Web, Android, iOS" href="./controle-gastos/index.html" target="_blank" rel="noopener noreferrer"><span class="conquista-icone" aria-hidden="true">💸</span><span class="conquista-corpo"><span class="conquista-selo">🏆 Conquista desbloqueada · <time datetime="2026-08-05">05/08/2026</time></span><span class="conquista-titulo">O dinheiro não some mais</span><span class="mini-projeto-cabecalho"><span class="mini-projeto-nome">Controle de gastos</span><span class="mini-projeto-tag">JavaScript · API Flask</span><span class="mini-projeto-seta" aria-hidden="true">↗</span></span><span class="mini-projeto-desc">Um app pra anotar receitas e despesas do dia a dia. Serve pra quando você quer parar de chegar no fim do mês sem saber pra onde o dinheiro foi.</span><span class="conquista-xp">11 commits · em 27/08 virou app que instala no celular</span><span class="mini-projeto-preco"><span class="pp-base">a partir de <b>R$&nbsp;300</b></span><span class="pp-promo" data-promo-ate="2026-09-29" hidden>até 30/09: <b>R$&nbsp;150</b> com os 50% (lançamento + depoimento)</span><span class="pp-promo" data-promo-depois="2026-09-29" hidden><b>R$&nbsp;270</b> deixando um depoimento (10% off)</span></span></span></a></li>
+                <li class="conquista"><a class="mini-projeto" data-tecnologias="python api flask sqlalchemy pytest" data-schema-categoria="DeveloperApplication" data-schema-os="Web" href="./gastos-api-demo/index.html" target="_blank" rel="noopener noreferrer"><span class="conquista-icone" aria-hidden="true">🗄️</span><span class="conquista-corpo"><span class="conquista-selo">🏆 Conquista desbloqueada · <time datetime="2026-08-06">06/08/2026</time></span><span class="conquista-titulo">Primeiro banco de dados de verdade</span><span class="mini-projeto-cabecalho"><span class="mini-projeto-nome">Controle de Gastos — API</span><span class="mini-projeto-tag">Python · Flask · SQLAlchemy</span><span class="mini-projeto-seta" aria-hidden="true">↗</span></span><span class="mini-projeto-desc">O banco de dados real por trás do app acima. Sem ele, os gastos sumiriam ao fechar a aba — é o que separa um site simples de um sistema que guarda informação de verdade.</span><span class="conquista-xp">32 testes automáticos rodando no GitHub Actions</span></span></a></li>
+                <li class="conquista"><a class="mini-projeto" data-tecnologias="python cli pytest" data-schema-categoria="HealthApplication" data-schema-os="CLI / Python" href="https://github.com/SamueldevmI/portfolio/tree/main/treino-planner" target="_blank" rel="noopener noreferrer"><span class="conquista-icone" aria-hidden="true">🏋️</span><span class="conquista-corpo"><span class="conquista-selo">🏆 Conquista desbloqueada · <time datetime="2026-08-06">06/08/2026</time></span><span class="conquista-titulo">Treino organizado pelo terminal</span><span class="mini-projeto-cabecalho"><span class="mini-projeto-nome">Planejador de Treino</span><span class="mini-projeto-tag">Python · Rich · Pytest</span><span class="mini-projeto-seta" aria-hidden="true">↗</span></span><span class="mini-projeto-desc">Um programa de terminal pra organizar a semana de treino. Mais um exercício técnico (testes automatizados, código organizado) do que uma ferramenta pronta pro dia a dia.</span><span class="conquista-xp">8 testes · Python com Rich, direto no terminal</span></span></a></li>
+                <li class="conquista conquista-bloqueada"><a class="conquista-trava" href="#orcamento"><span class="conquista-icone" aria-hidden="true">🔒</span><span class="conquista-corpo"><span class="conquista-selo">Conquista bloqueada · ???</span><span class="conquista-titulo">O seu projeto no ar</span><span class="mini-projeto-desc">A próxima conquista da lista pode ser o site, o sistema ou a automação do seu negócio.</span><span class="conquista-desbloquear">Desbloquear →</span></span></a></li>
             </ul>
         </section>
 
         <section id="servicos" class="secao servicos">
             <div class="titulo-secao">
+                <div class="gibi-legenda" aria-hidden="true"><span>Agora, o que interessa…</span></div>
                 <p class="eyebrow">COMO POSSO AJUDAR</p>
                 <h2>O que eu posso fazer pelo seu negócio.</h2>
                 <p>Preço de partida pra você ter uma ideia agora. O valor exato vem na proposta — respondo ainda hoje.</p>
                 <p class="desconto-depoimento"><b>10% de desconto</b> se você deixar um depoimento sobre o meu serviço.</p>
+                <p class="servicos-atalho"><a class="botao botao-secundario" href="./monte.html">Monte o seu e veja o preço na hora →</a></p>
             </div>
             <div class="lista-servicos">
                 <article>
@@ -515,6 +619,7 @@
         <section id="orcamento" class="secao orcamento">
             <div class="orcamento-titulo">
                 <div class="titulo-secao">
+                    <div class="gibi-legenda" aria-hidden="true"><span>Nesse exato momento, alguém precisa de um site…</span></div>
                     <p class="eyebrow">ORÇAMENTO</p>
                     <h2>Conte seu projeto em 1&nbsp;minuto.</h2>
                     <p>Responda algumas perguntas rapidinho — a mensagem já sai pronta pro WhatsApp, sem digitar nada.</p>
@@ -577,6 +682,16 @@
                     <summary>Como funciona o pagamento?</summary>
                     <p>A forma de pagamento é combinada na proposta, antes de começar.</p>
                 </details>
+                <details class="faq-item" name="faq" id="faq-indicacao">
+                    <summary>Indiquei alguém. Ganho alguma coisa?</summary>
+                    <p>Ganha! Quem chega pelo seu link tem <b data-indicacao="amigo">10% de desconto no primeiro site</b>, e você ganha <b data-indicacao="quemIndica">R$ 50 no Pix pra cada indicação que fechar</b>. Gere o seu link aqui:</p>
+                    <form class="indique-form" id="indiqueForm" autocomplete="off">
+                        <label class="v-oculto" for="indiqueNome">Seu nome</label>
+                        <input id="indiqueNome" type="text" maxlength="40" placeholder="Seu nome">
+                        <button class="botao botao-secundario" type="submit">Gerar meu link</button>
+                    </form>
+                    <p class="indique-link" id="indiqueLink" hidden></p>
+                </details>
                 </div>
                 </div>
             </div>
@@ -584,6 +699,7 @@
 
         <section id="jornada" class="secao jornada">
             <div class="titulo-secao">
+                <div class="gibi-legenda" aria-hidden="true"><span>Flashback!</span></div>
                 <p class="eyebrow">EVOLUÇÃO</p>
                 <h2>Minha jornada</h2>
             </div>
@@ -600,9 +716,11 @@
         </section>
 
         <section id="contato" class="secao contato">
+            <div class="gibi-legenda" aria-hidden="true"><span>E pra fechar a edição…</span></div>
             <p class="eyebrow">VAMOS CONVERSAR</p>
             <h2>Tem um projeto em mente?</h2>
             <p>Costumo responder ainda no mesmo dia. Prefere conversar direto? Me chame no WhatsApp. Também estou no LinkedIn e no GitHub.</p>
+            <p class="gibi-nota gibi-nota-contato" aria-hidden="true">fim da edição #1. a #2 depende de você.</p>
             <div class="contato-acoes">
                 <a class="botao botao-principal" href="https://wa.me/5567996034205?text=Oi%2C%20Samuel%21%20Vi%20seu%20portf%C3%B3lio%20e%20queria%20pedir%20um%20or%C3%A7amento.%20Meu%20projeto%20%C3%A9%3A%20" target="_blank" rel="noopener noreferrer">Falar direto no WhatsApp</a>
                 <a class="botao botao-secundario" href="https://www.linkedin.com/in/samuelrondon-dev/?utm_source=portfolio&utm_medium=contato&utm_campaign=site" target="_blank" rel="me noopener noreferrer">LinkedIn ↗</a>
@@ -616,7 +734,9 @@
             <div class="selo-brilho"><span class="selo-ponto" aria-hidden="true"></span><img class="selo-visitas" src="https://visitor-badge.laobi.icu/badge?page_id=samueldevmi.github.io.portfolio&color=8b1a1a&text_color=f6f6f6&left_text=visitas" alt="Contador de visitas do portfólio" loading="lazy" width="94" height="20"></div>
         </section>
     </main>
+    <div class="gibi-fim" aria-hidden="true"><p><b>Fim?</b><span>Próxima edição: o seu projeto.</span></p></div>
 
+    <nav class="rodape-ramos" aria-label="Sites por ramo">Sites para <a href="./site-para-pizzaria/">pizzaria</a> · <a href="./site-para-barbearia/">barbearia</a> · <a href="./site-para-loja-de-roupa/">loja de roupa</a> · <a href="./site-para-salao-de-beleza/">salão de beleza</a> · <a href="./site-para-academia/">academia</a> · <a href="./site-para-clinica/">clínica</a> · <a href="./monte.html">monte o seu</a> · <a href="./teste.html">teste de 1 minuto</a></nav>
     <footer>© <span id="ano"></span> Samuel Mickael. Feito com dedicação. · <a href="https://github.com/SamueldevmI" target="_blank" rel="me noopener noreferrer">GitHub</a> · <a class="link-linkedin" href="https://www.linkedin.com/in/samuelrondon-dev/?utm_source=portfolio&utm_medium=footer&utm_campaign=site" target="_blank" rel="me noopener noreferrer" aria-label="LinkedIn de Samuel Mickael"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>LinkedIn</a> · <button type="button" id="botaoTour" class="link-rodape">Tour rápido</button>
     </footer>
     <a class="orcamento-fixo" href="#orcamento">Quero meu orçamento</a>
@@ -685,22 +805,26 @@
     </div>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-    <script src="estatisticas.js?v=20261001celular"></script>
-    <script src="script.js?v=20261001celular"></script>
-<script src="acabamento.js?v=20261001celular" defer></script>
-<script src="idioma.js?v=20261001celular" defer></script>
+    <script src="estatisticas.js?v=20261006semPulo" defer></script>
+    <script src="servicos.js?v=20261002" defer></script>
+    <script src="previa-celular.js?v=20261006semPulo" defer></script>
+    <script src="filme-celular.js?v=20261006semPulo" defer></script>
+    <script src="script.js?v=20261006semPulo" defer></script>
+<script src="acabamento.js?v=20261006semPulo" defer></script>
+<script src="ficha.js?v=20261006semPulo" defer></script>
+<script src="gibi.js?v=20261006semPulo" defer></script>
+<script src="idioma.js?v=20261006semPulo" defer></script>
 <script>
     /* Scripts que a página não precisa pra aparecer: o mobile.js só baixa em tela de toque (no computador
        ele não faz nada) e a música só depois que a página terminou de carregar. */
     (function () {
-        var versao = "?v=20261001celular";
+        var versao = "?v=20261006semPulo";
         function carregar(arquivo) { var s = document.createElement("script"); s.src = arquivo + versao; document.body.appendChild(s); }
-        if (matchMedia("(pointer: coarse)").matches) {
-            // o pedido de "instalar app" pode chegar antes do mobile.js: fica guardado pra ele usar
-            addEventListener("beforeinstallprompt", function (e) { e.preventDefault(); window.pedidoInstalar = e; });
-            carregar("mobile.js");
-        }
-        function depois() { (window.requestIdleCallback || setTimeout)(function () { carregar("musica.js"); }); }
+        var toque = matchMedia("(pointer: coarse)").matches;
+        // o pedido de "instalar app" pode chegar antes do mobile.js: fica guardado pra ele usar
+        if (toque) addEventListener("beforeinstallprompt", function (e) { e.preventDefault(); window.pedidoInstalar = e; });
+        // o mobile.js também espera a página aparecer: assim não disputa o processador com a primeira tela
+        function depois() { (window.requestIdleCallback || setTimeout)(function () { if (toque) carregar("mobile.js"); carregar("musica.js"); }, { timeout: 1500 }); }
         if (document.readyState === "complete") depois(); else addEventListener("load", depois, { once: true });
     })();
 </script>

@@ -11,6 +11,11 @@
         const MESES = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
         const FOLGA = 4;
         const total = document.getElementById("ghTotal");
+        // o quadro já nasce com o tamanho do gráfico pronto: se ele crescesse ao carregar (às vezes acima de
+        // onde a pessoa está lendo), a página toda pularia no celular
+        const quadro = desenho.parentElement;
+        quadro.classList.add("gh-carregando");
+        const pronto = () => quadro.classList.remove("gh-carregando");
         const imagemAntiga = document.querySelector(".github-atividade > img");
         let rolagem = null;
         let colunas = 0;
@@ -122,11 +127,16 @@
                 total.innerHTML = "<b>" + somaAno + "</b> contribuições no último ano";
                 total.hidden = false;
             }
+            // a ficha de personagem (ficha.js) mostra esse mesmo número nas "missões cumpridas"
+            window.githubTotalAno = somaAno;
+            document.dispatchEvent(new CustomEvent("github:total", { detail: { total: somaAno } }));
             ajustar();
+            pronto();
             rolagem.scrollLeft = rolagem.scrollWidth; // no celular começa pelo mais recente
         }
 
         function mostrarImagemReserva() {
+            pronto();
             // O gráfico novo não veio (sem rede, serviço fora do ar): só agora baixa a imagem de antes.
             if (imagemAntiga && imagemAntiga.dataset.src && !imagemAntiga.getAttribute("src")) {
                 // Se a reserva também falhar, esconde o quadro inteiro em vez de mostrar imagem quebrada.
@@ -274,11 +284,12 @@
         }, { passive: true });
         /* o filtro por tecnologia esconde e mostra cards: refaz os pontos quando a contagem muda */
         new MutationObserver(function () {
+            if (visiveis().length === quantos) return; // só refaz quando o filtro muda quantos cards aparecem
             cancelAnimationFrame(quadro);
             quadro = requestAnimationFrame(montar);
         }).observe(lista, { subtree: true, attributes: true, attributeFilter: ["class"] });
         celular.addEventListener("change", montar);
-        montar();
+        (window.requestIdleCallback || setTimeout)(montar);
     })();
 
     /* ---------- "Não abriu o WhatsApp?" perto de qualquer botão que leve pra lá ----------
@@ -791,7 +802,7 @@
         }
         chipsFiltro.forEach((chip) => chip.addEventListener("click", () => requestAnimationFrame(mover)));
         window.addEventListener("resize", () => requestAnimationFrame(mover));
-        mover();
+        (window.requestIdleCallback || setTimeout)(mover);
     })();
 
     /* Sombra nas bordas do carrossel de projetos no celular, avisando que dá pra arrastar mais. */

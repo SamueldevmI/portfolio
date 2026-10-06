@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seu negócio tá pronto pra vender online? | Teste de 1 minuto</title>
+    <meta name="description" content="8 perguntas rápidas pra descobrir se o seu negócio está fácil de achar e de comprar pela internet. Nota de 0 a 10 e dicas grátis no final.">
+    <link rel="canonical" href="https://samueldevmi.github.io/portfolio/teste.html">
+    <meta property="og:title" content="Seu negócio tá pronto pra vender online?">
+    <meta property="og:description" content="Teste de 1 minuto: nota de 0 a 10 e 3 dicas grátis no final.">
+    <meta property="og:url" content="https://samueldevmi.github.io/portfolio/teste.html">
+    <meta property="og:image" content="https://samueldevmi.github.io/portfolio/imagem/og-image-v5.jpg">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+    <script>
+        (function () {
+            var azul = false;
+            try { azul = localStorage.getItem("portfolio-tema") === "azul"; } catch (e) { /* sem armazenamento */ }
+            document.documentElement.dataset.tema = azul ? "azul" : "vermelho";
+            document.write('<link rel="stylesheet" href="' + (azul ? "style-azul.css" : "style.css") + '?v=20261002">');
+        })();
+    </script>
+    <noscript><link rel="stylesheet" href="style.css"></noscript>
+    <style>
+        .tt { width: min(680px, calc(100% - 32px)); margin: 28px auto 80px; }
+        .tt .eyebrow::before { content: none; }
+        .tt-voltar { display: inline-block; margin-bottom: 18px; color: var(--muted); font-size: .9rem; text-decoration: none; }
+        .tt h1 { margin: 6px 0 8px; font-size: clamp(1.9rem, 6vw, 2.9rem); line-height: 1.05; letter-spacing: -.035em; }
+        .tt p { color: var(--muted); line-height: 1.6; }
+        .tt-caixa { margin-top: 22px; padding: 22px; border: 1px solid var(--line); border-radius: 18px; background: var(--surface); }
+        .tt-progresso { height: 6px; margin-bottom: 18px; border-radius: 99px; background: var(--line); overflow: hidden; }
+        .tt-progresso span { display: block; height: 100%; width: 0; background: var(--cyan); transition: width .3s; }
+        .tt-contador { margin: 0 0 6px; color: var(--acento-texto); font: 600 .78rem "DM Mono", monospace; letter-spacing: .1em; }
+        .tt-pergunta { margin: 0 0 18px; font-size: 1.35rem; line-height: 1.25; letter-spacing: -.02em; }
+        .tt-opcoes { display: grid; gap: 10px; }
+        .tt-opcoes button, .tt-ramos button { padding: 14px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--bg); color: var(--text); font: 600 1rem "Space Grotesk", Arial, sans-serif; text-align: left; cursor: var(--cursor-mao); transition: border-color .15s, background .15s; }
+        .tt-opcoes button:hover, .tt-ramos button:hover { border-color: var(--cyan); background: rgba(var(--cyan-rgb), .08); }
+        .tt-ramos { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+        .tt-voltar-pergunta { margin-top: 14px; padding: 0; border: 0; background: none; color: var(--muted); font: 500 .86rem "Space Grotesk", Arial, sans-serif; text-decoration: underline; cursor: var(--cursor-mao); }
+        .tt-nota { display: flex; align-items: center; gap: 18px; }
+        .tt-anel { --p: 0; flex: none; display: grid; place-items: center; width: 110px; height: 110px; border-radius: 50%; background: radial-gradient(closest-side, var(--surface) 78%, transparent 80%), conic-gradient(var(--cyan) calc(var(--p) * 1%), var(--line) 0); }
+        .tt-anel b { font-size: 2.2rem; letter-spacing: -.04em; }
+        .tt-anel small { color: var(--muted); font-size: .9rem; }
+        .tt-nota h2 { margin: 0 0 4px; font-size: 1.4rem; }
+        .tt-nota p { margin: 0; }
+        .tt-dicas { display: grid; gap: 10px; margin: 20px 0 0; padding: 0; list-style: none; }
+        .tt-dicas li { padding: 14px 16px; border-left: 3px solid var(--cyan); border-radius: 0 12px 12px 0; background: rgba(var(--cyan-rgb), .07); }
+        .tt-dicas b { display: block; margin-bottom: 2px; color: var(--text); }
+        .tt-dicas span { color: var(--muted); font-size: .92rem; line-height: 1.5; }
+        .tt-acoes { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+        .tt-acoes .botao { cursor: var(--cursor-mao); }
+        .tt-mais { margin-top: 14px; font-size: .9rem; }
+        .tt-mais a { color: var(--acento-texto); font-weight: 600; }
+        @media (max-width: 480px) { .tt-ramos { grid-template-columns: 1fr; } .tt-nota { flex-direction: column; align-items: flex-start; } }
+    </style>
+</head>
+<body>
+    <main class="tt">
+        <a class="tt-voltar" href="./">← voltar pro portfólio</a>
+        <p class="eyebrow">TESTE DE 1 MINUTO</p>
+        <h1>Seu negócio tá pronto pra vender online?</h1>
+        <p>8 perguntas rápidas, sem cadastro. No final você vê sua nota de 0 a 10 e 3 dicas pra melhorar, mesmo que não feche nada comigo.</p>
+        <section class="tt-caixa" id="ttCaixa" aria-live="polite"></section>
+    </main>
+    <script src="estatisticas.js?v=20261002"></script>
+    <script src="servicos.js?v=20261002"></script>
+    <script>
+        (function () {
+            "use strict";
+            const S = window.SERVICOS, est = window.ESTATISTICAS;
+            const caixa = document.getElementById("ttCaixa");
+            /* cada resposta: 2 = tudo certo, 1 = mais ou menos, 0 = não. dica aparece quando a resposta foi fraca. */
+            const PERGUNTAS = [
+                { p: (r) => `Quando alguém procura “${r ? r.nome : "o seu ramo"} perto de mim” no Google, você aparece?`, o: ["Sim, com fotos e avaliações", "Aparece, mas meio abandonado", "Acho que não / nunca vi"],
+                  dica: ["Apareça no Google Maps", "Crie (ou atualize) o Perfil da Empresa no Google: é grátis e é o primeiro lugar onde o cliente da sua região procura."] },
+                { p: (r) => `Você tem um link com seus ${r && r.pacote === "pedidos" ? "sabores e preços" : r && r.pacote === "loja" ? "produtos e preços" : "serviços e preços"} pra mandar pro cliente?`, o: ["Tenho, sempre atualizado", "Mando foto ou PDF", "Respondo um por um"],
+                  dica: ["Tenha um link com preços", "Quem vê o preço antes de perguntar chega mais decidido. Um link com tudo poupa dezenas de mensagens por dia."] },
+                { p: () => "Quanto tempo você leva pra responder uma mensagem quando está ocupado?", o: ["Até 15 minutos", "Uma ou duas horas", "Às vezes só no outro dia"],
+                  dica: ["Responda as perguntas de sempre sem estar no celular", "Horário, preço e endereço podem responder sozinhos no site. Você só entra na conversa quando é pra fechar."] },
+                { p: (r) => `O cliente consegue ${r && r.pacote === "agenda" ? "marcar um horário" : "fazer o pedido"} sem precisar te perguntar nada antes?`, o: ["Consegue, sozinho", "Mais ou menos", "Não, tudo passa por mim"],
+                  dica: ["Deixe o cliente pedir sozinho", "Quando o pedido (ou o horário) já chega pronto no seu WhatsApp, você para de anotar errado e de perder cliente na espera."] },
+                { p: () => "Seu endereço, horário e formas de pagamento são fáceis de achar?", o: ["Sim, tá tudo num lugar só", "Só no Instagram", "O cliente sempre pergunta"],
+                  dica: ["Junte o básico num lugar só", "Endereço com mapa, horário e formas de pagamento visíveis acabam com metade das perguntas repetidas."] },
+                { p: () => "Você tem fotos boas do que vende ou do seu trabalho?", o: ["Tenho, bem feitas", "Algumas, meio improvisadas", "Quase nenhuma"],
+                  dica: ["Capriche nas fotos", "Luz de janela, fundo liso e celular na altura certa já mudam tudo. Foto boa vende antes de você abrir a boca."] },
+                { p: () => "Dá pra mostrar o que clientes falam de você (avaliações, prints, depoimentos)?", o: ["Sim, tenho bastante", "Tenho poucos", "Não tenho nada guardado"],
+                  dica: ["Junte provas de que você é bom", "Peça pro cliente satisfeito avaliar no Google ou mandar um áudio. Elogio de cliente convence mais que qualquer anúncio."] },
+                { p: () => "Você sabe quantas pessoas te procuram por mês e quantas viram cliente?", o: ["Sei mais ou menos", "Faço ideia", "Não faço a menor ideia"],
+                  dica: ["Comece a medir", "Com um site dá pra ver quantas pessoas visitaram e quantas clicaram no WhatsApp. Saber o número mostra onde está escapando cliente."] },
+            ];
+            let ramo = null, i = 0;
+            const respostas = [];
+            const el = (tag, props, ...filhos) => { const e = Object.assign(document.createElement(tag), props || {}); e.append(...filhos); return e; };
+
+            function inicio() {
+                const grade = el("div", { className: "tt-ramos" }, ...Object.entries(S.RAMOS).map(([k, r]) => {
+                    const b = el("button", { type: "button", textContent: `${r.emoji} ${r.titulo}` });
+                    b.addEventListener("click", () => { ramo = Object.assign({ id: k }, r); pergunta(); });
+                    return b;
+                }));
+                const outro = el("button", { type: "button", textContent: "✨ outro tipo de negócio" });
+                outro.addEventListener("click", () => { ramo = null; pergunta(); });
+                grade.append(outro);
+                caixa.replaceChildren(el("p", { className: "tt-contador", textContent: "PRA COMEÇAR" }), el("h2", { className: "tt-pergunta", textContent: "Qual é o seu negócio?" }), grade);
+            }
+            function pergunta() {
+                const q = PERGUNTAS[i];
+                const opcoes = el("div", { className: "tt-opcoes" }, ...q.o.map((texto, k) => {
+                    const b = el("button", { type: "button", textContent: texto });
+                    b.addEventListener("click", () => { respostas[i] = 2 - k; i++; i < PERGUNTAS.length ? pergunta() : resultado(); });
+                    return b;
+                }));
+                const barra = el("div", { className: "tt-progresso" }, el("span"));
+                const filhos = [barra, el("p", { className: "tt-contador", textContent: `PERGUNTA ${i + 1} DE ${PERGUNTAS.length}` }), el("h2", { className: "tt-pergunta", textContent: q.p(ramo) }), opcoes];
+                const voltar = el("button", { type: "button", className: "tt-voltar-pergunta", textContent: "← voltar" });
+                voltar.addEventListener("click", () => { if (i === 0) inicio(); else { i--; pergunta(); } });
+                filhos.push(voltar);
+                caixa.replaceChildren(...filhos);
+                requestAnimationFrame(() => { barra.firstChild.style.width = `${(i / PERGUNTAS.length) * 100}%`; });
+                opcoes.querySelector("button").focus({ preventScroll: true });
+            }
+            function resultado() {
+                const pontos = respostas.reduce((a, b) => a + b, 0);
+                const nota = Math.round((pontos / (PERGUNTAS.length * 2)) * 10);
+                const [titulo, frase] = nota >= 8 ? ["Tá voando 🚀", "Seu negócio já está bem preparado. Dá pra ajustar detalhes e vender ainda mais."]
+                    : nota >= 5 ? ["Tá no caminho 👀", "O básico existe, mas tem cliente escapando pelas frestas."]
+                    : ["Tem cliente escapando 🫠", "Hoje o cliente precisa se esforçar pra comprar de você. A boa notícia: dá pra arrumar rápido."];
+                const fracas = PERGUNTAS.map((q, k) => ({ q, v: respostas[k], k })).filter((x) => x.v < 2).sort((a, b) => a.v - b.v).slice(0, 3);
+                const anel = el("div", { className: "tt-anel" }, el("span", {}, el("b", { textContent: String(nota) }), el("small", { textContent: "/10" })));
+                anel.style.setProperty("--p", nota * 10);
+                const nomeRamo = ramo ? ramo.nome : "meu negócio";
+                const resumo = PERGUNTAS.map((q, k) => `${k + 1}. ${q.o[2 - respostas[k]]}`).join("\n");
+                const zap = el("a", { className: "botao botao-principal", href: S.linkWhats(`Oi, Samuel! Fiz o teste do seu site e tirei ${nota}/10 (${nomeRamo}). Quero ajuda pra melhorar isso.\n\nMinhas respostas:\n${resumo}`), target: "_blank", rel: "noopener noreferrer", textContent: "Quero que você resolva isso" });
+                zap.addEventListener("click", () => est && est.contar("/evento/teste-whatsapp", "Teste: chamou no WhatsApp", true));
+                const compartilhar = el("button", { type: "button", className: "botao botao-secundario", textContent: "Desafiar um amigo" });
+                compartilhar.addEventListener("click", async () => {
+                    const texto = `Tirei ${nota}/10 no teste “Seu negócio tá pronto pra vender online?”. Faz aí e me diz a sua:`;
+                    const url = new URL("teste.html", location.href).toString();
+                    try { if (navigator.share) await navigator.share({ title: "Seu negócio tá pronto pra vender online?", text: texto, url }); else { await navigator.clipboard.writeText(`${texto} ${url}`); compartilhar.textContent = "Link copiado ✓"; } } catch (e) { /* cancelou */ }
+                });
+                const refazer = el("button", { type: "button", className: "tt-voltar-pergunta", textContent: "refazer o teste" });
+                refazer.addEventListener("click", () => { i = 0; respostas.length = 0; inicio(); });
+                const monte = new URL("monte.html", location.href); if (ramo) monte.searchParams.set("ramo", ramo.id);
+                const previa = new URL("./", location.href); if (ramo) previa.searchParams.set("ramo", ramo.id); previa.searchParams.set("previa", "1");
+                caixa.replaceChildren(
+                    el("div", { className: "tt-nota" }, anel, el("div", {}, el("h2", { textContent: titulo }), el("p", { textContent: frase }))),
+                    ...(fracas.length ? [el("p", { className: "tt-contador", style: "margin-top:22px", textContent: "SUAS 3 DICAS" }), el("ol", { className: "tt-dicas" }, ...fracas.map((x) => el("li", {}, el("b", { textContent: x.q.dica[0] }), el("span", { textContent: x.q.dica[1] }))))] : []),
+                    el("div", { className: "tt-acoes" }, zap, compartilhar),
+                    el("p", { className: "tt-mais" }, "Ou: ", el("a", { href: previa.toString(), textContent: "veja como ficaria o seu site" }), " · ", el("a", { href: monte.toString(), textContent: "monte o seu e veja o preço" })),
+                    refazer);
+                if (est) est.contar(`/evento/teste-nota-${nota}`, `Teste: nota ${nota}`, true);
+                caixa.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+            inicio();
+            if (est) est.contar("/teste", "Teste: pronto pra vender online?", true);
+        })();
+    </script>
+</body>
+</html>

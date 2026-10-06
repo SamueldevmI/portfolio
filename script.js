@@ -113,15 +113,24 @@ if (prefereMenosMovimento || !("IntersectionObserver" in window)) {
    senão a digitação, que lê o texto original em português, apagaria a tradução do idioma.js. */
 const heroTexto = document.querySelector(".hero-texto");
 if (heroTexto && !prefereMenosMovimento) {
+    // o resto do texto fica lá, invisível, guardando o espaço: o parágrafo não muda de altura e nada abaixo pula
     const textoCompletoHero = document.documentElement.dataset.idioma === "es"
         ? "Sitio y sistema a medida para tu negocio: aparece en Google, responde en WhatsApp solo y funciona en el celular."
         : heroTexto.textContent;
+    const digitado = document.createElement("span");
+    const falta = document.createElement("span");
+    falta.style.visibility = "hidden";
+    falta.setAttribute("aria-hidden", "true");
+    falta.textContent = textoCompletoHero;
     heroTexto.textContent = "";
+    heroTexto.append(digitado, falta);
     let indiceCharHero = 0;
     setTimeout(function digitarHero() {
-        heroTexto.textContent = textoCompletoHero.slice(0, indiceCharHero);
+        digitado.textContent = textoCompletoHero.slice(0, indiceCharHero);
+        falta.textContent = textoCompletoHero.slice(indiceCharHero);
         indiceCharHero++;
         if (indiceCharHero <= textoCompletoHero.length) setTimeout(digitarHero, 14);
+        else heroTexto.textContent = textoCompletoHero;
     }, 320);
 }
 
@@ -210,7 +219,8 @@ document.querySelectorAll(".botao").forEach((botao) => {
     const espera = (ms) => new Promise((r) => setTimeout(r, semMovimento ? 0 : ms));
     const ler = (k) => { try { return localStorage.getItem(k) || ""; } catch (e) { return ""; } };
     const gravar = (k, v) => { try { v ? localStorage.setItem(k, v) : localStorage.removeItem(k); } catch (e) { /* sem armazenamento */ } };
-    const reais = (n) => "R$ " + Math.round(n).toLocaleString("pt-BR");
+    const formatoReais = new Intl.NumberFormat("pt-BR"); // um só (criar a cada número é caro)
+    const reais = (n) => "R$ " + formatoReais.format(Math.round(n));
 
     // Cada ramo tem as conversas dele, do jeito que chegam no WhatsApp de verdade (com um pouco de zoeira).
     // whats: o que o cliente manda / o que o site responde sozinho. extra: a terceira cena (pedidos, loja ou
@@ -340,6 +350,16 @@ document.querySelectorAll(".botao").forEach((botao) => {
         return lista;
     }
 
+    // O comparador fica lá no topo: se ele muda de altura enquanto a pessoa lê mais embaixo, a página
+    // inteira pula (no iPhone o navegador não compensa). Então ele só troca de cena quando está na tela,
+    // e os dois lados nunca encolhem de uma cena pra outra (a altura só cresce até a maior cena).
+    let naTela = true;
+    if ("IntersectionObserver" in window) new IntersectionObserver((e) => { naTela = e.some((x) => x.isIntersecting); }).observe(raiz);
+    const quandoNaTela = () => new Promise((ok) => { (function ver() { if (naTela && !document.hidden) ok(); else setTimeout(ver, 500); })(); });
+    const segurarAltura = () => ["sem", "com"].forEach((lado) => { const el = palco[lado]; el.style.minHeight = Math.max(el.offsetHeight, parseFloat(el.style.minHeight) || 0) + "px"; });
+    let larguraAntes = innerWidth;
+    addEventListener("resize", () => { if (innerWidth === larguraAntes) return; larguraAntes = innerWidth; palco.sem.style.minHeight = palco.com.style.minHeight = ""; });
+
     let tipo = NEGOCIOS[ler("portfolio-tipo-negocio")] ? ler("portfolio-tipo-negocio") : "pizzaria";
     let lista = [], atual = 0, rodada = 0, automatico = true;
     const nome = () => (campoNome?.value || "").trim().slice(0, 40);
@@ -372,6 +392,7 @@ document.querySelectorAll(".botao").forEach((botao) => {
         if (detalhe) { const d = document.createElement("small"); d.textContent = detalhe; el.appendChild(d); }
         if (t === "msg") el.style.setProperty("--giro", (Math.random() * 4 - 2).toFixed(1) + "deg");
         palco[lado].appendChild(el);
+        return el;
     }
 
     function montarPlacar(c) {
@@ -416,19 +437,21 @@ document.querySelectorAll(".botao").forEach((botao) => {
         await espera(180);
         if (!vivo()) return false;
         raiz.classList.remove("cmp-trocando");
+        segurarAltura();
         palco.sem.innerHTML = ""; palco.com.innerHTML = "";
+        // todas as linhas da cena entram de uma vez, escondidas, e vão aparecendo uma a uma: assim o
+        // comparador já nasce do tamanho final e não empurra a página enquanto as mensagens chegam
         const passos = Math.max(c.sem.length, c.com.length);
+        const fila = [];
         for (let p = 0; p < passos; p++) {
-            if (c.sem[p]) {
-                if (!vivo()) return false;
-                linha("sem", ...c.sem[p]);
-                await espera(c.sem[p][0] === "alerta" ? 500 : 380);
-            }
-            if (c.com[p]) {
-                if (!vivo()) return false;
-                linha("com", ...c.com[p]);
-                await espera(380);
-            }
+            if (c.sem[p]) fila.push([linha("sem", ...c.sem[p]), c.sem[p][0] === "alerta" ? 500 : 380]);
+            if (c.com[p]) fila.push([linha("com", ...c.com[p]), 380]);
+        }
+        if (!semMovimento) fila.forEach(([el]) => el.classList.add("cmp-esperando"));
+        for (const [el, tempo] of fila) {
+            if (!vivo()) return false;
+            el.classList.remove("cmp-esperando");
+            await espera(tempo);
         }
         if (!vivo()) return false;
         await acenderPlacar();
@@ -441,6 +464,7 @@ document.querySelectorAll(".botao").forEach((botao) => {
         raiz.classList.remove("cmp-contando"); void raiz.offsetWidth; raiz.classList.add("cmp-contando");
         await espera(5000);
         raiz.classList.remove("cmp-contando");
+        await quandoNaTela();
         if (automatico) rodarSozinho((i + 1) % lista.length);
     }
 
@@ -483,6 +507,7 @@ document.querySelectorAll(".botao").forEach((botao) => {
         saidaAno.textContent = reais(perda * 12);
         faixa.style.setProperty("--p", ((msgs - faixa.min) / (faixa.max - faixa.min) * 100).toFixed(1) + "%");
         cancelAnimationFrame(quadroCalc);
+        if (reiniciar === "inicio") { perdaMostrada = perda; saidaPerda.textContent = reais(perda); return; } // na abertura: sem animar nem forçar layout
         const de = perdaMostrada, inicio = performance.now();
         const passo = (agora) => {
             const t = semMovimento ? 1 : Math.min((agora - inicio) / 500, 1);
@@ -496,10 +521,21 @@ document.querySelectorAll(".botao").forEach((botao) => {
     faixa?.addEventListener("input", () => calcular(false));
     ticketEl?.addEventListener("input", () => calcular(false));
 
-    montar();
-    calcular(true);
+    // monta as cenas quando o processador estiver livre: a primeira tela aparece antes
+    let montado = false;
+    const montarJa = () => { if (montado) return; montado = true; montar(); calcular("inicio"); };
+    (window.requestIdleCallback || ((f) => setTimeout(f, 200)))(montarJa, { timeout: 1500 });
     let comecou = false;
-    const comecar = () => { if (comecou) return; comecou = true; if (semMovimento) { automatico = false; mostrar(0); } else rodarSozinho(0); };
+    const comecar = () => { if (comecou) return; comecou = true; montarJa(); if (semMovimento) { automatico = false; mostrar(0); } else rodarSozinho(0); };
+    // A primeira cena já entra escondida no carregamento: o comparador nasce do tamanho final, em vez de
+    // crescer quando aparece na tela (o que empurrava a página no celular)
+    (function reservarEspaco() {
+        const c = cenas(tipo, nome())[0];
+        if (!c) return;
+        montarPlacar(c);
+        c.sem.forEach((x) => linha("sem", ...x).classList.add("cmp-esperando"));
+        c.com.forEach((x) => linha("com", ...x).classList.add("cmp-esperando"));
+    })();
     if ("IntersectionObserver" in window) {
         const obs = new IntersectionObserver((e) => { if (e.some((x) => x.isIntersecting)) { obs.disconnect(); comecar(); } });
         obs.observe(raiz);
@@ -703,12 +739,15 @@ if (!prefereMenosMovimento) {
         secoesFundo.forEach((secao) => obsFundo.observe(secao));
     }
 
-    let velocSuaveFundo = 0, ultimoYFundo = window.scrollY, ultimoTempoFundo = performance.now(), ultimaIntensidade = -1;
+    // a posição de rolagem vem do evento de scroll (ler scrollY dentro do timer forçava o navegador a recalcular a página)
+    let yAtualFundo = window.scrollY;
+    window.addEventListener("scroll", () => { yAtualFundo = window.scrollY; }, { passive: true });
+    let velocSuaveFundo = 0, ultimoYFundo = yAtualFundo, ultimoTempoFundo = performance.now(), ultimaIntensidade = -1;
     setInterval(() => {
         const agora = performance.now();
         const dt = Math.max(16, agora - ultimoTempoFundo);
-        const veloc = Math.min(1, (Math.abs(window.scrollY - ultimoYFundo) / dt * 16) / 40);
-        ultimoYFundo = window.scrollY;
+        const veloc = Math.min(1, (Math.abs(yAtualFundo - ultimoYFundo) / dt * 16) / 40);
+        ultimoYFundo = yAtualFundo;
         ultimoTempoFundo = agora;
         velocSuaveFundo += (veloc - velocSuaveFundo) * .18;
         const intensidade = Math.min(1, nivelBaseFundo + velocSuaveFundo * .4);
@@ -1928,65 +1967,8 @@ if (paletaOverlay) {
    são as do ramo do cliente, não as do tema do portfólio (o gerador do tema azul não mexe nelas).
    Abre pelo comparador, pelo convite do link personalizado ou direto com ?previa=1. */
 (function previaDoSite() {
-    const RAMOS = {
-        pizzaria: { rotulo: "pizzaria", exemplo: "Sua Pizzaria", emoji: "🍕", cor: "#f08a24", fundo: "#1c1311", texto: "#fff4ee", suave: "#c9a99c",
-            chamada: "A pizza que chega quentinha", sub: "Forno a lenha · entrega em Campo Grande", secao: "Cardápio",
-            itens: [["Calabresa", "R$ 45"], ["Frango com catupiry", "R$ 49"], ["Portuguesa", "R$ 52"]],
-            info: "Ter a dom · 18h às 23h30", chips: ["Borda recheada", "Entrega grátis até 5 km"], botao: "Pedir pelo WhatsApp" },
-        barbearia: { rotulo: "barbearia", exemplo: "Sua Barbearia", emoji: "💈", cor: "#c8a15a", fundo: "#121212", texto: "#f5efe3", suave: "#a39a88",
-            chamada: "Corte na régua, sem fila", sub: "Escolha o horário em 2 toques", secao: "Serviços",
-            itens: [["Corte", "R$ 35"], ["Barba", "R$ 25"], ["Corte + barba", "R$ 55"]],
-            info: "Horários livres hoje", chips: ["16h30", "18h", "19h30"], botao: "Agendar horário" },
-        "loja de roupa": { rotulo: "loja", exemplo: "Sua Loja", emoji: "👗", cor: "#ff5c8a", fundo: "#141014", texto: "#fdf0f4", suave: "#b89aa4",
-            chamada: "Nova coleção chegou", sub: "Enviamos pra todo o MS", secao: "Destaques",
-            itens: [["Vestido midi", "R$ 129"], ["Moletom oversized", "R$ 189"], ["Boné bordado", "R$ 79"]],
-            info: "Tamanhos", chips: ["P", "M", "G", "GG"], botao: "Comprar pelo WhatsApp" },
-        "salão": { rotulo: "salão", exemplo: "Seu Salão", emoji: "💇‍♀️", cor: "#e58fb4", fundo: "#1a1216", texto: "#fdeff5", suave: "#bf9fae",
-            chamada: "Seu cabelo do jeito que você sonhou", sub: "Agende sem precisar mandar mensagem", secao: "Serviços",
-            itens: [["Escova", "R$ 50"], ["Progressiva", "a partir de R$ 180"], ["Unhas", "R$ 35"]],
-            info: "Horários livres amanhã", chips: ["10h", "14h", "16h"], botao: "Agendar horário" },
-        academia: { rotulo: "academia", exemplo: "Sua Academia", emoji: "🏋️", cor: "#f5c518", fundo: "#0f0f0f", texto: "#fbf7e6", suave: "#a8a28a",
-            chamada: "Bora treinar?", sub: "Aula experimental grátis", secao: "Planos",
-            itens: [["Mensal", "R$ 99"], ["Trimestral", "R$ 89/mês"], ["Anual", "R$ 79/mês"]],
-            info: "Seg a sex 5h às 23h · sáb e dom 8h às 12h", chips: ["Musculação", "Funcional", "Spinning"], botao: "Agendar aula experimental" },
-        "clínica": { rotulo: "clínica", exemplo: "Sua Clínica", emoji: "🩺", cor: "#1f9e8f", fundo: "#f3faf9", texto: "#12302c", suave: "#5b7a76",
-            chamada: "Cuidado de verdade, perto de você", sub: "Agende sua consulta online", secao: "Especialidades",
-            itens: [["Clínico geral", "seg a sex"], ["Pediatria", "ter e qui"], ["Dermatologia", "qua"]],
-            info: "Convênios", chips: ["Unimed", "Bradesco Saúde", "Particular"], botao: "Agendar consulta" },
-    };
-    const esc = (t) => String(t).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-    const endereco = (nome) => (nome.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "") || "seunegocio") + ".com.br";
-    const iniciais = (nome) => nome.split(/\s+/).filter((p) => p.length > 2 || /^[A-Z]/.test(p)).slice(0, 2).map((p) => p[0]).join("").toUpperCase() || nome[0].toUpperCase();
+    const { RAMOS, esc, endereco, iniciais, celular } = window.PreviaCelular; // previa-celular.js
     const ler = (k) => { try { return localStorage.getItem(k) || ""; } catch (e) { return ""; } };
-
-    // o celular com o mini-site (usado na prévia e na vitrine do topo)
-    const ICONES_STATUS = '<svg viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>'
-        + '<svg viewBox="0 0 16 12"><path d="M8 2.2c2.6 0 4.9 1 6.6 2.7l1.2-1.3A11 11 0 0 0 8 .4 11 11 0 0 0 .2 3.6l1.2 1.3A9.2 9.2 0 0 1 8 2.2zm0 3.6c1.6 0 3 .6 4.1 1.6l1.2-1.3A7.6 7.6 0 0 0 8 4a7.6 7.6 0 0 0-5.3 2.1l1.2 1.3c1.1-1 2.5-1.6 4.1-1.6zm0 3.6c.6 0 1.2.2 1.6.6L8 11.8 6.4 10c.4-.4 1-.6 1.6-.6z"/></svg>'
-        + '<svg class="previa-bateria" viewBox="0 0 27 13"><rect x=".5" y=".5" width="23" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.2" y="2.2" width="17" height="8.6" rx="2"/><path d="M25 4.4v4.2a2.2 2.2 0 0 0 0-4.2z" opacity=".45"/></svg>';
-    const ICONE_WHATS = "M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.64.07-.3-.15-1.26-.46-2.39-1.47-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.21 3.07c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.7.63.71.22 1.36.19 1.87.12.57-.09 1.76-.72 2-1.41.25-.7.25-1.29.18-1.41-.08-.13-.27-.2-.57-.35m-5.42 7.4h-.01a9.87 9.87 0 0 1-5.03-1.38l-.36-.21-3.74.98 1-3.65-.24-.37a9.86 9.86 0 0 1-1.51-5.26c0-5.45 4.44-9.88 9.89-9.88 2.64 0 5.12 1.03 6.99 2.9a9.83 9.83 0 0 1 2.89 6.99c0 5.45-4.44 9.88-9.88 9.88m8.41-18.3A11.82 11.82 0 0 0 12.05 0C5.5 0 .16 5.34.16 11.89c0 2.1.55 4.14 1.59 5.95L.06 24l6.3-1.65a11.88 11.88 0 0 0 5.68 1.45h.01c6.55 0 11.89-5.34 11.89-11.9a11.82 11.82 0 0 0-3.48-8.41z";
-    function celular(ramo, marca) {
-        const r = RAMOS[ramo];
-        return `
-                <div class="previa-celular" style="--p-cor:${r.cor};--p-fundo:${r.fundo};--p-texto:${r.texto};--p-suave:${r.suave}">
-                    <div class="previa-tela">
-                        <div class="previa-status" aria-hidden="true"><span>9:41</span><span class="previa-ilha"></span><span class="previa-icones">${ICONES_STATUS}</span></div>
-                        <div class="previa-url"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 11V8a5 5 0 0 1 10 0v3"/><rect x="5" y="11" width="14" height="10" rx="2.5"/></svg>${esc(endereco(marca))}</div>
-                        <div class="previa-site">
-                            <header class="previa-topo"><span class="previa-logo">${esc(iniciais(marca))}</span><b>${esc(marca)}</b><span class="previa-menu" aria-hidden="true"><i></i><i></i><i></i></span></header>
-                            <section class="previa-hero">
-                                <div class="previa-capa" aria-hidden="true"><span class="previa-capa-emoji">${r.emoji}</span><span class="previa-nota">★ 4,9</span><span class="previa-aberto">aberto agora</span></div>
-                                <h4>${esc(r.chamada)}</h4><p>${esc(r.sub)}</p><button type="button" class="previa-botao">${esc(r.botao)}</button>
-                            </section>
-                            <section class="previa-secao"><h5>${esc(r.secao)}</h5>${r.itens.map(([n, v]) => `<div class="previa-item"><span class="previa-miniatura" aria-hidden="true">${r.emoji}</span><span class="previa-item-nome">${esc(n)}</span><b>${esc(v)}</b></div>`).join("")}</section>
-                            <section class="previa-secao"><h5>${esc(r.info)}</h5><div class="previa-chips">${r.chips.map((c) => `<button type="button">${esc(c)}</button>`).join("")}</div></section>
-                            <footer class="previa-rodape">📍 Campo Grande - MS · ⭐ 4,9 no Google</footer>
-                            <a class="previa-whats" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="${ICONE_WHATS}"/></svg></a>
-                        </div>
-                        <span class="previa-home" aria-hidden="true"></span>
-                    </div>
-                    <p class="previa-aviso" role="status"></p>
-                </div>`;
-    }
 
     function montar(ramo, nome) {
         const r = RAMOS[ramo];
@@ -2064,34 +2046,63 @@ ${celular(ramo, marca)}
         if (!caixa) return;
         const ordem = Object.keys(RAMOS);
         const salvo = ler("portfolio-tipo-negocio");
-        let i = Math.max(0, ordem.indexOf(salvo)), pausado = false, visivel = true, relogio = 0, rolagem = 0;
+        const filme = !prefereMenosMovimento && window.FilmeCelular; // filme-celular.js: o cliente comprando de madrugada
+        let i = Math.max(0, ordem.indexOf(salvo)), pausado = false, visivel = true, relogio = 0, rolagem = 0, cena = null, geracao = 0;
+        const LEGENDA = "digite o nome do seu negócio aqui embaixo, ou toque no celular pra prévia completa 👆";
         caixa.innerHTML = `
             <div class="vitrine-ramos" role="group" aria-label="Ver exemplo de outro ramo">${ordem.map((k) => `<button type="button" data-ramo="${esc(k)}">${esc(RAMOS[k].rotulo)}</button>`).join("")}</div>
             <div class="vitrine-palco" role="button" tabindex="0" aria-label="Abrir a prévia do site deste exemplo"></div>
-            <p class="vitrine-legenda">toca no celular pra ver com o nome do <b>seu</b> negócio 👆</p>`;
+            <p class="vitrine-legenda">${LEGENDA}</p>
+            <label class="vitrine-nome"><span aria-hidden="true">✏️</span><input type="text" maxlength="40" placeholder="Digite o nome do seu negócio" autocomplete="organization" enterkeyhint="done" aria-label="Nome do seu negócio, pra ver no celular"></label>`;
         const palco = caixa.querySelector(".vitrine-palco");
+        const legenda = caixa.querySelector(".vitrine-legenda");
+        const campoNome = caixa.querySelector(".vitrine-nome input");
         const botoes = [...caixa.querySelectorAll(".vitrine-ramos button")];
+        campoNome.value = ler("portfolio-nome-negocio").trim().slice(0, 40);
+        const nomeAtual = () => campoNome.value.trim() || RAMOS[ordem[i]].exemplo;
         function mostrar(n, animar) {
             i = (n + ordem.length) % ordem.length;
             const ramo = ordem[i];
-            const nome = ler("portfolio-nome-negocio").trim().slice(0, 40);
-            palco.innerHTML = celular(ramo, nome || RAMOS[ramo].exemplo);
+            const minha = ++geracao;
+            cena?.cancelar();
+            palco.innerHTML = celular(ramo, nomeAtual());
             palco.dataset.ramo = ramo;
             if (animar && !prefereMenosMovimento) { palco.classList.remove("trocou"); void palco.offsetWidth; palco.classList.add("trocou"); }
             botoes.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.ramo === ramo)));
-            // desce devagar pelo mini-site e volta, pra mostrar que tem cardápio/serviços lá embaixo
             clearTimeout(rolagem);
             const site = palco.querySelector(".previa-site");
-            if (site && !prefereMenosMovimento) rolagem = setTimeout(() => site.scrollTo({ top: 170, behavior: "smooth" }), 1600);
+            if (filme) {
+                // terminou a história: passa pro próximo ramo quando a vitrine estiver livre (sem mouse, na tela)
+                const proximo = () => { if (minha !== geracao) return; if (pausado || !visivel || document.hidden) relogio = setTimeout(proximo, 600); else mostrar(i + 1, true); };
+                cena = filme.rodar(palco, ramo, { marca: nomeAtual, ativo: () => visivel && !document.hidden, legenda: (html) => { legenda.innerHTML = html; }, fim: proximo });
+            } else if (site && !prefereMenosMovimento) {
+                // desce devagar pelo mini-site e volta, pra mostrar que tem cardápio/serviços lá embaixo
+                rolagem = setTimeout(() => site.scrollTo({ top: 170, behavior: "smooth" }), 1600);
+            }
         }
         function agendar() {
             clearTimeout(relogio);
-            if (prefereMenosMovimento) return;
+            if (prefereMenosMovimento || filme) return;
             relogio = setTimeout(() => { if (!pausado && visivel && !document.hidden) mostrar(i + 1, true); agendar(); }, 4600);
         }
+        // o nome digitado aparece na hora no celular (site, conversa e notificações) e fica guardado pra prévia
+        let guardar = 0;
+        campoNome.addEventListener("input", () => {
+            const nome = nomeAtual();
+            const ini = iniciais(nome);
+            palco.querySelectorAll(".previa-topo b, .filme-zap-topo b, .filme-aviso b").forEach((el) => { el.textContent = nome; });
+            palco.querySelectorAll(".previa-logo, .filme-zap-logo, .filme-aviso-logo").forEach((el) => { el.textContent = ini; });
+            const url = palco.querySelector(".previa-url");
+            if (url && url.lastChild) url.lastChild.textContent = endereco(nome);
+            const marcaLegenda = legenda.querySelector("b[data-marca]");
+            if (marcaLegenda) marcaLegenda.textContent = nome;
+            clearTimeout(guardar);
+            guardar = setTimeout(() => { try { localStorage.setItem("portfolio-nome-negocio", campoNome.value.trim().slice(0, 40)); } catch (e) { /* sem armazenamento */ } }, 400);
+        });
+        campoNome.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); campoNome.blur(); } });
         botoes.forEach((b) => b.addEventListener("click", () => { mostrar(ordem.indexOf(b.dataset.ramo), true); agendar(); }));
-        palco.addEventListener("click", () => abrir(palco.dataset.ramo));
-        palco.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); abrir(palco.dataset.ramo); } });
+        palco.addEventListener("click", () => abrir(palco.dataset.ramo, campoNome.value));
+        palco.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); abrir(palco.dataset.ramo, campoNome.value); } });
         caixa.addEventListener("mouseenter", () => { pausado = true; });
         caixa.addEventListener("mouseleave", () => { pausado = false; });
         caixa.addEventListener("focusin", () => { pausado = true; });
@@ -2110,4 +2121,29 @@ ${celular(ramo, marca)}
         const abrirDepois = () => setTimeout(() => abrir(LINK_PERSONALIZADO.ramo || undefined, LINK_PERSONALIZADO.para), 900);
         if (document.readyState === "complete") abrirDepois(); else window.addEventListener("load", abrirDepois, { once: true });
     }
+})();
+
+/* Indique e ganhe: quem já é cliente gera o próprio link (?indicou=Nome). Os valores vêm do servicos.js. */
+(function indiqueEGanhe() {
+    const S = window.SERVICOS;
+    const form = document.getElementById("indiqueForm");
+    if (!S || !form) return;
+    document.querySelectorAll("[data-indicacao]").forEach((b) => { b.textContent = S.INDICACAO[b.dataset.indicacao] || b.textContent; });
+    const campo = document.getElementById("indiqueNome");
+    const saida = document.getElementById("indiqueLink");
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const nome = campo.value.trim();
+        if (!nome) { campo.focus(); return; }
+        const link = new URL(location.href.split("#")[0].split("?")[0]);
+        link.searchParams.set("indicou", nome);
+        saida.hidden = false;
+        saida.textContent = link.toString();
+        const texto = `Conheço um cara que faz site pra negócio aqui em Campo Grande. Pelo meu link você ganha ${S.INDICACAO.amigo}: ${link}`;
+        try {
+            if (navigator.share) await navigator.share({ title: "Site pro seu negócio", text: texto });
+            else { await navigator.clipboard.writeText(texto); mostrarToast("Link copiado! É só mandar pra quem precisa de site."); }
+        } catch (erro) { /* a pessoa cancelou */ }
+        window.ESTATISTICAS?.contar(`/evento/indicacao-gerou`, "gerou link de indicação", true);
+    });
 })();

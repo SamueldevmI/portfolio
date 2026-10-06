@@ -228,7 +228,7 @@ a { color: var(--rosa); }
 .tom-r { --tom1: #ffeaf4; --tom2: #f5b7d5; }
 .tom-c { --tom1: #fbf6ec; --tom2: #e3d4b8; }
 .tom-m { --tom1: #e6fbf2; --tom2: #a9e3cf; }
-.card-imagem, .dp-imagem, .look-arte, .item-arte, .moldura, .estilo-arte, .voando, .carta-arte, .previsao-arte, .pagina-arte, .ingrediente-arte, .caixa-revelacao li > span, .carta-item-arte {
+.card-imagem, .dp-imagem, .look-arte, .item-arte, .moldura, .estilo-arte, .voando, .carta-arte, .previsao-arte, .pagina-arte, .ingrediente-arte, .caixa-revelacao li > span, .carta-item-arte, .boneca-pecas span {
     background:
         radial-gradient(rgba(36, 26, 51, .09) 1.2px, transparent 1.6px) 0 0 / 14px 14px,
         radial-gradient(circle at 50% 40%, var(--tom1), var(--tom2) 78%);
@@ -1237,3 +1237,60 @@ html.varinha :is(input[type="text"], input[type="search"], textarea) { cursor: t
     .ceu-lua-sangue::before { width: 70px; height: 70px; top: 14vh; right: 6vw; }
     .rosa-divisor { width: 180px; margin-top: 28px; }
 }
+
+/* peça vendida: "me avisa se chegar parecida" */
+.botao-avisa { margin-top: auto; border-color: var(--tinta); background: #efe3c8; box-shadow: 0 4px 0 var(--tinta); color: var(--tinta); font-size: .86rem; text-align: center; }
+.botao-avisa:hover { background: #f7ecd4; }
+
+/* ===================== boneca de papel (boneca.js) ===================== */
+.boneca-mesa { display: grid; grid-template-columns: minmax(240px, 380px) 1fr; align-items: start; gap: 32px; }
+.boneca-palco { position: relative; width: 100%; aspect-ratio: 200 / 320; border: 2px solid var(--linha-forte); border-radius: 24px; overflow: hidden; touch-action: none;
+    background: radial-gradient(60% 45% at 50% 42%, rgba(205, 180, 255, .25), transparent 70%), radial-gradient(rgba(233, 196, 106, .12) 1px, transparent 1.5px) 0 0 / 18px 18px, #1c1030; }
+.boneca-palco > svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.boneca-peca { position: absolute; display: grid; aspect-ratio: 1; padding: 0; border: 2px dashed transparent; border-radius: 12px; background: none; cursor: grab; translate: -50% -50%; touch-action: none; filter: drop-shadow(0 6px 8px rgba(0, 0, 0, .45)); }
+.boneca-peca > :is(.arte, .foto) { width: 100%; height: 100%; pointer-events: none; }
+.boneca-peca > .foto { border-radius: 10px; }
+.boneca-peca.selecionada { border-color: var(--ouro); background: rgba(233, 196, 106, .08); }
+.boneca-peca:active { cursor: grabbing; }
+.boneca-peca:focus-visible { outline: 2px solid var(--menta); outline-offset: 3px; }
+.boneca-controles { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 14px; padding: 10px 12px; border: 1px solid var(--ouro); border-radius: 16px; background: rgba(233, 196, 106, .08); }
+.boneca-controles span { flex: 1 1 100%; color: var(--ouro); font-weight: 700; font-size: .9rem; }
+.boneca-lado { min-width: 0; }
+.boneca-dica { margin: 0 0 8px; font-weight: 700; }
+.boneca-dica small { color: var(--mudo); font-weight: 600; }
+.boneca-pecas { display: grid; grid-template-columns: repeat(auto-fill, minmax(82px, 1fr)); gap: 8px; max-height: 330px; margin: 0 0 12px; padding: 4px; overflow-y: auto; list-style: none; }
+.boneca-pecas button { display: grid; justify-items: center; gap: 4px; width: 100%; padding: 6px 4px; border: 2px solid var(--linha); border-radius: 14px; background: var(--painel); color: var(--texto); font: inherit; cursor: pointer; }
+.boneca-pecas button[aria-pressed="true"] { border-color: var(--ouro); background: rgba(233, 196, 106, .12); }
+.boneca-pecas span { display: grid; width: 56px; aspect-ratio: 1; padding: 6px; border: 2px solid var(--tinta); border-radius: 50% 50% 10px 10px; }
+.boneca-pecas span > :is(.arte, .foto) { width: 100%; height: 100%; }
+.boneca-pecas span:has(> .foto) { padding: 0; overflow: hidden; }
+.boneca-pecas small { font-size: .68rem; line-height: 1.15; text-align: center; color: var(--mudo); }
+.boneca-total { color: var(--rosa); font-weight: 700; }
+.boneca-acoes { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+@media (max-width: 760px) {
+    .boneca-mesa { grid-template-columns: 1fr; gap: 18px; }
+    .boneca-palco { width: min(320px, 100%); margin: 0 auto; }
+    .boneca-pecas { grid-auto-flow: column; grid-template-columns: none; grid-auto-columns: 84px; max-height: none; overflow-x: auto; overflow-y: hidden; }
+}
+
+/* ===================== Halloween (extras.js) ===================== */
+.aviso-halloween { position: relative; z-index: 3; margin: 0; padding: 8px 16px; background: linear-gradient(90deg, #2a1206, #b4501c, #2a1206); color: #ffe2b8; font: 700 .86rem var(--fonte); letter-spacing: .04em; text-align: center; }
+.abobora { position: absolute; bottom: -2%; width: 15%; overflow: visible; filter: drop-shadow(0 0 14px rgba(255, 140, 50, .55)); }
+.abobora-e { left: 4%; }
+.abobora-d { right: 4%; bottom: 4%; width: 12%; }
+.ab-gomo { fill: #e0731f; stroke: #241a33; stroke-width: 3; }
+.ab-meio { fill: #f08a2c; stroke: #241a33; stroke-width: 3; }
+.ab-cabo { fill: #3c5a4a; stroke: #241a33; stroke-width: 2.5; }
+.ab-rosto { fill: #ffd36b; stroke: #241a33; stroke-width: 1.5; animation: abobora-brilha 1.8s ease-in-out infinite alternate; }
+@keyframes abobora-brilha { to { fill: #ffb13b; } }
+.morcego-voa { position: fixed; left: 0; top: var(--alto); z-index: 40; width: 46px; pointer-events: none; animation: morcego-voa var(--dur) linear forwards; }
+.morcego-voa svg { display: block; width: 100%; fill: #0b0610; stroke: var(--lilas); stroke-width: 1.4; animation: morcego-asa .25s ease-in-out infinite alternate; }
+@keyframes morcego-voa { 0% { transform: translate(-60px, 0); } 25% { transform: translate(25vw, -40px); } 50% { transform: translate(50vw, 20px); } 75% { transform: translate(75vw, -30px); } 100% { transform: translate(calc(100vw + 60px), 10px); } }
+@keyframes morcego-asa { to { transform: scaleY(.55); } }
+.halloween .titulo::after { content: " 🎃"; font-size: .5em; }
+.escuro .morcego-voa { display: none; }
+
+/* ===================== instalar como app ===================== */
+.instalar-app { margin-top: 12px; }
+.instalar-app .botao { min-height: 40px; padding: 0 16px; font-size: .86rem; }
+.instalar-app small { display: block; max-width: 34ch; color: var(--mudo); font-size: .8rem; }
