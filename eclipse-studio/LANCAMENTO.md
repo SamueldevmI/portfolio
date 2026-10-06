@@ -25,3 +25,11 @@ A ficha (`ficha/`) continua com `noindex` sempre.
 - **Contador de visitas:** criar a conta grátis no GoatCounter, ligar "Allow adding visitor counts" e pôr o código em `CODIGO`, no topo de `contador.js`. Os números aparecem em `painel/`.
 - **App:** já funciona (manifest e ícones em `app/`). No Android aparece "📲 Instalar o app da Eclipse" no rodapé; no iPhone, a dica de "Adicionar à Tela de Início".
 - **Halloween:** liga sozinho de 1º a 31 de outubro (prévia em outra época: `?festa=halloween`; desligar: `?festa=nao`).
+
+## Espanhol (idioma-loja.js)
+
+- Botão PT | ES no topo; a escolha fica salva (e vale também pro portfólio).
+- Traduz o texto fixo e tudo que os scripts colocam na tela depois (vitrine, sacola, avisos, magias), pelo dicionário do `idioma-loja.js`.
+- Os **nomes das peças ficam em português**, pra o pedido bater com o estoque. O pedido no WhatsApp sai em espanhol com a linha "🇪🇸 (Cliente fala espanhol)".
+- Peça nova ou texto novo: acrescentar a tradução no `DIC` do `idioma-loja.js` (sem tradução, o texto continua em português).
+- Ainda em português: previsões do horóscopo, leitura do tarô e dicas da Nyx (texto sorteado).
