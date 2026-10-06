@@ -39,6 +39,10 @@
         if (explosao) explosao.textContent = traduzir(TEXTO_EXPLOSAO);
     });
 
+    /* ---------- Foto desenhada: no toque, mostra a foto de verdade (e volta no próximo toque) ---------- */
+    const avatar = document.querySelector(".avatar-hq");
+    if (avatar) avatar.addEventListener("click", () => avatar.classList.toggle("real"));
+
     if (semMovimento) return;
 
     /* ---------- Legendas, balões, retícula e o "Fim?": aparecem quando entram na tela ---------- */
@@ -49,8 +53,52 @@
             e.target.classList.add("gibi-visivel");
             olho.unobserve(e.target);
         }), { threshold: .35, rootMargin: "0px 0px -6% 0px" });
-        document.querySelectorAll(".gibi-legenda, .gibi-nota, .gibi-fim, .titulo-secao").forEach((el) => olho.observe(el));
+        document.querySelectorAll(".gibi-legenda, .gibi-nota, .gibi-fim, .titulo-secao, .contato > h2").forEach((el) => olho.observe(el));
+
+        /* celular: o print do projeto "sai do quadro" quando o card chega no meio da tela */
+        if (!comMouse) {
+            const meio = new IntersectionObserver((entradas) => entradas.forEach((e) => e.target.classList.toggle("saindo-do-quadro", e.isIntersecting)), { rootMargin: "-38% 0px -38% 0px" });
+            document.querySelectorAll(".lista-projetos .card-projeto").forEach((card) => meio.observe(card));
+        }
     }
+
+    /* ---------- O sinal no céu: acende quando o Contato aparece; a luz passeia sozinha pelas nuvens
+       e, no computador, segue o mouse. O feixe sai do holofote do canto e aponta pra luz. ---------- */
+    (function sinalNoCeu() {
+        const secao = document.getElementById("contato");
+        const sinal = secao && secao.querySelector(".sinal");
+        if (!sinal || !("IntersectionObserver" in window)) return;
+        const holofote = sinal.querySelector(".sinal-holofote");
+        let naTela = false, quadro = 0, mouse = null, x = 0, y = 0, inicio = performance.now();
+        function passo(agora) {
+            quadro = 0;
+            if (!naTela) return;
+            const w = secao.clientWidth, faixa = parseFloat(getComputedStyle(secao).paddingTop) || 250;
+            const t = (agora - inicio) / 1000;
+            // alvo: o mouse (se estiver em cima da seção) ou um passeio lento de um lado pro outro
+            const alvoX = mouse ? Math.min(w - 90, Math.max(90, mouse.x)) : w * (.5 + .3 * Math.sin(t * .45));
+            const alvoY = mouse ? Math.min(faixa * .62, Math.max(faixa * .44, mouse.y)) : faixa * (.4 + .05 * Math.sin(t * .9));
+            x += (alvoX - x) * .08; y += (alvoY - y) * .08;
+            const ox = holofote.offsetLeft + holofote.offsetWidth / 2, oy = secao.clientHeight;
+            const ang = Math.atan2(x - ox, oy - y) * 180 / Math.PI;
+            secao.style.setProperty("--sinal-x", x.toFixed(1) + "px");
+            secao.style.setProperty("--sinal-y", y.toFixed(1) + "px");
+            secao.style.setProperty("--sinal-ang", ang.toFixed(2) + "deg");
+            quadro = requestAnimationFrame(passo);
+        }
+        new IntersectionObserver((entradas) => {
+            naTela = entradas.some((e) => e.isIntersecting);
+            if (naTela) {
+                sinal.classList.add("aceso");
+                if (!x) { x = secao.clientWidth * .5; y = 110; }
+                if (!quadro) quadro = requestAnimationFrame(passo);
+            }
+        }).observe(secao);
+        if (comMouse) {
+            secao.addEventListener("pointermove", (e) => { const r = secao.getBoundingClientRect(); mouse = { x: e.clientX - r.left, y: e.clientY - r.top }; });
+            secao.addEventListener("pointerleave", () => { mouse = null; inicio = performance.now() - Math.asin(Math.max(-1, Math.min(1, (x / secao.clientWidth - .5) / .3))) / .45 * 1000; });
+        }
+    })();
 
     /* ---------- "POW!" nos cliques: no computador, em qualquer botão ou link; no celular, só nos botões de orçamento ---------- */
     const ONOMATOPEIAS = ["POW!", "BAM!", "ZAP!", "TÁ!", "CLICK!", "BOOM!", "VUPT!"];
