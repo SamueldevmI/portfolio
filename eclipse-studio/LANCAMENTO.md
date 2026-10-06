@@ -25,3 +25,4 @@ A ficha (`ficha/`) continua com `noindex` sempre.
 - **Contador de visitas:** criar a conta grátis no GoatCounter, ligar "Allow adding visitor counts" e pôr o código em `CODIGO`, no topo de `contador.js`. Os números aparecem em `painel/`.
 - **App:** já funciona (manifest e ícones em `app/`). No Android aparece "📲 Instalar o app da Eclipse" no rodapé; no iPhone, a dica de "Adicionar à Tela de Início".
 - **Halloween:** liga sozinho de 1º a 31 de outubro (prévia em outra época: `?festa=halloween`; desligar: `?festa=nao`).
+

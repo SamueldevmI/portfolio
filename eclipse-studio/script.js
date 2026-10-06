@@ -822,7 +822,8 @@ function montarMensagem() {
     const linhas = [`${t("Oi! 🔮 Quero encomendar esta poção na")} ${LOJA.nome} 🖤`, "", `*${t("Ingredientes:")}*`];
     sacola.forEach((i) => {
         const p = produto(i.id);
-        linhas.push(`• ${i.qtd}x ${t(p.nome)}${i.tam ? " (" + i.tam + ")" : ""} — ${p.preco == null ? t("valor a combinar") : brl(p.preco * i.qtd)}`);
+        // o código (ES-03) vai junto: com o nome traduzido, é por ele que a Elizabeth acha a peça
+        linhas.push(`• ${i.qtd}x ${t(p.nome)} [${codigo(p.id)}]${i.tam ? " (" + i.tam + ")" : ""} — ${p.preco == null ? t("valor a combinar") : brl(p.preco * i.qtd)}`);
     });
     const entrega = entregaEscolhida();
     if (entrega) linhas.push("", `${t("Entrega:")} ${t(entrega.nome)}${entrega.taxa === 0 ? "" : taxaEntrega() ? ` (${t("taxa")} ${brl(taxaEntrega())})` : ` (${t("frete grátis")} ✦)`}`);
@@ -835,6 +836,7 @@ function montarMensagem() {
     if (ler("es-arcanos", { cartas: [] }).cartas?.length >= 4) linhas.push(`🃏 ${t("Completei a coleção de arcanos: código")} ${LOJA.colecao.codigo}`);
     linhas.push("", t("Podemos combinar a entrega e o pagamento por aqui?"));
     if (LOJA.demo) linhas.push("", t("_(Pedido de teste da prévia do site)_"));
+    if (document.documentElement.lang === "es") linhas.unshift("🇪🇸 (Cliente fala espanhol)"); // aviso pra Elizabeth, sempre em português
     return linhas.join("\n");
 }
 

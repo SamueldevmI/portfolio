@@ -1294,3 +1294,13 @@ html.varinha :is(input[type="text"], input[type="search"], textarea) { cursor: t
 .instalar-app { margin-top: 12px; }
 .instalar-app .botao { min-height: 40px; padding: 0 16px; font-size: .86rem; }
 .instalar-app small { display: block; max-width: 34ch; color: var(--mudo); font-size: .8rem; }
+
+/* celular bem estreito (até 360px): topo mais compacto pra caber logo, idioma, som e sacola com contador */
+@media (max-width: 360px) {
+    .topo-in { gap: 8px; }
+    .logo { gap: 6px; font-size: 1.35rem; }
+    .logo-icone { width: 26px; height: 26px; }
+    .botao-som { width: 38px; height: 38px; }
+    .botao-sacola { min-height: 38px; padding: 0 10px; gap: 6px; }
+}
+@media (max-width: 960px) { .topo nav { gap: 14px; } .topo-in { gap: 14px; } }
