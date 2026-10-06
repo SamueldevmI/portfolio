@@ -139,6 +139,8 @@
         "leu até aqui? então já é quase cliente 😏": "¿leíste hasta aquí? entonces ya eres casi cliente 😏",
         "fim da edição #1. a #2 depende de você.": "fin de la edición #1. la #2 depende de ti.",
         "Fim?": "¿Fin?",
+        "Precisa de um site? É só acender o sinal.": "¿Necesitas un sitio? Solo enciende la señal.",
+        "arraste pro lado pra ler a tirinha →": "desliza hacia el lado para leer la tira →",
         "Próxima edição: o seu projeto.": "Próxima edición: tu proyecto.",
         "Os projetos de bastidores, do primeiro site ao primeiro banco de dados. Cada um destravou uma coisa nova.":
             "Los proyectos de bastidores, del primer sitio a la primera base de datos. Cada uno desbloqueó algo nuevo.",

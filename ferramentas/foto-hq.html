@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="pt-BR">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Foto em HQ</title>
+<style>
+  body { margin: 0; padding: 24px 16px; background: #161616; color: #f2f2f2; font: 16px/1.5 system-ui, sans-serif; }
+  main { max-width: 760px; margin: 0 auto; }
+  canvas { max-width: 100%; height: auto; margin-top: 16px; border: 3px solid #111; }
+  a { color: #ffe14d; }
+</style>
+<main>
+  <h1>Foto em HQ</h1>
+  <p>Gera a versão "desenhada" das fotos do portfólio (avatar do topo e foto da ficha). Escolha a foto e baixe as duas imagens; depois é só colocar na pasta <code>imagem/</code> com os mesmos nomes.</p>
+  <p><label>Foto do rosto (quadrada): <input type="file" id="rosto" accept="image/*"></label></p>
+  <p><label>Foto da ficha (em pé, 3:4): <input type="file" id="ficha" accept="image/*"></label></p>
+  <p id="links"></p>
+  <div id="previa"></div>
+</main>
+<script>
+const previa = document.getElementById("previa");
+/* Transforma uma foto em "desenho de HQ": tons chapados (preto, vermelho-sangue, papel), retícula de pontos
+   nos meios-tons e contorno de nanquim nas bordas. */
+async function desenhar(src, largura, opcoes = {}) {
+  const img = new Image(); img.src = src; await img.decode();
+  const W = largura, H = Math.round(img.height * largura / img.width);
+  const c = document.createElement('canvas'); c.width = W; c.height = H;
+  const ctx = c.getContext('2d');
+  ctx.drawImage(img, 0, 0, W, H);
+  const dados = ctx.getImageData(0, 0, W, H), p = dados.data;
+  // luminância suavizada
+  const L = new Float32Array(W * H);
+  for (let i = 0; i < W * H; i++) L[i] = (0.299 * p[i * 4] + 0.587 * p[i * 4 + 1] + 0.114 * p[i * 4 + 2]) / 255;
+  const blur = (src, r) => { const out = new Float32Array(src.length); for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { let s = 0, n = 0; for (let dy = -r; dy <= r; dy++) for (let dx = -r; dx <= r; dx++) { const xx = x + dx, yy = y + dy; if (xx >= 0 && yy >= 0 && xx < W && yy < H) { s += src[yy * W + xx]; n++; } } out[y * W + x] = s / n; } return out; };
+  const S = blur(L, opcoes.suave ?? 1);
+  // contraste automático
+  const ord = Array.from(S).sort((a, b) => a - b); const lo = ord[Math.floor(ord.length * .03)], hi = ord[Math.floor(ord.length * .97)];
+  const N = S.map((v) => Math.min(1, Math.max(0, (v - lo) / (hi - lo))));
+  // bordas (Sobel) pra o nanquim
+  const E = new Float32Array(W * H);
+  for (let y = 1; y < H - 1; y++) for (let x = 1; x < W - 1; x++) {
+    const g = (dx, dy) => N[(y + dy) * W + x + dx];
+    const gx = -g(-1,-1) - 2*g(-1,0) - g(-1,1) + g(1,-1) + 2*g(1,0) + g(1,1);
+    const gy = -g(-1,-1) - 2*g(0,-1) - g(1,-1) + g(-1,1) + 2*g(0,1) + g(1,1);
+    E[y * W + x] = Math.hypot(gx, gy);
+  }
+  const PRETO = [17,17,17], SANGUE = opcoes.sangue || [150,28,34], PAPEL = [242,232,214], BRANCO = [255,252,245];
+  const passo = opcoes.reticula || 6; // tamanho da célula de retícula
+  const limiteBorda = opcoes.borda ?? .55;
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    const i = y * W + x, v = N[i];
+    // ponto de retícula: distância ao centro da célula (grade girada 45°)
+    const u = (x + y) / Math.SQRT2, w = (x - y) / Math.SQRT2;
+    const cu = ((u % passo) + passo) % passo - passo / 2, cw = ((w % passo) + passo) % passo - passo / 2;
+    const d = Math.hypot(cu, cw) / (passo / 2); // 0 no centro, ~1.4 no canto
+    let cor;
+    if (v < .2) cor = PRETO;
+    else if (v < .42) cor = d < 1.05 - (v - .2) * 2.2 ? PRETO : SANGUE;        // sombra: vermelho com pontos pretos
+    else if (v < .68) cor = d < .95 - (v - .42) * 2.4 ? SANGUE : PAPEL;        // meio-tom: papel com pontos vermelhos
+    else cor = v < .88 ? PAPEL : BRANCO;
+    if (E[i] > limiteBorda) cor = PRETO;
+    p[i * 4] = cor[0]; p[i * 4 + 1] = cor[1]; p[i * 4 + 2] = cor[2]; p[i * 4 + 3] = 255;
+  }
+  ctx.putImageData(dados, 0, 0);
+  previa.replaceChildren(c);
+  return c.toDataURL('image/webp', .86);
+}
+
+function ligar(id, largura, opcoes, nome) {
+  document.getElementById(id).addEventListener("change", async (e) => {
+    const arquivo = e.target.files[0];
+    if (!arquivo) return;
+    const url = await desenhar(URL.createObjectURL(arquivo), largura, opcoes);
+    const a = document.createElement("a");
+    a.href = url; a.download = nome; a.textContent = "Baixar " + nome;
+    document.getElementById("links").append(a, " ");
+  });
+}
+ligar("rosto", 168, { reticula: 4, borda: .5, suave: 1 }, "samuel-rosto-hq-168.webp");
+ligar("ficha", 720, { reticula: 7, borda: .5, suave: 1 }, "minhafoto-hq-720.webp");
+</script>
+</html>
