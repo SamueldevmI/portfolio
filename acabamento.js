@@ -11,6 +11,11 @@
         const MESES = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
         const FOLGA = 4;
         const total = document.getElementById("ghTotal");
+        // o quadro já nasce com o tamanho do gráfico pronto: se ele crescesse ao carregar (às vezes acima de
+        // onde a pessoa está lendo), a página toda pularia no celular
+        const quadro = desenho.parentElement;
+        quadro.classList.add("gh-carregando");
+        const pronto = () => quadro.classList.remove("gh-carregando");
         const imagemAntiga = document.querySelector(".github-atividade > img");
         let rolagem = null;
         let colunas = 0;
@@ -126,10 +131,12 @@
             window.githubTotalAno = somaAno;
             document.dispatchEvent(new CustomEvent("github:total", { detail: { total: somaAno } }));
             ajustar();
+            pronto();
             rolagem.scrollLeft = rolagem.scrollWidth; // no celular começa pelo mais recente
         }
 
         function mostrarImagemReserva() {
+            pronto();
             // O gráfico novo não veio (sem rede, serviço fora do ar): só agora baixa a imagem de antes.
             if (imagemAntiga && imagemAntiga.dataset.src && !imagemAntiga.getAttribute("src")) {
                 // Se a reserva também falhar, esconde o quadro inteiro em vez de mostrar imagem quebrada.

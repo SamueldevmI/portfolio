@@ -82,7 +82,7 @@
         function mostrarGithub(total) {
             if (!linhaGithub || !(total > 0)) return;
             linhaGithub.querySelector("strong").textContent = Number(total).toLocaleString("pt-BR");
-            linhaGithub.hidden = false;
+            linhaGithub.classList.remove("ficha-esperando"); // o espaço já estava reservado: a ficha não muda de tamanho
         }
         mostrarGithub(window.githubTotalAno);
         document.addEventListener("github:total", (e) => mostrarGithub(e.detail.total));
