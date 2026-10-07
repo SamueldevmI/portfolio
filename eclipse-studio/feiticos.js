@@ -27,7 +27,7 @@ const somarNaSacola = (id, tam, qtd = 1) => {
     }
     function textoDaCarta() {
         const para = campoPara.value.trim();
-        return `${para ? `Oi, ${para}! ` : "Oi! "}🎁 Separei umas peças na ${LOJA.nome} que eu ia amar ganhar de presente 🖤\nÉ só abrir a cartinha: ${montarLink()}`;
+        return `${para ? tf("Oi, {nome}!", { nome: para }) : t("Oi!")} 🎁 ${tf("Separei umas peças na {loja} que eu ia amar ganhar de presente 🖤", { loja: LOJA.nome })}\n${t("É só abrir a cartinha:")} ${montarLink()}`;
     }
 
     botao.addEventListener("click", () => {
@@ -63,20 +63,20 @@ const somarNaSacola = (id, tam, qtd = 1) => {
     if (!itens.length) return;
 
     const total = itens.reduce((s, i) => s + (produto(i.id).preco ?? 0) * i.qtd, 0);
-    document.getElementById("cartaTitulo").textContent = `${de} te mandou uma carta`;
-    document.getElementById("cartaTexto").textContent = `${para ? `${para}, ` : ""}${de} separou estas peças na ${LOJA.nome} e ia amar ganhar de presente:`;
+    document.getElementById("cartaTitulo").textContent = tf("{de} te mandou uma carta", { de });
+    document.getElementById("cartaTexto").textContent = `${para ? `${para}, ` : ""}${tf("{de} separou estas peças na {loja} e ia amar ganhar de presente:", { de, loja: LOJA.nome })}`;
     document.getElementById("cartaItens").innerHTML = itens.map((i) => {
         const p = produto(i.id);
-        return `<li><span class="carta-item-arte tom-${p.tom}">${arte(p)}</span><span>${i.qtd > 1 ? i.qtd + "× " : ""}${esc(p.nome)}${i.tam ? ` <small>(${esc(i.tam)})</small>` : ""}</span><b>${precoTexto(p, i.qtd)}</b></li>`;
+        return `<li><span class="carta-item-arte tom-${p.tom}">${arte(p)}</span><span>${i.qtd > 1 ? i.qtd + "× " : ""}${esc(t(p.nome))}${i.tam ? ` <small>(${esc(i.tam)})</small>` : ""}</span><b>${precoTexto(p, i.qtd)}</b></li>`;
     }).join("");
-    document.getElementById("cartaTotal").textContent = `Total estimado: ${brl(total)}${itens.some((i) => produto(i.id).preco == null) ? " + itens a combinar" : ""}`;
+    document.getElementById("cartaTotal").textContent = `${t("Total estimado:")} ${brl(total)}${itens.some((i) => produto(i.id).preco == null) ? " + " + t("itens a combinar") : ""}`;
     document.getElementById("cartaComprar").addEventListener("click", () => {
         itens.forEach((i) => somarNaSacola(i.id, i.tam, i.qtd));
-        campoObs.value = `É presente pra ${de} 🎁`;
+        campoObs.value = tf("É presente pra {de} 🎁", { de });
         renderSacola();
         caiuNoCaldeirao(itens.map((i) => i.id), dlgCarta.getBoundingClientRect());
         dlgCarta.close();
-        avisar(`🎁 O presente pra ${de} está na sacola`, { rotulo: "Ver sacola", fazer: () => dlgSacola.showModal() });
+        avisar(tf("🎁 O presente pra {de} está na sacola", { de }), { rotulo: "Ver sacola", fazer: () => dlgSacola.showModal() });
     });
     dlgCarta.addEventListener("click", (e) => { if (e.target === dlgCarta) dlgCarta.close(); });
     setTimeout(() => {
@@ -97,10 +97,11 @@ const somarNaSacola = (id, tam, qtd = 1) => {
     const caixa = produto("caixa");
     let vibe = ESTILOS[0];
 
-    document.getElementById("caixaSub").textContent = `${LOJA.caixa.pecas} peças surpresa da vibe que você escolher, por ${brl(caixa.preco)}. Toca na caixa pra sacudir 😉`;
     const renderVibes = () => {
-        vibesEl.innerHTML = ESTILOS.map((e) => `<button type="button" class="chip" data-caixa-vibe="${e.id}" aria-pressed="${e === vibe}">${esc(e.nome)}</button>`).join("");
+        document.getElementById("caixaSub").textContent = tf("{n} peças surpresa da vibe que você escolher, por {preco}. Toca na caixa pra sacudir 😉", { n: LOJA.caixa.pecas, preco: brl(caixa.preco) });
+        vibesEl.innerHTML = ESTILOS.map((e) => `<button type="button" class="chip" data-caixa-vibe="${e.id}" aria-pressed="${e === vibe}">${esc(t(e.nome))}</button>`).join("");
     };
+    document.addEventListener("idiomaMudou", () => { renderVibes(); fechar(); });
     function fechar() {
         desenho.classList.remove("aberta");
         revelacao.innerHTML = "";
@@ -127,11 +128,11 @@ const somarNaSacola = (id, tam, qtd = 1) => {
         const possiveis = PRODUTOS.filter((p) => naVitrine(p) && disponivel(p) && p.estilos.includes(vibe.id))
             .sort(() => Math.random() - .5).slice(0, 6);
         setTimeout(() => {
-            revelacao.innerHTML = `<p>Numa caixa <b>${esc(vibe.nome)}</b> pode vir qualquer uma destas (ou outras da mesma vibe):</p>
-                <ul>${possiveis.map((p, i) => `<li style="--i:${i}"><span class="tom-${p.tom}">${arte(p)}</span><small>${esc(p.nome)}</small></li>`).join("")}</ul>`;
+            revelacao.innerHTML = `<p>${tf("Numa caixa {vibe} pode vir qualquer uma destas (ou outras da mesma vibe):", { vibe: `<b>${esc(t(vibe.nome))}</b>` })}</p>
+                <ul>${possiveis.map((p, i) => `<li style="--i:${i}"><span class="tom-${p.tom}">${arte(p)}</span><small>${esc(t(p.nome))}</small></li>`).join("")}</ul>`;
             abrir.hidden = true;
             quero.hidden = false;
-            quero.textContent = `Quero a caixa ${vibe.nome} · ${brl(caixa.preco)}`;
+            quero.textContent = `${tf("Quero a caixa {vibe}", { vibe: t(vibe.nome) })} · ${brl(caixa.preco)}`;
         }, semMovimento ? 0 : 700);
     });
     quero.addEventListener("click", () => {
@@ -139,7 +140,7 @@ const somarNaSacola = (id, tam, qtd = 1) => {
         renderSacola();
         balancarSacola();
         caiuNoCaldeirao(["caixa"], desenho.getBoundingClientRect());
-        avisar(`✦ Caixa ${vibe.nome} no caldeirão`, { rotulo: "Ver sacola", fazer: () => dlgSacola.showModal() });
+        avisar(`✦ ${tf("Caixa {vibe} no caldeirão", { vibe: t(vibe.nome) })}`, { rotulo: "Ver sacola", fazer: () => dlgSacola.showModal() });
     });
     renderVibes();
 })();
@@ -158,32 +159,33 @@ const COLECAO = (() => {
 
     const frente = (id) => {
         const a = ARCANOS[id];
-        return `<div class="carta-frente"><span class="carta-num">${a.numero}</span><span class="carta-arte tom-${a.tom}"><svg class="arte" viewBox="0 0 100 100" aria-hidden="true">${ARTE[a.arte]}</svg></span><span class="carta-nome">${esc(a.nome)}</span><span class="carta-sub">${esc(estilo(id).nome)}</span></div>`;
+        return `<div class="carta-frente"><span class="carta-num">${a.numero}</span><span class="carta-arte tom-${a.tom}"><svg class="arte" viewBox="0 0 100 100" aria-hidden="true">${ARTE[a.arte]}</svg></span><span class="carta-nome">${esc(t(a.nome))}</span><span class="carta-sub">${esc(t(estilo(id).nome))}</span></div>`;
     };
     function render() {
         if (!album) return;
         const n = estado.cartas.length;
         sub.textContent = completa()
-            ? `Coleção completa! Seu código ${LOJA.colecao.codigo} já vai sozinho no pedido: ${LOJA.colecao.premio}.`
-            : `Cada dia que você visita a loja, ganha uma carta. Junte as ${ORDEM.length} e ganhe um código: ${LOJA.colecao.premio}. Você tem ${n} de ${ORDEM.length}.`;
+            ? tf("Coleção completa! Seu código {codigo} já vai sozinho no pedido: {premio}.", { codigo: LOJA.colecao.codigo, premio: t(LOJA.colecao.premio) })
+            : tf("Cada dia que você visita a loja, ganha uma carta. Junte as {total} e ganhe um código: {premio}. Você tem {n} de {total}.", { total: ORDEM.length, premio: t(LOJA.colecao.premio), n });
         album.innerHTML = ORDEM.map((id) => {
             const tem = estado.cartas.includes(id);
-            return `<li class="album-carta${tem ? " tem" : ""}" aria-label="${tem ? ARCANOS[id].nome : "Carta ainda escondida"}">
-                ${tem ? frente(id) : '<div class="carta-verso"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="11" class="coroa"/><circle cx="18" cy="14.5" r="10" class="disco"/></svg><span>volte amanhã</span></div>'}
+            return `<li class="album-carta${tem ? " tem" : ""}" aria-label="${tem ? t(ARCANOS[id].nome) : t("Carta ainda escondida")}">
+                ${tem ? frente(id) : '<div class="carta-verso"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="11" class="coroa"/><circle cx="18" cy="14.5" r="10" class="disco"/></svg><span>' + t("volte amanhã") + '</span></div>'}
             </li>`;
-        }).join("") + (completa() ? `<li class="album-codigo"><span>código</span><b>${LOJA.colecao.codigo}</b></li>` : "");
+        }).join("") + (completa() ? `<li class="album-codigo"><span>${t("código")}</span><b>${LOJA.colecao.codigo}</b></li>` : "");
     }
     function mostrar(id, primeira) {
-        document.getElementById("arcanoAviso").textContent = primeira ? "Sua primeira visita trouxe uma carta ✦" : completa() ? "A última carta! Coleção completa ✦" : "Você voltou, e trouxe uma carta nova ✦";
+        document.getElementById("arcanoAviso").textContent = t(primeira ? "Sua primeira visita trouxe uma carta ✦" : completa() ? "A última carta! Coleção completa ✦" : "Você voltou, e trouxe uma carta nova ✦");
         document.getElementById("arcanoRevelado").innerHTML = `<div class="carta"><div class="carta-dentro"><div class="carta-verso"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="11" class="coroa"/><circle cx="18" cy="14.5" r="10" class="disco"/></svg></div>${frente(id)}</div></div>`;
-        document.getElementById("arcanoTitulo").textContent = ARCANOS[id].nome;
+        document.getElementById("arcanoTitulo").textContent = t(ARCANOS[id].nome);
         document.getElementById("arcanoTexto").textContent = completa()
-            ? `Seu código é ${LOJA.colecao.codigo}: ${LOJA.colecao.premio}. Ele já vai sozinho na mensagem do pedido.`
-            : `${estado.cartas.length} de ${ORDEM.length} cartas. Volte amanhã pra próxima.`;
+            ? tf("Seu código é {codigo}: {premio}. Ele já vai sozinho na mensagem do pedido.", { codigo: LOJA.colecao.codigo, premio: t(LOJA.colecao.premio) })
+            : tf("{n} de {total} cartas. Volte amanhã pra próxima.", { n: estado.cartas.length, total: ORDEM.length });
         dlg.showModal();
         setTimeout(() => dlg.querySelector(".carta").classList.add("virada"), semMovimento ? 0 : 500);
     }
     dlg?.addEventListener("click", (e) => { if (e.target === dlg) dlg.close(); });
+    document.addEventListener("idiomaMudou", render);
 
     /* visita de hoje: ganha uma carta que ainda não tem */
     let nova = null;
@@ -214,10 +216,10 @@ const COLECAO = (() => {
     let tempoBalao = null, ultimaFala = 0;
 
     const DICAS = [
-        () => `Frete grátis acima de ${brl(LOJA.freteGratis)} na entrega em Campo Grande. Eu conferi 🐾`,
+        () => tf("Frete grátis acima de {valor} na entrega em Campo Grande. Eu conferi 🐾", { valor: brl(LOJA.freteGratis) }),
         () => "Já tirou o tarô do look? As cartas não mentem (eu às vezes sim).",
         () => "Psiu… apaga as velas lá em cima. Tem um primo meu escondido no escuro.",
-        () => `Lua de hoje: ${LUA.fase(Date.now()).toLowerCase()}. Peça nova chega na lua cheia.`,
+        () => tf("Lua de hoje: {fase}. Peça nova chega na lua cheia.", { fase: LUA.fase(Date.now()).toLowerCase() }),
         () => "Dizem que tem uma porta secreta aqui embaixo. A palavra sai nos close friends 👀",
         () => "Quer ganhar de presente? Monta a sacola e toca em “Pedir de presente”.",
         () => "Volta amanhã que tem carta de arcano nova pra você 🃏",
@@ -226,8 +228,8 @@ const COLECAO = (() => {
     const AO_CAIR = ["Mrrrau! Caiu no caldeirão ✦", "Boa escolha. Eu aprovo 🐾", "Hmm, essa combina com você.", "Ronronando aqui de felicidade."];
 
     function falar(texto, ms = 5200) {
-        balao.innerHTML = `<span></span><button type="button" class="nyx-calar" aria-label="Mandar a Nyx cochilar hoje">zzz</button>`;
-        balao.firstElementChild.textContent = texto;
+        balao.innerHTML = `<span></span><button type="button" class="nyx-calar" aria-label="${t("Mandar a Nyx cochilar hoje")}">zzz</button>`;
+        balao.firstElementChild.textContent = t(texto);
         balao.hidden = false;
         ultimaFala = Date.now();
         clearTimeout(tempoBalao);
@@ -261,7 +263,7 @@ const COLECAO = (() => {
         vista = null;
         if (!p || !p.estilos?.length || sacola.some((i) => i.id === p.id) || Date.now() - ultimaFala < 8000) return;
         const par = PRODUTOS.find((x) => x !== p && naVitrine(x) && disponivel(x) && x.estilos.some((e) => p.estilos.includes(e)) && x.cat !== p.cat);
-        if (par) falar(`Pensando em ${p.nome}? Combina demais com ${par.nome} ✦`);
+        if (par) falar(tf("Pensando em {peca}? Combina demais com {par} ✦", { peca: t(p.nome), par: t(par.nome) }));
     });
 
     setTimeout(() => {

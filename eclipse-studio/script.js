@@ -462,6 +462,9 @@ const LOOKS = [
 
 /* ===== Utilidades ===== */
 const t = (s) => (window.traduzir ? window.traduzir(s) : s);
+/* frase com lacunas: tf("Você tem {n} de {total}.", { n, total }) — traduz a frase inteira, depois preenche */
+const tf = (s, v) => t(s).replace(/\{(\w+)\}/g, (m, k) => (k in v ? v[k] : m));
+const localData = () => (document.documentElement.lang === "es" ? "es-ES" : "pt-BR");
 const $ = (seletor) => document.querySelector(seletor);
 const produto = (id) => PRODUTOS.find((p) => p.id === id);
 const esc = (texto) => String(texto).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -584,7 +587,7 @@ function cardHtml(p, indice) {
 function produtosVisiveis() {
     const q = normalizar(filtro.q.trim());
     const lista = PRODUTOS.filter((p) => {
-        if (filtro.cat === "favoritos" ? !ehFavorito(p.id) : filtro.cat !== "todos" && p.cat !== filtro.cat) return false;
+        if (filtro.cat === "favoritos" ? !ehFavorito(p.id) : filtro.cat === "novidades" ? !p.novo : filtro.cat !== "todos" && p.cat !== filtro.cat) return false;
         if (!naVitrine(p)) return false; // drop secreto e caixa: cada um no seu canto
         if (filtro.estilo && !p.estilos.includes(filtro.estilo)) return false;
         if (filtro.faixa) {
@@ -609,7 +612,10 @@ function renderChips() {
         const vitrine = PRODUTOS.filter(naVitrine);
         const total = nome === "todos" ? vitrine.length : vitrine.filter((p) => p.cat === nome).length;
         const rotulo = nome === "todos" ? t("Tudo") : t(nome);
-        return `<button type="button" class="chip" data-cat="${nome}" aria-pressed="${filtro.cat === nome}">${rotulo}<small>${total}</small></button>`;
+        const chip = `<button type="button" class="chip" data-cat="${nome}" aria-pressed="${filtro.cat === nome}">${rotulo}<small>${total}</small></button>`;
+        /* logo depois do "Tudo": as peças marcadas como novas (coluna "novo" da planilha) */
+        const novas = nome === "todos" ? vitrine.filter((p) => p.novo).length : 0;
+        return novas ? chip + `<button type="button" class="chip chip-novo" data-cat="novidades" aria-pressed="${filtro.cat === "novidades"}">✨ ${t("Novidades")}<small>${novas}</small></button>` : chip;
     }).join("") + (favoritos.length || filtro.cat === "favoritos"
         ? `<button type="button" class="chip chip-fav" data-cat="favoritos" aria-pressed="${filtro.cat === "favoritos"}">${CORACAO_ICONE}${t("Favoritos")}<small>${favoritos.length}</small></button>`
         : "");
@@ -758,6 +764,14 @@ function combinaHtml(p) {
 const linkDaPeca = (id) => location.href.split("#")[0] + "#peca-" + id;
 
 function abrirPecaDoLink() {
+    /* link de divulgação: …/eclipse-studio/#novidades abre a vitrine já filtrada nas peças novas */
+    if (location.hash === "#novidades" && PRODUTOS.some((p) => p.novo && naVitrine(p))) {
+        filtro.cat = "novidades";
+        renderChips();
+        renderGrade();
+        addEventListener("load", () => document.getElementById("colecao").scrollIntoView({ block: "start" }));
+        return;
+    }
     const id = location.hash.startsWith("#peca-") ? decodeURIComponent(location.hash.slice(6)) : "";
     if (produto(id)) abrirProduto(id);
 }
@@ -894,12 +908,12 @@ function avisar(texto, acao) {
     const aviso = document.createElement("div");
     aviso.className = "aviso";
     const span = document.createElement("span");
-    span.textContent = texto;
+    span.textContent = t(texto);
     aviso.appendChild(span);
     if (acao) {
         const botao = document.createElement("button");
         botao.type = "button";
-        botao.textContent = acao.rotulo;
+        botao.textContent = t(acao.rotulo);
         botao.addEventListener("click", () => { aviso.remove(); acao.fazer(); });
         aviso.appendChild(botao);
     }

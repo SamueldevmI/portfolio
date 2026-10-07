@@ -98,7 +98,7 @@ const CATALOGO = (() => {
         /* looks com peça que não existe mais (ou vendida) saem */
         for (let i = LOOKS.length - 1; i >= 0; i--) if (!LOOKS[i].itens.every((it) => produto(it.id) && disponivel(produto(it.id)))) LOOKS.splice(i, 1);
         sacola = sacola.filter(itemValido);
-        if (filtro.cat !== "todos" && filtro.cat !== "favoritos" && !CATEGORIAS.includes(filtro.cat)) filtro.cat = "todos";
+        if (!["todos", "favoritos", "novidades"].includes(filtro.cat) && !CATEGORIAS.includes(filtro.cat)) filtro.cat = "todos";
         renderChips(); renderGrade(); renderLooks(); renderSacola();
         document.querySelector(".looks")?.toggleAttribute("hidden", !LOOKS.length);
         document.dispatchEvent(new CustomEvent("catalogo:atualizado"));
