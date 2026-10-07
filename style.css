@@ -2934,9 +2934,9 @@ header.hero { overflow-x: clip; }
 /* ---------- Sua foto desenhada: a versão de HQ (gerada com ferramentas/foto-hq.html) fica por cima da
    foto de verdade e some no mouse ou no toque. Duas imagens paradas: troca só a opacidade. ---------- */
 .avatar-hq { position: relative; flex-shrink: 0; display: block; width: 56px; height: 56px; border-radius: 50%; cursor: var(--cursor-mao, pointer); }
-.avatar-desenho { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 50%; object-fit: cover; object-position: 50% 30%; border: 2px solid var(--cyan); transition: opacity .35s ease; pointer-events: none; }
-@media (hover: hover) { .avatar-hq:hover .avatar-desenho { opacity: 0; } }
-.avatar-hq.real .avatar-desenho { opacity: 0; }
+.avatar-desenho { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 50%; object-fit: cover; object-position: 50% 30%; border: 2px solid var(--cyan); opacity: 0; transition: opacity .35s ease; pointer-events: none; }
+@media (hover: hover) { .avatar-hq:hover .avatar-desenho { opacity: 1; } }
+.avatar-hq.real .avatar-desenho { opacity: 1; }
 .ficha .foto-wrapper .foto-desenho { position: absolute; z-index: 0; left: 0; top: 0; width: 100%; aspect-ratio: 4 / 3.3; object-fit: cover; object-position: 50% 32%; border: 3px solid #111111; border-radius: 8px; transition: opacity .4s ease; pointer-events: none; }
 .ficha .foto-wrapper .foto-legenda, .ficha .foto-wrapper .tooltip, .ficha .foto-wrapper .ficha-nivel { z-index: 2; }
 @media (hover: hover) { .ficha .foto-wrapper:hover .foto-desenho { opacity: 0; } }
@@ -2947,3 +2947,69 @@ header.hero { overflow-x: clip; }
 }
 @media (prefers-reduced-motion: reduce) { .avatar-desenho, .ficha .foto-wrapper .foto-desenho { transition: none; } }
 .ficha .foto-wrapper .foto-desenho, .ficha .foto-wrapper:hover .foto-desenho { height: auto; filter: none; }
+
+/* ---------- Antes × depois do topo (antes-depois.js): o mesmo cliente, sem site e com site.
+   A alça mexe só com transform; a chuva para quando o quadro sai da tela. ---------- */
+.ad-topo { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 18px; }
+.ad-titulo { margin: 0; font: 700 clamp(1.35rem, 2.8vw, 1.95rem)/1.12 "Space Grotesk", Arial, sans-serif; letter-spacing: -.02em; }
+.ad-titulo span { color: var(--cyan); text-shadow: 0 0 16px rgba(var(--cyan-rgb), .5); }
+.ad-ramo { display: inline-flex; align-items: center; gap: 8px; color: var(--muted); font-size: .86rem; }
+.ad-ramo select { min-height: 40px; padding: 6px 34px 6px 12px; border: 2px solid #111111; border-radius: 8px; background: #ffe14d url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23111' stroke-width='2'/%3E%3C/svg%3E") right 11px center / 12px 8px no-repeat; color: #111111; font: 700 .92rem "Space Grotesk", Arial, sans-serif; box-shadow: 3px 3px 0 #111111; appearance: none; -webkit-appearance: none; cursor: var(--cursor-mao, pointer); }
+.ad-ramo select:focus-visible { outline: 3px solid var(--cyan); outline-offset: 2px; }
+.ad { position: relative; height: 430px; margin: 18px 0 20px; overflow: hidden; border: 3px solid #111111; border-radius: 12px; box-shadow: 0 0 0 3px #f2f2f2, 9px 9px 0 3px rgba(255,42,61,.45); touch-action: pan-y; user-select: none; -webkit-user-select: none; cursor: ew-resize; }
+.ad-cena { position: absolute; inset: 0; z-index: 0; overflow: hidden; isolation: isolate; }
+.ad-janela { position: absolute; inset: 0; z-index: 1; overflow: hidden; will-change: transform; }
+.ad-com { will-change: transform; background: #8b1a1a; }
+.ad-sem { background: linear-gradient(180deg, #343841, #1b1d22); }
+.ad-chuva { position: absolute; left: 0; right: 0; top: -60px; bottom: 0; opacity: .55; pointer-events: none; animation: ad-chuva .55s linear infinite;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='60'%3E%3Cg stroke='%23c3cbd8' stroke-width='1.3' stroke-linecap='round'%3E%3Cpath d='M8 4l-3 14M30 22l-3 14M18 40l-3 14M40 6l-3 12'/%3E%3C/g%3E%3C/svg%3E") repeat; }
+@keyframes ad-chuva { to { transform: translateY(60px); } }
+.ad:not(.ad-na-tela) .ad-chuva { animation-play-state: paused; }
+.ad-raios { position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(circle, rgba(0,0,0,.18) 1.3px, transparent 1.7px) 0 0 / 10px 10px, repeating-conic-gradient(from 0deg at 50% 55%, #b52530 0deg 7deg, #861818 7deg 14deg); }
+.ad-celular { position: absolute; left: 50%; top: 52%; display: flex; flex-direction: column; width: 290px; height: 360px; overflow: hidden; border: 8px solid #111111; border-radius: 30px; background: #0b141a; box-shadow: 0 0 0 2px #3a3a3a, 0 24px 50px -16px rgba(0,0,0,.8); transform: translate(-50%, -50%); }
+.ad-sem .ad-celular { filter: saturate(.25) brightness(.9); }
+.ad-zap-topo { display: flex; align-items: center; gap: 8px; padding: 12px 12px 9px; background: #202c33; color: #e9edef; }
+.ad-avatar { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: #3b4a54; font-size: .9rem; }
+.ad-zap-topo p { display: grid; margin: 0; font-size: .8rem; line-height: 1.2; }
+.ad-zap-topo small { color: #8fe3b4; font-size: .64rem; }
+.ad-sem .ad-zap-topo small { color: #aebac1; }
+.ad-conversa { display: flex; flex: 1; flex-direction: column; gap: 7px; padding: 12px 10px; background: radial-gradient(circle, rgba(255,255,255,.035) 1px, transparent 1.4px) 0 0 / 12px 12px, #0b141a; }
+.ad-bolha { max-width: 84%; margin: 0; padding: 6px 9px 5px; border-radius: 9px; color: #e9edef; font: 500 .78rem/1.38 "Space Grotesk", Arial, sans-serif; }
+.ad-bolha small { display: block; margin-top: 2px; color: rgba(233,237,239,.6); font-size: .58rem; text-align: right; }
+.ad-cliente { align-self: flex-start; border-top-left-radius: 2px; background: #202c33; }
+.ad-voce { align-self: flex-end; border-top-right-radius: 2px; background: #005c4b; }
+.ad-voce small { color: #8fe3b4; }
+.ad-aviso { align-self: center; margin: 6px 0 0; padding: 3px 9px; border-radius: 6px; background: rgba(255,255,255,.08); color: #aebac1; font: 500 .66rem "Space Grotesk", Arial, sans-serif; }
+.ad-rotulo { position: absolute; z-index: 2; top: 14px; padding: 6px 12px 4px; border: 3px solid #111111; color: #111111; font: 400 1.35rem/1 "Bangers", Impact, sans-serif; letter-spacing: .05em; text-transform: uppercase; box-shadow: 3px 3px 0 #111111; }
+.ad-sem .ad-rotulo { left: 14px; background: #cfd3da; transform: rotate(-2deg); }
+.ad-com .ad-rotulo { right: 14px; background: #ffe14d; transform: rotate(2deg); }
+.ad-carimbo { position: absolute; z-index: 2; top: 50%; display: grid; justify-items: center; margin: 0; padding: 8px 14px 6px; border: 4px solid currentColor; border-radius: 6px; background: rgba(255,255,255,.94); font: 400 1.7rem/1 "Bangers", Impact, sans-serif; letter-spacing: .05em; text-transform: uppercase; box-shadow: 4px 4px 0 #111111; }
+.ad-carimbo small { margin-top: 4px; font: 600 .66rem "DM Mono", monospace; letter-spacing: .06em; text-transform: none; }
+.ad-sem .ad-carimbo { right: calc(50% + 175px); color: #d11a2a; transform: translateY(-50%) rotate(-10deg); }
+.ad-com .ad-carimbo { left: calc(50% + 175px); color: #13804a; transform: translateY(-50%) rotate(8deg); }
+.ad-alca { position: absolute; z-index: 5; top: 0; bottom: 0; left: -2px; width: 4px; background: #ffffff; box-shadow: 0 0 0 2px #111111; will-change: transform; }
+.ad-alca span { position: absolute; left: 50%; top: 50%; display: grid; place-items: center; width: 48px; height: 48px; margin: -24px 0 0 -24px; border: 3px solid #111111; border-radius: 50%; background: #ffe14d; color: #111111; font: 400 1.5rem/1 "Bangers", Impact, sans-serif; box-shadow: 3px 3px 0 #111111; transition: transform .15s ease; }
+.ad-arrastando .ad-alca span { transform: scale(1.12); }
+.ad-alca:focus-visible { outline: none; }
+.ad-alca:focus-visible span { outline: 3px solid var(--cyan); outline-offset: 3px; }
+.ad-dica { position: absolute; z-index: 4; left: 50%; bottom: 12px; margin: 0; padding: 4px 12px; border-radius: 999px; background: rgba(0,0,0,.6); color: #ffffff; font: 600 .72rem "DM Mono", monospace; transform: translateX(-50%); pointer-events: none; transition: opacity .3s ease; }
+.ad-mexeu .ad-dica { opacity: 0; }
+@media (max-width: 999px) {
+    .ad { height: 470px; }
+    .ad-celular { top: 46%; width: 240px; height: 330px; }
+    .ad-sem .ad-carimbo, .ad-com .ad-carimbo { top: auto; bottom: 18px; font-size: 1.35rem; }
+    .ad-sem .ad-carimbo { right: auto; left: 12px; transform: rotate(-8deg); }
+    .ad-com .ad-carimbo { left: auto; right: 12px; transform: rotate(6deg); }
+    .ad-dica { bottom: auto; top: 58px; }
+}
+@media (max-width: 720px) {
+    .ad-topo { gap: 10px; }
+    .ad { height: 480px; margin-top: 14px; }
+    .ad-celular { width: 228px; height: 320px; border-width: 7px; border-radius: 26px; }
+    .ad-bolha { font-size: .74rem; }
+    .ad-rotulo { top: 10px; font-size: 1.1rem; }
+    .ad-sem .ad-rotulo { left: 10px; }
+    .ad-com .ad-rotulo { right: 10px; }
+}
+@media (prefers-reduced-motion: reduce) { .ad-chuva { animation: none; } .ad-alca span { transition: none; } }

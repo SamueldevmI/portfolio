@@ -241,6 +241,9 @@ document.querySelectorAll(".botao").forEach((botao) => {
 (function comparadorSemCom() {
     const raiz = document.getElementById("comparador");
     if (!raiz) return;
+    // com o antes × depois (antes-depois.js) as cenas antigas ficam escondidas: aqui sobram os ramos,
+    // a calculadora, a prévia e o nome do negócio
+    const modoAntesDepois = raiz.classList.contains("cmp-ad");
     const $ = (sel) => raiz.querySelector(sel);
     const tiposEl = $(".cmp-tipos"), abas = $(".cmp-abas"), testar = $(".cmp-testar"), querer = $(".cmp-querer");
     const palco = { sem: $('.cmp-palco[data-lado="sem"]'), com: $('.cmp-palco[data-lado="com"]') };
@@ -448,6 +451,7 @@ document.querySelectorAll(".botao").forEach((botao) => {
     botaoPrevia?.addEventListener("click", () => { pararAuto(); window.abrirPreviaSite && window.abrirPreviaSite(tipo, nome()); });
     function acertarRodape(c) {
         if (botaoPrevia) botaoPrevia.querySelector("b").textContent = nome() || NEGOCIOS[tipo].exemplo;
+        if (modoAntesDepois) return; // o rodapé fica com o texto fixo do HTML
         querer.textContent = c.cta;
         querer.dataset.orcamentoTipo = c.tipoOrc;
         querer.dataset.orcamentoRef = `${nome() || tipo} — ${c.cta.replace(" →", "")}`.slice(0, 80);
@@ -560,10 +564,11 @@ document.querySelectorAll(".botao").forEach((botao) => {
     const montarJa = () => { if (montado) return; montado = true; calcular("inicio"); };
     (window.requestIdleCallback || ((f) => setTimeout(f, 200)))(montarJa, { timeout: 1500 });
     let comecou = false;
-    const comecar = () => { if (comecou) return; comecou = true; montarJa(); if (semMovimento) { automatico = false; mostrar(0); } else rodarSozinho(0); };
+    const comecar = () => { if (comecou) return; comecou = true; montarJa(); if (modoAntesDepois) { automatico = false; acertarRodape(lista[0]); } else if (semMovimento) { automatico = false; mostrar(0); } else rodarSozinho(0); };
     // A primeira cena já entra escondida no carregamento: o comparador nasce do tamanho final, em vez de
     // crescer quando aparece na tela (o que empurrava a página no celular)
     (function reservarEspaco() {
+        if (modoAntesDepois) return;
         const c = cenas(tipo, nome())[0];
         if (!c) return;
         montarPlacar(c);
