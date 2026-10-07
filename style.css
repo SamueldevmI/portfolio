@@ -2758,9 +2758,6 @@ html.secoes-montadas main > section.secao, html.secoes-montadas main > .secao { 
 .gibi-anima .titulo-secao:not(.gibi-visivel)::after { opacity: 0; }
 
 /* "Fim?" no fim da revista */
-.gibi-contracapa { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 18px; width: min(1200px, calc(100% - 44px)); margin: 0 auto 60px; }
-.gibi-selo-raro { display: grid; place-items: center; width: 74px; height: 74px; padding: 4px; border: 3px solid #111111; border-radius: 50%; background: #ffe14d; color: #111111; font: 700 .62rem/1.15 "Space Grotesk", sans-serif; text-align: center; text-transform: uppercase; letter-spacing: .02em; box-shadow: 4px 4px 0 #ff2a3d; transform: rotate(-6deg); }
-.gibi-codigo-fim { transform: rotate(-3deg); }
 .gibi-fim { display: grid; place-items: center; margin: 0; }
 .gibi-continua { display: flex; align-items: center; justify-content: center; gap: 9px; width: fit-content; margin: 36px auto 0; padding: 9px 20px 7px; border: 2px dashed #111111; border-radius: 999px; background: #ffffff; color: #111111; font: 700 .76rem "Space Grotesk", sans-serif; text-transform: uppercase; letter-spacing: .07em; transform: rotate(-1deg); }
 .gibi-continua b { font: 400 1.1rem "Bangers", Impact, sans-serif; letter-spacing: .02em; }
@@ -2796,9 +2793,9 @@ html.secoes-montadas main > section.secao, html.secoes-montadas main > .secao { 
     .gibi-nota { max-width: 230px; font-size: .8rem; }
     .titulo-secao::after { left: -30px; width: 260px; height: 180px; }
     .gibi-fim { margin-bottom: 40px; }
-    .gibi-contracapa { grid-template-columns: auto 1fr; margin-bottom: 40px; }
-    .gibi-codigo-fim { display: none; }
-    .gibi-selo-raro { width: 54px; height: 54px; font-size: .52rem; }
+    
+    
+    
 }
 @media (prefers-reduced-motion: reduce) { .gibi-explosao { animation: none; } }
 .gibi-pb-trama { position: fixed; inset: 0; z-index: 9000; pointer-events: none; opacity: 0; background-image: radial-gradient(circle, #000000 1px, transparent 1.3px); background-size: 4px 4px; mix-blend-mode: multiply; transition: opacity .3s ease; }
@@ -2810,7 +2807,7 @@ html.gibi-pb .gibi-pb-trama { opacity: .15; }
 @media (max-width: 720px) { .gibi-dogear { width: 32px; height: 32px; } }
 @media print { .gibi-dogear { display: none; } }
 @media (prefers-reduced-motion: reduce) { .gibi-pb-trama { transition: none; } .botao-principal::after { transition: none; } }
-@media print { .gibi-legenda, .gibi-nota, .gibi-fim, .gibi-contracapa, .gibi-continua, .gibi-pow, .gibi-velocidade, .gibi-explosao { display: none !important; } .gibi-pb-trama, .botao-principal::after { display: none !important; } }
+@media print { .gibi-legenda, .gibi-nota, .gibi-fim, .gibi-continua, .gibi-pow, .gibi-velocidade, .gibi-explosao { display: none !important; } .gibi-pb-trama, .botao-principal::after { display: none !important; } }
 
 /* ---------- Orçamento em quadrinho: a caixa vira um quadro de HQ, a pergunta vira balão de fala
    e as respostas viram botões de gibi (contorno de nanquim, sombra dura, amarelo no mouse). ---------- */
@@ -2959,3 +2956,137 @@ header.hero { overflow-x: clip; }
 }
 @media (prefers-reduced-motion: reduce) { .avatar-desenho, .ficha .foto-wrapper .foto-desenho { transition: none; } }
 .ficha .foto-wrapper .foto-desenho, .ficha .foto-wrapper:hover .foto-desenho { height: auto; filter: none; }
+
+/* ---------- Antes × depois do topo (antes-depois.js): o mesmo cliente, sem site e com site.
+   A alça mexe só com transform; a chuva para quando o quadro sai da tela. ---------- */
+.ad-topo { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 18px; }
+.ad-titulo { margin: 0; font: 700 clamp(1.35rem, 2.8vw, 1.95rem)/1.12 "Space Grotesk", Arial, sans-serif; letter-spacing: -.02em; }
+.ad-titulo span { color: var(--cyan); text-shadow: 0 0 16px rgba(var(--cyan-rgb), .5); }
+.ad-ramo { display: inline-flex; align-items: center; gap: 8px; color: var(--muted); font-size: .86rem; }
+.ad-ramo select { min-height: 40px; padding: 6px 34px 6px 12px; border: 2px solid #111111; border-radius: 8px; background: #ffe14d url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23111' stroke-width='2'/%3E%3C/svg%3E") right 11px center / 12px 8px no-repeat; color: #111111; font: 700 .92rem "Space Grotesk", Arial, sans-serif; box-shadow: 3px 3px 0 #111111; appearance: none; -webkit-appearance: none; cursor: var(--cursor-mao, pointer); }
+.ad-ramo select:focus-visible { outline: 3px solid var(--cyan); outline-offset: 2px; }
+.ad { position: relative; height: 430px; margin: 18px 0 20px; overflow: hidden; border: 3px solid #111111; border-radius: 12px; box-shadow: 0 0 0 3px #f2f2f2, 9px 9px 0 3px rgba(255,42,61,.45); touch-action: pan-y; user-select: none; -webkit-user-select: none; cursor: ew-resize; }
+.ad-cena { position: absolute; inset: 0; z-index: 0; overflow: hidden; isolation: isolate; }
+.ad-janela { position: absolute; inset: 0; z-index: 1; overflow: hidden; will-change: transform; }
+.ad-com { will-change: transform; background: #8b1a1a; }
+.ad-sem { background: linear-gradient(180deg, #343841, #1b1d22); }
+.ad-chuva { position: absolute; left: 0; right: 0; top: -60px; bottom: 0; opacity: .55; pointer-events: none; animation: ad-chuva .55s linear infinite;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='60'%3E%3Cg stroke='%23c3cbd8' stroke-width='1.3' stroke-linecap='round'%3E%3Cpath d='M8 4l-3 14M30 22l-3 14M18 40l-3 14M40 6l-3 12'/%3E%3C/g%3E%3C/svg%3E") repeat; }
+@keyframes ad-chuva { to { transform: translateY(60px); } }
+.ad:not(.ad-na-tela) .ad-chuva { animation-play-state: paused; }
+.ad-raios { position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(circle, rgba(0,0,0,.18) 1.3px, transparent 1.7px) 0 0 / 10px 10px, repeating-conic-gradient(from 0deg at 50% 55%, #b52530 0deg 7deg, #861818 7deg 14deg); }
+.ad-celular { position: absolute; left: 50%; top: 52%; display: flex; flex-direction: column; width: 290px; height: 360px; overflow: hidden; border: 8px solid #111111; border-radius: 30px; background: #0b141a; box-shadow: 0 0 0 2px #3a3a3a, 0 24px 50px -16px rgba(0,0,0,.8); transform: translate(-50%, -50%); }
+.ad-sem .ad-celular { filter: saturate(.25) brightness(.9); }
+.ad-zap-topo { display: flex; align-items: center; gap: 8px; padding: 12px 12px 9px; background: #202c33; color: #e9edef; }
+.ad-avatar { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: #3b4a54; font-size: .9rem; }
+.ad-zap-topo p { display: grid; margin: 0; font-size: .8rem; line-height: 1.2; }
+.ad-zap-topo small { color: #8fe3b4; font-size: .64rem; }
+.ad-sem .ad-zap-topo small { color: #aebac1; }
+.ad-conversa { display: flex; flex: 1; flex-direction: column; gap: 7px; padding: 12px 10px; background: radial-gradient(circle, rgba(255,255,255,.035) 1px, transparent 1.4px) 0 0 / 12px 12px, #0b141a; }
+.ad-bolha { max-width: 84%; margin: 0; padding: 6px 9px 5px; border-radius: 9px; color: #e9edef; font: 500 .78rem/1.38 "Space Grotesk", Arial, sans-serif; }
+.ad-bolha small { display: block; margin-top: 2px; color: rgba(233,237,239,.6); font-size: .58rem; text-align: right; }
+.ad-cliente { align-self: flex-start; border-top-left-radius: 2px; background: #202c33; }
+.ad-voce { align-self: flex-end; border-top-right-radius: 2px; background: #005c4b; }
+.ad-voce small { color: #8fe3b4; }
+.ad-aviso { align-self: center; margin: 6px 0 0; padding: 3px 9px; border-radius: 6px; background: rgba(255,255,255,.08); color: #aebac1; font: 500 .66rem "Space Grotesk", Arial, sans-serif; }
+.ad-rotulo { position: absolute; z-index: 2; top: 14px; padding: 6px 12px 4px; border: 3px solid #111111; color: #111111; font: 400 1.35rem/1 "Bangers", Impact, sans-serif; letter-spacing: .05em; text-transform: uppercase; box-shadow: 3px 3px 0 #111111; }
+.ad-sem .ad-rotulo { left: 14px; background: #cfd3da; transform: rotate(-2deg); }
+.ad-com .ad-rotulo { right: 14px; background: #ffe14d; transform: rotate(2deg); }
+.ad-carimbo { position: absolute; z-index: 2; top: 50%; display: grid; justify-items: center; margin: 0; padding: 8px 14px 6px; border: 4px solid currentColor; border-radius: 6px; background: rgba(255,255,255,.94); font: 400 1.7rem/1 "Bangers", Impact, sans-serif; letter-spacing: .05em; text-transform: uppercase; box-shadow: 4px 4px 0 #111111; }
+.ad-carimbo small { margin-top: 4px; font: 600 .66rem "DM Mono", monospace; letter-spacing: .06em; text-transform: none; }
+.ad-sem .ad-carimbo { right: calc(50% + 175px); color: #d11a2a; transform: translateY(-50%) rotate(-10deg); }
+.ad-com .ad-carimbo { left: calc(50% + 175px); color: #13804a; transform: translateY(-50%) rotate(8deg); }
+.ad-alca { position: absolute; z-index: 5; top: 0; bottom: 0; left: -2px; width: 4px; background: #ffffff; box-shadow: 0 0 0 2px #111111; will-change: transform; }
+.ad-alca span { position: absolute; left: 50%; top: 50%; display: grid; place-items: center; width: 48px; height: 48px; margin: -24px 0 0 -24px; border: 3px solid #111111; border-radius: 50%; background: #ffe14d; color: #111111; font: 400 1.5rem/1 "Bangers", Impact, sans-serif; box-shadow: 3px 3px 0 #111111; transition: transform .15s ease; }
+.ad-arrastando .ad-alca span { transform: scale(1.12); }
+.ad-alca:focus-visible { outline: none; }
+.ad-alca:focus-visible span { outline: 3px solid var(--cyan); outline-offset: 3px; }
+.ad-dica { position: absolute; z-index: 4; left: 50%; bottom: 12px; margin: 0; padding: 4px 12px; border-radius: 999px; background: rgba(0,0,0,.6); color: #ffffff; font: 600 .72rem "DM Mono", monospace; transform: translateX(-50%); pointer-events: none; transition: opacity .3s ease; }
+.ad-mexeu .ad-dica { opacity: 0; }
+@media (max-width: 999px) {
+    .ad { height: 470px; }
+    .ad-celular { top: 46%; width: 240px; height: 330px; }
+    .ad-sem .ad-carimbo, .ad-com .ad-carimbo { top: auto; bottom: 18px; font-size: 1.35rem; }
+    .ad-sem .ad-carimbo { right: auto; left: 12px; transform: rotate(-8deg); }
+    .ad-com .ad-carimbo { left: auto; right: 12px; transform: rotate(6deg); }
+    .ad-dica { bottom: auto; top: 58px; }
+}
+@media (max-width: 720px) {
+    .ad-topo { gap: 10px; }
+    .ad { height: 480px; margin-top: 14px; }
+    .ad-celular { width: 228px; height: 320px; border-width: 7px; border-radius: 26px; }
+    .ad-bolha { font-size: .74rem; }
+    .ad-rotulo { top: 10px; font-size: 1.1rem; }
+    .ad-sem .ad-rotulo { left: 10px; }
+    .ad-com .ad-rotulo { right: 10px; }
+}
+@media (prefers-reduced-motion: reduce) { .ad-chuva { animation: none; } .ad-alca span { transition: none; } }
+
+/* ---------- Serviços como anúncios de revista antiga: papel amarelado, chamada gritada, preço num
+   estouro amarelo e o cupom recortável (tocar no cupom abre o orçamento daquele serviço) ---------- */
+#servicos .lista-servicos { gap: 26px; }
+#servicos .lista-servicos article { position: relative; display: flex; flex-direction: column; padding: 22px 20px 20px; border: 3px solid #111111; border-radius: 4px; color: #111111;
+    background: radial-gradient(circle, rgba(139,26,26,.09) 1.2px, transparent 1.6px) 0 0 / 9px 9px, #f3ead6; box-shadow: 7px 7px 0 #111111; transform: rotate(-.7deg); transition: transform .25s ease; }
+#servicos .lista-servicos article:nth-child(2) { transform: rotate(.6deg); }
+#servicos .lista-servicos article:nth-child(3) { transform: rotate(-.4deg); }
+@media (hover: hover) { #servicos .lista-servicos article:hover { transform: rotate(0deg) translateY(-4px); } }
+#servicos .lista-servicos article > span { align-self: flex-start; margin: 0 0 8px; color: #6b5a3c; font: 500 .66rem "DM Mono", monospace; letter-spacing: .1em; }
+#servicos .lista-servicos article > span::before { content: "Nº "; }
+#servicos .anuncio-chamada { margin: 0 96px 10px 0; color: #c41f2a; font: 400 clamp(1.45rem, 2.1vw, 1.8rem)/1 "Bangers", Impact, sans-serif; letter-spacing: .03em; text-transform: uppercase; -webkit-text-stroke: 1px #111111; paint-order: stroke fill; text-shadow: 2px 2px 0 #111111; }
+#servicos .lista-servicos h3 { color: #111111; font-size: 1.15rem; }
+#servicos .lista-servicos .servico-icone { background: #111111; color: #ffe14d; box-shadow: none; }
+#servicos .lista-servicos .servico-icone svg { stroke: #ffe14d; }
+#servicos .lista-servicos article p { color: #2b2b2b; }
+#servicos .lista-servicos .servico-preco:not([hidden]) { position: absolute; top: -18px; right: -16px; z-index: 2; display: grid; place-content: center; justify-items: center; width: 118px; height: 118px; margin: 0; padding: 18px; border: 0; background: #ffe14d; color: #111111; text-align: center; transform: rotate(10deg); filter: drop-shadow(3px 3px 0 #111111);
+    clip-path: polygon(50% 0%, 61% 14%, 78% 6%, 81% 24%, 100% 25%, 91% 41%, 100% 57%, 83% 64%, 88% 83%, 68% 81%, 58% 100%, 46% 85%, 28% 95%, 23% 76%, 3% 74%, 12% 57%, 0% 41%, 17% 33%, 13% 14%, 33% 18%); }
+#servicos .lista-servicos .servico-preco small { color: #111111; font: 600 .62rem/1 "DM Mono", monospace; }
+#servicos .lista-servicos .servico-preco strong { color: #c41f2a; font: 400 1.6rem/1 "Bangers", Impact, sans-serif; letter-spacing: .02em; text-shadow: none; }
+#servicos .lista-servicos .servico-preco s { color: #555555; font: 400 .9rem/1 "Bangers", Impact, sans-serif; }
+#servicos .promo-automacao:not([hidden]) { margin: 4px 0 6px; padding: 8px 10px; border: 2px dashed #c41f2a; border-radius: 4px; background: #ffffff; color: #111111 !important; font-size: .84rem; }
+#servicos .promo-automacao b { color: #c41f2a; }
+#servicos .servico-inclui { margin: 10px 0 0; padding: 0; border: 0; }
+#servicos .servico-inclui li { color: #111111; }
+#servicos .servico-inclui li::before { color: #c41f2a; }
+#servicos .link-servico { position: relative; display: grid; gap: 4px; margin-top: auto; padding: 16px 14px 12px; border: 2px dashed #111111; border-radius: 4px; background: #ffffff; color: #111111; font: 400 1.25rem/1 "Bangers", Impact, sans-serif; letter-spacing: .04em; text-align: left; text-decoration: none; text-transform: uppercase; transition: transform .2s ease, background-color .2s ease; }
+#servicos .lista-servicos .link-servico { margin-top: 18px; }
+#servicos .link-servico::before { content: "✂"; position: absolute; left: 12px; top: -12px; padding: 0 4px; background: #f3ead6; color: #111111; font: 400 1.05rem/1 system-ui, sans-serif; }
+#servicos .cupom-rotulo { color: #6b5a3c; font: 600 .6rem "DM Mono", monospace; letter-spacing: .08em; text-transform: uppercase; }
+@media (hover: hover) { #servicos .link-servico:hover { background: #ffe14d; color: #111111; transform: rotate(-1.5deg); } }
+#servicos .link-servico:focus-visible { outline: 3px solid #c41f2a; outline-offset: 3px; }
+#servicos .link-servico.recortado { animation: cupom-recorta .6s cubic-bezier(.3, .7, .4, 1); }
+@keyframes cupom-recorta { 30% { transform: rotate(-4deg) translateY(-6px); background: #ffe14d; } 100% { transform: none; } }
+@media (max-width: 720px) {
+    #servicos .lista-servicos article { padding: 20px 16px 16px; }
+    #servicos .anuncio-chamada { margin-right: 84px; font-size: 1.45rem; }
+    #servicos .lista-servicos .servico-preco:not([hidden]) { top: -14px; right: -10px; width: 102px; height: 102px; padding: 14px; }
+    #servicos .lista-servicos .servico-preco strong { font-size: 1.35rem; }
+}
+@media (prefers-reduced-motion: reduce) { #servicos .lista-servicos article, #servicos .link-servico { transition: none; } #servicos .link-servico.recortado { animation: none; } }
+
+/* ---------- Contracapa da revista (depois do "Fim?") ---------- */
+.contracapa { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 22px 34px; width: min(1200px, calc(100% - 44px)); margin: 0 auto 50px; padding: 34px 34px 18px; border: 3px solid #111111; border-radius: 6px; color: #111111;
+    background: radial-gradient(circle, rgba(139,26,26,.12) 1.3px, transparent 1.7px) 0 0 / 10px 10px, #efe6d0; box-shadow: 0 0 0 4px #f2f2f2, 0 0 0 7px #111111, 12px 12px 0 7px rgba(255,42,61,.45); }
+.cc-chamada { display: inline-block; margin: 0 0 8px; padding: 5px 12px 4px; border: 2px solid #111111; background: #ffe14d; font: 400 1.15rem/1 "Bangers", Impact, sans-serif; letter-spacing: .06em; text-transform: uppercase; box-shadow: 3px 3px 0 #111111; transform: rotate(-2deg); }
+.cc-titulo { margin: 0; color: #d11a2a; font: 400 clamp(2.6rem, 7vw, 5rem)/.95 "Bangers", Impact, sans-serif; letter-spacing: .03em; text-transform: uppercase; -webkit-text-stroke: 2px #111111; paint-order: stroke fill; text-shadow: 4px 4px 0 #111111; }
+.cc-texto { max-width: 520px; margin: 10px 0 18px; color: #2b2b2b !important; font-size: 1.02rem; }
+.cc-lado { display: grid; justify-items: center; gap: 16px; }
+.cc-selo { display: grid; justify-items: center; align-content: center; width: 132px; height: 132px; padding: 10px; border: 4px solid #111111; border-radius: 50%; background: #ffffff; color: #111111; text-align: center; box-shadow: inset 0 0 0 4px #ffffff, inset 0 0 0 6px #111111; transform: rotate(-8deg); }
+.cc-selo small { font: 700 .5rem/1.15 "DM Mono", monospace; letter-spacing: .06em; text-transform: uppercase; }
+.cc-selo b { margin: 2px 0; color: #d11a2a; font: 400 2.4rem/1 "Bangers", Impact, sans-serif; letter-spacing: .05em; }
+.cc-codigo { display: grid; justify-items: center; padding: 6px 8px 4px; border: 2px solid #111111; background: #ffffff; }
+.cc-codigo svg { width: 92px; height: 34px; fill: #111111; }
+.cc-codigo small { font: 600 .6rem "DM Mono", monospace; }
+.cc-rodape { grid-column: 1 / -1; margin: 6px 0 0; padding-top: 12px; border-top: 2px solid #111111; color: #4a4030 !important; font: 500 .7rem "DM Mono", monospace; letter-spacing: .06em; text-align: center; }
+@media (max-width: 720px) {
+    .contracapa { grid-template-columns: minmax(0, 1fr); gap: 18px; margin-bottom: 40px; padding: 26px 18px 14px; box-shadow: 0 0 0 3px #f2f2f2, 0 0 0 5px #111111, 7px 7px 0 5px rgba(255,42,61,.45); }
+    .cc-lado { grid-auto-flow: column; justify-content: center; align-items: center; }
+    .cc-selo { width: 112px; height: 112px; }
+    .cc-selo b { font-size: 2rem; }
+    .cc-botao { width: 100%; text-align: center; }
+}
+/* papel de revista: o texto comum fica nítido (sem a sombra/brilho que o tema escuro põe nos textos) */
+#servicos .lista-servicos article, #servicos .lista-servicos article *, .contracapa, .contracapa * { text-shadow: none; }
+#servicos .lista-servicos article .anuncio-chamada { text-shadow: 2px 2px 0 #111111; }
+.contracapa .cc-titulo { text-shadow: 4px 4px 0 #111111; }
+.contracapa .cc-botao { text-shadow: none; }
