@@ -3074,3 +3074,46 @@ header.hero { overflow-x: clip; }
 #servicos .lista-servicos article .anuncio-chamada { text-shadow: 2px 2px 0 #111111; }
 .contracapa .cc-titulo { text-shadow: 4px 4px 0 #111111; }
 .contracapa .cc-botao { text-shadow: none; }
+
+/* ---------- "Quanto custaria o seu?" como máquina de orçamento de gibi: cartões de papel pros tipos,
+   medidor grosso com os níveis escritos e o preço num estouro amarelo que pula quando muda ---------- */
+.hero-conteudo .calc-rapida { display: grid; grid-template-columns: minmax(0, 1fr) 290px; grid-template-areas: "titulo res" "tipos res" "slider res" "niveis cta" "aviso aviso"; align-items: center; gap: 12px 34px; max-width: none; margin-top: 30px; padding: 22px 26px 18px; border: 3px solid #111111; border-radius: 10px;
+    background: radial-gradient(circle, rgba(255,42,61,.12) 1.3px, transparent 1.7px) 0 0 / 10px 10px, #1b1b1b; box-shadow: 0 0 0 3px #f2f2f2, 9px 9px 0 3px rgba(255,42,61,.45); }
+.calc-rapida .calc-titulo { grid-area: titulo; justify-self: start; margin: 0; padding: 6px 14px 5px; border: 3px solid #111111; background: #ffe14d; color: #111111; font: 400 1.35rem/1 "Bangers", Impact, sans-serif; letter-spacing: .05em; text-transform: uppercase; box-shadow: 3px 3px 0 #111111; transform: rotate(-1.5deg); }
+.calc-rapida .calc-tipos { grid-area: tipos; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 6px 0 4px; }
+.calc-rapida .calc-tipo { display: grid; justify-items: start; gap: 3px; padding: 12px 12px 10px; border: 3px solid #111111; border-radius: 8px; background: #f3ead6; color: #111111; text-align: left; box-shadow: 4px 4px 0 #111111; transform: rotate(-.6deg); transition: transform .15s ease, background-color .15s ease, box-shadow .15s ease; }
+.calc-rapida .calc-tipo:nth-child(2) { transform: rotate(.5deg); }
+.calc-rapida .calc-tipo i { font-size: 1.45rem; font-style: normal; line-height: 1; }
+.calc-rapida .calc-tipo b { font: 400 1.3rem/1 "Bangers", Impact, sans-serif; letter-spacing: .04em; text-transform: uppercase; }
+.calc-rapida .calc-tipo small { color: #4a4030; font: 600 .72rem/1.25 "Space Grotesk", sans-serif; }
+@media (hover: hover) { .calc-rapida .calc-tipo:hover { background: #fff7d6; transform: translate(-2px, -2px) rotate(0deg); box-shadow: 6px 6px 0 #111111; } }
+.calc-rapida .calc-tipo.is-ativo { border-color: #111111; background: #ffe14d; color: #111111; box-shadow: 4px 4px 0 #ff2a3d; transform: rotate(0deg); }
+.calc-rapida .calc-tipo:focus-visible { outline: 3px solid var(--cyan); outline-offset: 3px; }
+.calc-rapida .calc-slider { grid-area: slider; margin: 4px 0 0; color: var(--muted); font-size: .86rem; }
+.calc-rapida .calc-slider b { color: #ffe14d; }
+.calc-rapida input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; height: 16px; margin-top: 10px; border: 3px solid #111111; border-radius: 999px; background: repeating-linear-gradient(-45deg, #ff2a3d 0 8px, #c41f2a 8px 16px); box-shadow: 0 0 0 2px #f2f2f2; cursor: var(--cursor-mao, pointer); }
+.calc-rapida input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 30px; height: 30px; border: 3px solid #111111; border-radius: 50%; background: #ffe14d; box-shadow: 2px 2px 0 #111111; }
+.calc-rapida input[type="range"]::-moz-range-thumb { width: 24px; height: 24px; border: 3px solid #111111; border-radius: 50%; background: #ffe14d; box-shadow: 2px 2px 0 #111111; }
+.calc-rapida input[type="range"]:focus-visible { outline: 3px solid var(--cyan); outline-offset: 4px; }
+.calc-niveis { grid-area: niveis; display: flex; justify-content: space-between; margin-top: -2px; }
+.calc-niveis span { padding: 3px 8px; border-radius: 4px; color: var(--muted); font: 400 1rem/1 "Bangers", Impact, sans-serif; letter-spacing: .05em; text-transform: uppercase; cursor: var(--cursor-mao, pointer); transition: background-color .15s ease, color .15s ease; }
+.calc-niveis span.is-ativo { background: #ffe14d; color: #111111; }
+.calc-rapida .calc-resultado { grid-area: res; justify-self: center; display: grid; place-content: center; justify-items: center; width: 270px; height: 220px; margin: 0; padding: 44px; border-radius: 0; background: #ffe14d; color: #111111; font: 400 1.05rem/1 "Bangers", Impact, sans-serif; letter-spacing: .06em; text-align: center; text-transform: uppercase; text-shadow: none; filter: drop-shadow(4px 4px 0 #111111);
+    clip-path: polygon(50% 0%, 60% 13%, 76% 4%, 80% 21%, 98% 18%, 92% 36%, 100% 50%, 90% 62%, 97% 80%, 78% 79%, 72% 97%, 58% 85%, 46% 100%, 37% 84%, 20% 94%, 19% 76%, 1% 74%, 10% 58%, 0% 44%, 12% 33%, 6% 15%, 25% 18%, 31% 2%, 42% 14%); }
+.calc-rapida .calc-resultado strong { display: grid; justify-items: center; margin-top: 4px; color: #d11a2a; font: 400 2.6rem/1 "Bangers", Impact, sans-serif; letter-spacing: .03em; text-shadow: 2px 2px 0 #111111; }
+.calc-rapida .calc-resultado strong small { color: #111111; font: 600 .68rem/1.2 "DM Mono", monospace; letter-spacing: .04em; text-shadow: none; text-transform: none; }
+.calc-rapida .calc-resultado.pulou { animation: calc-pula .45s cubic-bezier(.2, 1.6, .4, 1); }
+@keyframes calc-pula { 0% { transform: scale(.82) rotate(-6deg); } 60% { transform: scale(1.08) rotate(3deg); } 100% { transform: none; } }
+.calc-rapida .calc-cta { grid-area: cta; width: 100%; min-height: 50px; border: 3px solid #111111; border-radius: 8px; background: #b0222a; color: #ffffff; font: 400 1.25rem/1 "Bangers", Impact, sans-serif; letter-spacing: .05em; text-transform: uppercase; box-shadow: 4px 4px 0 #111111; }
+@media (hover: hover) { .calc-rapida .calc-cta:hover { background: #d42a33; transform: translate(-2px, -2px); box-shadow: 6px 6px 0 #111111; } }
+.calc-rapida .calc-aviso { grid-area: aviso; margin: 4px 0 0; font-size: .74rem; }
+@media (max-width: 860px) {
+    .hero-conteudo .calc-rapida { grid-template-columns: minmax(0, 1fr); grid-template-areas: "titulo" "tipos" "slider" "niveis" "res" "cta" "aviso"; gap: 12px; padding: 18px 16px 14px; box-shadow: 0 0 0 3px #f2f2f2, 6px 6px 0 3px rgba(255,42,61,.45); }
+    .calc-rapida .calc-tipos { gap: 8px; }
+    .calc-rapida .calc-tipo { padding: 10px 8px 8px; }
+    .calc-rapida .calc-tipo b { font-size: 1.05rem; }
+    .calc-rapida .calc-tipo small { font-size: .64rem; }
+    .calc-rapida .calc-resultado { width: 220px; height: 172px; padding: 34px; }
+    .calc-rapida .calc-resultado strong { font-size: 2.05rem; }
+}
+@media (prefers-reduced-motion: reduce) { .calc-rapida .calc-tipo, .calc-niveis span { transition: none; } .calc-rapida .calc-resultado.pulou { animation: none; } }
