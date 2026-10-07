@@ -1918,7 +1918,18 @@
         document.documentElement.dataset.idioma = idioma;
     })();
 
+    /* Em português (o caso comum) a página já está no idioma certo: percorrer o texto todo pode
+       esperar o navegador ficar livre, em vez de atrasar a primeira tela. Se a pessoa trocar pra
+       espanhol antes disso, as listas são montadas na hora (o texto ainda está em português). */
+    var listasProntas = false;
+    function prepararListas() {
+        if (listasProntas) return;
+        listasProntas = true;
+        montarListas();
+    }
+
     function aplicar(idioma) {
+        if (idioma === "es") prepararListas();
         listaTextos.forEach(function (item) {
             var chave = normalizar(item.original);
             if (idioma === "es" && DICIONARIO[chave]) {
@@ -1986,8 +1997,9 @@
     }
 
     function iniciar() {
-        montarListas();
         var idioma = idiomaInicial();
+        if (idioma === "es") prepararListas();
+        else (window.requestIdleCallback || setTimeout)(prepararListas, { timeout: 3000 });
         aplicar(idioma);
 
         var nav = document.querySelector(".nav");

@@ -816,21 +816,18 @@
     <script src="filme-celular.js?v=20261007a" defer></script>
     <script src="depoimentos.js?v=20261007" defer></script>
     <script src="script.js?v=20261007a" defer></script>
-<script src="acabamento.js?v=20261007a" defer></script>
-<script src="ficha.js?v=20261007a" defer></script>
-<script src="gibi.js?v=20261007a" defer></script>
 <script src="idioma.js?v=20261007a" defer></script>
 <script>
     /* Scripts que a página não precisa pra aparecer: o mobile.js só baixa em tela de toque (no computador
        ele não faz nada) e a música só depois que a página terminou de carregar. */
     (function () {
         var versao = "?v=20261007a";
-        function carregar(arquivo) { var s = document.createElement("script"); s.src = arquivo + versao; document.body.appendChild(s); }
+        function carregar(arquivo) { var s = document.createElement("script"); s.src = arquivo + versao; s.async = false; document.body.appendChild(s); }
         var toque = matchMedia("(pointer: coarse)").matches;
         // o pedido de "instalar app" pode chegar antes do mobile.js: fica guardado pra ele usar
         if (toque) addEventListener("beforeinstallprompt", function (e) { e.preventDefault(); window.pedidoInstalar = e; });
         // o mobile.js também espera a página aparecer: assim não disputa o processador com a primeira tela
-        function depois() { (window.requestIdleCallback || setTimeout)(function () { if (toque) carregar("mobile.js"); carregar("musica.js"); }, { timeout: 1500 }); }
+        function depois() { (window.requestIdleCallback || setTimeout)(function () { carregar("acabamento.js"); carregar("ficha.js"); carregar("gibi.js"); if (toque) carregar("mobile.js"); carregar("musica.js"); }, { timeout: 1500 }); }
         if (document.readyState === "complete") depois(); else addEventListener("load", depois, { once: true });
     })();
 </script>

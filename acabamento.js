@@ -817,7 +817,7 @@
         lista.addEventListener("scroll", () => { cancelAnimationFrame(quadro); quadro = requestAnimationFrame(atualizar); }, { passive: true });
         new MutationObserver(() => requestAnimationFrame(atualizar)).observe(lista, { subtree: true, attributes: true, attributeFilter: ["class"] });
         window.addEventListener("resize", () => requestAnimationFrame(atualizar));
-        atualizar();
+        requestAnimationFrame(atualizar); // no próximo quadro: lê o layout que o navegador já calculou, sem forçar outro
     })();
 
     /* Anel de progresso de leitura ao redor do botão "voltar ao topo". */
