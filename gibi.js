@@ -43,7 +43,17 @@
     const avatar = document.querySelector(".avatar-hq");
     if (avatar) avatar.addEventListener("click", () => avatar.classList.toggle("real"));
 
+    /* ---------- Contracapa: o ano do copyright ---------- */
+    document.querySelectorAll(".cc-ano").forEach((el) => { el.textContent = new Date().getFullYear(); });
+
     if (semMovimento) return;
+
+    /* ---------- Cupom dos anúncios: "recorta" quando a pessoa toca ---------- */
+    document.addEventListener("click", (e) => {
+        const cupom = e.target.closest("#servicos .link-servico");
+        if (!cupom) return;
+        cupom.classList.remove("recortado"); void cupom.offsetWidth; cupom.classList.add("recortado");
+    });
 
     /* ---------- Legendas, balões, retícula e o "Fim?": aparecem quando entram na tela ----------
        A classe "gibi-anima" já foi ligada cedo, num script síncrono no <head> (antes da primeira
