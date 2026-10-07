@@ -39,9 +39,41 @@
         if (explosao) explosao.textContent = traduzir(TEXTO_EXPLOSAO);
     });
 
-    /* ---------- Foto desenhada: no toque, mostra a foto de verdade (e volta no próximo toque) ---------- */
+    /* ---------- Foto desenhada: no toque/clique, mostra o modo desenho (e volta no próximo toque) ---------- */
     const avatar = document.querySelector(".avatar-hq");
     if (avatar) avatar.addEventListener("click", () => avatar.classList.toggle("real"));
+
+    /* ---------- Easter egg: clicar no selo da edição ("#1") liga o modo preto e branco,
+       tipo gibi velho xerocado. Guardado no aparelho pra continuar na próxima visita. */
+    (function modoPB() {
+        const selo = document.querySelector(".gibi-edicao");
+        if (!selo) return;
+        const CHAVE = "gibi-pb";
+        const trama = document.createElement("div");
+        trama.className = "gibi-pb-trama";
+        trama.setAttribute("aria-hidden", "true");
+        document.body.appendChild(trama);
+        selo.setAttribute("role", "button");
+        selo.setAttribute("tabindex", "0");
+        selo.setAttribute("aria-pressed", "false");
+        selo.setAttribute("aria-label", traduzir("Alternar modo preto e branco"));
+        function aplicar(ligado) {
+            raiz.classList.toggle("gibi-pb", ligado);
+            selo.setAttribute("aria-pressed", String(ligado));
+        }
+        function alternar() {
+            const ligado = !raiz.classList.contains("gibi-pb");
+            aplicar(ligado);
+            try { localStorage.setItem(CHAVE, ligado ? "1" : "0"); } catch (e) { /* sem armazenamento */ }
+        }
+        selo.addEventListener("click", alternar);
+        selo.addEventListener("keydown", (e) => {
+            if (e.key !== "Enter" && e.key !== " ") return;
+            e.preventDefault();
+            alternar();
+        });
+        try { if (localStorage.getItem(CHAVE) === "1") aplicar(true); } catch (e) { /* sem armazenamento */ }
+    })();
 
     if (semMovimento) return;
 
@@ -54,7 +86,21 @@
             e.target.classList.add("gibi-visivel");
             olho.unobserve(e.target);
         }), { threshold: .35, rootMargin: "0px 0px -6% 0px" });
-        document.querySelectorAll(".gibi-legenda, .gibi-nota, .gibi-fim, .titulo-secao, .contato > h2").forEach((el) => olho.observe(el));
+        document.querySelectorAll(".gibi-legenda, .gibi-nota, .gibi-fim, .gibi-continua, .titulo-secao, .contato > h2").forEach((el) => olho.observe(el));
+
+        /* ---------- Dog-ear: a quina da página "vira" sempre que um título de seção nova aparece ---------- */
+        const dogEar = document.createElement("div");
+        dogEar.className = "gibi-dogear";
+        dogEar.setAttribute("aria-hidden", "true");
+        document.body.appendChild(dogEar);
+        let virandoAgora = false;
+        const olhoDogEar = new IntersectionObserver((entradas) => entradas.forEach((e) => {
+            if (!e.isIntersecting || virandoAgora) return;
+            virandoAgora = true;
+            dogEar.classList.remove("vira"); void dogEar.offsetWidth; dogEar.classList.add("vira");
+            setTimeout(() => { virandoAgora = false; }, 650);
+        }), { threshold: .2 });
+        document.querySelectorAll(".titulo-secao").forEach((el) => olhoDogEar.observe(el));
 
         /* celular: o print do projeto "sai do quadro" quando o card chega no meio da tela */
         if (!comMouse) {
