@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Deixe seu depoimento | Samuel Mickael</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+    <script>
+        /* Mesmo tema escolhido no portfólio (vermelho ou azul) */
+        (function () {
+            var azul = false;
+            try { azul = localStorage.getItem("portfolio-tema") === "azul"; } catch (e) { /* sem armazenamento */ }
+            document.documentElement.dataset.tema = azul ? "azul" : "vermelho";
+            document.write('<link rel="stylesheet" href="' + (azul ? "style-azul.css" : "style.css") + '">');
+        })();
+    </script>
+    <noscript><link rel="stylesheet" href="style.css"></noscript>
+    <style>
+        .dp { width: min(640px, calc(100% - 32px)); margin: 48px auto 80px; }
+        .dp h1 { margin: 6px 0 8px; font-size: clamp(1.8rem, 5vw, 2.5rem); letter-spacing: -.03em; }
+        .dp > p { color: var(--muted); }
+        .dp .eyebrow::before { content: none; }
+        .dp-caixa { display: grid; gap: 16px; margin-top: 24px; padding: 22px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); }
+        .dp label { display: grid; gap: 6px; color: var(--muted); font-size: .85rem; }
+        .dp input[type=text], .dp textarea { width: 100%; padding: 11px 13px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--text); font: 500 1rem "Space Grotesk", Arial, sans-serif; }
+        .dp textarea { min-height: 150px; resize: vertical; line-height: 1.5; }
+        .dp input:focus, .dp textarea:focus { outline: none; border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(var(--cyan-rgb), .2); }
+        .dp-linha { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .dp-ajuda { margin: 0; padding-left: 18px; color: var(--muted); font-size: .85rem; }
+        .dp-estrelas { display: flex; gap: 4px; margin: 0; padding: 0; border: 0; }
+        .dp-estrelas legend { margin-bottom: 6px; color: var(--muted); font-size: .85rem; }
+        .dp-estrelas input { position: absolute; opacity: 0; pointer-events: none; }
+        .dp-estrelas label { display: block; color: var(--line); font-size: 2rem; line-height: 1; cursor: var(--cursor-mao); transition: color .15s ease, transform .15s ease; }
+        .dp-estrelas label.acesa { color: #f5c542; }
+        .dp-estrelas input:focus-visible + label { outline: 2px solid var(--cyan); outline-offset: 2px; border-radius: 4px; }
+        .dp-check { display: flex !important; align-items: flex-start; gap: 8px; color: var(--text) !important; font-size: .92rem !important; }
+        .dp-check input { margin-top: 3px; }
+        .dp .botao { justify-self: start; cursor: var(--cursor-mao); }
+        .dp-obrigado { margin-top: 24px; padding: 18px 20px; border: 1px solid rgba(var(--cyan-rgb), .5); border-radius: 14px; background: rgba(var(--cyan-rgb), .08); }
+        @media (max-width: 560px) { .dp-linha { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <main class="dp">
+        <p class="eyebrow">Depoimento</p>
+        <h1 id="dpTitulo">Como foi trabalhar comigo?</h1>
+        <p>Leva um minuto. Sua resposta vai direto pro meu WhatsApp, e eu só publico no site se você deixar.</p>
+
+        <form class="dp-caixa" id="dpForm" autocomplete="on">
+            <div class="dp-linha">
+                <label>Seu nome<input type="text" id="dpNome" name="name" maxlength="40" required></label>
+                <label>Seu negócio<input type="text" id="dpNegocio" maxlength="50"></label>
+            </div>
+            <fieldset class="dp-estrelas" id="dpNota">
+                <legend>Nota pro serviço</legend>
+            </fieldset>
+            <label>Seu depoimento<textarea id="dpTexto" maxlength="600" required placeholder="Escreva do seu jeito, como se contasse pra uma amiga."></textarea></label>
+            <ul class="dp-ajuda">
+                <li>Como era antes do site?</li>
+                <li>O que mudou depois (clientes, pedidos, tempo)?</li>
+                <li>Você indicaria? Pra quem?</li>
+            </ul>
+            <label class="dp-check"><input type="checkbox" id="dpPode" checked> Pode mostrar no seu site, com meu nome e o nome do negócio.</label>
+            <button type="submit" class="botao botao-principal">Enviar pelo WhatsApp</button>
+        </form>
+        <div class="dp-obrigado" id="dpObrigado" hidden>
+            <b>Muito obrigado! 🙏</b>
+            <p>Abri o WhatsApp com o seu depoimento: é só tocar em enviar. Isso ajuda demais quem está começando.</p>
+        </div>
+    </main>
+    <script>
+        (function () {
+            "use strict";
+            const $ = (id) => document.getElementById(id);
+            const q = new URLSearchParams(location.search);
+            const limpo = (v, n) => String(v || "").replace(/\s+/g, " ").trim().slice(0, n);
+            const para = limpo(q.get("para"), 50), nome = limpo(q.get("nome"), 40);
+            if (para) $("dpNegocio").value = para;
+            if (nome) { $("dpNome").value = nome; $("dpTitulo").textContent = `${nome}, como foi trabalhar comigo?`; }
+
+            /* estrelas: rádio de verdade por baixo (funciona no teclado e no leitor de tela) */
+            let nota = 5;
+            $("dpNota").insertAdjacentHTML("beforeend", [1, 2, 3, 4, 5].map((n) =>
+                `<input type="radio" name="nota" id="nota${n}" value="${n}"${n === 5 ? " checked" : ""}><label for="nota${n}" aria-label="${n} de 5">★</label>`).join(""));
+            const acender = (ate) => $("dpNota").querySelectorAll("label").forEach((l, i) => l.classList.toggle("acesa", i < ate));
+            $("dpNota").addEventListener("change", (e) => { nota = Number(e.target.value); acender(nota); });
+            acender(nota);
+
+            $("dpForm").addEventListener("submit", (e) => {
+                e.preventDefault();
+                const texto = limpo($("dpTexto").value, 600), quem = limpo($("dpNome").value, 40), negocio = limpo($("dpNegocio").value, 50);
+                const msg = [
+                    "⭐ Depoimento pro seu site",
+                    "",
+                    `"${texto}"`,
+                    "",
+                    `— ${quem}${negocio ? ", " + negocio : ""}`,
+                    `Nota: ${"★".repeat(nota)}${"☆".repeat(5 - nota)}`,
+                    $("dpPode").checked ? "✅ Pode publicar com meu nome." : "🔒 Prefiro que não publique com meu nome.",
+                ].join("\n");
+                window.open("https://wa.me/5567996034205?text=" + encodeURIComponent(msg), "_blank", "noopener");
+                $("dpObrigado").hidden = false;
+                window.ESTATISTICAS?.contar("/evento/depoimento", "mandou depoimento", true);
+            });
+        })();
+    </script>
+    <script src="estatisticas.js?v=20261002"></script>
+</body>
+</html>

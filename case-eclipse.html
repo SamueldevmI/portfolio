@@ -160,17 +160,12 @@
         </section>
     </main>
     <script src="idioma.js?v=20261002proj" defer></script>
+    <script src="depoimentos.js?v=20261007" defer></script>
     <script src="estatisticas.js"></script>
     <script>
         (function () {
             "use strict";
-            /* Depoimento: quando a dona da Eclipse mandar, é só preencher aqui que a seção aparece. */
-            const DEPOIMENTO = { texto: "", autor: "" }; // ex.: { texto: "…", autor: "Elizabeth, Eclipse Studio" }
-            if (DEPOIMENTO.texto) {
-                document.getElementById("casoDepoTexto").textContent = `“${DEPOIMENTO.texto}”`;
-                document.getElementById("casoDepoAutor").textContent = `— ${DEPOIMENTO.autor}`;
-                document.getElementById("casoDepoimento").hidden = false;
-            }
+            /* o depoimento da Eclipse vem do depoimentos.js (é só colar lá que a seção aparece) */
             const est = window.ESTATISTICAS;
             if (est) {
                 est.contar("/case-eclipse", "Case Eclipse Studio", true);

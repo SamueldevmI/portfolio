@@ -39,7 +39,11 @@
         .gl-historico ol { margin: 0; padding: 0; list-style: none; }
         .gl-historico a { color: var(--acento-texto); }
         /* mini-CRM */
-        .crm-resumo { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 14px; }
+        .achar-sinais { color: var(--muted); font-size: .92rem; }
+        .achar-sinais summary { color: var(--text); font-weight: 600; cursor: var(--cursor-mao); }
+        .achar-sinais ul { margin: 10px 0; padding-left: 20px; }
+        .achar-sinais li + li { margin-top: 4px; }
+                .crm-resumo { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 14px; }
         .crm-resumo span { padding: 6px 12px; border: 1px solid var(--line); border-radius: 999px; font-size: .82rem; }
         .crm-resumo .urgente { border-color: var(--cyan); background: rgba(var(--cyan-rgb), .12); color: var(--text); }
         .crm-filtros { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
@@ -130,6 +134,40 @@
             </div>
         </form>
 
+        <section class="gl-proposta" id="glAchar" aria-labelledby="acharTitulo">
+            <h2 id="acharTitulo">🔎 Onde achar clientes</h2>
+            <p>Escolha o ramo e o bairro: eu abro a busca pronta. Quem aparece sem botão de “Site” no Google Maps é cliente em potencial.</p>
+            <div class="gl-caixa">
+                <div class="gl-linha">
+                    <label>Ramo
+                        <select id="acharRamo">
+                            <option value="pizzaria|pizzaria">🍕 Pizzaria / lanchonete</option>
+                            <option value="barbearia|barbearia">💈 Barbearia</option>
+                            <option value="loja|loja de roupas">👕 Loja de roupa</option>
+                            <option value="salao|salão de beleza">💇 Salão de beleza</option>
+                            <option value="academia|academia">💪 Academia</option>
+                            <option value="clinica|clínica">🩺 Clínica / consultório</option>
+                        </select>
+                    </label>
+                    <label>Bairro ou cidade<input type="text" id="acharOnde" maxlength="50" value="Campo Grande MS" placeholder="Ex.: Tiradentes, Campo Grande MS"></label>
+                </div>
+                <div class="gl-acoes">
+                    <a class="botao botao-principal" id="acharMaps" href="https://www.google.com/maps" target="_blank" rel="noopener">Buscar no Google Maps ↗</a>
+                    <a class="botao botao-secundario" id="acharInsta" href="https://www.google.com" target="_blank" rel="noopener">Achar no Instagram ↗</a>
+                </div>
+                <details class="achar-sinais">
+                    <summary>Como saber se o negócio precisa de site</summary>
+                    <ul>
+                        <li>No Google Maps, o perfil tem <b>Ligar</b> e <b>Rotas</b>, mas não tem <b>Site</b>.</li>
+                        <li>O link da bio do Instagram é só o WhatsApp ou um Linktree.</li>
+                        <li>Preço e cardápio só aparecem em foto, story ou “chama no direct”.</li>
+                        <li>Tem muita avaliação boa no Google, mas quem procura não acha mais nada sobre ele.</li>
+                    </ul>
+                    <p>Achou? Copie o nome e o telefone do perfil e cole na lista aqui embaixo, um por linha. Dez por dia já enche a agenda.</p>
+                </details>
+            </div>
+        </section>
+
         <section class="gl-proposta" id="glLote" aria-labelledby="loteTitulo">
             <h2 id="loteTitulo">📋 Vários de uma vez</h2>
             <p>Cole uma lista (do Google Maps, de um grupo, de onde for): um negócio por linha, com nome, telefone e, se souber, o ramo. Eu separo, monto o link e a mensagem de cada um e ponho todos na fila.</p>
@@ -139,6 +177,24 @@
                 <div id="lotePrevia" hidden>
                     <table class="lote-tabela"><thead><tr><th>Negócio</th><th>WhatsApp</th><th>Ramo</th><th></th></tr></thead><tbody id="loteLinhas"></tbody></table>
                     <div class="gl-acoes"><button type="button" class="botao botao-principal" id="loteFila">Pôr todos na fila</button></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="gl-proposta" id="glDepo" aria-labelledby="depoTitulo">
+            <h2 id="depoTitulo">⭐ Pedir depoimento</h2>
+            <p>Pra cliente que já recebeu o site. Ela abre o link, escreve, dá a nota e o texto chega no seu WhatsApp. Aí é só colar no <b>depoimentos.js</b> que aparece no site.</p>
+            <div class="gl-caixa">
+                <div class="gl-linha">
+                    <label>Nome da pessoa<input type="text" id="depoNome" maxlength="40" value="Elizabeth"></label>
+                    <label>Negócio<input type="text" id="depoNegocio" maxlength="50" value="Eclipse Studio"></label>
+                </div>
+                <label>WhatsApp dela (opcional)<input type="tel" id="depoTel" placeholder="(67) 99999-9999"></label>
+                <label>Mensagem (dá pra editar)<textarea id="depoMsg"></textarea></label>
+                <div class="gl-acoes">
+                    <button type="button" class="botao botao-principal" id="depoWhats">Enviar no WhatsApp</button>
+                    <button type="button" class="botao botao-secundario" id="depoCopiar">Copiar mensagem</button>
+                    <a class="botao botao-secundario" id="depoVer" href="depoimento.html" target="_blank" rel="noopener">Ver a página ↗</a>
                 </div>
             </div>
         </section>
@@ -605,6 +661,57 @@
             atualizar();
             desenharHistorico();
             checarSinais();
+        })();
+    </script>
+    <script>
+        /* Pedir depoimento: link pro depoimento.html já com o nome e o negócio preenchidos */
+        (function () {
+            "use strict";
+            const $ = (id) => document.getElementById(id);
+            const base = new URL("depoimento.html", location.href).href;
+            let editada = false;
+            function link() {
+                const q = new URLSearchParams();
+                if ($("depoNome").value.trim()) q.set("nome", $("depoNome").value.trim());
+                if ($("depoNegocio").value.trim()) q.set("para", $("depoNegocio").value.trim());
+                return `${base}${q.toString() ? "?" + q : ""}`;
+            }
+            function montar() {
+                $("depoVer").href = link();
+                if (editada) return;
+                const nome = $("depoNome").value.trim();
+                $("depoMsg").value = `Oi${nome ? ", " + nome : ""}! Tudo bem? 😊\n\nQueria te pedir um favor rápido: um depoimento curtinho sobre o site. Leva um minuto, é só abrir aqui:\n${link()}\n\nIsso ajuda demais quem está começando como eu. Obrigado! 🙏`;
+            }
+            $("depoMsg").addEventListener("input", () => { editada = true; });
+            ["depoNome", "depoNegocio"].forEach((id) => $(id).addEventListener("input", () => { editada = false; montar(); }));
+            $("depoWhats").addEventListener("click", () => {
+                const tel = $("depoTel").value.replace(/\D/g, "");
+                const numero = tel ? (tel.length <= 11 ? "55" + tel : tel) : "";
+                window.open(`https://wa.me/${numero}?text=${encodeURIComponent($("depoMsg").value)}`, "_blank", "noopener");
+            });
+            $("depoCopiar").addEventListener("click", async () => {
+                try { await navigator.clipboard.writeText($("depoMsg").value); $("depoCopiar").textContent = "Copiada ✓"; }
+                catch (erro) { $("depoMsg").select(); }
+                setTimeout(() => { $("depoCopiar").textContent = "Copiar mensagem"; }, 1800);
+            });
+            montar();
+        })();
+    </script>
+    <script>
+        /* Onde achar clientes: monta a busca do ramo + bairro no Maps e no Instagram (via Google) */
+        (function () {
+            "use strict";
+            const ramo = document.getElementById("acharRamo"), onde = document.getElementById("acharOnde");
+            const maps = document.getElementById("acharMaps"), insta = document.getElementById("acharInsta");
+            const lote = document.getElementById("glRamo");
+            function montar() {
+                const termo = `${ramo.value.split("|")[1]} ${onde.value.trim() || "Campo Grande MS"}`;
+                maps.href = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(termo);
+                insta.href = "https://www.google.com/search?q=" + encodeURIComponent("site:instagram.com " + termo);
+            }
+            ramo.addEventListener("change", () => { montar(); if (lote) { lote.value = ramo.value.split("|")[0]; lote.dispatchEvent(new Event("change")); } });
+            onde.addEventListener("input", montar);
+            montar();
         })();
     </script>
 </body>
