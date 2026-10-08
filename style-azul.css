@@ -2712,7 +2712,7 @@ html.secoes-montadas main > section.secao, html.secoes-montadas main > .secao { 
    Amarelo de legenda de quadrinho (#ffe14d), nanquim (#0b101b) e a fonte Bangers só nos elementos do gibi.
    O que aparece ao rolar só começa escondido com o gibi.js ligado (classe gibi-anima). */
 .gibi-capa { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 18px; margin: 0 0 30px; padding: 0 0 14px; border-bottom: 3px solid #ffffff; box-shadow: 0 5px 0 -1px #2e7eff; }
-.gibi-edicao { display: grid; place-items: center; min-width: 74px; padding: 6px 8px 5px; border: 3px solid #0b101b; background: #ffffff; color: #0b101b; line-height: 1; box-shadow: 4px 4px 0 #2e7eff; transform: rotate(-4deg); }
+.gibi-edicao { display: grid; place-items: center; min-width: 74px; padding: 6px 8px 5px; border: 3px solid #0b101b; background: #ffffff; color: #0b101b; line-height: 1; box-shadow: 4px 4px 0 #2e7eff; transform: rotate(-4deg); cursor: pointer; }
 .gibi-edicao b { font: 400 2.3rem/1 "Bangers", Impact, sans-serif; letter-spacing: .02em; }
 .gibi-edicao small { font: 600 .58rem "DM Mono", monospace; letter-spacing: .08em; }
 .gibi-titulo { min-width: 0; }
@@ -2766,7 +2766,11 @@ html.secoes-montadas main > section.secao, html.secoes-montadas main > .secao { 
 .gibi-anima .titulo-secao:not(.gibi-visivel)::after { opacity: 0; }
 
 /* "Fim?" no fim da revista */
-.gibi-fim { display: grid; place-items: center; width: min(1200px, calc(100% - 44px)); margin: 0 auto 60px; }
+.gibi-fim { display: grid; place-items: center; margin: 0; }
+.gibi-continua { display: flex; align-items: center; justify-content: center; gap: 9px; width: fit-content; margin: 36px auto 0; padding: 9px 20px 7px; border: 2px dashed #0b101b; border-radius: 999px; background: #ffffff; color: #0b101b; font: 700 .76rem "Space Grotesk", sans-serif; text-transform: uppercase; letter-spacing: .07em; transform: rotate(-1deg); }
+.gibi-continua b { font: 400 1.1rem "Bangers", Impact, sans-serif; letter-spacing: .02em; }
+.gibi-anima .gibi-continua { opacity: 0; transform: translateY(8px) rotate(-1deg); transition: opacity .4s ease, transform .4s ease; }
+.gibi-anima .gibi-continua.gibi-visivel { opacity: 1; transform: rotate(-1deg); }
 .gibi-fim p { display: grid; justify-items: center; gap: 6px; margin: 0; padding: 18px 34px 16px; border: 3px solid #0b101b; background: #ffe14d; color: #0b101b; box-shadow: 6px 6px 0 #0b101b; transform: rotate(-2deg); }
 .gibi-fim b { font: 400 clamp(2.4rem, 6vw, 3.6rem)/.9 "Bangers", Impact, sans-serif; letter-spacing: .04em; text-transform: uppercase; }
 .gibi-fim span { font: 600 .9rem "Space Grotesk", sans-serif; }
@@ -2779,7 +2783,8 @@ html.secoes-montadas main > section.secao, html.secoes-montadas main > .secao { 
 @keyframes gibi-pow { 0% { opacity: 1; transform: translate(-50%, -50%) rotate(var(--giro)) scale(.2); } 35% { opacity: 1; transform: translate(-50%, -110%) rotate(var(--giro)) scale(1.1); } 70% { opacity: 1; transform: translate(-50%, -120%) rotate(var(--giro)) scale(1); } 100% { opacity: 0; transform: translate(-50%, -135%) rotate(var(--giro)) scale(.9); } }
 
 /* linhas de velocidade quando a página voa */
-.gibi-velocidade { position: fixed; inset: 0; z-index: 85; background-position: center; background-repeat: no-repeat; background-size: 100% 100%; opacity: 0; pointer-events: none; transition: opacity .16s linear; }
+.gibi-velocidade { position: fixed; inset: 0; z-index: 85; background-position: center; background-repeat: no-repeat; background-size: 100% 100%; opacity: 0; pointer-events: none; transition: opacity .16s linear; mix-blend-mode: screen; }
+.gibi-velocidade.v-flash { background-image: radial-gradient(circle, rgba(255,255,255,.95), rgba(255,255,255,0) 68%); }
 
 @media (max-width: 720px) {
     .gibi-capa { gap: 10px; margin-bottom: 22px; padding-bottom: 10px; border-bottom-width: 2px; }
@@ -2797,9 +2802,21 @@ html.secoes-montadas main > section.secao, html.secoes-montadas main > .secao { 
     .gibi-nota { max-width: 230px; font-size: .8rem; }
     .titulo-secao::after { left: -30px; width: 260px; height: 180px; }
     .gibi-fim { margin-bottom: 40px; }
+    
+    
+    
 }
 @media (prefers-reduced-motion: reduce) { .gibi-explosao { animation: none; } }
-@media print { .gibi-legenda, .gibi-nota, .gibi-fim, .gibi-pow, .gibi-velocidade, .gibi-explosao { display: none !important; } }
+.gibi-pb-trama { position: fixed; inset: 0; z-index: 9000; pointer-events: none; opacity: 0; background-image: radial-gradient(circle, #000000 1px, transparent 1.3px); background-size: 4px 4px; mix-blend-mode: multiply; transition: opacity .3s ease; }
+html.gibi-pb body { filter: grayscale(1) contrast(1.12); }
+html.gibi-pb .gibi-pb-trama { opacity: .15; }
+@media (hover: hover) { .botao-principal { position: relative; } .botao-principal::after { content: "\2605"; position: absolute; top: -10px; right: -10px; width: 22px; height: 22px; display: grid; place-items: center; border: 2px solid #0b101b; border-radius: 50%; background: #ffe14d; color: #0b101b; font-size: .7rem; line-height: 1; opacity: 0; transform: scale(.4) rotate(-20deg); transition: opacity .2s ease, transform .25s cubic-bezier(.3, 1.5, .4, 1); pointer-events: none; } .botao-principal:hover::after { opacity: 1; transform: scale(1) rotate(8deg); } }
+.gibi-dogear { position: fixed; right: 0; bottom: 0; z-index: 55; width: 46px; height: 46px; pointer-events: none; background: linear-gradient(135deg, transparent 50%, #ffe14d 50%); border-top: 2px solid #0b101b; border-left: 2px solid #0b101b; box-shadow: -3px -3px 10px rgba(0,0,0,.2); transform-origin: bottom right; transform: rotate(-6deg) scale(.001); opacity: 0; transition: transform .55s cubic-bezier(.2, .9, .3, 1.1), opacity .3s ease; }
+.gibi-dogear.vira { transform: rotate(-10deg) scale(1); opacity: 1; }
+@media (max-width: 720px) { .gibi-dogear { width: 32px; height: 32px; } }
+@media print { .gibi-dogear { display: none; } }
+@media (prefers-reduced-motion: reduce) { .gibi-pb-trama { transition: none; } .botao-principal::after { transition: none; } }
+@media print { .gibi-legenda, .gibi-nota, .gibi-fim, .gibi-continua, .gibi-pow, .gibi-velocidade, .gibi-explosao { display: none !important; } .gibi-pb-trama, .botao-principal::after { display: none !important; } }
 
 /* ---------- Orçamento em quadrinho: a caixa vira um quadro de HQ, a pergunta vira balão de fala
    e as respostas viram botões de gibi (contorno de nanquim, sombra dura, amarelo no mouse). ---------- */
@@ -3014,3 +3031,176 @@ header.hero { overflow-x: clip; }
     .ad-com .ad-rotulo { right: 10px; }
 }
 @media (prefers-reduced-motion: reduce) { .ad-chuva { animation: none; } .ad-alca span { transition: none; } }
+
+/* ---------- Serviços como anúncios de revista antiga: papel amarelado, chamada gritada, preço num
+   estouro amarelo e o cupom recortável (tocar no cupom abre o orçamento daquele serviço) ---------- */
+#servicos .lista-servicos { gap: 26px; }
+#servicos .lista-servicos article { position: relative; display: flex; flex-direction: column; padding: 22px 20px 20px; border: 3px solid #0b101b; border-radius: 4px; color: #0b101b;
+    background: radial-gradient(circle, rgba(26,62,139,.09) 1.2px, transparent 1.6px) 0 0 / 9px 9px, #f3ead6; box-shadow: 7px 7px 0 #0b101b; transform: rotate(-.7deg); transition: transform .25s ease; }
+#servicos .lista-servicos article:nth-child(2) { transform: rotate(.6deg); }
+#servicos .lista-servicos article:nth-child(3) { transform: rotate(-.4deg); }
+@media (hover: hover) { #servicos .lista-servicos article:hover { transform: rotate(0deg) translateY(-4px); } }
+#servicos .lista-servicos article > span { align-self: flex-start; margin: 0 0 8px; color: #6b5a3c; font: 500 .66rem "DM Mono", monospace; letter-spacing: .1em; }
+#servicos .lista-servicos article > span::before { content: "Nº "; }
+#servicos .anuncio-chamada { margin: 0 96px 10px 0; color: #4a85e2; font: 400 clamp(1.45rem, 2.1vw, 1.8rem)/1 "Bangers", Impact, sans-serif; letter-spacing: .03em; text-transform: uppercase; -webkit-text-stroke: 1px #0b101b; paint-order: stroke fill; text-shadow: 2px 2px 0 #0b101b; }
+#servicos .lista-servicos h3 { color: #0b101b; font-size: 1.15rem; }
+#servicos .lista-servicos .servico-icone { background: #0b101b; color: #ffe14d; box-shadow: none; }
+#servicos .lista-servicos .servico-icone svg { stroke: #ffe14d; }
+#servicos .lista-servicos article p { color: #1b2843; }
+#servicos .lista-servicos .servico-preco:not([hidden]) { position: absolute; top: -18px; right: -16px; z-index: 2; display: grid; place-content: center; justify-items: center; width: 118px; height: 118px; margin: 0; padding: 18px; border: 0; background: #ffe14d; color: #0b101b; text-align: center; transform: rotate(10deg); filter: drop-shadow(3px 3px 0 #0b101b);
+    clip-path: polygon(50% 0%, 61% 14%, 78% 6%, 81% 24%, 100% 25%, 91% 41%, 100% 57%, 83% 64%, 88% 83%, 68% 81%, 58% 100%, 46% 85%, 28% 95%, 23% 76%, 3% 74%, 12% 57%, 0% 41%, 17% 33%, 13% 14%, 33% 18%); }
+#servicos .lista-servicos .servico-preco small { color: #0b101b; font: 600 .62rem/1 "DM Mono", monospace; }
+#servicos .lista-servicos .servico-preco strong { color: #4a85e2; font: 400 1.6rem/1 "Bangers", Impact, sans-serif; letter-spacing: .02em; text-shadow: none; }
+#servicos .lista-servicos .servico-preco s { color: #444f66; font: 400 .9rem/1 "Bangers", Impact, sans-serif; }
+#servicos .promo-automacao:not([hidden]) { margin: 4px 0 6px; padding: 8px 10px; border: 2px dashed #4a85e2; border-radius: 4px; background: #ffffff; color: #0b101b !important; font-size: .84rem; }
+#servicos .promo-automacao b { color: #4a85e2; }
+#servicos .servico-inclui { margin: 10px 0 0; padding: 0; border: 0; }
+#servicos .servico-inclui li { color: #0b101b; }
+#servicos .servico-inclui li::before { color: #4a85e2; }
+#servicos .link-servico { position: relative; display: grid; gap: 4px; margin-top: auto; padding: 16px 14px 12px; border: 2px dashed #0b101b; border-radius: 4px; background: #ffffff; color: #0b101b; font: 400 1.25rem/1 "Bangers", Impact, sans-serif; letter-spacing: .04em; text-align: left; text-decoration: none; text-transform: uppercase; transition: transform .2s ease, background-color .2s ease; }
+#servicos .lista-servicos .link-servico { margin-top: 18px; }
+#servicos .link-servico::before { content: "✂"; position: absolute; left: 12px; top: -12px; padding: 0 4px; background: #f3ead6; color: #0b101b; font: 400 1.05rem/1 system-ui, sans-serif; }
+#servicos .cupom-rotulo { color: #6b5a3c; font: 600 .6rem "DM Mono", monospace; letter-spacing: .08em; text-transform: uppercase; }
+@media (hover: hover) { #servicos .link-servico:hover { background: #ffe14d; color: #0b101b; transform: rotate(-1.5deg); } }
+#servicos .link-servico:focus-visible { outline: 3px solid #4a85e2; outline-offset: 3px; }
+#servicos .link-servico.recortado { animation: cupom-recorta .6s cubic-bezier(.3, .7, .4, 1); }
+@keyframes cupom-recorta { 30% { transform: rotate(-4deg) translateY(-6px); background: #ffe14d; } 100% { transform: none; } }
+@media (max-width: 720px) {
+    #servicos .lista-servicos article { padding: 20px 16px 16px; }
+    #servicos .anuncio-chamada { margin-right: 84px; font-size: 1.45rem; }
+    #servicos .lista-servicos .servico-preco:not([hidden]) { top: -14px; right: -10px; width: 102px; height: 102px; padding: 14px; }
+    #servicos .lista-servicos .servico-preco strong { font-size: 1.35rem; }
+}
+@media (prefers-reduced-motion: reduce) { #servicos .lista-servicos article, #servicos .link-servico { transition: none; } #servicos .link-servico.recortado { animation: none; } }
+
+/* ---------- Contracapa da revista (depois do "Fim?") ---------- */
+.contracapa { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 22px 34px; width: min(1200px, calc(100% - 44px)); margin: 0 auto 50px; padding: 34px 34px 18px; border: 3px solid #0b101b; border-radius: 6px; color: #0b101b;
+    background: radial-gradient(circle, rgba(26,62,139,.12) 1.3px, transparent 1.7px) 0 0 / 10px 10px, #efe6d0; box-shadow: 0 0 0 4px #eff1f5, 0 0 0 7px #0b101b, 12px 12px 0 7px rgba(46,126,255,.45); }
+.cc-chamada { display: inline-block; margin: 0 0 8px; padding: 5px 12px 4px; border: 2px solid #0b101b; background: #ffe14d; font: 400 1.15rem/1 "Bangers", Impact, sans-serif; letter-spacing: .06em; text-transform: uppercase; box-shadow: 3px 3px 0 #0b101b; transform: rotate(-2deg); }
+.cc-titulo { margin: 0; color: #4583e8; font: 400 clamp(2.6rem, 7vw, 5rem)/.95 "Bangers", Impact, sans-serif; letter-spacing: .03em; text-transform: uppercase; -webkit-text-stroke: 2px #0b101b; paint-order: stroke fill; text-shadow: 4px 4px 0 #0b101b; }
+.cc-texto { max-width: 520px; margin: 10px 0 18px; color: #1b2843 !important; font-size: 1.02rem; }
+.cc-lado { display: grid; justify-items: center; gap: 16px; }
+.cc-selo { display: grid; justify-items: center; align-content: center; width: 132px; height: 132px; padding: 10px; border: 4px solid #0b101b; border-radius: 50%; background: #ffffff; color: #0b101b; text-align: center; box-shadow: inset 0 0 0 4px #ffffff, inset 0 0 0 6px #0b101b; transform: rotate(-8deg); }
+.cc-selo small { font: 700 .5rem/1.15 "DM Mono", monospace; letter-spacing: .06em; text-transform: uppercase; }
+.cc-selo b { margin: 2px 0; color: #4583e8; font: 400 2.4rem/1 "Bangers", Impact, sans-serif; letter-spacing: .05em; }
+.cc-codigo { display: grid; justify-items: center; padding: 6px 8px 4px; border: 2px solid #0b101b; background: #ffffff; }
+.cc-codigo svg { width: 92px; height: 34px; fill: #0b101b; }
+.cc-codigo small { font: 600 .6rem "DM Mono", monospace; }
+.cc-rodape { grid-column: 1 / -1; margin: 6px 0 0; padding-top: 12px; border-top: 2px solid #0b101b; color: #4a4030 !important; font: 500 .7rem "DM Mono", monospace; letter-spacing: .06em; text-align: center; }
+@media (max-width: 720px) {
+    .contracapa { grid-template-columns: minmax(0, 1fr); gap: 18px; margin-bottom: 40px; padding: 26px 18px 14px; box-shadow: 0 0 0 3px #eff1f5, 0 0 0 5px #0b101b, 7px 7px 0 5px rgba(46,126,255,.45); }
+    .cc-lado { grid-auto-flow: column; justify-content: center; align-items: center; }
+    .cc-selo { width: 112px; height: 112px; }
+    .cc-selo b { font-size: 2rem; }
+    .cc-botao { width: 100%; text-align: center; }
+}
+/* papel de revista: o texto comum fica nítido (sem a sombra/brilho que o tema escuro põe nos textos) */
+#servicos .lista-servicos article, #servicos .lista-servicos article *, .contracapa, .contracapa * { text-shadow: none; }
+#servicos .lista-servicos article .anuncio-chamada { text-shadow: 2px 2px 0 #0b101b; }
+.contracapa .cc-titulo { text-shadow: 4px 4px 0 #0b101b; }
+.contracapa .cc-botao { text-shadow: none; }
+
+/* ---------- "Quanto custaria o seu?" como máquina de orçamento de gibi: cartões de papel pros tipos,
+   medidor grosso com os níveis escritos e o preço num estouro amarelo que pula quando muda ---------- */
+.hero-conteudo .calc-rapida { display: grid; grid-template-columns: minmax(0, 1fr) 290px; grid-template-areas: "titulo res" "tipos res" "slider res" "niveis cta" "aviso aviso"; align-items: center; gap: 12px 34px; max-width: none; margin-top: 30px; padding: 22px 26px 18px; border: 3px solid #0b101b; border-radius: 10px;
+    background: radial-gradient(circle, rgba(46,126,255,.12) 1.3px, transparent 1.7px) 0 0 / 10px 10px, #11192a; box-shadow: 0 0 0 3px #eff1f5, 9px 9px 0 3px rgba(46,126,255,.45); }
+.calc-rapida .calc-titulo { grid-area: titulo; justify-self: start; margin: 0; padding: 6px 14px 5px; border: 3px solid #0b101b; background: #ffe14d; color: #0b101b; font: 400 1.35rem/1 "Bangers", Impact, sans-serif; letter-spacing: .05em; text-transform: uppercase; box-shadow: 3px 3px 0 #0b101b; transform: rotate(-1.5deg); }
+.calc-rapida .calc-tipos { grid-area: tipos; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 6px 0 4px; }
+.calc-rapida .calc-tipo { display: grid; justify-items: start; gap: 3px; padding: 12px 12px 10px; border: 3px solid #0b101b; border-radius: 8px; background: #f3ead6; color: #0b101b; text-align: left; box-shadow: 4px 4px 0 #0b101b; transform: rotate(-.6deg); transition: transform .15s ease, background-color .15s ease, box-shadow .15s ease; }
+.calc-rapida .calc-tipo:nth-child(2) { transform: rotate(.5deg); }
+.calc-rapida .calc-tipo i { font-size: 1.45rem; font-style: normal; line-height: 1; }
+.calc-rapida .calc-tipo b { font: 400 1.3rem/1 "Bangers", Impact, sans-serif; letter-spacing: .04em; text-transform: uppercase; }
+.calc-rapida .calc-tipo small { color: #4a4030; font: 600 .72rem/1.25 "Space Grotesk", sans-serif; }
+@media (hover: hover) { .calc-rapida .calc-tipo:hover { background: #fff7d6; transform: translate(-2px, -2px) rotate(0deg); box-shadow: 6px 6px 0 #0b101b; } }
+.calc-rapida .calc-tipo.is-ativo { border-color: #0b101b; background: #ffe14d; color: #0b101b; box-shadow: 4px 4px 0 #2e7eff; transform: rotate(0deg); }
+.calc-rapida .calc-tipo:focus-visible { outline: 3px solid var(--cyan); outline-offset: 3px; }
+.calc-rapida .calc-slider { grid-area: slider; margin: 4px 0 0; color: var(--muted); font-size: .86rem; }
+.calc-rapida .calc-slider b { color: #ffe14d; }
+.calc-rapida input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; height: 16px; margin-top: 10px; border: 3px solid #0b101b; border-radius: 999px; background: repeating-linear-gradient(-45deg, #2e7eff 0 8px, #4a85e2 8px 16px); box-shadow: 0 0 0 2px #eff1f5; cursor: var(--cursor-mao, pointer); }
+.calc-rapida input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 30px; height: 30px; border: 3px solid #0b101b; border-radius: 50%; background: #ffe14d; box-shadow: 2px 2px 0 #0b101b; }
+.calc-rapida input[type="range"]::-moz-range-thumb { width: 24px; height: 24px; border: 3px solid #0b101b; border-radius: 50%; background: #ffe14d; box-shadow: 2px 2px 0 #0b101b; }
+.calc-rapida input[type="range"]:focus-visible { outline: 3px solid var(--cyan); outline-offset: 4px; }
+.calc-niveis { grid-area: niveis; display: flex; justify-content: space-between; margin-top: -2px; }
+.calc-niveis span { padding: 3px 8px; border-radius: 4px; color: var(--muted); font: 400 1rem/1 "Bangers", Impact, sans-serif; letter-spacing: .05em; text-transform: uppercase; cursor: var(--cursor-mao, pointer); transition: background-color .15s ease, color .15s ease; }
+.calc-niveis span.is-ativo { background: #ffe14d; color: #0b101b; }
+.calc-rapida .calc-resultado { grid-area: res; justify-self: center; display: grid; place-content: center; justify-items: center; width: 270px; height: 220px; margin: 0; padding: 44px; border-radius: 0; background: #ffe14d; color: #0b101b; font: 400 1.05rem/1 "Bangers", Impact, sans-serif; letter-spacing: .06em; text-align: center; text-transform: uppercase; text-shadow: none; filter: drop-shadow(4px 4px 0 #0b101b);
+    clip-path: polygon(50% 0%, 60% 13%, 76% 4%, 80% 21%, 98% 18%, 92% 36%, 100% 50%, 90% 62%, 97% 80%, 78% 79%, 72% 97%, 58% 85%, 46% 100%, 37% 84%, 20% 94%, 19% 76%, 1% 74%, 10% 58%, 0% 44%, 12% 33%, 6% 15%, 25% 18%, 31% 2%, 42% 14%); }
+.calc-rapida .calc-resultado strong { display: grid; justify-items: center; margin-top: 4px; color: #4583e8; font: 400 2.6rem/1 "Bangers", Impact, sans-serif; letter-spacing: .03em; text-shadow: 2px 2px 0 #0b101b; }
+.calc-rapida .calc-resultado strong small { color: #0b101b; font: 600 .68rem/1.2 "DM Mono", monospace; letter-spacing: .04em; text-shadow: none; text-transform: none; }
+.calc-rapida .calc-resultado.pulou { animation: calc-pula .45s cubic-bezier(.2, 1.6, .4, 1); }
+@keyframes calc-pula { 0% { transform: scale(.82) rotate(-6deg); } 60% { transform: scale(1.08) rotate(3deg); } 100% { transform: none; } }
+.calc-rapida .calc-cta { grid-area: cta; width: 100%; min-height: 50px; border: 3px solid #0b101b; border-radius: 8px; background: #224fb0; color: #ffffff; font: 400 1.25rem/1 "Bangers", Impact, sans-serif; letter-spacing: .05em; text-transform: uppercase; box-shadow: 4px 4px 0 #0b101b; }
+@media (hover: hover) { .calc-rapida .calc-cta:hover { background: #5086dc; transform: translate(-2px, -2px); box-shadow: 6px 6px 0 #0b101b; } }
+.calc-rapida .calc-aviso { grid-area: aviso; margin: 4px 0 0; font-size: .74rem; }
+@media (max-width: 860px) {
+    .hero-conteudo .calc-rapida { grid-template-columns: minmax(0, 1fr); grid-template-areas: "titulo" "tipos" "slider" "niveis" "res" "cta" "aviso"; gap: 12px; padding: 18px 16px 14px; box-shadow: 0 0 0 3px #eff1f5, 6px 6px 0 3px rgba(46,126,255,.45); }
+    .calc-rapida .calc-tipos { gap: 8px; }
+    .calc-rapida .calc-tipo { padding: 10px 8px 8px; }
+    .calc-rapida .calc-tipo b { font-size: 1.05rem; }
+    .calc-rapida .calc-tipo small { font-size: .64rem; }
+    .calc-rapida .calc-resultado { width: 220px; height: 172px; padding: 34px; }
+    .calc-rapida .calc-resultado strong { font-size: 2.05rem; }
+}
+@media (prefers-reduced-motion: reduce) { .calc-rapida .calc-tipo, .calc-niveis span { transition: none; } .calc-rapida .calc-resultado.pulou { animation: none; } }
+
+/* ---------- Depoimento de cliente (aparece só quando o HTML tiver a frase de verdade) ---------- */
+.depoimento { max-width: 760px; margin: 46px auto 0; }
+.depoimento[hidden] { display: none; }
+.depoimento blockquote { position: relative; margin: 0; padding: 22px 26px; border: 3px solid #0b101b; border-radius: 30px; background: #ffffff; color: #0b101b; box-shadow: 6px 6px 0 #0b101b, 6px 6px 0 3px rgba(46,126,255,.45); }
+.depoimento blockquote::after { content: ""; position: absolute; left: 54px; bottom: -22px; width: 30px; height: 22px; background: #0b101b; clip-path: polygon(0 0, 100% 0, 10% 100%); }
+.depoimento blockquote p { margin: 0; color: #0b101b !important; font: 600 clamp(1.05rem, 2vw, 1.3rem)/1.45 "Space Grotesk", sans-serif; text-shadow: none; }
+.depoimento blockquote p::before { content: "“"; margin-right: 2px; color: #4583e8; font: 400 2.2rem/0 "Bangers", Impact, sans-serif; vertical-align: -.35em; }
+.depoimento figcaption { display: flex; align-items: center; gap: 12px; margin: 30px 0 0 34px; color: var(--muted); font-size: .88rem; }
+.depoimento figcaption img { width: 48px; height: 48px; border: 3px solid #0b101b; border-radius: 50%; }
+.depoimento figcaption span { display: grid; line-height: 1.35; }
+.depoimento figcaption b { color: var(--text); font-size: 1rem; }
+.depoimento figcaption a { color: var(--acento-texto); }
+
+/* ---------- Diagnóstico grátis em destaque no orçamento (cupom tracejado) ---------- */
+.diagnostico-cupom { position: relative; display: grid; gap: 4px; margin: 18px 0 6px; padding: 16px 18px 14px; border: 2px dashed #0b101b; border-radius: 6px; background: #f3ead6; color: #0b101b; text-decoration: none; box-shadow: 5px 5px 0 #0b101b; transform: rotate(-.8deg); transition: transform .2s ease, background-color .2s ease; }
+.diagnostico-cupom b { color: #4a85e2; font: 400 1.45rem/1 "Bangers", Impact, sans-serif; letter-spacing: .04em; text-transform: uppercase; }
+.diagnostico-cupom span { color: #1b2843; font-size: .9rem; line-height: 1.45; }
+.diagnostico-cupom i { color: #0b101b; font: 400 1.05rem/1 "Bangers", Impact, sans-serif; font-style: normal; letter-spacing: .05em; text-transform: uppercase; }
+.diagnostico-cupom .dc-selo { position: absolute; top: -12px; right: 14px; padding: 4px 10px 3px; border: 2px solid #0b101b; background: #ffe14d; color: #0b101b; font: 400 .95rem/1 "Bangers", Impact, sans-serif; letter-spacing: .06em; text-transform: uppercase; transform: rotate(6deg); }
+@media (hover: hover) { .diagnostico-cupom:hover { background: #fff7d6; transform: rotate(0deg) translateY(-2px); } }
+.diagnostico-cupom:focus-visible { outline: 3px solid var(--cyan); outline-offset: 3px; }
+
+/* ---------- Contato: sugestões de horário pra conversa de 15 min ---------- */
+.agenda-conversa { max-width: 640px; margin: 22px auto 0; padding: 16px 18px; border: 2px solid #0b101b; border-radius: 10px; background: rgba(11,16,27,.55); }
+.agenda-conversa p { margin: 0 0 12px; font-size: .9rem; }
+.agenda-conversa p b { color: #ffe14d; }
+.agenda-horarios { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.agenda-horario { display: grid; justify-items: center; min-width: 92px; padding: 7px 12px 6px; border: 2px solid #0b101b; border-radius: 8px; background: #f3ead6; color: #0b101b; text-decoration: none; box-shadow: 3px 3px 0 #0b101b; transition: transform .15s ease, background-color .15s ease; }
+.agenda-horario small { color: #4a4030; font: 600 .66rem "DM Mono", monospace; text-transform: uppercase; }
+.agenda-horario b { font: 400 1.3rem/1 "Bangers", Impact, sans-serif; letter-spacing: .04em; }
+@media (hover: hover) { .agenda-horario:hover { background: #ffe14d; transform: translate(-2px, -2px); } }
+.agenda-horario:focus-visible { outline: 3px solid var(--cyan); outline-offset: 2px; }
+
+/* ---------- Motoboy na barra de progresso (gibi.js move só com transform) ---------- */
+.motoboy { position: fixed; z-index: 91; top: 1px; left: 0; width: 34px; height: 24px; pointer-events: none; opacity: 0; transition: opacity .3s ease; will-change: transform; }
+.motoboy.visivel { opacity: 1; }
+.motoboy-moto { display: block; font-size: 20px; line-height: 24px; transform: scaleX(-1); filter: drop-shadow(0 1px 0 #0b101b); }
+.motoboy-balao { position: absolute; top: 26px; right: 0; padding: 4px 9px 3px; border: 2px solid #0b101b; border-radius: 10px; background: #ffe14d; color: #0b101b; font: 400 .95rem/1 "Bangers", Impact, sans-serif; letter-spacing: .05em; white-space: nowrap; box-shadow: 2px 2px 0 #0b101b; opacity: 0; transform: translateY(-6px) scale(.6); transform-origin: top right; transition: opacity .25s ease, transform .35s cubic-bezier(.2, 1.6, .4, 1); }
+.motoboy.entregue .motoboy-balao { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { .motoboy { display: none; } }
+@media print { .motoboy, .gibi-pagina, .selo-rara { display: none !important; } }
+
+/* ---------- Virar a página (computador, ao pular de seção pelo menu) ---------- */
+.gibi-pagina { position: fixed; z-index: 95; top: -10%; bottom: -10%; left: 0; width: 70vw; pointer-events: none; border-left: 5px solid #0b101b; border-right: 5px solid #0b101b;
+    background: radial-gradient(circle, rgba(11,16,27,.22) 1.6px, transparent 2px) 0 0 / 12px 12px, #f3ead6; box-shadow: -18px 0 40px rgba(0,0,0,.35); transform: translateX(110vw) skewX(-12deg); animation: gibi-pagina .62s cubic-bezier(.65, 0, .35, 1) forwards; }
+@keyframes gibi-pagina { from { transform: translateX(110vw) skewX(-12deg); } to { transform: translateX(-90vw) skewX(-12deg); } }
+
+/* ---------- Edição especial secreta (digitar "gibi" ou 5 toques no "#1" da capa) ---------- */
+/* o filtro vai no conteúdo (não no body, que quebraria o menu e os botões fixos) e uma camada leve por cima faz o papel velho */
+html.edicao-rara :is(.hero-conteudo, main, .gibi-fim, .contracapa, .rodape-ramos) { filter: sepia(.5) saturate(.7) contrast(.95); }
+html.edicao-rara::after { content: ""; position: fixed; inset: 0; z-index: 99; pointer-events: none; background: radial-gradient(ellipse at center, transparent 55%, rgba(120,80,20,.22) 100%), radial-gradient(circle, rgba(120,90,40,.08) 1px, transparent 1.4px) 0 0 / 5px 5px; }
+.selo-rara { position: fixed; z-index: 100; right: 16px; bottom: 90px; display: grid; justify-items: center; padding: 10px 14px 8px; border: 3px solid #0b101b; border-radius: 50% / 40%; background: #ffe14d; color: #0b101b; box-shadow: 4px 4px 0 #0b101b; transform: rotate(-10deg); cursor: var(--cursor-mao, pointer); }
+.selo-rara[hidden] { display: none; }
+.selo-rara b { font: 400 1.35rem/1 "Bangers", Impact, sans-serif; letter-spacing: .06em; text-transform: uppercase; }
+.selo-rara small { font: 600 .56rem "DM Mono", monospace; }
+
+/* ---------- Preços dos projetos como etiqueta de gibi antigo, que descola o cantinho no mouse ---------- */
+.projeto-preco .pp-promo:not([hidden]), .mini-projeto-preco .pp-promo:not([hidden]) { position: relative; padding: 5px 12px 4px; border: 2px solid #0b101b; border-radius: 6px; background: #ffe14d; color: #0b101b; font-weight: 600; box-shadow: 3px 3px 0 #0b101b; transform: rotate(-2deg); }
+.projeto-preco .pp-promo b, .mini-projeto-preco .pp-promo b { color: #4a85e2; font: 400 1.25rem/1 "Bangers", Impact, sans-serif; letter-spacing: .03em; text-shadow: none; }
+.projeto-preco .pp-promo::after, .mini-projeto-preco .pp-promo::after { content: ""; position: absolute; top: -2px; right: -2px; width: 0; height: 0; border-radius: 0 4px 0 0; background: linear-gradient(225deg, #11192a 50%, #d9bd36 50%); box-shadow: -1px 1px 2px rgba(0,0,0,.3); transition: width .2s ease, height .2s ease; }
+@media (hover: hover) { .card-projeto:hover .pp-promo::after, .mini-projeto:hover .pp-promo::after { width: 16px; height: 16px; } }

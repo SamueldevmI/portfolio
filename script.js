@@ -923,14 +923,19 @@ carregarStatsGithub();
         const nivel = niveis[Number(slider.value)];
         rotuloComplexidade.textContent = nivel.nome;
         slider.setAttribute("aria-valuetext", nivel.nome);
-        if (nivel.mult === 1) {
-            valorEl.textContent = `a partir de R$ ${base}`;
-        } else {
-            const preco = Math.round((base * nivel.mult) / 5) * 5;
-            valorEl.textContent = `por volta de R$ ${preco}`;
+        const preco = nivel.mult === 1 ? base : Math.round((base * nivel.mult) / 5) * 5;
+        const prefixo = nivel.mult === 1 ? "a partir de" : "por volta de";
+        // o preço fica em duas linhas no estouro amarelo ("a partir de" pequeno, o valor grande) e pula quando muda
+        if (valorEl.textContent.replace(/\s+/g, " ").trim() !== `${prefixo} R$ ${preco}`) {
+            valorEl.innerHTML = `<small>${prefixo}</small> R$\u00a0${preco}`;
+            const estouro = valorEl.closest(".calc-resultado");
+            if (estouro && !prefereMenosMovimento) { estouro.classList.remove("pulou"); void estouro.offsetWidth; estouro.classList.add("pulou"); }
         }
+        raiz.querySelectorAll(".calc-niveis span").forEach((s) => s.classList.toggle("is-ativo", s.dataset.nivel === slider.value));
         cta.dataset.orcamentoTipo = tipoEl.dataset.tipo;
     }
+    // tocar no nome do nível também escolhe ("Simples / Médio / Avançado" embaixo do medidor)
+    raiz.querySelectorAll(".calc-niveis span").forEach((s) => s.addEventListener("click", () => { slider.value = s.dataset.nivel; atualizar(); }));
 
     botoesTipo.forEach((botao) => {
         botao.addEventListener("click", () => {
