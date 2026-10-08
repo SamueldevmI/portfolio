@@ -448,12 +448,13 @@ dialog::backdrop { background: rgba(15, 9, 24, .78); -webkit-backdrop-filter: bl
 .recorte { position: relative; padding: 30px 32px 24px; border-radius: 4px; background: radial-gradient(120% 90% at 30% 20%, #f4ead6, #dfcfae); box-shadow: 0 22px 44px rgba(0, 0, 0, .45); color: #3a2b1f; rotate: .8deg; }
 .recorte::before { content: ""; position: absolute; inset: 0; border-radius: inherit; background: radial-gradient(rgba(90, 60, 30, .12) 1px, transparent 1.4px) 0 0 / 5px 5px; pointer-events: none; }
 .recorte::after { content: ""; position: absolute; top: -12px; left: 50%; width: 110px; height: 26px; translate: -50% 0; rotate: -3deg; background: rgba(205, 180, 255, .75); box-shadow: 0 2px 6px rgba(0, 0, 0, .2); }
-.recorte-jornal { margin-bottom: 14px; padding-bottom: 8px; border-bottom: 3px double #3a2b1f; font: 400 1.25rem var(--gotica); text-align: center; }
+/* frases pequenas na serifa (a gótica fecha o miolo das letras em tamanho pequeno e vira borrão); a gótica fica só no nome da loja e nas iniciais grandes */
+.recorte-jornal { margin-bottom: 14px; padding-bottom: 8px; border-bottom: 3px double #3a2b1f; font: 700 clamp(.88rem, 3.6vw, 1.05rem)/1.3 var(--serifa); font-variant: small-caps; letter-spacing: .04em; text-align: center; text-wrap: balance; }
 .recorte .eyebrow { color: #8a5a2b; }
 .recorte .titulo { color: #2a1d14; }
 .recorte .titulo::after { color: #b07a2a; }
 .sobre .recorte p { color: #4a3a2c; }
-.sobre-assinatura { color: #9a3d6b !important; font: 400 1.7rem var(--gotica); }
+.sobre-assinatura { color: #9a3d6b !important; font: italic 600 1.6rem var(--serifa); }
 .sobre-sonho { color: #8a5a2b !important; font: italic 700 1.3rem/1.3 var(--serifa); }
 .insta { color: #9a3d6b; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
 .rodape .insta { color: var(--rosa); }
@@ -1064,7 +1065,7 @@ html.varinha :is(input[type="text"], input[type="search"], textarea) { cursor: t
 .carta-item-arte { display: grid; width: 48px; aspect-ratio: 1; padding: 5px; border: 2px solid var(--tinta); border-radius: 10px; }
 .carta-item-arte > :is(.arte, .foto) { width: 100%; height: 100%; }
 .carta-total { margin: 0 0 6px; font-weight: 700; }
-.carta-assina { margin: 12px 0 0; color: #9a3d6b; font: 400 1.4rem var(--gotica); }
+.carta-assina { margin: 12px 0 0; color: #9a3d6b; font: italic 600 1.4rem var(--serifa); }
 .selo-cera { position: relative; z-index: 2; display: grid; place-items: center; width: 84px; height: 84px; margin: 0 auto -42px; border-radius: 50% 46% 52% 48%; background: radial-gradient(circle at 38% 35%, #d2486b, var(--vinho) 55%, #5e1022); box-shadow: 0 6px 16px rgba(0, 0, 0, .5), inset 0 -4px 8px rgba(0, 0, 0, .35); color: #f2b3c4; font-size: 1.8rem; }
 .selo-cera.quebrando { animation: selo-quebra .6s .3s ease-in both; }
 @keyframes selo-quebra { 40% { transform: scale(1.12) rotate(-6deg); } 100% { transform: translateY(-30px) rotate(25deg) scale(.6); opacity: 0; } }
