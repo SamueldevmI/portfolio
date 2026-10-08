@@ -263,7 +263,7 @@
     let ultimoPow = 0;
     document.addEventListener("pointerdown", (e) => {
         if (e.button !== 0) return;
-        const seletor = comMouse && e.pointerType === "mouse" ? "a, button, [role='button'], summary, .card-projeto" : ".botao-principal, .nav-cta, .orcamento-fixo";
+        const seletor = comMouse && e.pointerType === "mouse" ? "a, button, [role='button'], summary, .card-projeto" : ".botao-principal, .nav-cta, .orcamento-fixo, a[href*='wa.me/'], [data-orcamento-tipo]";
         if (!e.target.closest(seletor) || e.target.closest("input, textarea, select, .previa-site, .vitrine-palco")) return;
         const agora = performance.now();
         if (agora - ultimoPow < 160) return;
@@ -271,7 +271,11 @@
         const pow = document.createElement("span");
         pow.className = "gibi-pow";
         pow.setAttribute("aria-hidden", "true");
-        pow.textContent = ONOMATOPEIAS[Math.floor(Math.random() * ONOMATOPEIAS.length)];
+        // WhatsApp faz "ZAP!" (verde) e pedir orçamento faz "BORA!"; o resto sorteia
+        const zap = e.target.closest('a[href*="wa.me/"]'), bora = !zap && e.target.closest('[data-orcamento-tipo], .card-orcamento, .orcamento-fixo, a[href="#orcamento"]');
+        const lista = zap ? ["ZAP!", "PLIM!", "FIUUU!"] : bora ? ["BORA!", "FECHOU!", "VAMO!"] : ONOMATOPEIAS;
+        if (zap) pow.classList.add("pow-zap"); else if (bora) pow.classList.add("pow-bora");
+        pow.textContent = lista[Math.floor(Math.random() * lista.length)];
         pow.style.left = e.clientX + "px";
         pow.style.top = e.clientY + "px";
         pow.style.setProperty("--giro", (Math.random() * 24 - 12).toFixed(1) + "deg");
