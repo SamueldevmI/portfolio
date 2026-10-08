@@ -840,10 +840,11 @@ const CHAVE_ORIGEM = "es-origem";
     const de = (new URLSearchParams(location.search).get("de") || "").toLowerCase();
     if (ORIGENS_LOJA[de]) guardar(CHAVE_ORIGEM, { de, em: Date.now() });
 }
-const origemDaCliente = () => {
+const origemChave = () => {
     const o = ler(CHAVE_ORIGEM, null);
-    return o && ORIGENS_LOJA[o.de] && Date.now() - o.em < 30 * 24 * 60 * 60 * 1000 ? ORIGENS_LOJA[o.de] : "";
+    return o && ORIGENS_LOJA[o.de] && Date.now() - o.em < 30 * 24 * 60 * 60 * 1000 ? o.de : "";
 };
+const origemDaCliente = () => ORIGENS_LOJA[origemChave()] || "";
 
 function montarMensagem() {
     const linhas = [`${t("Oi! 🔮 Quero encomendar esta poção na")} ${LOJA.nome} 🖤`, "", `*${t("Ingredientes:")}*`];

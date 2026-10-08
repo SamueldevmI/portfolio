@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /* Gera as páginas feitas pra aparecer no Google e trazer gente nova:
      criacao-de-sites-campo-grande/index.html   ("criação de sites em Campo Grande")
-     dicas/index.html + 3 artigos curtos         (Google Maps, cardápio no Instagram × site, quanto custa um site)
+     dicas/index.html + artigos curtos (Google Maps, cardápio, preço de site, catálogo do WhatsApp, avaliações, iFood)
    Preço, prazo, extras e garantia vêm do servicos.js: mudou lá, rode de novo.
        node ferramentas/gerar-paginas-conteudo.js            (gera)
        node ferramentas/gerar-paginas-conteudo.js --conferir (só confere se está em dia; usado no CI) */
@@ -81,7 +81,9 @@ function pagina({ pasta, titulo, descricao, schemas, corpo, contar, largo }) {
     <meta property="og:title" content="${esc(titulo.split(" | ")[0])}">
     <meta property="og:description" content="${esc(descricao)}">
     <meta property="og:url" content="${url}">
-    <meta property="og:image" content="${BASE}imagem/og-image-v5.jpg">
+    <meta property="og:image" content="${BASE}imagem/og/${pasta.replace(/\//g, "-")}.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
     <link rel="icon" href="${"../".repeat(pasta.split("/").length)}favicon.svg" type="image/svg+xml">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -250,6 +252,88 @@ ${Object.values(S.EXTRAS).map((e) => `            <li><b>${esc(e.nome)}</b> (${R
         <div class="ct-caixa"><p><b>Quer o valor exato do seu?</b> <a href="../../monte.html">Monte o seu site</a> e veja o preço na hora, ou me chame no WhatsApp: a proposta sai em até 24h.</p></div>
 ${fim("Me conta o que você precisa que eu te mando o valor exato, sem compromisso.", "Oi, Samuel! Li quanto custa um site e queria um orçamento. Meu negócio é: ")}`,
     },
+    {
+        pasta: "dicas/catalogo-whatsapp-ou-site", data: "2026-10-09",
+        titulo: "Catálogo do WhatsApp Business ou site: qual usar?",
+        resumo: "O catálogo do WhatsApp Business é grátis e já resolve muita coisa. Veja quando ele basta e quando vale ter um site.",
+        corpo: () => `        <p class="ct-lead">O WhatsApp Business tem um <b>catálogo grátis</b>: você cadastra produto, foto e preço, e o cliente vê tudo sem sair da conversa. Pra muito negócio isso já é um ótimo começo. A pergunta é: quando ele deixa de ser suficiente?</p>
+        <table class="ct-tabela">
+            <thead><tr><th></th><th>Catálogo do WhatsApp</th><th>Site com cardápio ou vitrine</th></tr></thead>
+            <tbody>
+                <tr><th>Preço</th><td><b>Grátis</b></td><td>Pagamento único (a partir de ${R(P.pedidos.preco)} com pedido no WhatsApp)</td></tr>
+                <tr><th>Quem encontra</th><td>Quem já está conversando com você</td><td><b>Também quem procura no Google</b> e ainda não te conhece</td></tr>
+                <tr><th>Cara da marca</th><td>O visual do WhatsApp, igual pra todo mundo</td><td><b>Suas cores, sua logo</b>, seu jeito</td></tr>
+                <tr><th>Organizar muitos itens</th><td>Coleções simples</td><td>Filtro, busca, tamanhos, sabores e adicionais</td></tr>
+                <tr><th>Pedido</th><td>Carrinho dentro do WhatsApp</td><td>Carrinho que manda o pedido pronto pro seu WhatsApp</td></tr>
+            </tbody>
+        </table>
+        <h2>Quando o catálogo basta</h2>
+        <ul>
+            <li>Você tem <b>poucos produtos</b> e quase todo cliente já chega pelo WhatsApp.</li>
+            <li>Você está <b>começando</b> e quer testar antes de investir.</li>
+        </ul>
+        <h2>Quando vale ter um site</h2>
+        <ul>
+            <li>Você quer ser achado por <b>gente nova</b>, que procura "pizzaria perto de mim" ou "loja de roupa em Campo Grande".</li>
+            <li>Tem <b>muita variação</b>: tamanho, cor, sabor, adicional, borda recheada.</li>
+            <li>Quer um <b>link bonito</b> pra bio do Instagram, pro Google Maps e pros anúncios, com a cara do seu negócio.</li>
+        </ul>
+        <div class="ct-caixa">
+            <p><b>Dá pra usar os dois.</b> O site atrai e organiza; o pedido chega no mesmo WhatsApp de sempre. Ninguém precisa baixar nada, e você não paga taxa por pedido.</p>
+        </div>
+${fim("Me conta o que você vende que eu te digo se o catálogo já basta ou se vale um site.", "Oi, Samuel! Li sua dica sobre catálogo do WhatsApp e site. Meu negócio é: ")}`,
+    },
+    {
+        pasta: "dicas/avaliacoes-no-google", data: "2026-10-09",
+        titulo: "Como conseguir mais avaliações no Google (sem comprar nenhuma)",
+        resumo: "Avaliação é o que faz o cliente escolher você no mapa. Um jeito simples de pedir, a mensagem pronta e o que nunca fazer.",
+        corpo: () => `        <p class="ct-lead">Duas pizzarias lado a lado no Google Maps: uma com 4 avaliações, outra com 180. Em qual você pede? Avaliação é a prova de que outras pessoas confiaram em você, e dá pra conseguir mais sem gastar nada.</p>
+        <h2>Passo a passo</h2>
+        <ol class="ct-passos">
+            <li><b>Pegue o seu link de avaliação.</b> No Perfil da Empresa no Google, procure a opção de pedir avaliações e copie o link. Ainda não tem perfil? <a href="../aparecer-no-google-maps/">Veja como criar</a>.</li>
+            <li><b>Peça na hora certa:</b> logo depois de um atendimento que deu certo. Pedido entregue e elogiado, corte que o cliente gostou, cliente voltando pela terceira vez.</li>
+            <li><b>Mande pelo WhatsApp, com o link.</b> Quanto menos o cliente precisar procurar, mais ele avalia.</li>
+            <li><b>Deixe um QR Code no balcão</b> que abre direto a avaliação. Dá pra gerar grátis no <a href="../../qr/">gerador de QR Code</a> (escolha "Cardápio / site" e cole o link de avaliação).</li>
+            <li><b>Responda todas</b>, as boas e as ruins. Agradeça pelo nome e, nas ruins, mostre que resolveu. Quem lê a resposta também está decidindo.</li>
+        </ol>
+        <div class="ct-caixa">
+            <p><b>Mensagem pronta:</b> "Oi, [nome]! Que bom que você gostou 😊 Se puder, deixa uma avaliação pra gente no Google? Ajuda muito um negócio pequeno como o nosso: [link]"</p>
+        </div>
+        <h2>O que nunca fazer</h2>
+        <ul>
+            <li><b>Comprar avaliação</b> ou pedir pra amigo que nunca foi cliente: vai contra as regras do Google e pode derrubar o perfil.</li>
+            <li><b>Dar desconto em troca de avaliação:</b> as regras do Google também não permitem oferecer recompensa por avaliação.</li>
+            <li><b>Brigar na resposta.</b> Mesmo quando o cliente exagerou, responda com calma.</li>
+        </ul>
+${fim("Quer aparecer melhor no Google? O diagnóstico leva 1 minuto e mostra o que mais está te fazendo perder cliente.", "Oi, Samuel! Li sua dica sobre avaliações no Google e queria ajuda com o meu negócio: ")}`,
+    },
+    {
+        pasta: "dicas/site-ou-ifood", data: "2026-10-09",
+        titulo: "Site próprio ou iFood: onde a pizzaria lucra mais?",
+        resumo: "O app traz cliente novo, mas cobra por pedido. O site não cobra nada por pedido, mas precisa ser divulgado. Como usar cada um a seu favor.",
+        corpo: () => `        <p class="ct-lead">App de delivery e site próprio não são inimigos: cada um faz um trabalho diferente. O erro é deixar <b>todo</b> pedido passar pelo app, inclusive o do cliente que já te conhece.</p>
+        <table class="ct-tabela">
+            <thead><tr><th></th><th>App de delivery</th><th>Site próprio com pedido no WhatsApp</th></tr></thead>
+            <tbody>
+                <tr><th>Cliente novo</th><td><b>Ótimo</b>: muita gente procura direto no app</td><td>Depende de você divulgar (Instagram, Google Maps, balcão)</td></tr>
+                <tr><th>Custo por pedido</th><td>Comissão por pedido, que varia conforme o plano</td><td><b>Nenhum</b></td></tr>
+                <tr><th>Contato do cliente</th><td>Fica com o app</td><td><b>Fica com você</b>: dá pra avisar de promoção depois</td></tr>
+                <tr><th>Preço</th><td>Muita gente aumenta o preço no app pra cobrir a taxa</td><td>Você pode cobrar o preço de balcão</td></tr>
+            </tbody>
+        </table>
+        <h2>Faça a conta com os seus números</h2>
+        <p>Pegue quantos pedidos você faz por mês no app e quanto pagou de comissão no último extrato. Esse é o valor que sai do seu bolso pra vender pra quem, muitas vezes, <b>já era seu cliente</b>. Um exemplo só pra ilustrar: se a comissão fosse de R$ 8 por pedido, 300 pedidos no mês dariam R$ 2.400. Confira as taxas atuais do seu plano direto no portal do app.</p>
+        <h2>O jeito que funciona: usar os dois</h2>
+        <ul>
+            <li><b>No app:</b> pra ser descoberto por quem ainda não te conhece.</li>
+            <li><b>No seu canal:</b> divulgue o link do seu cardápio no Instagram, no Google Maps, no balcão e no status do WhatsApp, pra quem já é cliente pedir direto.</li>
+            <li><b>Ofereça um motivo:</b> preço de balcão, um brinde ou a borda recheada de graça pra quem pede pelo seu site.</li>
+        </ul>
+        <div class="ct-caixa">
+            <p><b>Cardápio com pedido no WhatsApp:</b> ${esc(P.pedidos.resumo)} A partir de <b>${R(P.pedidos.preco)}</b>, pagamento único, sem taxa por pedido. <a href="../../site-para-pizzaria/">Veja como fica pra pizzaria</a>.</p>
+        </div>
+${fim("Quer ver como ficaria o cardápio da sua pizzaria? A prévia é por minha conta.", "Oi, Samuel! Li sua dica sobre site e iFood e queria ver como ficaria o meu cardápio. Minha pizzaria é: ")}`,
+    },
 ];
 
 function paginaArtigo(a) {
@@ -281,7 +365,50 @@ ${fim("Quer ajuda com o seu? Me chama que eu te digo o que faria primeiro.", "Oi
     return { arquivo: "dicas/index.html", html: pagina({ pasta, titulo, descricao, schemas, corpo, contar: "Dicas" }) };
 }
 
-const paginas = [campoGrande(), indiceDicas(), ...ARTIGOS.map(paginaArtigo)];
+/* ---------- Bastidores: como este site foi feito (pra quem procura dev, não só pra dono de negócio) ---------- */
+function comoFoiFeito() {
+    const pasta = "como-foi-feito";
+    const titulo = "Como este site foi feito | Samuel Mickael";
+    const descricao = "Os bastidores do portfólio: trilha sonora tocada pelo navegador, gibi animado sem pesar no celular, páginas geradas de um arquivo de preços e testes automáticos.";
+    const schemas = [artigo("Como este site foi feito", descricao, pasta, "2026-10-09"), migalhas([["Samuel Mickael", BASE], ["Como este site foi feito", BASE + pasta + "/"]])];
+    const corpo = `        <a class="ct-voltar" href="../">← portfólio do Samuel</a>
+        <p class="ct-selo">Bastidores</p>
+        <h1>Como este site <em>foi feito</em></h1>
+        <p class="ct-lead">Por trás do gibi tem bastante engenharia. Se você é dono de negócio, pode pular esta página: ela é pra quem quer saber <b>como</b> eu trabalho por dentro (empresas, recrutadores e outros devs).</p>
+        <h2>Sem framework, sem servidor</h2>
+        <p>HTML, CSS e JavaScript puros, hospedados de graça no GitHub Pages. Nada pra instalar, nada pra pagar todo mês. É o mesmo jeito que eu entrego os sites dos clientes: rápido de abrir e barato de manter.</p>
+        <h2>A trilha sonora é tocada pelo navegador</h2>
+        <p>A música "Meia-noite" não é um arquivo de áudio: cada nota do piano, do grave e da batida é gerada na hora com <b>Web Audio</b>. Por isso ela não pesa no carregamento, muda de clima conforme a seção que você está lendo, fica mais lenta à noite e abaixa sozinha quando você começa a digitar. E só toca se você apertar o play.</p>
+        <h2>Gibi animado sem travar o celular</h2>
+        <ul>
+            <li>As animações só mexem em <b>posição e transparência</b>, que o celular faz sem esforço.</li>
+            <li>Quem pede "menos movimento" nas configurações do aparelho vê tudo parado.</li>
+            <li>As seções de baixo só são montadas quando chegam perto da tela, e os scripts que não precisam pra página aparecer chegam depois.</li>
+            <li>A versão em espanhol só é baixada se alguém aperta "ES".</li>
+        </ul>
+        <h2>Um arquivo de preços manda em tudo</h2>
+        <p>Preço, prazo, pacotes e extras ficam num arquivo só. Dele saem as páginas por ramo (pizzaria, barbearia…), as dicas, o "Monte seu site" e a proposta. Mudou um preço? Um comando gera tudo de novo, e um <b>teste automático no GitHub</b> confere, a cada mudança, se nenhuma página ficou com o valor antigo.</p>
+        <h2>Ferramentas feitas pra este site</h2>
+        <ul>
+            <li><b>Tema azul automático:</b> gerado a partir do vermelho, sem copiar estilo à mão.</li>
+            <li><b>Imagens de prévia:</b> o cartão que aparece quando você manda um link no WhatsApp é gerado por um script, uma imagem por página.</li>
+            <li><b>Foto em quadrinho:</b> feita numa ferramenta própria que roda no navegador.</li>
+            <li><b>QR Code grátis:</b> gerado no próprio celular de quem usa; nada do que a pessoa digita sai do aparelho.</li>
+        </ul>
+        <h2>Em números</h2>
+        <p>Mais de 400 alterações salvas desde 5 de agosto de 2026, todas abertas no <a href="https://github.com/SamueldevmI/portfolio" target="_blank" rel="noopener noreferrer">GitHub</a>.</p>
+        <section class="ct-fim">
+            <p>Quer esse cuidado no seu projeto, ou conversar sobre uma vaga?</p>
+            <div class="ct-acoes">
+                <a class="botao botao-principal" href="${esc(zap("Oi, Samuel! Vi como seu site foi feito e queria conversar."))}" target="_blank" rel="noopener noreferrer">Chamar no WhatsApp</a>
+                <a class="botao botao-secundario" href="../curriculo.html">Ver o currículo</a>
+                <a class="botao botao-secundario" href="https://github.com/SamueldevmI" target="_blank" rel="noopener noreferrer">GitHub</a>
+            </div>
+        </section>`;
+    return { arquivo: pasta + "/index.html", html: pagina({ pasta, titulo, descricao, schemas, corpo, contar: "Como este site foi feito" }) };
+}
+
+const paginas = [campoGrande(), indiceDicas(), ...ARTIGOS.map(paginaArtigo), comoFoiFeito()];
 const conferir = process.argv.includes("--conferir");
 let desatualizadas = 0;
 for (const { arquivo, html } of paginas) {

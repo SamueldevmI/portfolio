@@ -327,7 +327,7 @@
             <div class="st-topo"><span class="st-avatar"></span><div><b class="st-nome"></b><span class="st-tag"></span></div><button type="button" class="st-fechar" aria-label="Fechar">✕</button></div>
             <div class="st-palco"><img class="st-fundo" alt=""><img class="st-img" alt=""></div>
             <p class="st-frase"></p>
-            <div class="st-acoes"><a class="st-testar" target="_blank" rel="noopener noreferrer">Testar agora ↗</a><a class="st-quero" target="_blank" rel="noopener noreferrer">💬 Quero um assim</a></div>
+            <div class="st-acoes"><a class="st-testar" href="./" target="_blank" rel="noopener noreferrer">Testar agora ↗</a><a class="st-quero" href="https://wa.me/5567996034205" target="_blank" rel="noopener noreferrer">💬 Quero um assim</a></div>
             <button type="button" class="st-lado st-voltar" aria-label="Anterior"></button><button type="button" class="st-lado st-avancar" aria-label="Próximo"></button>`);
         ov.hidden = true;
         ov.setAttribute("role", "dialog");

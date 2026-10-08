@@ -10,7 +10,7 @@
     <meta property="og:title" content="QR Code grátis pro seu WhatsApp ou cardápio">
     <meta property="og:description" content="Gere e baixe um QR Code num cartão pronto pra imprimir e colar no balcão. Sem cadastro.">
     <meta property="og:url" content="https://samueldevmi.github.io/portfolio/qr/">
-    <meta property="og:image" content="https://samueldevmi.github.io/portfolio/imagem/og-image-v5.jpg">
+    <meta property="og:image" content="https://samueldevmi.github.io/portfolio/imagem/og/qr.jpg">
     <link rel="icon" href="../favicon.svg" type="image/svg+xml">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -51,6 +51,16 @@
         .qr-fim a { color: var(--acento-texto); font-weight: 600; }
         @media (max-width: 760px) { .qr-grade { grid-template-columns: 1fr; } }
         @media print { body * { visibility: hidden; } .qr-saida canvas, .qr-saida canvas * { visibility: visible; } .qr-saida canvas { position: fixed; left: 0; top: 0; width: 100%; max-width: none; border: 0; box-shadow: none; } }
+        .qr-escolha { margin: 0; padding: 0; border: 0; }
+        .qr-escolha legend { margin-bottom: 6px; color: var(--muted); font-size: .9rem; }
+        .qr-opcoes { display: flex; flex-wrap: wrap; gap: 8px; }
+        .qr-opcoes button { padding: 8px 12px 6px; border: 2px solid #111111; border-radius: 6px; background: #f3ead6; color: #111111; font: 600 .86rem "Space Grotesk", sans-serif; cursor: pointer; box-shadow: 3px 3px 0 #111111; }
+        .qr-opcoes button[aria-pressed="true"] { background-color: #ffe14d; transform: rotate(-2deg); }
+        .qr-cores button { padding-left: 34px; background-image: linear-gradient(135deg, var(--c1) 50%, var(--c2) 50%); background-size: 18px 18px; background-repeat: no-repeat; background-position: 8px center; background-color: #f3ead6; }
+        .qr-cores button[aria-pressed="true"] { background-color: #ffe14d; }
+        .qr-sua-cor { display: flex !important; flex-direction: row !important; align-items: center; gap: 10px; margin-top: 10px; }
+        .qr-sua-cor input { width: 52px; height: 36px; padding: 0; border: 2px solid #111111; border-radius: 6px; background: none; cursor: pointer; }
+        .qr-dica-formato { margin: 0; color: var(--muted); font-size: .86rem; }
         [hidden] { display: none !important; }
     </style>
 </head>
@@ -73,6 +83,26 @@
                 <label data-campo="link" hidden>Link do cardápio ou site<input id="qrLink" inputmode="url" maxlength="300" placeholder="ex.: https://meucardapio.com.br"></label>
                 <label data-campo="insta" hidden>@ do Instagram<input id="qrInsta" maxlength="40" placeholder="ex.: @pizzariadojoao"></label>
                 <label>Frase em cima do QR Code<input id="qrChamada" maxlength="28" value="Peça pelo WhatsApp!"></label>
+                <fieldset class="qr-escolha">
+                    <legend>Formato</legend>
+                    <div class="qr-opcoes" data-grupo="formato">
+                        <button type="button" data-valor="cartao" aria-pressed="true">Cartão de balcão</button>
+                        <button type="button" data-valor="adesivo" aria-pressed="false">Adesivo redondo</button>
+                        <button type="button" data-valor="mesa" aria-pressed="false">Display de mesa</button>
+                    </div>
+                </fieldset>
+                <fieldset class="qr-escolha">
+                    <legend>Cores</legend>
+                    <div class="qr-opcoes qr-cores" data-grupo="paleta">
+                        <button type="button" data-valor="gibi" aria-pressed="true" style="--c1:#f3ead6;--c2:#c41f2a">Gibi</button>
+                        <button type="button" data-valor="vermelho" aria-pressed="false" style="--c1:#c41f2a;--c2:#ffe14d">Vermelho</button>
+                        <button type="button" data-valor="verde" aria-pressed="false" style="--c1:#e6f7ec;--c2:#25d366">Verde</button>
+                        <button type="button" data-valor="azul" aria-pressed="false" style="--c1:#e8f0ff;--c2:#1d4ed8">Azul</button>
+                        <button type="button" data-valor="pb" aria-pressed="false" style="--c1:#ffffff;--c2:#111111">Preto e branco</button>
+                    </div>
+                    <label class="qr-sua-cor">A cor do seu negócio <input type="color" id="qrCor" value="#c41f2a"></label>
+                </fieldset>
+                <p class="qr-dica-formato" id="qrDicaFormato">Imprima, recorte e cole no balcão.</p>
                 <p class="qr-erro" id="qrErro" role="alert" hidden></p>
             </form>
             <div class="qr-saida">
@@ -128,54 +158,118 @@
                 return linhas;
             }
 
-            function desenhar() {
-                const d = destino();
-                const W = tela.width, H = tela.height;
-                // papel amarelado com retícula e moldura de gibi
-                ctx.fillStyle = "#f3ead6"; ctx.fillRect(0, 0, W, H);
-                ctx.fillStyle = "rgba(139,26,26,.10)";
-                for (let y = 10; y < H; y += 22) for (let x = (y / 22) % 2 ? 21 : 10; x < W; x += 22) { ctx.beginPath(); ctx.arc(x, y, 3, 0, Math.PI * 2); ctx.fill(); }
-                ctx.lineWidth = 16; ctx.strokeStyle = "#111111"; ctx.strokeRect(24, 24, W - 48, H - 48);
-                // chamada num balão amarelo
+            /* Cores do cartão (o QR em si fica sempre preto no branco: é o que todo celular lê melhor) */
+            const PALETAS = {
+                gibi:     { papel: "#f3ead6", pontos: "rgba(139,26,26,.10)", tinta: "#111111", faixa: "#ffe14d", nome: "#c41f2a", texto: "#4a4030" },
+                vermelho: { papel: "#c41f2a", pontos: "rgba(0,0,0,.16)",     tinta: "#111111", faixa: "#ffe14d", nome: "#ffffff", texto: "#ffe9e9" },
+                verde:    { papel: "#e6f7ec", pontos: "rgba(18,140,74,.13)", tinta: "#0f3d24", faixa: "#25d366", nome: "#128c4a", texto: "#24543a" },
+                azul:     { papel: "#e8f0ff", pontos: "rgba(29,78,216,.12)", tinta: "#0b1f4d", faixa: "#7cc4ff", nome: "#1d4ed8", texto: "#2b3f6b" },
+                pb:       { papel: "#ffffff", pontos: "rgba(0,0,0,.07)",     tinta: "#111111", faixa: "#ffffff", nome: "#111111", texto: "#333333" },
+            };
+            const FORMATOS = { cartao: [1200, 1600], adesivo: [1200, 1200], mesa: [1200, 1700] };
+            let paleta = "gibi", formato = "cartao";
+            const cores = () => { const c = Object.assign({}, PALETAS[paleta]); const sua = $("qrCor").dataset.usar === "1" ? $("qrCor").value : ""; if (sua) { c.nome = sua; c.faixa = sua; } return c; };
+            // texto claro ou escuro em cima da faixa, conforme a cor dela
+            const tintaSobre = (hex) => { const n = parseInt(hex.slice(1), 16), r = n >> 16, g = (n >> 8) & 255, b = n & 255; return (r * 299 + g * 587 + b * 114) / 1000 > 150 ? "#111111" : "#ffffff"; };
+
+            function fundo(w, h, c) {
+                ctx.fillStyle = c.papel; ctx.fillRect(0, 0, w, h);
+                ctx.fillStyle = c.pontos;
+                for (let y = 10; y < h; y += 22) for (let x = (y / 22) % 2 ? 21 : 10; x < w; x += 22) { ctx.beginPath(); ctx.arc(x, y, 3, 0, Math.PI * 2); ctx.fill(); }
+            }
+            function faixa(cx, cy, texto, tamanho, maxw, c) {
                 ctx.save();
-                ctx.translate(W / 2, 190); ctx.rotate(-0.03);
-                ctx.font = "400 104px Bangers, Impact, sans-serif";
-                const chamada = (campoChamada.value.trim() || CHAMADAS[tipo]).toUpperCase();
-                const lc = Math.min(W - 160, ctx.measureText(chamada).width + 80);
-                ctx.fillStyle = "#111111"; ctx.fillRect(-lc / 2 + 12, -82, lc, 150);
-                ctx.fillStyle = "#ffe14d"; ctx.fillRect(-lc / 2, -94, lc, 150);
-                ctx.lineWidth = 8; ctx.strokeRect(-lc / 2, -94, lc, 150);
-                ctx.fillStyle = "#111111"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
-                ctx.fillText(chamada, 0, -16, lc - 50);
+                ctx.translate(cx, cy); ctx.rotate(-0.03);
+                ctx.font = `400 ${tamanho}px Bangers, Impact, sans-serif`;
+                const lc = Math.min(maxw, ctx.measureText(texto).width + tamanho * .8), alt = tamanho * 1.45;
+                ctx.fillStyle = c.tinta; ctx.fillRect(-lc / 2 + 12, -alt / 2 + 12, lc, alt);
+                ctx.fillStyle = c.faixa; ctx.fillRect(-lc / 2, -alt / 2, lc, alt);
+                ctx.lineWidth = 8; ctx.strokeStyle = c.tinta; ctx.strokeRect(-lc / 2, -alt / 2, lc, alt);
+                ctx.fillStyle = tintaSobre(c.faixa); ctx.textAlign = "center"; ctx.textBaseline = "middle";
+                ctx.fillText(texto, 0, tamanho * .06, lc - tamanho * .5);
                 ctx.restore();
-                // QR Code
-                const q0 = 180, tamanho = W - 2 * q0, qy = 330;
-                ctx.fillStyle = "#111111"; ctx.fillRect(q0 - 24 + 16, qy - 24 + 16, tamanho + 48, tamanho + 48);
-                ctx.fillStyle = "#ffffff"; ctx.fillRect(q0 - 24, qy - 24, tamanho + 48, tamanho + 48);
-                ctx.lineWidth = 8; ctx.strokeStyle = "#111111"; ctx.strokeRect(q0 - 24, qy - 24, tamanho + 48, tamanho + 48);
+            }
+            function qrEm(x, y, tamanho, d, c) {
+                const borda = Math.round(tamanho * .045);
+                ctx.fillStyle = c.tinta; ctx.fillRect(x - borda + 14, y - borda + 14, tamanho + 2 * borda, tamanho + 2 * borda);
+                ctx.fillStyle = "#ffffff"; ctx.fillRect(x - borda, y - borda, tamanho + 2 * borda, tamanho + 2 * borda);
+                ctx.lineWidth = 8; ctx.strokeStyle = c.tinta; ctx.strokeRect(x - borda, y - borda, tamanho + 2 * borda, tamanho + 2 * borda);
                 if (d.url) {
                     const qr = qrcode(0, "M");
                     qr.addData(d.url);
                     qr.make();
                     const n = qr.getModuleCount(), m = tamanho / n;
                     ctx.fillStyle = "#111111";
-                    for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (qr.isDark(r, c)) ctx.fillRect(Math.floor(q0 + c * m), Math.floor(qy + r * m), Math.ceil(m), Math.ceil(m));
-                    erro.hidden = true;
+                    for (let r = 0; r < n; r++) for (let col = 0; col < n; col++) if (qr.isDark(r, col)) ctx.fillRect(Math.floor(x + col * m), Math.floor(y + r * m), Math.ceil(m), Math.ceil(m));
                 } else {
-                    ctx.fillStyle = "#999999"; ctx.font = "600 44px 'Space Grotesk', Arial, sans-serif"; ctx.textAlign = "center";
-                    quebrar(d.erro, tamanho - 80).forEach((l, i) => ctx.fillText(l, W / 2, qy + tamanho / 2 + i * 56));
-                    erro.textContent = d.erro; erro.hidden = !document.activeElement || !document.activeElement.closest("#qrForm");
+                    ctx.fillStyle = "#999999"; ctx.font = "600 40px 'Space Grotesk', Arial, sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "alphabetic";
+                    quebrar(d.erro, tamanho - 60).forEach((l, i) => ctx.fillText(l, x + tamanho / 2, y + tamanho / 2 + i * 50));
                 }
-                // nome do negócio
-                const nome = $("qrNome").value.trim() || "Seu negócio";
+            }
+            function nomeEm(cx, y, tamanho, maxw, c) {
+                const nome = ($("qrNome").value.trim() || "Seu negócio").toUpperCase();
                 ctx.textAlign = "center"; ctx.textBaseline = "alphabetic";
-                ctx.font = "400 120px Bangers, Impact, sans-serif";
-                ctx.fillStyle = "#111111"; ctx.fillText(nome.toUpperCase(), W / 2 + 6, qy + tamanho + 196, W - 160);
-                ctx.fillStyle = "#c41f2a"; ctx.fillText(nome.toUpperCase(), W / 2, qy + tamanho + 190, W - 160);
-                ctx.font = "500 34px 'DM Mono', monospace"; ctx.fillStyle = "#4a4030";
-                ctx.fillText("aponte a câmera do celular 📷", W / 2, qy + tamanho + 260);
-                ctx.font = "500 26px 'DM Mono', monospace"; ctx.fillStyle = "#6b5a3c";
-                ctx.fillText("QR grátis: samueldevmi.github.io/portfolio/qr", W / 2, H - 60);
+                ctx.font = `400 ${tamanho}px Bangers, Impact, sans-serif`;
+                ctx.fillStyle = c.tinta; ctx.fillText(nome, cx + 6, y + 6, maxw);
+                ctx.fillStyle = c.nome; ctx.fillText(nome, cx, y, maxw);
+            }
+            function rodape(cx, y, tamanho, c) {
+                ctx.textAlign = "center"; ctx.font = `500 ${tamanho}px 'DM Mono', monospace`; ctx.fillStyle = c.texto;
+                ctx.fillText("QR grátis: samueldevmi.github.io/portfolio/qr", cx, y);
+            }
+
+            function desenhar() {
+                const d = destino(), c = cores();
+                const [W, H] = FORMATOS[formato];
+                if (tela.width !== W || tela.height !== H) { tela.width = W; tela.height = H; }
+                const chamada = (campoChamada.value.trim() || CHAMADAS[tipo]).toUpperCase();
+                ctx.clearRect(0, 0, W, H);
+                if (formato === "cartao") {
+                    // cartão de balcão em pé
+                    fundo(W, H, c);
+                    ctx.lineWidth = 16; ctx.strokeStyle = c.tinta; ctx.strokeRect(24, 24, W - 48, H - 48);
+                    faixa(W / 2, 176, chamada, 104, W - 160, c);
+                    const q0 = 180, tamanho = W - 2 * q0, qy = 330;
+                    qrEm(q0, qy, tamanho, d, c);
+                    nomeEm(W / 2, qy + tamanho + 190, 120, W - 160, c);
+                    ctx.font = "500 34px 'DM Mono', monospace"; ctx.fillStyle = c.texto; ctx.textAlign = "center";
+                    ctx.fillText("aponte a câmera do celular 📷", W / 2, qy + tamanho + 260);
+                    rodape(W / 2, H - 60, 26, c);
+                } else if (formato === "adesivo") {
+                    // adesivo redondo pra embalagem: fora do círculo fica transparente no PNG
+                    ctx.save();
+                    ctx.beginPath(); ctx.arc(W / 2, H / 2, W / 2 - 8, 0, Math.PI * 2); ctx.clip();
+                    fundo(W, H, c);
+                    ctx.restore();
+                    ctx.lineWidth = 16; ctx.strokeStyle = c.tinta; ctx.beginPath(); ctx.arc(W / 2, H / 2, W / 2 - 16, 0, Math.PI * 2); ctx.stroke();
+                    faixa(W / 2, 220, chamada, 80, 760, c);
+                    const tamanho = 560;
+                    qrEm((W - tamanho) / 2, 330, tamanho, d, c);
+                    nomeEm(W / 2, 1010, 92, 700, c);
+                    rodape(W / 2, 1080, 20, c);
+                } else {
+                    // display de mesa: dobra no meio; a metade de cima vai de cabeça pra baixo pra ler dos dois lados
+                    const metade = H / 2;
+                    const painel = () => {
+                        fundo(W, metade, c);
+                        ctx.lineWidth = 14; ctx.strokeStyle = c.tinta; ctx.strokeRect(22, 22, W - 44, metade - 44);
+                        faixa(W / 2, 128, chamada, 84, W - 160, c);
+                        const tamanho = 440;
+                        qrEm(110, 250, tamanho, d, c);
+                        ctx.save(); ctx.textAlign = "center";
+                        nomeEm(860, 430, 84, 420, c);
+                        ctx.font = "500 30px 'DM Mono', monospace"; ctx.fillStyle = c.texto;
+                        ctx.fillText("aponte a câmera 📷", 860, 500);
+                        ctx.restore();
+                        rodape(W / 2, metade - 50, 20, c);
+                    };
+                    ctx.save(); ctx.translate(W, metade); ctx.rotate(Math.PI); painel(); ctx.restore();
+                    ctx.save(); ctx.translate(0, metade); painel(); ctx.restore();
+                    ctx.setLineDash([18, 14]); ctx.lineWidth = 3; ctx.strokeStyle = "rgba(0,0,0,.45)";
+                    ctx.beginPath(); ctx.moveTo(0, metade); ctx.lineTo(W, metade); ctx.stroke(); ctx.setLineDash([]);
+                }
+                if (d.url) erro.hidden = true;
+                else { erro.textContent = d.erro; erro.hidden = !document.activeElement || !document.activeElement.closest("#qrForm"); }
                 return d;
             }
 
@@ -187,6 +281,15 @@
                 if (!campoChamada.value.trim() || campoChamada.value === antes) campoChamada.value = CHAMADAS[tipo];
                 desenhar();
             }));
+            const DICAS = { cartao: "Imprima, recorte e cole no balcão.", adesivo: "Imprima em papel adesivo e cole na embalagem ou na sacola. Fora do círculo fica transparente.", mesa: "Imprima, dobre na linha tracejada e deixe em pé na mesa: dá pra ler dos dois lados." };
+            document.querySelectorAll(".qr-opcoes button").forEach((b) => b.addEventListener("click", () => {
+                const grupo = b.parentElement.dataset.grupo;
+                b.parentElement.querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+                if (grupo === "formato") { formato = b.dataset.valor; $("qrDicaFormato").textContent = DICAS[formato]; }
+                else { paleta = b.dataset.valor; $("qrCor").dataset.usar = "0"; }
+                desenhar();
+            }));
+            $("qrCor").addEventListener("input", () => { $("qrCor").dataset.usar = "1"; desenhar(); });
             $("qrForm").addEventListener("input", desenhar);
             $("qrForm").addEventListener("submit", (e) => e.preventDefault());
 

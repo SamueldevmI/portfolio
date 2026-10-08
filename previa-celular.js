@@ -53,12 +53,12 @@
                             <header class="previa-topo"><span class="previa-logo">${esc(iniciais(marca))}</span><b>${esc(marca)}</b><span class="previa-menu" aria-hidden="true"><i></i><i></i><i></i></span></header>
                             <section class="previa-hero">
                                 <div class="previa-capa" aria-hidden="true"><span class="previa-capa-emoji">${r.emoji}</span><span class="previa-nota">★ 4,9</span><span class="previa-aberto">aberto agora</span></div>
-                                <h4>${esc(r.chamada)}</h4><p>${esc(r.sub)}</p><button type="button" class="previa-botao">${esc(r.botao)}</button>
+                                <strong class="previa-h">${esc(r.chamada)}</strong><p>${esc(r.sub)}</p><button type="button" class="previa-botao">${esc(r.botao)}</button>
                             </section>
                             <section class="previa-secao"><h5>${esc(r.secao)}</h5>${r.itens.map(([n, v]) => `<div class="previa-item"><span class="previa-miniatura" aria-hidden="true">${r.emoji}</span><span class="previa-item-nome">${esc(n)}</span><b>${esc(v)}</b></div>`).join("")}</section>
                             <section class="previa-secao"><h5>${esc(r.info)}</h5><div class="previa-chips">${r.chips.map((c) => `<button type="button">${esc(c)}</button>`).join("")}</div></section>
                             <footer class="previa-rodape">📍 Campo Grande - MS · ⭐ 4,9 no Google</footer>
-                            <a class="previa-whats" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="${ICONE_WHATS}"/></svg></a>
+                            <span class="previa-whats" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="${ICONE_WHATS}"/></svg></span>
                         </div>
                         <span class="previa-home" aria-hidden="true"></span>
                     </div>

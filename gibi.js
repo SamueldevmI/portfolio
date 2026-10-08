@@ -53,6 +53,7 @@
         trama.className = "gibi-pb-trama";
         trama.setAttribute("aria-hidden", "true");
         document.body.appendChild(trama);
+        selo.removeAttribute("aria-hidden"); // vira botão de verdade: precisa ser visto por leitor de tela
         selo.setAttribute("role", "button");
         selo.setAttribute("tabindex", "0");
         selo.setAttribute("aria-pressed", "false");
