@@ -43,3 +43,20 @@ jobs:
       - run: node ferramentas/gerar-tema-azul.js --conferir
       - run: node ferramentas/gerar-paginas-ramo.js --conferir
       - run: node ferramentas/gerar-paginas-conteudo.js --conferir
+
+  # O site aberto num navegador de verdade, como o Chrome do Android e o Safari do iPhone:
+  # sem marca de conflito, sem erro de JavaScript, sem arquivo faltando, sem link quebrado.
+  site:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        navegador: [chromium, webkit]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npm install --no-save --no-package-lock playwright@1.56.1
+      - run: npx playwright install --with-deps ${{ matrix.navegador }}
+      - run: node ferramentas/testar-site.js --navegador ${{ matrix.navegador }}
