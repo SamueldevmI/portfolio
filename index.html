@@ -61,7 +61,7 @@
             } catch (e) { /* sem armazenamento */ }
             document.documentElement.dataset.tema = tema;
             if (tema === "azul") document.querySelector('meta[name="theme-color"]').content = "#0e1422";
-            document.write('<link rel="stylesheet" id="folhaTema" href="' + (tema === "azul" ? "style-azul.css" : "style.css") + '?v=20261007anuncios">');
+            document.write('<link rel="stylesheet" id="folhaTema" href="' + (tema === "azul" ? "style-azul.css" : "style.css") + '?v=20261007calculadora">');
         })();
         /* Idioma: detectado cedo (antes do resto da página rodar) só pra avisar efeitos como a
            digitação do texto do hero, que senão sobrescreveriam a tradução feita pelo idioma.js. */
@@ -75,7 +75,7 @@
             document.documentElement.dataset.idioma = idioma;
         })();
     </script>
-    <noscript><link rel="stylesheet" href="style.css?v=20261007anuncios"></noscript>
+    <noscript><link rel="stylesheet" href="style.css?v=20261007calculadora"></noscript>
     <title id="tituloPagina">Samuel Mickael | Desenvolvedor Web &amp; Mobile</title>
     <script type="application/ld+json">
     {
@@ -182,15 +182,16 @@
             <div class="calc-rapida" aria-label="Calculadora rápida de orçamento">
                 <p class="calc-titulo">🔮 Quanto custaria o seu?</p>
                 <div class="calc-tipos" role="group" aria-label="Tipo de projeto">
-                    <button type="button" class="calc-tipo is-ativo" data-tipo="site" data-base="250">Site</button>
-                    <button type="button" class="calc-tipo" data-tipo="sistema" data-base="300">Sistema</button>
-                    <button type="button" class="calc-tipo" data-tipo="automacao" data-base="250">Automação</button>
+                    <button type="button" class="calc-tipo is-ativo" data-tipo="site" data-base="250"><i aria-hidden="true">🌐</i><b>Site</b><small>pra aparecer e vender</small></button>
+                    <button type="button" class="calc-tipo" data-tipo="sistema" data-base="300"><i aria-hidden="true">🗂️</i><b>Sistema</b><small>pra organizar o negócio</small></button>
+                    <button type="button" class="calc-tipo" data-tipo="automacao" data-base="250"><i aria-hidden="true">⚡</i><b>Automação</b><small>pra parar de repetir tarefa</small></button>
                 </div>
                 <label class="calc-slider">
                     <span>Complexidade: <b id="calcComplexidadeRotulo">Simples</b></span>
                     <input type="range" id="calcComplexidade" min="0" max="2" value="0" step="1">
                 </label>
-                <p class="calc-resultado">Estimativa: <strong id="calcValor">a partir de R$&nbsp;250</strong></p>
+                <div class="calc-niveis" aria-hidden="true"><span data-nivel="0">Simples</span><span data-nivel="1">Médio</span><span data-nivel="2">Avançado</span></div>
+                <p class="calc-resultado">Estimativa: <strong id="calcValor"><small>a partir de</small> R$&nbsp;250</strong></p>
                 <button type="button" class="botao botao-secundario calc-cta" id="calcCta" data-orcamento-tipo="site">Pedir esse orçamento →</button>
                 <p class="calc-aviso">Só um ponto de partida — o valor exato vem na proposta, depois que eu entender sua ideia.</p>
             </div>
@@ -844,21 +845,21 @@
     </div>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-    <script src="estatisticas.js?v=20261007anuncios" defer></script>
+    <script src="estatisticas.js?v=20261007calculadora" defer></script>
     <script src="servicos.js?v=20261002" defer></script>
-    <script src="previa-celular.js?v=20261007anuncios" defer></script>
-    <script src="filme-celular.js?v=20261007anuncios" defer></script>
-    <script src="script.js?v=20261007anuncios" defer></script>
-    <script src="antes-depois.js?v=20261007anuncios" defer></script>
-<script src="acabamento.js?v=20261007anuncios" defer></script>
-<script src="ficha.js?v=20261007anuncios" defer></script>
-<script src="gibi.js?v=20261007anuncios" defer></script>
-<script src="idioma.js?v=20261007anuncios" defer></script>
+    <script src="previa-celular.js?v=20261007calculadora" defer></script>
+    <script src="filme-celular.js?v=20261007calculadora" defer></script>
+    <script src="script.js?v=20261007calculadora" defer></script>
+    <script src="antes-depois.js?v=20261007calculadora" defer></script>
+<script src="acabamento.js?v=20261007calculadora" defer></script>
+<script src="ficha.js?v=20261007calculadora" defer></script>
+<script src="gibi.js?v=20261007calculadora" defer></script>
+<script src="idioma.js?v=20261007calculadora" defer></script>
 <script>
     /* Scripts que a página não precisa pra aparecer: o mobile.js só baixa em tela de toque (no computador
        ele não faz nada) e a música só depois que a página terminou de carregar. */
     (function () {
-        var versao = "?v=20261007anuncios";
+        var versao = "?v=20261007calculadora";
         function carregar(arquivo) { var s = document.createElement("script"); s.src = arquivo + versao; document.body.appendChild(s); }
         var toque = matchMedia("(pointer: coarse)").matches;
         // o pedido de "instalar app" pode chegar antes do mobile.js: fica guardado pra ele usar

@@ -2803,7 +2803,7 @@ html.secoes-montadas main > section.secao, html.secoes-montadas main > .secao { 
 .gibi-pb-trama { position: fixed; inset: 0; z-index: 9000; pointer-events: none; opacity: 0; background-image: radial-gradient(circle, #000000 1px, transparent 1.3px); background-size: 4px 4px; mix-blend-mode: multiply; transition: opacity .3s ease; }
 html.gibi-pb body { filter: grayscale(1) contrast(1.12); }
 html.gibi-pb .gibi-pb-trama { opacity: .15; }
-@media (hover: hover) { .botao-principal { position: relative; } .botao-principal::after { content: "\2605"; position: absolute; top: -10px; right: -10px; width: 22px; height: 22px; display: grid; place-items: center; border: 2px solid #111111; border-radius: 50%; background: #ffe14d; color: #111111; font-size: .7rem; line-height: 1; opacity: 0; transform: scale(.4) rotate(-20deg); transition: opacity .2s ease, transform .25s cubic-bezier(.3, 1.5, .4, 1); pointer-events: none; } .botao-principal:hover::after { opacity: 1; transform: scale(1) rotate(8deg); } }
+@media (hover: hover) { .botao-principal { position: relative; } .botao-principal::after { content: "\2605"; position: absolute; top: -10px; right: -10px; width: 22px; height: 22px; display: grid; place-items: center; border: 2px solid #0b101b; border-radius: 50%; background: #ffe14d; color: #0b101b; font-size: .7rem; line-height: 1; opacity: 0; transform: scale(.4) rotate(-20deg); transition: opacity .2s ease, transform .25s cubic-bezier(.3, 1.5, .4, 1); pointer-events: none; } .botao-principal:hover::after { opacity: 1; transform: scale(1) rotate(8deg); } }
 .gibi-dogear { position: fixed; right: 0; bottom: 0; z-index: 55; width: 46px; height: 46px; pointer-events: none; background: linear-gradient(135deg, transparent 50%, #ffe14d 50%); border-top: 2px solid #0b101b; border-left: 2px solid #0b101b; box-shadow: -3px -3px 10px rgba(0,0,0,.2); transform-origin: bottom right; transform: rotate(-6deg) scale(.001); opacity: 0; transition: transform .55s cubic-bezier(.2, .9, .3, 1.1), opacity .3s ease; }
 .gibi-dogear.vira { transform: rotate(-10deg) scale(1); opacity: 1; }
 @media (max-width: 720px) { .gibi-dogear { width: 32px; height: 32px; } }
@@ -3092,3 +3092,46 @@ header.hero { overflow-x: clip; }
 #servicos .lista-servicos article .anuncio-chamada { text-shadow: 2px 2px 0 #0b101b; }
 .contracapa .cc-titulo { text-shadow: 4px 4px 0 #0b101b; }
 .contracapa .cc-botao { text-shadow: none; }
+
+/* ---------- "Quanto custaria o seu?" como máquina de orçamento de gibi: cartões de papel pros tipos,
+   medidor grosso com os níveis escritos e o preço num estouro amarelo que pula quando muda ---------- */
+.hero-conteudo .calc-rapida { display: grid; grid-template-columns: minmax(0, 1fr) 290px; grid-template-areas: "titulo res" "tipos res" "slider res" "niveis cta" "aviso aviso"; align-items: center; gap: 12px 34px; max-width: none; margin-top: 30px; padding: 22px 26px 18px; border: 3px solid #0b101b; border-radius: 10px;
+    background: radial-gradient(circle, rgba(46,126,255,.12) 1.3px, transparent 1.7px) 0 0 / 10px 10px, #11192a; box-shadow: 0 0 0 3px #eff1f5, 9px 9px 0 3px rgba(46,126,255,.45); }
+.calc-rapida .calc-titulo { grid-area: titulo; justify-self: start; margin: 0; padding: 6px 14px 5px; border: 3px solid #0b101b; background: #ffe14d; color: #0b101b; font: 400 1.35rem/1 "Bangers", Impact, sans-serif; letter-spacing: .05em; text-transform: uppercase; box-shadow: 3px 3px 0 #0b101b; transform: rotate(-1.5deg); }
+.calc-rapida .calc-tipos { grid-area: tipos; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 6px 0 4px; }
+.calc-rapida .calc-tipo { display: grid; justify-items: start; gap: 3px; padding: 12px 12px 10px; border: 3px solid #0b101b; border-radius: 8px; background: #f3ead6; color: #0b101b; text-align: left; box-shadow: 4px 4px 0 #0b101b; transform: rotate(-.6deg); transition: transform .15s ease, background-color .15s ease, box-shadow .15s ease; }
+.calc-rapida .calc-tipo:nth-child(2) { transform: rotate(.5deg); }
+.calc-rapida .calc-tipo i { font-size: 1.45rem; font-style: normal; line-height: 1; }
+.calc-rapida .calc-tipo b { font: 400 1.3rem/1 "Bangers", Impact, sans-serif; letter-spacing: .04em; text-transform: uppercase; }
+.calc-rapida .calc-tipo small { color: #4a4030; font: 600 .72rem/1.25 "Space Grotesk", sans-serif; }
+@media (hover: hover) { .calc-rapida .calc-tipo:hover { background: #fff7d6; transform: translate(-2px, -2px) rotate(0deg); box-shadow: 6px 6px 0 #0b101b; } }
+.calc-rapida .calc-tipo.is-ativo { border-color: #0b101b; background: #ffe14d; color: #0b101b; box-shadow: 4px 4px 0 #2e7eff; transform: rotate(0deg); }
+.calc-rapida .calc-tipo:focus-visible { outline: 3px solid var(--cyan); outline-offset: 3px; }
+.calc-rapida .calc-slider { grid-area: slider; margin: 4px 0 0; color: var(--muted); font-size: .86rem; }
+.calc-rapida .calc-slider b { color: #ffe14d; }
+.calc-rapida input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; height: 16px; margin-top: 10px; border: 3px solid #0b101b; border-radius: 999px; background: repeating-linear-gradient(-45deg, #2e7eff 0 8px, #4a85e2 8px 16px); box-shadow: 0 0 0 2px #eff1f5; cursor: var(--cursor-mao, pointer); }
+.calc-rapida input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 30px; height: 30px; border: 3px solid #0b101b; border-radius: 50%; background: #ffe14d; box-shadow: 2px 2px 0 #0b101b; }
+.calc-rapida input[type="range"]::-moz-range-thumb { width: 24px; height: 24px; border: 3px solid #0b101b; border-radius: 50%; background: #ffe14d; box-shadow: 2px 2px 0 #0b101b; }
+.calc-rapida input[type="range"]:focus-visible { outline: 3px solid var(--cyan); outline-offset: 4px; }
+.calc-niveis { grid-area: niveis; display: flex; justify-content: space-between; margin-top: -2px; }
+.calc-niveis span { padding: 3px 8px; border-radius: 4px; color: var(--muted); font: 400 1rem/1 "Bangers", Impact, sans-serif; letter-spacing: .05em; text-transform: uppercase; cursor: var(--cursor-mao, pointer); transition: background-color .15s ease, color .15s ease; }
+.calc-niveis span.is-ativo { background: #ffe14d; color: #0b101b; }
+.calc-rapida .calc-resultado { grid-area: res; justify-self: center; display: grid; place-content: center; justify-items: center; width: 270px; height: 220px; margin: 0; padding: 44px; border-radius: 0; background: #ffe14d; color: #0b101b; font: 400 1.05rem/1 "Bangers", Impact, sans-serif; letter-spacing: .06em; text-align: center; text-transform: uppercase; text-shadow: none; filter: drop-shadow(4px 4px 0 #0b101b);
+    clip-path: polygon(50% 0%, 60% 13%, 76% 4%, 80% 21%, 98% 18%, 92% 36%, 100% 50%, 90% 62%, 97% 80%, 78% 79%, 72% 97%, 58% 85%, 46% 100%, 37% 84%, 20% 94%, 19% 76%, 1% 74%, 10% 58%, 0% 44%, 12% 33%, 6% 15%, 25% 18%, 31% 2%, 42% 14%); }
+.calc-rapida .calc-resultado strong { display: grid; justify-items: center; margin-top: 4px; color: #4583e8; font: 400 2.6rem/1 "Bangers", Impact, sans-serif; letter-spacing: .03em; text-shadow: 2px 2px 0 #0b101b; }
+.calc-rapida .calc-resultado strong small { color: #0b101b; font: 600 .68rem/1.2 "DM Mono", monospace; letter-spacing: .04em; text-shadow: none; text-transform: none; }
+.calc-rapida .calc-resultado.pulou { animation: calc-pula .45s cubic-bezier(.2, 1.6, .4, 1); }
+@keyframes calc-pula { 0% { transform: scale(.82) rotate(-6deg); } 60% { transform: scale(1.08) rotate(3deg); } 100% { transform: none; } }
+.calc-rapida .calc-cta { grid-area: cta; width: 100%; min-height: 50px; border: 3px solid #0b101b; border-radius: 8px; background: #224fb0; color: #ffffff; font: 400 1.25rem/1 "Bangers", Impact, sans-serif; letter-spacing: .05em; text-transform: uppercase; box-shadow: 4px 4px 0 #0b101b; }
+@media (hover: hover) { .calc-rapida .calc-cta:hover { background: #5086dc; transform: translate(-2px, -2px); box-shadow: 6px 6px 0 #0b101b; } }
+.calc-rapida .calc-aviso { grid-area: aviso; margin: 4px 0 0; font-size: .74rem; }
+@media (max-width: 860px) {
+    .hero-conteudo .calc-rapida { grid-template-columns: minmax(0, 1fr); grid-template-areas: "titulo" "tipos" "slider" "niveis" "res" "cta" "aviso"; gap: 12px; padding: 18px 16px 14px; box-shadow: 0 0 0 3px #eff1f5, 6px 6px 0 3px rgba(46,126,255,.45); }
+    .calc-rapida .calc-tipos { gap: 8px; }
+    .calc-rapida .calc-tipo { padding: 10px 8px 8px; }
+    .calc-rapida .calc-tipo b { font-size: 1.05rem; }
+    .calc-rapida .calc-tipo small { font-size: .64rem; }
+    .calc-rapida .calc-resultado { width: 220px; height: 172px; padding: 34px; }
+    .calc-rapida .calc-resultado strong { font-size: 2.05rem; }
+}
+@media (prefers-reduced-motion: reduce) { .calc-rapida .calc-tipo, .calc-niveis span { transition: none; } .calc-rapida .calc-resultado.pulou { animation: none; } }
