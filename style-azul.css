@@ -2811,6 +2811,13 @@ html.gibi-pb .gibi-pb-trama { opacity: .15; }
 @media (prefers-reduced-motion: reduce) { .gibi-pb-trama { transition: none; } .botao-principal::after { transition: none; } }
 @media print { .gibi-legenda, .gibi-nota, .gibi-fim, .gibi-continua, .gibi-pow, .gibi-velocidade, .gibi-explosao { display: none !important; } .gibi-pb-trama, .botao-principal::after { display: none !important; } }
 
+/* ---------- Atividade do GitHub vira um painel de gibi: moldura grossa de nanquim, a mesma
+   trama de pontos (halftone) dos outros quadros da edição e sombra de adesivo. ---------- */
+.github-atividade { position: relative; border: 3px solid #0b101b; border-radius: 10px;
+    background: radial-gradient(circle, rgba(46,126,255,.14) 1.3px, transparent 1.7px) 0 0 / 10px 10px, rgba(17,25,42,.92);
+    box-shadow: 0 0 0 3px #eff1f5, 8px 8px 0 3px rgba(46,126,255,.45); }
+@media (max-width: 999px) { .github-atividade { box-shadow: 0 0 0 2px #eff1f5, 5px 5px 0 2px rgba(46,126,255,.45); } }
+
 /* ---------- Orçamento em quadrinho: a caixa vira um quadro de HQ, a pergunta vira balão de fala
    e as respostas viram botões de gibi (contorno de nanquim, sombra dura, amarelo no mouse). ---------- */
 #orcamento .orcamento-caixa { border: 3px solid #0b101b; border-radius: 8px; animation: none;
