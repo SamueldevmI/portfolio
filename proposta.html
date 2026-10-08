@@ -14,8 +14,8 @@
         (function () {
             var azul = false;
             try { azul = localStorage.getItem("portfolio-tema") === "azul"; } catch (e) { /* sem armazenamento */ }
-            document.documentElement.dataset.tema = azul ? "azul" : "vermelho";
-            document.write('<link rel="stylesheet" href="' + (azul ? "style-azul.css" : "style.css") + '">');
+            document.documentElement.dataset.tema = (function(){try{var t=localStorage.getItem("portfolio-tema");return /^(azul|cerrado|neon|gibi85)$/.test(t)?t:"vermelho"}catch(e){return "vermelho"}})();
+            document.write('<link rel="stylesheet" href="' + ((function(){try{var t=localStorage.getItem("portfolio-tema");return /^(azul|cerrado|neon|gibi85)$/.test(t)?"style-"+t+".css":"style.css"}catch(e){return "style.css"}})()) + '">');
         })();
     </script>
     <noscript><link rel="stylesheet" href="style.css"></noscript>
@@ -56,6 +56,8 @@
         .pp-acoes .botao { flex: 1 1 150px; justify-content: center; text-align: center; cursor: var(--cursor-mao); }
         .pp-validade { margin-top: 6px; font-size: .86rem; text-align: center; }
         .pp-validade.vencida { color: var(--urgencia); }
+        .pp-falta { display: inline-block; margin-left: 6px; padding: 2px 9px 1px; border: 2px solid #111111; border-radius: 999px; background: #ffe14d; color: #111111; font-weight: 700; white-space: nowrap; }
+        .pp-falta-urgente { background: #ff2a3d; color: #ffffff; }
         .pp-vazio { margin-top: 40px; text-align: center; }
         @media (max-width: 560px) {
             .pp-numeros { grid-template-columns: 1fr 1fr; }
@@ -164,7 +166,14 @@
             if (obs) { $("ppObs").textContent = obs; $("ppObsCaixa").hidden = false; }
 
             const vencida = ate && ate < new Date();
-            $("ppValidade").textContent = ate ? (vencida ? `Essa proposta venceu em ${ate.toLocaleDateString("pt-BR")}, mas me chama que eu vejo se ainda dá pra manter o valor.` : `Valor garantido até ${ate.toLocaleDateString("pt-BR")}.`) : "";
+            if (ate && !vencida) {
+                // contagem visível: o prazo é real (o valor vale até essa data), então mostra quanto falta
+                const hoje = new Date(); hoje.setHours(0, 0, 0, 0);
+                const dias = Math.round((new Date(ate.getFullYear(), ate.getMonth(), ate.getDate()) - hoje) / 864e5);
+                const quando = ate.toLocaleDateString("pt-BR", { weekday: "long", day: "2-digit", month: "2-digit" });
+                const falta = dias <= 0 ? "último dia" : dias === 1 ? "falta 1 dia" : `faltam ${dias} dias`;
+                $("ppValidade").innerHTML = `Valor garantido até <b>${quando}</b> <span class="pp-falta${dias <= 1 ? " pp-falta-urgente" : ""}">${falta}</span>`;
+            } else $("ppValidade").textContent = ate ? `Essa proposta venceu em ${ate.toLocaleDateString("pt-BR")}, mas me chama que eu vejo se ainda dá pra manter o valor.` : "";
             if (vencida) $("ppValidade").classList.add("vencida");
 
             const whats = (texto) => `https://wa.me/${WHATS}?text=${encodeURIComponent(texto)}`;

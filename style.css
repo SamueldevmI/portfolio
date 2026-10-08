@@ -2719,7 +2719,8 @@ html.secoes-montadas main > section.secao, html.secoes-montadas main > .secao { 
 }
 @media (prefers-reduced-motion: reduce) { .gibi-explosao { animation: none; } }
 .gibi-pb-trama { position: fixed; inset: 0; z-index: 9000; pointer-events: none; opacity: 0; background-image: radial-gradient(circle, #000000 1px, transparent 1.3px); background-size: 4px 4px; mix-blend-mode: multiply; transition: opacity .3s ease; }
-html.gibi-pb body { filter: grayscale(1) contrast(1.12); }
+/* no <html>, não no <body>: filtro no body vira "moldura" dos elementos fixos (voltar ao topo, botão de orçamento, avisos) e eles iam parar no fim da página; o elemento raiz é a exceção da regra */
+html.gibi-pb { filter: grayscale(1) contrast(1.12); }
 html.gibi-pb .gibi-pb-trama { opacity: .15; }
 @media (hover: hover) { .botao-principal { position: relative; } .botao-principal::after { content: "\2605"; position: absolute; top: -10px; right: -10px; width: 22px; height: 22px; display: grid; place-items: center; border: 2px solid #111111; border-radius: 50%; background: #ffe14d; color: #111111; font-size: .7rem; line-height: 1; opacity: 0; transform: scale(.4) rotate(-20deg); transition: opacity .2s ease, transform .25s cubic-bezier(.3, 1.5, .4, 1); pointer-events: none; } .botao-principal:hover::after { opacity: 1; transform: scale(1) rotate(8deg); } }
 .gibi-dogear { position: fixed; right: 0; bottom: 0; z-index: 55; width: 46px; height: 46px; pointer-events: none; background: linear-gradient(135deg, transparent 50%, #ffe14d 50%); border-top: 2px solid #111111; border-left: 2px solid #111111; box-shadow: -3px -3px 10px rgba(0,0,0,.2); transform-origin: bottom right; transform: rotate(-6deg) scale(.001); opacity: 0; transition: transform .55s cubic-bezier(.2, .9, .3, 1.1), opacity .3s ease; }
@@ -3382,3 +3383,35 @@ a.gibi-continua:focus-visible { outline: 3px solid #ffe14d; outline-offset: 3px;
     /* tarja "continua" mais colada no fim da seção */
     a.gibi-continua { margin-top: 12px; }
 }
+
+/* ---------- Versão leve (botão no rodapé): sem animação, sem música, sem efeito de mouse ---------- */
+html.modo-simples *, html.modo-simples *::before, html.modo-simples *::after { animation-duration: .001ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; transition-delay: 0s !important; scroll-behavior: auto !important; }
+html.modo-simples :is(.reticula-lente, .faisca-rastro, .gibi-velocidade, .gibi-pow, .gibi-pagina, .figurinha-brilho) { display: none !important; }
+.aviso-simples { position: fixed; z-index: 70; left: 50%; top: 84px; padding: 9px 16px 7px; border: 3px solid #111111; border-radius: 999px; background: #ffe14d; color: #111111; font: 700 .9rem "Space Grotesk", sans-serif; box-shadow: 4px 4px 0 #111111; cursor: var(--cursor-mao, pointer); opacity: 0; transform: translate(-50%, -10px); transition: opacity .3s ease, transform .3s ease; white-space: nowrap; }
+.aviso-simples.visivel { opacity: 1; transform: translate(-50%, 0); }
+@media print { .aviso-simples { display: none !important; } }
+
+/* ---------- Menu de temas (script.js): 5 opções com amostra de cor ---------- */
+.tema-menu { position: absolute; z-index: 60; top: calc(100% + 8px); right: 0; width: min(290px, calc(100vw - 32px)); padding: 12px; border: 3px solid #111111; border-radius: 10px; background: #f3ead6; color: #111111; box-shadow: 6px 6px 0 #111111; }
+.tema-menu[hidden] { display: none; }
+.tema-menu-titulo { margin: 0 0 8px; font: 400 1.15rem/1 "Bangers", Impact, sans-serif; letter-spacing: .05em; }
+.tema-menu button { display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto; column-gap: 10px; align-items: center; width: 100%; margin: 0 0 6px; padding: 8px 10px; border: 2px solid #111111; border-radius: 8px; background: #ffffff; color: #111111; text-align: left; cursor: var(--cursor-mao, pointer); }
+.tema-menu button:last-child { margin-bottom: 0; }
+.tema-menu button b { grid-column: 2; font: 700 .95rem "Space Grotesk", sans-serif; }
+.tema-menu button small { grid-column: 2; color: #4a4030; font-size: .78rem; }
+.tema-menu button[aria-checked="true"] { background: #ffe14d; box-shadow: 3px 3px 0 #111111; }
+.tema-menu button:focus-visible { outline: 3px solid #111111; outline-offset: 2px; }
+.tema-amostra { grid-row: 1 / span 2; display: flex; }
+.tema-amostra i { width: 16px; height: 30px; border: 2px solid #111111; margin-left: -2px; } /* manter-cor */
+.tema-amostra i:first-child { margin-left: 0; border-radius: 4px 0 0 4px; }
+.tema-amostra i:last-child { border-radius: 0 4px 4px 0; }
+@media print { .tema-menu { display: none !important; } }
+
+/* ---------- Cor pelo ramo (antes-depois.js): quem escolhe um ramo vê o destaque do site na cor dele ---------- */
+html[data-ramo-cor="pizzaria"] { --cyan: #e8452c; --cyan-rgb: 232, 69, 44; --acento-texto: #ff8a6e; --pink: #ffc93c; --pink-rgb: 255, 201, 60; } /* manter-cor */
+html[data-ramo-cor="barbearia"] { --cyan: #d4a24c; --cyan-rgb: 212, 162, 76; --acento-texto: #e8c27a; --pink: #c9a46a; --pink-rgb: 201, 164, 106; } /* manter-cor */
+html[data-ramo-cor="loja"] { --cyan: #a26bff; --cyan-rgb: 162, 107, 255; --acento-texto: #c4a1ff; --pink: #ff6fb5; --pink-rgb: 255, 111, 181; } /* manter-cor */
+html[data-ramo-cor="salao"] { --cyan: #ff5fa2; --cyan-rgb: 255, 95, 162; --acento-texto: #ff9cc6; --pink: #c94a7e; --pink-rgb: 201, 74, 126; } /* manter-cor */
+html[data-ramo-cor="academia"] { --cyan: #ff6a1a; --cyan-rgb: 255, 106, 26; --acento-texto: #ff9d5c; --pink: #ffd23f; --pink-rgb: 255, 210, 63; } /* manter-cor */
+html[data-ramo-cor="clinica"] { --cyan: #2bb5a3; --cyan-rgb: 43, 181, 163; --acento-texto: #6fd8c9; --pink: #7cc4ff; --pink-rgb: 124, 196, 255; } /* manter-cor */
+html[data-ramo-cor] .botao-principal { transition: background-color .4s ease, border-color .4s ease; }

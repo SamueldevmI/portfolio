@@ -31,6 +31,19 @@
             var conexao = navigator.connection || {};
             var leve = forcado === "1" || (forcado !== "0" && (matchMedia("(pointer:coarse)").matches || conexao.saveData === true || /(^|-)(2g|3g)$/.test(conexao.effectiveType || "")));
             if (leve) document.documentElement.classList.add("modo-leve");
+            /* Versão leve escolhida pela pessoa (botão no rodapé): além do modo leve, a página toda passa a
+               responder como se o aparelho pedisse "menos movimento", então todo efeito que já respeita isso desliga. */
+            var simples = forcado === "simples";
+            try { simples = simples || localStorage.getItem("portfolio-simples") === "1"; } catch (e) { /* sem armazenamento */ }
+            if (simples) {
+                document.documentElement.classList.add("modo-leve", "modo-simples");
+                var original = window.matchMedia.bind(window);
+                window.matchMedia = function (q) {
+                    if (/prefers-reduced-motion\s*:\s*reduce/.test(q)) return original("all");
+                    if (/prefers-reduced-motion\s*:\s*no-preference/.test(q)) return original("not all");
+                    return original(q);
+                };
+            }
         })();
         /* Edição de gibi: a classe que esconde balão/legenda pra animar ao rolar precisa entrar
            ANTES da primeira pintura — senão o balão aparece visível um instante e depois "pisca"
@@ -41,6 +54,7 @@
             }
         })();
     </script>
+    <!-- GOOGLE SEARCH CONSOLE: a tag de verificação (google-site-verification) entra aqui. Passo a passo em ferramentas/passo-a-passo-google.md -->
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="imagem/apple-touch-icon.png">
     <link rel="manifest" href="manifest.json">
@@ -50,20 +64,26 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bangers&family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bangers&family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap"></noscript>
     <script>
-        /* Tema: vermelho (padrão) ou azul. Escolhido antes de desenhar a página, pra não piscar a cor errada.
-           O style-azul.css é gerado a partir do style.css (ferramentas/gerar-tema-azul.js). */
+        /* Tema: vermelho (padrão), azul, cerrado, neon ou gibi85. Escolhido antes de desenhar a página, pra não
+           piscar a cor errada. Os style-<tema>.css são gerados a partir do style.css (ferramentas/gerar-tema-azul.js). */
         (function () {
             var tema = "vermelho";
             try {
                 var salvo = localStorage.getItem("portfolio-tema");
                 if (!salvo && localStorage.getItem("tema") === "aranha") salvo = "azul"; // quem tinha escolhido o antigo tema Aranha
-                if (salvo === "azul") tema = "azul";
+                if (/^(azul|cerrado|neon|gibi85)$/.test(salvo)) tema = salvo;
             } catch (e) { /* sem armazenamento */ }
             document.documentElement.dataset.tema = tema;
             var hora = new Date().getHours();
             document.documentElement.dataset.periodo = hora >= 5 && hora < 12 ? "manha" : hora >= 12 && hora < 18 ? "tarde" : "noite";
+<<<<<<< HEAD
+            var barra = { azul: "#0e1422", cerrado: "#1e1510", neon: "#0d0b1e", gibi85: "#1b1815" }[tema];
+            if (barra) document.querySelector('meta[name="theme-color"]').content = barra;
+            document.write('<link rel="stylesheet" id="folhaTema" href="' + (tema === "vermelho" ? "style.css" : "style-" + tema + ".css") + '?v=20261009cores">');
+=======
             if (tema === "azul") document.querySelector('meta[name="theme-color"]').content = "#0e1422";
-            document.write('<link rel="stylesheet" id="folhaTema" href="' + (tema === "azul" ? "style-azul.css" : "style.css") + '?v=20261009faxina3">');
+            document.write('<link rel="stylesheet" id="folhaTema" href="' + (tema === "azul" ? "style-azul.css" : "style.css") + '?v=20261009pb3">');
+>>>>>>> origin/main
         })();
         /* Idioma: detectado cedo (antes do resto da página rodar) só pra avisar efeitos como a
            digitação do texto do hero, que senão sobrescreveriam a tradução feita pelo idioma.js. */
@@ -77,7 +97,11 @@
             document.documentElement.dataset.idioma = idioma;
         })();
     </script>
-    <noscript><link rel="stylesheet" href="style.css?v=20261009faxina3"></noscript>
+<<<<<<< HEAD
+    <noscript><link rel="stylesheet" href="style.css?v=20261009cores"></noscript>
+=======
+    <noscript><link rel="stylesheet" href="style.css?v=20261009pb3"></noscript>
+>>>>>>> origin/main
     <title id="tituloPagina">Samuel Mickael | Desenvolvedor Web &amp; Mobile</title>
     <script type="application/ld+json">
     {
@@ -856,7 +880,7 @@
     </section>
 
     <nav class="rodape-ramos" aria-label="Sites por ramo">Sites para <a href="./site-para-pizzaria/">pizzaria</a> · <a href="./site-para-barbearia/">barbearia</a> · <a href="./site-para-loja-de-roupa/">loja de roupa</a> · <a href="./site-para-salao-de-beleza/">salão de beleza</a> · <a href="./site-para-academia/">academia</a> · <a href="./site-para-clinica/">clínica</a> · <a href="./monte.html">monte o seu</a> · <a href="./teste.html">teste de 1 minuto</a> · <a href="./como-trabalho.html">como eu trabalho</a><br><a href="./criacao-de-sites-campo-grande/">criação de sites em Campo Grande</a> · <a href="./dicas/">dicas grátis</a> · <a href="./qr/">QR Code grátis pro seu negócio</a> · <a href="./como-foi-feito/">como este site foi feito</a> · <a href="./para-agencias/">pra agências</a> · <a href="./cartao/">cartão de visita</a></nav>
-    <footer>© <span id="ano"></span> Samuel Mickael. Feito com dedicação. · <a href="https://github.com/SamueldevmI" target="_blank" rel="me noopener noreferrer">GitHub</a> · <a class="link-linkedin" href="https://www.linkedin.com/in/samuelrondon-dev/?utm_source=portfolio&utm_medium=footer&utm_campaign=site" target="_blank" rel="me noopener noreferrer" aria-label="LinkedIn de Samuel Mickael"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>LinkedIn</a> · <button type="button" id="botaoTour" class="link-rodape">Tour rápido</button>
+    <footer>© <span id="ano"></span> Samuel Mickael. Feito com dedicação. · <a href="https://github.com/SamueldevmI" target="_blank" rel="me noopener noreferrer">GitHub</a> · <a class="link-linkedin" href="https://www.linkedin.com/in/samuelrondon-dev/?utm_source=portfolio&utm_medium=footer&utm_campaign=site" target="_blank" rel="me noopener noreferrer" aria-label="LinkedIn de Samuel Mickael"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>LinkedIn</a> · <button type="button" id="botaoTour" class="link-rodape">Tour rápido</button> · <button type="button" id="botaoSimples" class="link-rodape">⚡ Versão leve</button>
     </footer>
     <a class="orcamento-fixo" href="#orcamento">Quero meu orçamento</a>
     <a class="voltar-topo" href="#inicio" aria-label="Voltar ao topo"><span class="voltar-topo-seta" aria-hidden="true">↑</span></a>
@@ -924,29 +948,76 @@
     </div>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-    <script src="estatisticas.js?v=20261009faxina3" defer></script>
+<<<<<<< HEAD
+    <script src="estatisticas.js?v=20261009cores" defer></script>
     <script src="servicos.js?v=20261002" defer></script>
-    <script src="previa-celular.js?v=20261009faxina3" defer></script>
-    <script src="filme-celular.js?v=20261009faxina3" defer></script>
+    <script src="previa-celular.js?v=20261009cores" defer></script>
+    <script src="filme-celular.js?v=20261009cores" defer></script>
     <script src="depoimentos.js?v=20261007" defer></script>
-    <script src="script.js?v=20261009faxina3" defer></script>
-    <script src="antes-depois.js?v=20261009faxina3" defer></script>
+    <script src="script.js?v=20261009cores" defer></script>
+    <script src="antes-depois.js?v=20261009cores" defer></script>
     <!-- espanhol sob demanda: o botão ES é leve e o idioma.js só baixa quando alguém pede (os scripts acima se redesenham no "idiomaMudou") -->
-    <script src="idioma-leve.js?v=20261009faxina3" defer></script>
+    <script src="idioma-leve.js?v=20261009cores" defer></script>
+=======
+    <script src="estatisticas.js?v=20261009pb3" defer></script>
+    <script src="servicos.js?v=20261002" defer></script>
+    <script src="previa-celular.js?v=20261009pb3" defer></script>
+    <script src="filme-celular.js?v=20261009pb3" defer></script>
+    <script src="depoimentos.js?v=20261007" defer></script>
+    <script src="script.js?v=20261009pb3" defer></script>
+    <script src="antes-depois.js?v=20261009pb3" defer></script>
+    <!-- espanhol sob demanda: o botão ES é leve e o idioma.js só baixa quando alguém pede (os scripts acima se redesenham no "idiomaMudou") -->
+    <script src="idioma-leve.js?v=20261009pb3" defer></script>
+>>>>>>> origin/main
 <script>
     /* Scripts que a página não precisa pra aparecer: o mobile.js só baixa em tela de toque (no computador
        ele não faz nada) e a música só depois que a página terminou de carregar. */
     (function () {
-        var versao = "?v=20261009faxina3";
+<<<<<<< HEAD
+        var versao = "?v=20261009cores";
+=======
+        var versao = "?v=20261009pb3";
+>>>>>>> origin/main
         function carregar(arquivo) { var s = document.createElement("script"); s.src = arquivo + versao; s.async = false; document.body.appendChild(s); }
         var toque = matchMedia("(pointer: coarse)").matches;
         // o pedido de "instalar app" pode chegar antes do mobile.js: fica guardado pra ele usar
         if (toque) addEventListener("beforeinstallprompt", function (e) { e.preventDefault(); window.pedidoInstalar = e; });
         // o mobile.js também espera a página aparecer: assim não disputa o processador com a primeira tela
-        function depois() { (window.requestIdleCallback || setTimeout)(function () { carregar("acabamento.js"); carregar("ficha.js"); carregar("gibi.js"); carregar("visual.js"); carregar("figurinhas.js"); if (toque) carregar("mobile.js"); carregar("musica.js"); }, { timeout: 1500 }); }
+        function depois() { (window.requestIdleCallback || setTimeout)(function () { carregar("acabamento.js"); carregar("ficha.js"); carregar("gibi.js"); carregar("visual.js"); carregar("figurinhas.js"); if (toque) carregar("mobile.js"); if (!document.documentElement.classList.contains("modo-simples")) carregar("musica.js"); }, { timeout: 1500 }); }
         if (document.readyState === "complete") depois(); else addEventListener("load", depois, { once: true });
     })();
 </script>
 
+<script>
+    /* Versão leve: o botão do rodapé liga/desliga (fica guardado). Com internet lenta, um aviso oferece uma vez. */
+    (function () {
+        var raiz = document.documentElement, botao = document.getElementById("botaoSimples");
+        if (!botao) return;
+        var ligada = raiz.classList.contains("modo-simples");
+        var tr = function (t) { return window.traduzir ? window.traduzir(t) : t; };
+        botao.textContent = ligada ? tr("✨ Versão completa") : tr("⚡ Versão leve");
+        function trocar(liga) {
+            try { localStorage.setItem("portfolio-simples", liga ? "1" : "0"); } catch (e) { /* sem armazenamento */ }
+            location.reload();
+        }
+        botao.addEventListener("click", function () { trocar(!ligada); });
+        var decidiu = null;
+        try { decidiu = localStorage.getItem("portfolio-simples"); } catch (e) { /* sem armazenamento */ }
+        if (ligada || decidiu !== null) return;
+        addEventListener("load", function () {
+            var c = navigator.connection || {};
+            var lento = c.saveData === true || /(^|-)(2g|3g)$/.test(c.effectiveType || "") || performance.now() > 7000;
+            if (!lento) return;
+            var aviso = document.createElement("button");
+            aviso.type = "button";
+            aviso.className = "aviso-simples";
+            aviso.textContent = tr("⚡ Tá lento? Toque pra versão leve");
+            aviso.addEventListener("click", function () { trocar(true); });
+            document.body.appendChild(aviso);
+            requestAnimationFrame(function () { aviso.classList.add("visivel"); });
+            setTimeout(function () { aviso.classList.remove("visivel"); setTimeout(function () { aviso.remove(); }, 400); }, 12000);
+        }, { once: true });
+    })();
+</script>
 </body>
 </html>

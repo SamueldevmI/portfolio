@@ -23,8 +23,8 @@
         (function () {
             var azul = false;
             try { azul = localStorage.getItem("portfolio-tema") === "azul"; } catch (e) { /* sem armazenamento */ }
-            document.documentElement.dataset.tema = azul ? "azul" : "vermelho";
-            document.write('<link rel="stylesheet" href="../' + (azul ? "style-azul.css" : "style.css") + '?v=20261008">');
+            document.documentElement.dataset.tema = (function(){try{var t=localStorage.getItem("portfolio-tema");return /^(azul|cerrado|neon|gibi85)$/.test(t)?t:"vermelho"}catch(e){return "vermelho"}})();
+            document.write('<link rel="stylesheet" href="../' + ((function(){try{var t=localStorage.getItem("portfolio-tema");return /^(azul|cerrado|neon|gibi85)$/.test(t)?"style-"+t+".css":"style.css"}catch(e){return "style.css"}})()) + '?v=20261008">');
         })();
     </script>
     <noscript><link rel="stylesheet" href="../style.css"></noscript>
@@ -57,6 +57,9 @@
         .ct-tabela th { color: var(--text); font-size: .9rem; }
         .ct-tabela td { color: var(--muted); }
         .ct-tabela td b { color: var(--ouro); }
+        .ct-rolagem { margin: 14px 0; overflow-x: auto; overscroll-behavior-x: contain; }
+        .ct-rolagem .ct-tabela { margin: 0; }
+        @media (max-width: 600px) { .ct-tabela-larga { min-width: 560px; font-size: .9rem; } }
         .ct-pacotes { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin: 18px 0; }
         .ct-pacote { padding: 18px; border: 3px solid #111111; border-radius: 8px; background: #f3ead6; box-shadow: 5px 5px 0 #111111; }
         .ct-pacote h3 { margin: 0 0 6px; color: #111111; }
