@@ -58,7 +58,7 @@
                             <section class="previa-secao"><h5>${esc(r.secao)}</h5>${r.itens.map(([n, v]) => `<div class="previa-item"><span class="previa-miniatura" aria-hidden="true">${r.emoji}</span><span class="previa-item-nome">${esc(n)}</span><b>${esc(v)}</b></div>`).join("")}</section>
                             <section class="previa-secao"><h5>${esc(r.info)}</h5><div class="previa-chips">${r.chips.map((c) => `<button type="button">${esc(c)}</button>`).join("")}</div></section>
                             <footer class="previa-rodape">📍 Campo Grande - MS · ⭐ 4,9 no Google</footer>
-                            <a class="previa-whats" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="${ICONE_WHATS}"/></svg></a>
+                            <span class="previa-whats" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="${ICONE_WHATS}"/></svg></span>
                         </div>
                         <span class="previa-home" aria-hidden="true"></span>
                     </div>
