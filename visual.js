@@ -38,6 +38,20 @@
        na página (parecem crescer), e as duas coisas mexem só com transform. ---------- */
     if (mouseFino && !semMovimento) {
         const RAIO = 160;
+        // Em cima de algo (texto, botão, card, foto...) a trama fica mais fraca, pra não lavar o
+        // que está por baixo; em fundo vazio (só a cor/textura da seção) ela fica na força normal.
+        const SELETOR_CONTEUDO = "a, button, input, textarea, select, label, img, svg, canvas, video, iframe, p, h1, h2, h3, h4, h5, h6, li, td, th, blockquote, figcaption, strong, b, em, small, span, article, .card-projeto, .botao, .gibi-nota, .gibi-legenda, .gibi-fim, .contracapa, .ficha, .orcamento-caixa, .github-atividade, .fig-item, .fig-overlay, .changelog, .nav, .atalhos-caixa, .plano-mensal, .mini-projeto, .previa-celular, .modal-caixa, .paleta-caixa, .tour-caixa, .calc-rapida, .status-area, .habilidades";
+        // a lente é grande (320px): checa uma grade de pontos espalhados por dentro dela (~28px entre
+        // eles), senão um texto pequeno entre dois pontos de amostra passaria sem ser notado
+        const AMOSTRAS = [];
+        const PASSO = 28;
+        for (let raio = 0; raio <= RAIO; raio += PASSO) {
+            const pontos = raio === 0 ? 1 : Math.max(6, Math.round((2 * Math.PI * raio) / PASSO));
+            for (let i = 0; i < pontos; i++) {
+                const ang = (i / pontos) * Math.PI * 2;
+                AMOSTRAS.push([Math.round(Math.cos(ang) * raio), Math.round(Math.sin(ang) * raio)]);
+            }
+        }
         const lente = document.createElement("div");
         lente.className = "reticula-lente";
         lente.setAttribute("aria-hidden", "true");
@@ -51,6 +65,11 @@
             const lx = Math.round(x - RAIO), ly = Math.round(y - RAIO);
             lente.style.transform = `translate(${lx}px, ${ly}px)`;
             trama.style.transform = `translate(${-lx}px, ${-ly}px)`;
+            const temConteudo = AMOSTRAS.some(([dx, dy]) => {
+                const alvo = document.elementFromPoint(x + dx, y + dy);
+                return alvo && alvo.closest(SELETOR_CONTEUDO);
+            });
+            lente.classList.toggle("sobre-conteudo", temConteudo);
         };
         addEventListener("pointermove", (e) => {
             if (e.pointerType !== "mouse") return;
