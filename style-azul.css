@@ -1719,10 +1719,10 @@ html.sem-animacoes, html.sem-animacoes *, html.sem-animacoes *::before, html.sem
    digitar continua). Um anel em volta cresce sobre o que é clicável. */
 @media (hover: hover) and (pointer: fine) {
 }
-.faisca-rastro { position: fixed; z-index: 2147482999; width: 7px; height: 7px; border-radius: 50%; background: radial-gradient(circle, #ffffff 0%, var(--cyan) 42%, transparent 72%); box-shadow: 0 0 6px 1px rgba(var(--cyan-rgb), .85), 0 0 16px 4px rgba(var(--cyan-rgb), .35); pointer-events: none; user-select: none; animation: faisca-cai .65s ease-out forwards; }
+.faisca-rastro { position: fixed; z-index: 3; width: 7px; height: 7px; border-radius: 50%; background: radial-gradient(circle, #ffffff 0%, var(--cyan) 42%, transparent 72%); box-shadow: 0 0 6px 1px rgba(var(--cyan-rgb), .85), 0 0 16px 4px rgba(var(--cyan-rgb), .35); mix-blend-mode: screen; pointer-events: none; user-select: none; animation: faisca-cai .65s ease-out forwards; }
 .faisca-rastro.faisca-branca { background: radial-gradient(circle, #ffffff 0%, #ffffff 36%, transparent 72%); box-shadow: 0 0 6px 1px rgba(255,255,255,.9), 0 0 18px 5px rgba(var(--cyan-rgb), .45); }
 @keyframes faisca-cai {
-    0%   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    0%   { opacity: .6; transform: translate(-50%, -50%) scale(1); }
     100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(.15); }
 }
 @media print { .faisca-rastro { display: none !important; } }
@@ -2380,7 +2380,7 @@ html { cursor: var(--cursor-seta); }
 .previa-nota { top: 10px; right: 10px; color: #ffd54a; }
 .previa-aberto { left: 10px; bottom: 10px; display: flex; align-items: center; gap: 5px; }
 .previa-aberto::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #3ddc84; box-shadow: 0 0 6px #3ddc84; }
-.previa-hero h4 { margin: 0 0 6px; font-size: 1.28rem; line-height: 1.12; letter-spacing: -.025em; }
+.previa-hero .previa-h { display: block; margin: 0 0 6px; font-size: 1.28rem; line-height: 1.12; letter-spacing: -.025em; }
 .previa-hero p { margin: 0 0 14px; color: var(--p-suave); font-size: .78rem; }
 .previa-botao { width: 100%; padding: 11px; border: 0; border-radius: 14px; background: var(--p-cor); color: var(--p-fundo); font: 700 .82rem "Space Grotesk", Arial, sans-serif; box-shadow: 0 8px 18px -8px var(--p-cor); cursor: var(--cursor-mao); }
 .previa-secao { padding: 12px 14px; }
@@ -3400,22 +3400,6 @@ a.gibi-continua:focus-visible { outline: 3px solid #ffe14d; outline-offset: 3px;
 .video-oi { max-width: 300px; margin: 0 0 24px; }
 .video-oi video { display: block; width: 100%; height: auto; aspect-ratio: 9 / 16; border: 4px solid #0b101b; border-radius: 8px; background: #0b101b; box-shadow: 6px 6px 0 #2e7eff; }
 .video-oi figcaption { margin-top: 8px; color: var(--muted); font: .78rem "DM Mono", monospace; }
-
-/* ---------- Álbum de figurinhas dos projetos ---------- */
-.album { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; margin: 0 0 22px; padding: 10px 14px; border: 2px dashed rgba(255,255,255,.3); border-radius: 8px; }
-.album-titulo { margin: 0; color: var(--muted); font-size: .9rem; }
-.album-titulo b { color: var(--text); }
-.album-conta { margin: 0 4px; padding: 2px 8px 0; border: 2px solid #0b101b; background: #ffe14d; color: #0b101b; font: 400 1.05rem/1.2 "Bangers", Impact, sans-serif; letter-spacing: .04em; }
-.album-slots { display: flex; gap: 6px; margin: 0 0 0 auto; padding: 0; list-style: none; }
-.album-slots li { width: 22px; height: 28px; border: 2px dashed rgba(255,255,255,.35); border-radius: 3px; }
-.album-slots li.colada { border: 2px solid #0b101b; background: linear-gradient(135deg, #ffe14d, #ff9de2 55%, #8fe3ff); box-shadow: 2px 2px 0 #0b101b; transform: rotate(-4deg); }
-.album-slots li.colada:nth-child(even) { transform: rotate(4deg); }
-.album-slots li.acabou-de-colar { animation: album-cola .45s cubic-bezier(.2, .9, .3, 1.4); }
-@keyframes album-cola { from { transform: scale(2.2) rotate(-20deg); opacity: 0; } }
-.album.completo { border-style: solid; border-color: #ffe14d; }
-.album-completo-link { color: #ffe14d; font-weight: 700; }
-@media (max-width: 720px) { .album-slots { margin-left: 0; } .album-titulo small { display: block; margin-top: 2px; } }
-@media (prefers-reduced-motion: reduce) { .album-slots li.acabou-de-colar { animation: none; } }
 
 /* ---------- Dúvidas de quem nunca teve site ---------- */
 .duvidas-novato { grid-column: 1 / -1; margin-top: 40px; }

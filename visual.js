@@ -87,40 +87,6 @@
         cards.forEach((card) => olho.observe(card));
     }
 
-    /* ---------- Álbum: abriu um projeto (testar, demo, tecnologias), cola a figurinha dele ----------
-       Fica guardado neste aparelho. PREMIO vazio = completar só dá os parabéns; com texto, ele aparece. */
-    const PREMIO = ""; // ex.: "10% de desconto no seu site" (só coloque o que você vai cumprir)
-    const album = document.getElementById("album");
-    if (album && cards.length) {
-        const CHAVE = "portfolio-album";
-        const nomeDo = (card) => card.querySelector(".projeto-nome")?.textContent.trim() || "";
-        let coladas = [];
-        try { coladas = JSON.parse(localStorage.getItem(CHAVE) || "[]"); } catch (e) { /* sem armazenamento */ }
-        const total = cards.length, slots = [...album.querySelectorAll(".album-slots li")];
-        const conta = album.querySelector(".album-conta"), dica = album.querySelector(".album-dica");
-        const desenhar = (nova) => {
-            const n = cards.filter((c) => coladas.includes(nomeDo(c))).length;
-            conta.textContent = `${n}/${total}`;
-            slots.forEach((li, i) => { li.classList.toggle("colada", i < n); li.classList.toggle("acabou-de-colar", nova && i === n - 1); });
-            if (n >= total && !album.classList.contains("completo")) {
-                album.classList.add("completo");
-                const msg = encodeURIComponent("Oi, Samuel! Completei o álbum de figurinhas do seu site 🏆 e queria conversar sobre um projeto.");
-                dica.innerHTML = `${tr("Álbum completo! 🏆")} ${PREMIO ? tr(PREMIO) + " · " : ""}<a class="album-completo-link" href="https://wa.me/5567996034205?text=${msg}" target="_blank" rel="noopener noreferrer">${tr("Contar pro Samuel →")}</a>`;
-                if (nova) window.musicaSite?.subida?.();
-            }
-        };
-        desenhar(false);
-        document.getElementById("lista-projetos").addEventListener("click", (e) => {
-            const card = e.target.closest(".card-projeto");
-            if (!card || !e.target.closest("a, button") || e.target.closest(".botao-compartilhar, .card-orcamento")) return;
-            const nome = nomeDo(card);
-            if (!nome || coladas.includes(nome)) return;
-            coladas.push(nome);
-            try { localStorage.setItem(CHAVE, JSON.stringify(coladas)); } catch (e2) { /* só não lembra */ }
-            desenhar(true);
-        });
-    }
-
     /* ---------- Carimbo "APROVADO": bate no orçamento quando a pessoa manda pro WhatsApp ---------- */
     const caixa = document.querySelector(".orcamento-caixa");
     if (caixa) {
