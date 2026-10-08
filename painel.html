@@ -129,8 +129,8 @@
                 }
                 const q = (c) => est.quantos(c);
                 const ramos = Object.entries(S.RAMOS);
-                const [visitas, previas, monte, monteEnviou, whats, teste, testeZap, comoTrab, caseEc, ...resto] = await Promise.all([
-                    q("/"), Promise.all(ramos.map(([, r]) => q(`/evento/previa-${est.slug(r.previa)}`))), q("/monte"), q("/evento/monte-enviou"), q("/evento/whatsapp"), q("/teste"), q("/evento/teste-whatsapp"), q("/como-trabalho"), q("/case-eclipse"),
+                const [visitas, previas, monte, monteEnviou, whats, teste, testeZap, comoTrab, caseEc, assinEclipse, ...resto] = await Promise.all([
+                    q("/"), Promise.all(ramos.map(([, r]) => q(`/evento/previa-${est.slug(r.previa)}`))), q("/monte"), q("/evento/monte-enviou"), q("/evento/whatsapp"), q("/teste"), q("/evento/teste-whatsapp"), q("/como-trabalho"), q("/case-eclipse"), q("/origem/assinatura-eclipse"),
                     ...ramos.map(([k]) => q(`/site-para-${{ loja: "loja-de-roupa", salao: "salao-de-beleza" }[k] || k}/`)),
                     ...Array.from({ length: 11 }, (_, i) => q(`/evento/teste-nota-${i}`)),
                 ]);
@@ -147,7 +147,7 @@
                 const etapas = [["visitas", "prévia", visitas, totalPrevias, "Pouca gente abre a prévia: vale deixar o celular do topo ainda mais chamativo ou citar a prévia na mensagem de prospecção."], ["prévia", "WhatsApp", totalPrevias, (whats || 0) + (monteEnviou || 0), "Muita gente vê a prévia e não chama: experimente deixar o botão “quero esse site” mais forte ou lembrar da garantia logo abaixo dele."]];
                 const pior = etapas.filter(([, , a]) => a > 20).sort((x, y) => (x[3] / x[2]) - (y[3] / y[2]))[0];
                 if (pior) { $("pnDica").hidden = false; $("pnDica").textContent = "💡 " + pior[4]; }
-                $("pnPaginas").replaceChildren(...[["Portfólio", visitas], ["Monte seu site", monte], ["Teste de 1 minuto", teste], ["Chamaram pelo teste", testeZap], ["Como eu trabalho", comoTrab], ["Case Eclipse", caseEc], ...ramos.map(([, r], i) => [`Site para ${r.nome}`, paginasRamo[i]])]
+                $("pnPaginas").replaceChildren(...[["Portfólio", visitas], ["Monte seu site", monte], ["Teste de 1 minuto", teste], ["Chamaram pelo teste", testeZap], ["Como eu trabalho", comoTrab], ["Case Eclipse", caseEc], ["Vieram pela assinatura da Eclipse", assinEclipse], ...ramos.map(([, r], i) => [`Site para ${r.nome}`, paginasRamo[i]])]
                     .map(([t, v]) => el("div", { className: "pn-num" }, el("b", { textContent: n(v) }), el("span", { textContent: t }))));
                 barras("pnRamos", ramos.map(([, r], i) => ({ rotulo: `${r.emoji} ${r.nome}`, v: previas[i] })).sort((a, b) => (b.v || 0) - (a.v || 0)));
                 barras("pnNotas", notas.map((v, i) => ({ rotulo: `nota ${i}`, v })).filter((x) => x.v));

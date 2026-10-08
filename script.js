@@ -71,6 +71,11 @@ const LINK_PERSONALIZADO = (function () {
     window.addEventListener("hashchange", montarSecoes);
 }
 window.ESTATISTICAS?.contar("/", "Portfólio", true);
+// veio pela assinatura no rodapé de um site de cliente (assinatura.js): conta de qual site
+{
+    const q = new URLSearchParams(location.search);
+    if (q.get("origem") === "assinatura") window.ESTATISTICAS?.contar(`/origem/assinatura-${window.ESTATISTICAS.slug(q.get("de") || "site")}`, `veio pela assinatura: ${q.get("de") || "site"}`, true);
+}
 // qualquer toque num botão que leve pro meu WhatsApp (o fim do funil no painel)
 document.addEventListener("click", (evento) => {
     if (evento.target.closest('a[href*="wa.me/5567996034205"], [data-orcamento-tipo], .cmp-querer, .previa-quero')) window.ESTATISTICAS?.contar("/evento/whatsapp", "tocou no WhatsApp/orçamento", true);
@@ -1397,7 +1402,7 @@ if (paletaOverlay) {
     document.body.append(impresso);
 
     // Links com ?origem=instagram e ?tipo=app (só valores conhecidos entram na mensagem)
-    const ORIGENS = { link: "link que você me mandou", instagram: "Instagram", whatsapp: "WhatsApp", linkedin: "LinkedIn", github: "GitHub", facebook: "Facebook", google: "Google" };
+    const ORIGENS = { assinatura: "site de um cliente seu", link: "link que você me mandou", instagram: "Instagram", whatsapp: "WhatsApp", linkedin: "LinkedIn", github: "GitHub", facebook: "Facebook", google: "Google" };
     const PARAMETROS = new URLSearchParams(location.search);
     const ORIGEM = ORIGENS[(PARAMETROS.get("origem") || "").toLowerCase()] || "";
 

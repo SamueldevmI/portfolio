@@ -832,6 +832,19 @@ function renderBarraSacola(vazia, quantidade) {
 }
 const rotuloTam = (i) => (i.tam ? `${t(produto(i.id).rotulo || "Tamanho")} ${t(i.tam)}` : t("Tamanho único")); // t(): a vibe da caixa (P, M, G ficam iguais)
 
+/* De onde veio quem compra: links com ?de=instagram (bio), ?de=qr (cartão de visita), ?de=status… guardam a
+   origem por 30 dias e ela vai no fim do pedido. Assim a Elizabeth sabe o que está trazendo venda. */
+const ORIGENS_LOJA = { instagram: "Instagram", qr: "QR do cartão de visita", status: "status do WhatsApp", tiktok: "TikTok", amiga: "indicação de amiga" };
+const CHAVE_ORIGEM = "es-origem";
+{
+    const de = (new URLSearchParams(location.search).get("de") || "").toLowerCase();
+    if (ORIGENS_LOJA[de]) guardar(CHAVE_ORIGEM, { de, em: Date.now() });
+}
+const origemDaCliente = () => {
+    const o = ler(CHAVE_ORIGEM, null);
+    return o && ORIGENS_LOJA[o.de] && Date.now() - o.em < 30 * 24 * 60 * 60 * 1000 ? ORIGENS_LOJA[o.de] : "";
+};
+
 function montarMensagem() {
     const linhas = [`${t("Oi! 🔮 Quero encomendar esta poção na")} ${LOJA.nome} 🖤`, "", `*${t("Ingredientes:")}*`];
     sacola.forEach((i) => {
@@ -849,6 +862,7 @@ function montarMensagem() {
     if (ler(CHAVE_GATO, false)) linhas.push(`🐈‍⬛ ${t("Achei o gato preto no site: código")} ${LOJA.segredo.codigo}`);
     if (ler("es-arcanos", { cartas: [] }).cartas?.length >= 4) linhas.push(`🃏 ${t("Completei a coleção de arcanos: código")} ${LOJA.colecao.codigo}`);
     linhas.push("", t("Podemos combinar a entrega e o pagamento por aqui?"));
+    if (origemDaCliente()) linhas.push(`📍 ${t("Como cheguei:")} ${t(origemDaCliente())}`);
     if (LOJA.demo) linhas.push("", t("_(Pedido de teste da prévia do site)_"));
     if (document.documentElement.lang === "es") linhas.unshift("🇪🇸 (Cliente fala espanhol)"); // aviso pra Elizabeth, sempre em português
     return linhas.join("\n");
