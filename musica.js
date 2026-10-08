@@ -32,8 +32,10 @@
     // De noite (19h às 6h) a música fica um pouco mais lenta, mais abafada e com mais pad
     const HORA = new Date().getHours();
     const NOITE = HORA >= 19 || HORA < 6;
+    const MANHA = HORA >= 6 && HORA < 12; // de manhã: um pouco mais rápida e mais aberta (combina com a capa clara)
     const TOQUE = window.matchMedia("(pointer: coarse)").matches;
-    const BPM = NOITE ? 90 : 96;
+    const BPM = NOITE ? 90 : MANHA ? 100 : 96;
+    const BRILHO_HORA = NOITE ? 0.8 : MANHA ? 1.15 : 1; // o quanto o filtro abre conforme a hora
     const BATIDA = 60 / BPM;
     const COMPASSO = BATIDA * 4;
     const CHAVE_VOLUME = "portfolio-musica-volume";
@@ -130,9 +132,9 @@
         musicaBus.connect(mestre);
         mestre.connect(filtro).connect(compressor).connect(saida).connect(ctx.destination);
         mix = misturaAtual();
-        filtro.frequency.value = mix.filtro * (NOITE ? 0.8 : 1);
+        filtro.frequency.value = filtroDaVez();
         efeitos = ctx.createGain();
-        efeitos.gain.value = 1.25;
+        efeitos.gain.value = 0.9; // efeitos curtinhos, mais baixos que antes (a música agora só toca se a pessoa pedir)
         efeitos.connect(compressor); // sem o filtro da seção: efeito sempre nítido
         // eco (colcheia pontuada, abafado): dá o ar de "noite" na voz, no estalo e no pluck neon
         eco = ctx.createGain();
@@ -401,6 +403,7 @@
         let v = nome === "fraco" ? m.marimba * m.fraco : m[nome];
         if (nome === "bumbo" || nome === "palma" || nome === "chocalho") v *= TOQUE ? 0.55 + 0.95 * energia : 0.75 + 0.5 * energia; // rolando rápido = batida mais forte (no celular, mais ainda)
         if (nome === "pad" && NOITE) v *= 1.25;
+        if ((nome === "brilho" || nome === "chocalho") && MANHA) v *= 1.2;
         return v;
     }
 
@@ -438,12 +441,15 @@
         return Object.assign({}, trechos[trechos.length - 1].c);
     }
 
+    // Edição rara (modo preto e branco do gibi.js): som de rádio antigo, abafado
+    const raiz = document.documentElement;
+    function filtroDaVez() { const f = mix.filtro * BRILHO_HORA; return raiz.classList.contains("edicao-rara") ? Math.min(f, 1500) : f; }
     function aplicarMistura() {
         mix = misturaAtual();
         if (!ctx) return;
         const agora = ctx.currentTime;
         GRUPOS.forEach((nome) => grupo[nome].gain.setTargetAtTime(volumeDoGrupo(nome, mix), agora, 0.35));
-        filtroMestre.frequency.setTargetAtTime(mix.filtro * (NOITE ? 0.8 : 1), agora, 0.5);
+        filtroMestre.frequency.setTargetAtTime(filtroDaVez(), agora, 0.5);
     }
 
     /* ---------- Efeitos de interação: tudo afinado com o acorde que está tocando ---------- */
@@ -552,6 +558,42 @@
         [70, 74, 75, 79].forEach((nota) => rhodes(nota, t + 0.45, 0.7, efeitos, 5));
         baixo(36, t + 0.45, 2.5, efeitos);
         setTimeout(aplicarMistura, 4200);
+    }
+
+    /* ---------- Sons dos visuais de gibi ---------- */
+    // ZAP! (WhatsApp): um "fiuuu" subindo e um plim no acorde
+    function zap() { const t = agoraMais(); varrida(t, 500, 4200, 0.22); sino(acordeAgora().notas[3] + 24, t + 0.16, 0.9, 0.6, efeitos); }
+    // BORA! (orçamento): acorde animado subindo
+    function bora() { const t = agoraMais(); const ns = acordeAgora().notas; ns.forEach((n, i) => marimba(n + 12, t + i * 0.035, 0.85, efeitos)); sino(ns[0] + 36, t + 0.16, 0.6, 0.4, efeitos); }
+    // Carimbo: TUM seco + o estalo do papel + um eco curtinho
+    function carimbo() {
+        const t = agoraMais(0.02);
+        bumbo(t, 1, efeitos); barulho(t, "bandpass", 900, 0.35, 0.07, efeitos);
+        bumbo(t + 0.11, 0.3, efeitos); barulho(t + 0.11, "bandpass", 900, 0.1, 0.05, efeitos);
+        sino(acordeAgora().notas[2] + 24, t + 0.25, 1, 0.35, efeitos);
+        if (navigator.vibrate) navigator.vibrate(35);
+    }
+    // Virar página: papel folheando (duas passadas de ruído agudo)
+    function pagina() { const t = agoraMais(); varrida(t, 5200, 1400, 0.2); barulho(t + 0.14, "highpass", 2500, 0.1, 0.08, efeitos); }
+    // Caneta riscando: 4 traços bem baixinhos, no ritmo da moldura (0,3 s cada)
+    function rabisco() { const t = agoraMais(); for (let i = 0; i < 4; i++) barulho(t + i * 0.3, "bandpass", 3200 + Math.random() * 900, 0.035, 0.24, efeitos); }
+    // Figurinha: "tilim" de brilho (a rara tem uma nota a mais)
+    function tilim(rara) { const t = agoraMais(); [91, 96, 100].slice(0, rara ? 3 : 2).forEach((n, i) => sino(n, t + i * 0.07, 0.5, 0.22, efeitos)); }
+    // Holofote ligando: "clunk" grave e um zumbido que some
+    function holofote() { const t = agoraMais(); bumbo(t, 0.8, efeitos); barulho(t, "lowpass", 400, 0.3, 0.12, efeitos); tom(55, "sawtooth", t + 0.05, 0.05, 0.035, 1.2, efeitos); tom(110, "sine", t + 0.05, 0.05, 0.03, 1.2, efeitos); }
+    // Buzininha do motoboy: bi-bi!
+    function buzina() { const t = agoraMais(); [0, 0.16].forEach((d) => { tom(midi(69), "square", t + d, 0.005, 0.05, 0.1, efeitos); tom(midi(73), "square", t + d, 0.005, 0.04, 0.1, efeitos); }); }
+    // Chiado de vinil por baixo da música na edição rara (passa pelo canal da música: some se ela parar)
+    let chiado = 0;
+    function chiadoRara() {
+        clearInterval(chiado);
+        if (!raiz.classList.contains("edicao-rara")) return;
+        chiado = setInterval(() => {
+            if (!ctx || !tocando || ctx.state !== "running") return;
+            const t = agoraMais();
+            for (let i = 0; i < 4; i++) barulho(t + Math.random() * 0.5, "highpass", 3500, 0.04 + Math.random() * 0.06, 0.01, musicaBus);
+            barulho(t, "bandpass", 1500, 0.012, 0.6, musicaBus);
+        }, 600);
     }
 
     function agendar() {
@@ -678,15 +720,27 @@
         const primeiraInteracao = function (evento) {
             if (evento.target.closest && evento.target.closest("#botaoSom")) return remover(); // o próprio botão resolve
             remover();
-            if (preferencia === "off") { destravar(); return; }
+            // a trilha só toca sozinha pra quem já ligou ela antes; pros outros, o gesto só libera os efeitos
+            if (preferencia !== "on") { destravar(); return; }
             ligar();
-            if (!ler(CHAVE_AVISO) && typeof window.mostrarToast === "function") {
-                window.mostrarToast("♪ Tocando “Meia-noite”, trilha feita pro site. Pra desligar ou mudar o volume, é o ícone de som lá em cima.");
-                gravar(CHAVE_AVISO, "1");
-            }
         };
         const remover = function () { GESTOS.forEach((tipo) => document.removeEventListener(tipo, primeiraInteracao, true)); };
         GESTOS.forEach((tipo) => document.addEventListener(tipo, primeiraInteracao, true));
+    }
+
+    // Convite: um balão de gibi do lado do ícone, uma vez por aparelho, pra quem nunca escolheu
+    if (!preferencia && !ler(CHAVE_AVISO)) {
+        const convite = document.createElement("button");
+        convite.type = "button";
+        convite.className = "som-convite";
+        const tr = (t) => (window.traduzir ? window.traduzir(t) : t);
+        convite.textContent = tr("🎧 Aperte o play da edição");
+        const fechar = () => { convite.classList.remove("visivel"); setTimeout(() => convite.remove(), 400); gravar(CHAVE_AVISO, "1"); };
+        convite.addEventListener("click", () => { fechar(); ligar(); gravar(CHAVE, "on"); });
+        botao.addEventListener("click", fechar, { once: true });
+        (botao.closest(".som-caixa-volume") || botao).after(convite);
+        setTimeout(() => convite.classList.add("visivel"), 2500);
+        setTimeout(() => { if (convite.isConnected) fechar(); }, 14000);
     }
 
     // Sons que o mobile.js usa (gestos do celular). Só tocam com o áudio liberado.
@@ -731,8 +785,55 @@
     document.addEventListener("click", (e) => {
         if (!podeTocarEfeito()) return;
         const alvo = e.target.closest(INTERATIVO);
-        if (alvo && alvo.id !== "botaoSom") notaClique();
+        if (!alvo || alvo.id === "botaoSom" || alvo.classList.contains("som-convite")) return;
+        if (alvo.closest('#orcamentoApp a[href*="wa.me/"]')) carimbo();
+        else if (alvo.matches('a[href*="wa.me/"]')) zap();
+        else if (alvo.matches('[data-orcamento-tipo], .card-orcamento, .orcamento-fixo, a[href="#orcamento"]')) bora();
+        else if (alvo.matches('a.gibi-continua, .nav-links a[href^="#"]')) pagina();
+        else notaClique();
     });
+
+    // Moldura dos títulos se riscando, holofote do Contato, motoboy entregando, figurinha brilhando
+    const semMovimento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!semMovimento && "IntersectionObserver" in window) {
+        const olhoTitulo = new IntersectionObserver((entradas) => entradas.forEach((e) => {
+            if (!e.isIntersecting) return;
+            olhoTitulo.unobserve(e.target);
+            if (podeTocarEfeito()) rabisco();
+        }), { threshold: .35, rootMargin: "0px 0px -6% 0px" });
+        document.querySelectorAll("main .titulo-secao").forEach((el) => olhoTitulo.observe(el));
+    }
+    const observarClasse = (el, classe, acao) => {
+        if (!el) return;
+        let tinha = el.classList.contains(classe);
+        new MutationObserver(() => {
+            const tem = el.classList.contains(classe);
+            if (tem && !tinha && podeTocarEfeito()) acao(el);
+            tinha = tem;
+        }).observe(el, { attributes: true, attributeFilter: ["class"] });
+    };
+    let holofoteTocou = false;
+    observarClasse(document.querySelector(".sinal"), "aceso", () => { if (!holofoteTocou) { holofoteTocou = true; holofote(); } });
+    // o motoboy e as figurinhas são criados por outros scripts: espera eles aparecerem
+    const esperar = (seletor, acao, tentativas = 20) => {
+        const el = document.querySelectorAll(seletor);
+        if (el.length) el.forEach(acao); else if (tentativas > 0) setTimeout(() => esperar(seletor, acao, tentativas - 1), 500);
+    };
+    esperar(".motoboy", (m) => observarClasse(m, "entregue", buzina));
+    esperar("#lista-projetos .card-projeto", (card) => observarClasse(card, "figurinha-reluz", (c) => tilim(c.hasAttribute("data-destaque"))));
+
+    // Edição rara: rádio antigo (filtro fechado + chiado de vinil)
+    new MutationObserver(() => { aplicarMistura(); chiadoRara(); }).observe(raiz, { attributes: true, attributeFilter: ["class"] });
+    chiadoRara();
+
+    // Digitando (orçamento, nome do negócio): a música abaixa pra não atrapalhar, e volta quando para
+    let digitando = 0;
+    document.addEventListener("input", (e) => {
+        if (!tocando || !ctx || !e.target.matches("input, textarea")) return;
+        musicaBus.gain.setTargetAtTime(NIVEL_MUSICA * 0.35, ctx.currentTime, 0.2);
+        clearTimeout(digitando);
+        digitando = setTimeout(() => { if (tocando && ctx) musicaBus.gain.setTargetAtTime(NIVEL_MUSICA, ctx.currentTime, 0.8); }, 1600);
+    }, true);
     // 5) Filtro de projetos troca o timbre da melodia
     const TIMBRES = { todos: "voz", site: "marimba", sistema: "pluck", app: "flauta", atendimento: "bip" };
     document.querySelectorAll(".chip-filtro[data-filtro]").forEach((chip) => chip.addEventListener("click", () => {

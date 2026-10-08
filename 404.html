@@ -27,6 +27,8 @@
         .quadro-404 { position: relative; width: min(560px, 100%); padding: 26px 22px 24px; border: 4px solid #111111; border-radius: 6px; background: radial-gradient(circle, rgba(17,17,17,.14) 1.6px, transparent 2px) 0 0 / 12px 12px, #f3ead6; color: #111111; text-align: center; box-shadow: 9px 9px 0 #111111; transform: rotate(-.6deg); }
         .legenda-404 { position: absolute; top: -18px; left: 16px; margin: 0; padding: 5px 12px 3px; border: 3px solid #111111; background: #ffe14d; font: 400 1rem/1 "Bangers", Impact, sans-serif; letter-spacing: .06em; transform: rotate(-2deg); }
         .numero-404 { display: block; margin: 8px 0 0; color: #ff2a3d; font: 400 clamp(5rem, 24vw, 8.5rem)/.9 "Bangers", Impact, sans-serif; letter-spacing: .04em; -webkit-text-stroke: 3px #111111; paint-order: stroke fill; text-shadow: 6px 6px 0 #111111; }
+        .vilao-botao { display: grid; justify-items: center; margin: 0 auto; padding: 0; border: 0; background: none; color: #555555; font: .7rem "DM Mono", monospace; cursor: pointer; }
+        .vilao-botao:focus-visible { outline: 3px solid #ff2a3d; outline-offset: 4px; }
         .vilao-404 { display: block; width: 120px; height: 90px; margin: 4px auto 6px; }
         .quadro-404 h1 { margin: 0 0 8px; color: #111111; font: 400 clamp(1.9rem, 7vw, 2.6rem)/1 "Bangers", Impact, sans-serif; letter-spacing: .04em; text-transform: uppercase; }
         .quadro-404 p.desc { max-width: 400px; margin: 0 auto 20px; color: #2b2b2b; }
@@ -51,7 +53,7 @@
         <div class="quadro-404">
             <p class="legenda-404">Enquanto isso, no esconderijo…</p>
             <span class="numero-404" aria-hidden="true">404</span>
-            <svg class="vilao-404" viewBox="0 0 120 90" aria-hidden="true"><path d="M20 70 Q60 20 100 70 Z" fill="#111111"/><circle cx="60" cy="40" r="22" fill="#111111"/><rect x="36" y="32" width="48" height="12" rx="6" fill="#ff2a3d"/><circle cx="50" cy="38" r="3" fill="#ffffff"/><circle cx="70" cy="38" r="3" fill="#ffffff"/><path d="M88 58 l22 -8 -4 22 z" fill="#ffffff" stroke="#111111" stroke-width="3"/><path d="M93 60 h10 M94 65 h8" stroke="#111111" stroke-width="2"/></svg>
+            <button type="button" class="vilao-botao" id="vilao" aria-label="Apertar o vilão (ele ri)"><svg class="vilao-404" viewBox="0 0 120 90" aria-hidden="true"><path d="M20 70 Q60 20 100 70 Z" fill="#111111"/><circle cx="60" cy="40" r="22" fill="#111111"/><rect x="36" y="32" width="48" height="12" rx="6" fill="#ff2a3d"/><circle cx="50" cy="38" r="3" fill="#ffffff"/><circle cx="70" cy="38" r="3" fill="#ffffff"/><path d="M88 58 l22 -8 -4 22 z" fill="#ffffff" stroke="#111111" stroke-width="3"/><path d="M93 60 h10 M94 65 h8" stroke="#111111" stroke-width="2"/></svg><small>aperta o vilão</small></button>
             <h1>Ops! Essa página foi roubada pelo vilão.</h1>
             <p class="desc">Ele levou <code id="rotaPedida">/essa-pagina</code> e sumiu. Mas a edição completa continua lá no início.</p>
             <a class="botao botao-principal" href="/portfolio/">Voltar pro gibi →</a>
@@ -79,6 +81,27 @@
                 rotularTema();
             };
             atual.after(nova);
+        });
+        /* Risada do vilão, feita no próprio navegador (Web Audio): "muahaha" descendo */
+        document.getElementById("vilao").addEventListener("click", () => {
+            const C = window.AudioContext || window.webkitAudioContext;
+            if (!C) return;
+            const ctx = new C(), t0 = ctx.currentTime + 0.02;
+            const saida = ctx.createGain(); saida.gain.value = 0.5; saida.connect(ctx.destination);
+            [[0, 220, 0.32], [0.38, 196, 0.16], [0.58, 185, 0.16], [0.78, 175, 0.16], [0.98, 165, 0.36]].forEach(([d, f, dur], i) => {
+                const o = ctx.createOscillator(), filtro = ctx.createBiquadFilter(), g = ctx.createGain();
+                o.type = "sawtooth";
+                o.frequency.setValueAtTime(f * 1.1, t0 + d);
+                o.frequency.exponentialRampToValueAtTime(f * 0.85, t0 + d + dur);
+                filtro.type = "bandpass"; filtro.Q.value = 3;
+                filtro.frequency.setValueAtTime(i === 0 ? 500 : 900, t0 + d); // "mu" mais fechado, "ha" mais aberto
+                g.gain.setValueAtTime(0.0001, t0 + d);
+                g.gain.exponentialRampToValueAtTime(0.6, t0 + d + 0.03);
+                g.gain.exponentialRampToValueAtTime(0.0001, t0 + d + dur);
+                o.connect(filtro).connect(g).connect(saida);
+                o.start(t0 + d); o.stop(t0 + d + dur + 0.05);
+            });
+            setTimeout(() => ctx.close(), 1800);
         });
         try {
             document.getElementById("rotaPedida").textContent = location.pathname || "/rota-que-voce-tentou";
