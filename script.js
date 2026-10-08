@@ -2127,7 +2127,8 @@ ${celular(ramo, marca)}
             [...grupo.children].forEach((b) => { b.textContent = tr(RAMOS[b.dataset.ramo].rotulo); });
         }
         textosFixos();
-        document.addEventListener("idiomaMudou", () => { textosFixos(); if (!filme) caixa.querySelector(".vitrine-legenda").textContent = tr(LEGENDA); });
+        // o idioma.js pode chegar depois (espanhol sob demanda): refaz os textos e recomeça a cena já no idioma novo
+        document.addEventListener("idiomaMudou", () => { textosFixos(); if (filme) mostrar(i, false); else caixa.querySelector(".vitrine-legenda").textContent = tr(LEGENDA); });
         const palco = caixa.querySelector(".vitrine-palco");
         const legenda = caixa.querySelector(".vitrine-legenda");
         const campoNome = caixa.querySelector(".vitrine-nome input");
@@ -2171,7 +2172,12 @@ ${celular(ramo, marca)}
             const marcaLegenda = legenda.querySelector("b[data-marca]");
             if (marcaLegenda) marcaLegenda.textContent = nome;
             clearTimeout(guardar);
-            guardar = setTimeout(() => { try { localStorage.setItem("portfolio-nome-negocio", campoNome.value.trim().slice(0, 40)); } catch (e) { /* sem armazenamento */ } }, 400);
+            guardar = setTimeout(() => {
+                try { localStorage.setItem("portfolio-nome-negocio", campoNome.value.trim().slice(0, 40)); } catch (e) { /* sem armazenamento */ }
+                // o mesmo nome vale pras demos dos Projetos (o campo de lá agora fica escondido)
+                const campoDemos = document.getElementById("nomeNegocio");
+                if (campoDemos) { campoDemos.value = campoNome.value.trim().slice(0, 40); campoDemos.dispatchEvent(new Event("input")); }
+            }, 400);
         });
         campoNome.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); campoNome.blur(); } });
         botoes.forEach((b) => b.addEventListener("click", () => { mostrar(ordem.indexOf(b.dataset.ramo), true); agendar(); }));
