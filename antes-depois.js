@@ -13,7 +13,7 @@
 
     const CENAS = {
         pizzaria: { hora: "23:47", msg: "Boa noite! Vocês tão abertos? Queria 2 calabresa 🍕", insiste: "???", desiste: "deixa, pedi em outro lugar 👋", viu: "07:30",
-            resposta: "Abertos até 23h30! 🍕 2 calabresa = R$ 90. Chega em 40 min.", fecha: "Fechado! 🙌", ganho: "+1 PEDIDO", valor: "R$ 90" },
+            resposta: "Abertos até meia-noite! 🍕 2 calabresa = R$ 90. Chega em 40 min.", fecha: "Fechado! 🙌", ganho: "+1 PEDIDO", valor: "R$ 90" },
         barbearia: { hora: "06:58", msg: "Fala! Tem horário hoje à tarde? Corte + barba", insiste: "??", desiste: "achei outra barbearia, valeu", viu: "12:40",
             resposta: "Tem sim ✂️ 16h30 ou 18h. Toca no horário pra agendar 👇", fecha: "18h! 🙌", ganho: "+1 HORÁRIO", valor: "R$ 55" },
         "loja de roupa": { hora: "22:10", msg: "Oi! Tem o moletom preto no M?", insiste: "oi??", desiste: "comprei em outra loja 👋", viu: "09:15",

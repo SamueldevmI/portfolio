@@ -1573,7 +1573,7 @@
         /* antes × depois do topo (antes-depois.js) e vitrine do celular */
         "Boa noite! Vocês tão abertos? Queria 2 calabresa 🍕": "¡Buenas noches! ¿Están abiertos? Quería 2 de calabresa 🍕",
         "deixa, pedi em outro lugar 👋": "deja, pedí en otro lado 👋",
-        "Abertos até 23h30! 🍕 2 calabresa = R$ 90. Chega em 40 min.": "¡Abiertos hasta las 23:30! 🍕 2 de calabresa = R$ 90. Llega en 40 min.",
+        "Abertos até meia-noite! 🍕 2 calabresa = R$ 90. Chega em 40 min.": "¡Abiertos hasta la medianoche! 🍕 2 de calabresa = R$ 90. Llega en 40 min.",
         "Fechado! 🙌": "¡Listo! 🙌",
         "Fala! Tem horário hoje à tarde? Corte + barba": "¡Buenas! ¿Hay turno hoy a la tarde? Corte + barba",
         "achei outra barbearia, valeu": "encontré otra barbería, gracias",
