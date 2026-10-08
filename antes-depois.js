@@ -25,30 +25,31 @@
         "clínica": { hora: "20:15", msg: "Boa noite, tem consulta com clínico essa semana?", insiste: "olá?", desiste: "consegui em outra clínica", viu: "10:05",
             resposta: "Temos! 🩺 Quinta 9h ou 14h. Qual fica melhor?", fecha: "Quinta 9h, obrigada!", ganho: "+1 CONSULTA", valor: "marcada" },
     };
+    const tr = (texto) => (window.traduzir ? window.traduzir(texto) : texto); // em espanhol, a cena inteira troca
     const esc = (t) => String(t).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
     const mais = (hora, min) => { const [h, m] = hora.split(":").map(Number); const t = (h * 60 + m + min) % 1440; return String(Math.floor(t / 60)).padStart(2, "0") + ":" + String(t % 60).padStart(2, "0"); };
-    const bolha = (quem, texto, hora, extra = "") => `<p class="ad-bolha ad-${quem}">${esc(texto)}<small>${extra}${hora}</small></p>`;
+    const bolha = (quem, texto, hora, extra = "") => `<p class="ad-bolha ad-${quem}">${esc(tr(texto))}<small>${extra}${hora}</small></p>`;
 
     function cena(lado, c) {
         const sem = lado === "sem";
         const conversa = sem
-            ? bolha("cliente", c.msg, c.hora) + bolha("cliente", c.insiste, mais(c.hora, 11)) + bolha("cliente", c.desiste, mais(c.hora, 23)) + `<p class="ad-aviso">você viu às ${c.viu} 😴</p>`
-            : bolha("cliente", c.msg, c.hora) + bolha("voce", c.resposta, c.hora, "⚡ resposta automática · ") + bolha("cliente", c.fecha, mais(c.hora, 1));
+            ? bolha("cliente", c.msg, c.hora) + bolha("cliente", c.insiste, mais(c.hora, 11)) + bolha("cliente", c.desiste, mais(c.hora, 23)) + `<p class="ad-aviso">${tr("você viu às")} ${c.viu} 😴</p>`
+            : bolha("cliente", c.msg, c.hora) + bolha("voce", c.resposta, c.hora, `⚡ ${tr("resposta automática")} · `) + bolha("cliente", c.fecha, mais(c.hora, 1));
         return `
-            <span class="ad-rotulo">${sem ? "😩 sem site" : "😎 com site"}</span>
+            <span class="ad-rotulo">${tr(sem ? "😩 sem site" : "😎 com site")}</span>
             ${sem ? '<i class="ad-chuva" aria-hidden="true"></i>' : '<i class="ad-raios" aria-hidden="true"></i>'}
             <div class="ad-celular">
-                <div class="ad-zap-topo"><span class="ad-avatar" aria-hidden="true">👤</span><p><b>Cliente novo</b><small>${sem ? "visto por último às " + c.viu : "online"}</small></p></div>
+                <div class="ad-zap-topo"><span class="ad-avatar" aria-hidden="true">👤</span><p><b>${tr("Cliente novo")}</b><small>${sem ? tr("visto por último às") + " " + c.viu : "online"}</small></p></div>
                 <div class="ad-conversa">${conversa}</div>
             </div>
-            <p class="ad-carimbo">${sem ? "Cliente perdido<small>foi pro concorrente</small>" : `${esc(c.ganho)}<small>${esc(c.valor)}</small>`}</p>`;
+            <p class="ad-carimbo">${sem ? `${tr("Cliente perdido")}<small>${tr("foi pro concorrente")}</small>` : `${esc(tr(c.ganho))}<small>${esc(tr(c.valor))}</small>`}</p>`;
     }
 
     quadro.innerHTML = `
         <div class="ad-cena ad-sem"></div>
         <div class="ad-janela"><div class="ad-cena ad-com"></div></div>
         <div class="ad-alca" role="slider" tabindex="0" aria-label="Arraste pra comparar: à esquerda sem site, à direita com site" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50"><span aria-hidden="true">⇆</span></div>
-        <p class="ad-dica" aria-hidden="true">arrasta ↔</p>`;
+        <p class="ad-dica" aria-hidden="true">arrasta ↔</p>`; // estes dois o idioma.js traduz (ficam fixos)
     const camadaSem = quadro.querySelector(".ad-sem"), camadaCom = quadro.querySelector(".ad-com");
     const janela = quadro.querySelector(".ad-janela"), alca = quadro.querySelector(".ad-alca");
 
@@ -126,6 +127,7 @@
     const inicial = CENAS[lerRamo()] ? lerRamo() : "pizzaria";
     seletor.value = inicial;
     mostrarRamo(inicial);
+    document.addEventListener("idiomaMudou", () => mostrarRamo(seletor.value));
     seletor.addEventListener("change", () => {
         mostrarRamo(seletor.value);
         raiz.querySelector(`.cmp-tipos button[data-tipo="${CSS.escape(seletor.value)}"]`)?.click();

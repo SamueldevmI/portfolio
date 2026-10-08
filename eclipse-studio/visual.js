@@ -10,7 +10,7 @@ const mouseFino = matchMedia("(pointer: fine)").matches;
 
 /* ========== 1. Abertura: a lua cobre o sol e o site acende (primeira visita do dia) ========== */
 (function abertura() {
-    const temCartaOuPeca = PREVIA.has("presente") || location.hash.startsWith("#peca-");
+    const temCartaOuPeca = PREVIA.has("presente") || location.hash.startsWith("#peca-") || location.hash === "#novidades";
     if (semMovimento || temCartaOuPeca || (ler("es-abertura", "") === hojeChave() && !PREVIA.has("abertura"))) return;
     guardar("es-abertura", hojeChave());
     const raios = Array.from({ length: 24 }, (_, i) => `<line x1="200" y1="${i % 2 ? 70 : 52}" x2="200" y2="96" transform="rotate(${i * 15} 200 200)"/>`).join("");

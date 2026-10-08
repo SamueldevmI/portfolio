@@ -38,20 +38,22 @@ const LUGAR_NA_BONECA = { "Roupas": [50, 40, 46], "Joias e bijuterias": [50, 24,
     function renderPalco() {
         palco.innerHTML = BONECA_SVG + vestidas.map((v, i) => {
             const p = produto(v.id);
-            return `<button type="button" class="boneca-peca${v.id === selecionada ? " selecionada" : ""}" data-peca="${v.id}" style="left:${v.x}%;top:${v.y}%;width:${v.w}%;z-index:${i + 1}" aria-label="${esc(p.nome)}: arraste pra mover, setas também movem">${arte(p)}</button>`;
+            return `<button type="button" class="boneca-peca${v.id === selecionada ? " selecionada" : ""}" data-peca="${v.id}" style="left:${v.x}%;top:${v.y}%;width:${v.w}%;z-index:${i + 1}" aria-label="${esc(t(p.nome))}: ${t("arraste pra mover, setas também movem")}">${arte(p)}</button>`;
         }).join("");
         const sel = vestidas.find((v) => v.id === selecionada);
         controles.hidden = !sel;
-        if (sel) nomeSel.textContent = produto(sel.id).nome;
+        if (sel) nomeSel.textContent = t(produto(sel.id).nome);
     }
     function renderLista() {
         lista.innerHTML = PRODUTOS.filter(podeVestir).map((p) => {
             const vestida = vestidas.some((v) => v.id === p.id);
-            return `<li><button type="button" data-vestir="${p.id}" aria-pressed="${vestida}"><span class="tom-${p.tom}">${arte(p)}</span><small>${esc(p.nome)}</small></button></li>`;
+            return `<li><button type="button" data-vestir="${p.id}" aria-pressed="${vestida}"><span class="tom-${p.tom}">${arte(p)}</span><small>${esc(t(p.nome))}</small></button></li>`;
         }).join("");
         const total = vestidas.reduce((s, v) => s + (produto(v.id).preco ?? 0), 0);
         const consulta = vestidas.some((v) => produto(v.id).preco == null);
-        totalEl.textContent = vestidas.length ? `Look com ${vestidas.length} ${vestidas.length === 1 ? "peça" : "peças"}: ${brl(total)}${consulta ? " + itens a combinar" : ""}` : "A boneca está só de anágua. Escolha uma peça ✦";
+        totalEl.textContent = vestidas.length
+            ? tf(vestidas.length === 1 ? "Look com 1 peça: {total}" : "Look com {n} peças: {total}", { n: vestidas.length, total: brl(total) }) + (consulta ? " + " + t("itens a combinar") : "")
+            : t("A boneca está só de anágua. Escolha uma peça ✦");
     }
     const render = () => { renderPalco(); renderLista(); };
 
@@ -141,7 +143,7 @@ const LUGAR_NA_BONECA = { "Roupas": [50, 40, 46], "Joias e bijuterias": [50, 24,
     document.getElementById("bonecaStory").addEventListener("click", async (e) => {
         if (!vestidas.length) { avisar("Vista a boneca primeiro ✦"); return; }
         const botao = e.currentTarget, texto = botao.textContent;
-        botao.disabled = true; botao.textContent = "Preparando a imagem…";
+        botao.disabled = true; botao.textContent = t("Preparando a imagem…");
         try {
             await Promise.all(FONTES_STORY.map((f) => document.fonts.load(f)));
             const W = 1080, H = 1920, tela = document.createElement("canvas");
@@ -149,7 +151,7 @@ const LUGAR_NA_BONECA = { "Roupas": [50, 40, 46], "Joias e bijuterias": [50, 24,
             const ctx = tela.getContext("2d");
             pintarFundoStory(ctx, W, H);
             ctx.fillStyle = "#f6eeff"; ctx.font = '700 88px "Cormorant Garamond"';
-            ctx.fillText("Meu look de boneca", W / 2, 320);
+            ctx.fillText(t("Meu look de boneca"), W / 2, 320);
             /* palco: 800 × 1200 com luz no meio */
             const pw = 750, ph = 1200, px = (W - pw) / 2, py = 400; // mesma proporção da boneca (200 × 320)
             const luz = ctx.createRadialGradient(W / 2, py + ph * .45, 0, W / 2, py + ph * .45, 620);
@@ -169,10 +171,10 @@ const LUGAR_NA_BONECA = { "Roupas": [50, 40, 46], "Joias e bijuterias": [50, 24,
                 } else ctx.drawImage(img, cx - lado / 2, cy - lado / 2, lado, lado);
             }
             ctx.fillStyle = "#ffb8d9"; ctx.font = '700 36px "Quicksand"';
-            quebrarLinhas(ctx, vestidas.map((v) => produto(v.id).nome).join(" + "), 920).slice(0, 2).forEach((l, n) => ctx.fillText(l, W / 2, 1670 + n * 46));
+            quebrarLinhas(ctx, vestidas.map((v) => t(produto(v.id).nome)).join(" + "), 920).slice(0, 2).forEach((l, n) => ctx.fillText(l, W / 2, 1670 + n * 46));
             ctx.fillStyle = "#e9c46a"; ctx.font = '700 40px "Quicksand"';
-            ctx.fillText("monte o seu no link da bio ✦ @eclipse_studiocg", W / 2, H - 110);
-            await entregarImagem(tela, "meu-look-boneca-eclipse.png", "Meu look de boneca · Eclipse Studio");
+            ctx.fillText(t("monte o seu no link da bio ✦ @eclipse_studiocg"), W / 2, H - 110);
+            await entregarImagem(tela, "meu-look-boneca-eclipse.png", `${t("Meu look de boneca")} · Eclipse Studio`);
         } catch (erro) {
             avisar("Não consegui montar a imagem agora. Tente de novo ou tire um print.");
         } finally {
@@ -181,6 +183,7 @@ const LUGAR_NA_BONECA = { "Roupas": [50, 40, 46], "Joias e bijuterias": [50, 24,
     });
 
     render();
+    document.addEventListener("idiomaMudou", render);
     /* se o catálogo mudar (planilha), a lista de peças acompanha */
     document.addEventListener("catalogo:atualizado", () => { vestidas = vestidas.filter((v) => podeVestir(produto(v.id))); render(); });
 })();

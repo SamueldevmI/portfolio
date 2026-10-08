@@ -46,10 +46,12 @@ function sorteioComSemente(texto) {
 const hojeChave = () => { const d = new Date(); return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`; };
 
 function fraseDaLua(fase) {
-    if (/cheia/i.test(fase)) return `Com a ${fase.toLowerCase()}, tudo fica mais intenso, até o look.`;
-    if (/nova/i.test(fase)) return `Com a ${fase.toLowerCase()}, é dia de começar algo do zero.`;
-    if (/crescente/i.test(fase)) return `Com a lua ${fase.toLowerCase().replace("lua ", "")}, o que você plantar hoje cresce rápido.`;
-    return `Com a lua ${fase.toLowerCase().replace("lua ", "")}, é hora de desapegar do que não te veste mais.`;
+    const f = fase.toLowerCase();
+    if (/cheia|llena/i.test(fase)) return tf("Com a {fase}, tudo fica mais intenso, até o look.", { fase: f });
+    if (/nova|nueva/i.test(fase)) return tf("Com a {fase}, é dia de começar algo do zero.", { fase: f });
+    const resto = document.documentElement.lang === "es" ? f : f.replace("lua ", ""); // em espanhol a frase é "En {fase}…"
+    if (/crescente|creciente/i.test(fase)) return tf("Com a lua {fase}, o que você plantar hoje cresce rápido.", { fase: resto });
+    return tf("Com a lua {fase}, é hora de desapegar do que não te veste mais.", { fase: resto });
 }
 
 function previsaoDoDia(signo) {
@@ -58,9 +60,9 @@ function previsaoDoDia(signo) {
     const pecas = PRODUTOS.filter((p) => naVitrine(p) && disponivel(p) && p.estilos.includes(ELEMENTO_VIBE[signo.elemento]));
     const [cor, corHex] = pega(CORES_DO_DIA);
     return {
-        texto: `${pega(ABERTURAS[signo.elemento])} ${pega(CONSELHOS)}`,
+        texto: `${t(pega(ABERTURAS[signo.elemento]))} ${t(pega(CONSELHOS))}`,
         lua: fraseDaLua(LUA.fase(Date.now())),
-        cor, corHex,
+        cor: t(cor), corHex,
         numero: 1 + Math.floor(sorte() * 33),
         peca: pega(pecas),
     };
@@ -71,11 +73,13 @@ function previsaoDoDia(signo) {
     const caixa = document.getElementById("previsao");
     const dataEl = document.getElementById("horoscopoData");
     if (!grupo) return;
-    const hojeLonga = new Date().toLocaleDateString("pt-BR", { weekday: "long", day: "numeric", month: "long" });
-    dataEl.textContent = `Previsão de ${hojeLonga}. Muda todo dia: volta amanhã ✦`;
-    let atual = null;
-
-    grupo.innerHTML = SIGNOS.map((s) => `<button type="button" class="signo" data-signo="${s.id}" aria-pressed="false"><span class="signo-glifo" aria-hidden="true">${s.glifo}${GLIFO_TEXTO}</span><span class="signo-nome">${s.nome}</span><small>${s.datas}</small></button>`).join("");
+    let hojeLonga = "", atual = null;
+    function montarSignos() {
+        hojeLonga = new Date().toLocaleDateString(localData(), { weekday: "long", day: "numeric", month: "long" });
+        dataEl.textContent = tf("Previsão de {data}. Muda todo dia: volta amanhã ✦", { data: hojeLonga });
+        grupo.innerHTML = SIGNOS.map((s) => `<button type="button" class="signo" data-signo="${s.id}" aria-pressed="${atual?.signo === s}"><span class="signo-glifo" aria-hidden="true">${s.glifo}${GLIFO_TEXTO}</span><span class="signo-nome">${t(s.nome)}</span><small>${s.datas}</small></button>`).join("");
+    }
+    montarSignos();
 
     function mostrar(id, rolar) {
         const signo = SIGNOS.find((s) => s.id === id);
@@ -85,19 +89,19 @@ function previsaoDoDia(signo) {
         grupo.querySelectorAll(".signo").forEach((b) => b.setAttribute("aria-pressed", b.dataset.signo === id));
         const { peca } = atual;
         caixa.innerHTML = `<div class="previsao-topo"><span class="previsao-glifo" aria-hidden="true">${signo.glifo}${GLIFO_TEXTO}</span>
-                <div><h3>${signo.nome}</h3><p>${hojeLonga}</p></div></div>
+                <div><h3>${t(signo.nome)}</h3><p>${hojeLonga}</p></div></div>
             <p class="previsao-texto">${esc(atual.texto)}</p>
             <p class="previsao-lua">${LUA.desenho(Date.now())}<span>${esc(atual.lua)}</span></p>
             <dl class="previsao-dados">
-                <div><dt>Cor do dia</dt><dd><i style="background:${atual.corHex}"></i>${atual.cor}</dd></div>
-                <div><dt>Número da sorte</dt><dd>${atual.numero}</dd></div>
+                <div><dt>${t("Cor do dia")}</dt><dd><i style="background:${atual.corHex}"></i>${atual.cor}</dd></div>
+                <div><dt>${t("Número da sorte")}</dt><dd>${atual.numero}</dd></div>
             </dl>
             <div class="previsao-peca">
-                <button type="button" class="previsao-arte tom-${peca.tom}" data-abrir="${peca.id}" aria-label="Ver ${esc(peca.nome)}">${arte(peca)}</button>
-                <div><p class="previsao-rotulo">Peça do dia</p><p class="previsao-nome">${esc(peca.nome)}</p><p class="previsao-preco">${precoTexto(peca)}</p>
-                <button class="botao botao-linha" type="button" data-abrir="${peca.id}">Ver a peça</button></div>
+                <button type="button" class="previsao-arte tom-${peca.tom}" data-abrir="${peca.id}" aria-label="${t("Ver")} ${esc(t(peca.nome))}">${arte(peca)}</button>
+                <div><p class="previsao-rotulo">${t("Peça do dia")}</p><p class="previsao-nome">${esc(t(peca.nome))}</p><p class="previsao-preco">${precoTexto(peca)}</p>
+                <button class="botao botao-linha" type="button" data-abrir="${peca.id}">${t("Ver a peça")}</button></div>
             </div>
-            <div class="previsao-acoes"><button class="botao" type="button" data-horoscopo-story>Salvar pro story</button></div>`;
+            <div class="previsao-acoes"><button class="botao" type="button" data-horoscopo-story>${t("Salvar pro story")}</button></div>`;
         caixa.hidden = false;
         if (rolar) caixa.scrollIntoView({ behavior: semMovimento ? "auto" : "smooth", block: "nearest" });
     }
@@ -112,13 +116,14 @@ function previsaoDoDia(signo) {
     });
     const salvo = ler(CHAVE_SIGNO, "");
     if (salvo) mostrar(salvo, false);
+    document.addEventListener("idiomaMudou", () => { montarSignos(); if (atual) mostrar(atual.signo.id, false); });
 })();
 
 async function storyDoHoroscopo(h, botao) {
     if (!h) return;
     const textoOriginal = botao.textContent;
     botao.disabled = true;
-    botao.textContent = "Preparando a imagem…";
+    botao.textContent = t("Preparando a imagem…");
     try {
         await Promise.all(FONTES_STORY.map((f) => document.fonts.load(f)));
         const W = 1080, H = 1920;
@@ -128,13 +133,13 @@ async function storyDoHoroscopo(h, botao) {
         pintarFundoStory(ctx, W, H);
 
         ctx.fillStyle = "#e9c46a"; ctx.font = '700 34px "Quicksand"';
-        ctx.fillText("HORÓSCOPO ALT DO DIA", W / 2, 300);
+        ctx.fillText(t("HORÓSCOPO ALT DO DIA"), W / 2, 300);
         ctx.fillStyle = "#cfc0e6"; ctx.font = 'italic 600 44px "Cormorant Garamond"';
-        ctx.fillText(new Date().toLocaleDateString("pt-BR", { weekday: "long", day: "numeric", month: "long" }), W / 2, 360);
+        ctx.fillText(new Date().toLocaleDateString(localData(), { weekday: "long", day: "numeric", month: "long" }), W / 2, 360);
         ctx.fillStyle = "#e9c46a"; ctx.font = '260px "Cormorant Garamond", serif';
         ctx.fillText(h.signo.glifo + GLIFO_TEXTO, W / 2, 640);
         ctx.fillStyle = "#f6eeff"; ctx.font = '700 110px "Cormorant Garamond"';
-        ctx.fillText(h.signo.nome, W / 2, 790);
+        ctx.fillText(t(h.signo.nome), W / 2, 790);
 
         ctx.font = 'italic 700 52px "Cormorant Garamond"';
         let y = 900;
@@ -156,15 +161,15 @@ async function storyDoHoroscopo(h, botao) {
         else ctx.drawImage(img, x + 40, top + 40, lado - 80, lado - 80);
         ctx.restore();
         ctx.fillStyle = "#e9c46a"; ctx.font = '700 30px "Quicksand"';
-        ctx.fillText("PEÇA DO DIA", W / 2, top + lado + 60);
+        ctx.fillText(t("PEÇA DO DIA"), W / 2, top + lado + 60);
         ctx.fillStyle = "#ffb8d9"; ctx.font = '700 44px "Quicksand"';
-        ctx.fillText(h.peca.nome, W / 2, top + lado + 118);
+        ctx.fillText(t(h.peca.nome), W / 2, top + lado + 118);
         ctx.fillStyle = "#cfc0e6"; ctx.font = '500 34px "Quicksand"';
-        ctx.fillText(`cor do dia: ${h.cor}  ✦  número da sorte: ${h.numero}`, W / 2, top + lado + 178);
+        ctx.fillText(tf("cor do dia: {cor}  ✦  número da sorte: {n}", { cor: h.cor, n: h.numero }), W / 2, top + lado + 178);
 
         ctx.fillStyle = "#e9c46a"; ctx.font = '700 40px "Quicksand"';
-        ctx.fillText("veja o seu no link da bio ✦ @eclipse_studiocg", W / 2, H - 110);
-        await entregarImagem(tela, `horoscopo-${h.signo.id}-eclipse-studio.png`, `Horóscopo alt · ${h.signo.nome}`);
+        ctx.fillText(t("veja o seu no link da bio ✦ @eclipse_studiocg"), W / 2, H - 110);
+        await entregarImagem(tela, `horoscopo-${h.signo.id}-eclipse-studio.png`, `${t("Horóscopo alt")} · ${t(h.signo.nome)}`);
     } catch (erro) {
         avisar("Não consegui montar a imagem agora. Tente de novo ou tire um print.");
     } finally {
@@ -195,7 +200,7 @@ async function storyDoHoroscopo(h, botao) {
         if (!comAnimacao) desenho.classList.add("sem-animacao");
         grade.innerHTML = PRODUTOS.filter((p) => p.secreto).map(cardHtml).join("");
         drop.hidden = false;
-        status.textContent = "A porta está aberta ✦ boas-vindas ao drop secreto.";
+        status.textContent = t("A porta está aberta ✦ boas-vindas ao drop secreto.");
         form.hidden = true;
     }
 
@@ -203,7 +208,7 @@ async function storyDoHoroscopo(h, botao) {
         e.preventDefault();
         const palavra = normalizar(campo.value);
         if (!palavra) { campo.focus(); return; }
-        if (!crypto.subtle) { status.textContent = "Seu navegador não abre essa porta. Tente outro navegador."; return; }
+        if (!crypto.subtle) { status.textContent = t("Seu navegador não abre essa porta. Tente outro navegador."); return; }
         if (await hashDe(palavra) === LOJA.portaSecreta.hash) {
             guardar(CHAVE_PORTA, LOJA.portaSecreta.hash);
             abrir(true);
@@ -213,7 +218,7 @@ async function storyDoHoroscopo(h, botao) {
             desenho.classList.remove("tremendo");
             void desenho.offsetWidth;
             desenho.classList.add("tremendo");
-            status.textContent = "A porta não reconheceu essa palavra 🔒 Ela aparece nos close friends do @eclipse_studiocg.";
+            status.textContent = t("A porta não reconheceu essa palavra 🔒 Ela aparece nos close friends do @eclipse_studiocg.");
             campo.select();
         }
     });
@@ -238,24 +243,27 @@ const RECEITAS = {
     const rotulo = document.getElementById("livroPagina");
     const NUMERAIS = ["I", "II", "III", "IV"];
 
+    let paginas = [];
+    function montarPaginas() {
     const capa = `<div class="pagina pagina-capa"><div class="capa-moldura">
         <svg class="capa-eclipse" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="11" class="coroa"/><circle cx="18" cy="14.5" r="10" class="disco"/></svg>
-        <p class="capa-titulo">Grimório</p><p class="capa-sub">da Eclipse Studio</p><p class="capa-rodape">receitas de estilo ✦ vire a página</p></div></div>`;
-    const contracapa = `<div class="pagina pagina-fim"><p class="fim-titulo">Continua na próxima lua cheia…</p>
-        ${LUA.desenho(Date.now())}<p>Novas receitas chegam junto com as peças novas.</p>
+        <p class="capa-titulo">${t("Grimório")}</p><p class="capa-sub">${t("da Eclipse Studio")}</p><p class="capa-rodape">${t("receitas de estilo ✦ vire a página")}</p></div></div>`;
+    const contracapa = `<div class="pagina pagina-fim"><p class="fim-titulo">${t("Continua na próxima lua cheia…")}</p>
+        ${LUA.desenho(Date.now())}<p>${t("Novas receitas chegam junto com as peças novas.")}</p>
         <a class="botao botao-linha" href="https://www.instagram.com/eclipse_studiocg/" target="_blank" rel="noopener noreferrer">@eclipse_studiocg</a></div>`;
-    const paginas = [capa];
+    paginas = [capa];
     ESTILOS.forEach((e, i) => {
         const arcano = ARCANOS[e.id];
         const pecas = PRODUTOS.filter((p) => naVitrine(p) && disponivel(p) && p.estilos.includes(e.id)).slice(0, 5);
-        paginas.push(`<div class="pagina pagina-receita"><p class="pagina-capitulo">Capítulo ${NUMERAIS[i]}</p><h3>${esc(e.nome)}</h3>
+        paginas.push(`<div class="pagina pagina-receita"><p class="pagina-capitulo">${t("Capítulo")} ${NUMERAIS[i]}</p><h3>${esc(t(e.nome))}</h3>
             <span class="pagina-arte tom-${arcano.tom}"><svg class="arte" viewBox="0 0 100 100" aria-hidden="true">${ARTE[arcano.arte]}</svg></span>
-            <p class="pagina-texto">${esc(RECEITAS[e.id])}</p></div>`);
-        paginas.push(`<div class="pagina pagina-ingredientes"><p class="pagina-capitulo">Ingredientes</p>
-            <ul>${pecas.map((p) => `<li><button type="button" data-abrir="${p.id}"><span class="ingrediente-arte tom-${p.tom}">${arte(p)}</span><span class="ingrediente-nome">${esc(p.nome)}</span><span class="ingrediente-preco">${precoTexto(p)}</span></button></li>`).join("")}</ul>
-            <button class="pagina-link" type="button" data-estilo="${e.id}">ver tudo da vibe ${esc(e.nome)} →</button></div>`);
+            <p class="pagina-texto">${esc(t(RECEITAS[e.id]))}</p></div>`);
+        paginas.push(`<div class="pagina pagina-ingredientes"><p class="pagina-capitulo">${t("Ingredientes")}</p>
+            <ul>${pecas.map((p) => `<li><button type="button" data-abrir="${p.id}"><span class="ingrediente-arte tom-${p.tom}">${arte(p)}</span><span class="ingrediente-nome">${esc(t(p.nome))}</span><span class="ingrediente-preco">${precoTexto(p)}</span></button></li>`).join("")}</ul>
+            <button class="pagina-link" type="button" data-estilo="${e.id}">${tf("ver tudo da vibe {vibe} →", { vibe: esc(t(e.nome)) })}</button></div>`);
     });
     paginas.push(contracapa);
+    }
 
     let viradas = 0, folhas = 0, duplo = false;
     const modoDuplo = matchMedia("(min-width: 860px)");
@@ -264,6 +272,7 @@ const RECEITAS = {
         const eraDuplo = duplo;
         duplo = modoDuplo.matches;
         const pagAtual = eraDuplo ? viradas * 2 : viradas; // guarda a página aberta ao trocar de modo
+        montarPaginas();
         const pares = [];
         if (duplo) for (let i = 0; i < paginas.length; i += 2) pares.push([paginas[i], paginas[i + 1] || '<div class="pagina"></div>']);
         else paginas.forEach((p) => pares.push([p, '<div class="pagina pagina-verso"></div>']));
@@ -287,9 +296,9 @@ const RECEITAS = {
         const ultima = duplo ? folhas : folhas - 1;
         anterior.disabled = viradas === 0;
         proxima.disabled = viradas >= ultima;
-        rotulo.textContent = viradas === 0 ? "capa"
-            : duplo ? (viradas === folhas ? "fim" : `páginas ${viradas * 2}–${viradas * 2 + 1}`)
-            : `página ${viradas + 1} de ${paginas.length}`;
+        rotulo.textContent = viradas === 0 ? t("capa")
+            : duplo ? (viradas === folhas ? t("fim") : tf("páginas {a}–{b}", { a: viradas * 2, b: viradas * 2 + 1 }))
+            : tf("página {n} de {total}", { n: viradas + 1, total: paginas.length });
         if (comSom) document.dispatchEvent(new CustomEvent("encanto:som", { detail: "pagina" }));
     }
 
@@ -326,6 +335,7 @@ const RECEITAS = {
         inicio = null;
     });
     modoDuplo.addEventListener("change", montar);
+    document.addEventListener("idiomaMudou", montar); // montar() guarda a página aberta
     montar();
 })();
 
@@ -433,18 +443,18 @@ const CLIMA = (() => {
         mestre.gain.setTargetAtTime(.5, ctx.currentTime, 1.2); // entra bem devagar
         agendarLareira();
         botao.setAttribute("aria-pressed", "true");
-        botao.setAttribute("aria-label", "Desligar o clima sonoro");
+        botao.setAttribute("aria-label", t("Desligar o clima sonoro"));
     }
     function desligar() {
         ligado = false;
         timers.forEach(clearTimeout); timers = [];
         if (ctx) mestre.gain.setTargetAtTime(0, ctx.currentTime, .3);
         botao.setAttribute("aria-pressed", "false");
-        botao.setAttribute("aria-label", "Ligar o clima: chuva e lareira");
+        botao.setAttribute("aria-label", t("Ligar o clima: chuva e lareira"));
     }
 
     if (botao) {
-        botao.setAttribute("aria-label", "Ligar o clima: chuva e lareira");
+        botao.setAttribute("aria-label", t("Ligar o clima: chuva e lareira"));
         botao.addEventListener("click", () => (ligado ? desligar() : ligar()));
         document.addEventListener("visibilitychange", () => { if (ctx && ligado) (document.hidden ? ctx.suspend() : ctx.resume()); });
     }

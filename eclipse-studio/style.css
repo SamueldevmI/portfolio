@@ -280,6 +280,8 @@ html[lang="es"] .fav-texto[aria-pressed="true"]::after { content: "En favoritos"
 .estilo-pastel { --fundo: #3b2750; --luz: rgba(255, 184, 217, .45); }
 .chip-estilo { display: inline-flex; align-items: center; gap: 8px; border-color: var(--ouro); color: var(--ouro); }
 .chip-estilo span { font-size: 1.1rem; line-height: 1; }
+.chip-novo { border-color: rgba(233, 196, 106, .55); }
+.chip-novo[aria-pressed="false"] { color: var(--ouro); }
 @media (max-width: 980px) { .estilos-grade { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 480px) {
     .estilos-grade { gap: 10px; }

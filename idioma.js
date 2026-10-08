@@ -1434,6 +1434,396 @@
         "Minguante gibosa": "Gibosa menguante",
         "Quarto minguante": "Cuarto menguante",
         "Lua minguante": "Luna menguante",
+
+        /* página inicial: garantia, indicação, monte o seu, filme do celular, calculadora do celular e rótulos de acessibilidade */
+        "Um cliente": "Un cliente",
+        "acha a {m} no Google": "encuentra {m} en Google",
+        "acha o {m} no Google": "encuentra {m} en Google",
+        "acha a {m} no Instagram": "encuentra {m} en Instagram",
+        "…a mensagem chega pronta no WhatsApp e <b>já é respondida sozinha</b>…": "…el mensaje llega listo a WhatsApp y <b>se responde solo</b>…",
+        "…e você acorda com": "…y te despiertas con",
+        "3 horários marcados": "3 turnos agendados",
+        "3 vendas": "3 ventas",
+        "3 clientes agendaram": "3 clientes agendaron",
+        "3 alunos novos": "3 alumnos nuevos",
+        "3 consultas marcadas": "3 consultas agendadas",
+        "ou veja o preço na hora →": "o mira el precio al instante →",
+        "Só paga se gostar da prévia": "Solo pagas si te gusta la vista previa",
+        "como funciona?": "¿cómo funciona?",
+        "📝 Não sabe se precisa?": "📝 ¿No sabes si lo necesitas?",
+        "Faça o teste de 1 minuto": "Haz el test de 1 minuto",
+        "monte o seu e veja o preço": "arma el tuyo y mira el precio",
+        "Qual é a sua cara?": "¿Cuál es tu estilo?",
+        "deixando um depoimento (10% off)": "dejando un testimonio (10% off)",
+        "Meu primeiro site": "Mi primer sitio",
+        "Monte o seu e veja o preço na hora →": "Arma el tuyo y mira el precio al instante →",
+        "Salão, barbearia ou estética": "Salón, barbería o estética",
+        "Prestador de serviço": "Prestador de servicios",
+        "Um site a partir de R$ 250 se paga com": "Un sitio desde R$ 250 se paga con",
+        "É uma estimativa, só pra ter ideia do tamanho da coisa.": "Es una estimación, solo para tener idea del tamaño.",
+        "Toque no campo e aperte o": "Toca el campo y aprieta el",
+        "microfone do teclado": "micrófono del teclado",
+        ". Fala do seu jeito que o texto sai pronto pro WhatsApp.": ". Habla a tu manera y el texto sale listo para WhatsApp.",
+        "💬 Mandar minha ideia": "💬 Enviar mi idea",
+        "Você só paga se gostar da prévia.": "Solo pagas si te gusta la vista previa.",
+        "Eu monto a primeira versão do seu site antes de qualquer pagamento. Gostou? Aí você paga 50% e eu termino; os outros 50% ficam pra entrega. Não gostou? Não paga nada. Pix, cartão ou o que combinarmos na proposta.": "Armo la primera versión de tu sitio antes de cualquier pago. ¿Te gustó? Entonces pagas el 50% y lo termino; el otro 50% queda para la entrega. ¿No te gustó? No pagas nada. Pix, tarjeta o lo que acordemos en la propuesta.",
+        "Indiquei alguém. Ganho alguma coisa?": "Recomendé a alguien. ¿Gano algo?",
+        "Ganha! Quem chega pelo seu link tem": "¡Sí! Quien llega por tu link tiene",
+        "10% de desconto no primeiro site": "10% de descuento en el primer sitio",
+        ". Gere o seu link aqui:": ". Genera tu link aquí:",
+        "Gerar meu link": "Generar mi link",
+        "Mandar pro seu sócio": "Enviar a tu socio",
+        "Meu resumo da visita": "Mi resumen de la visita",
+        "Instalar o portfólio": "Instalar el portafolio",
+        "monte o seu": "arma el tuyo",
+        "como eu trabalho": "cómo trabajo",
+        "Navegação rápida por seção": "Navegación rápida por sección",
+        "Navegação principal": "Navegación principal",
+        "Navegação rápida": "Navegación rápida",
+        "Chamar no WhatsApp": "Escribir por WhatsApp",
+        "Passe o mouse pra ver o modo desenho": "Pasa el mouse para ver el modo dibujo",
+        "Stories dos projetos": "Stories de los proyectos",
+        "Abrir a prévia do site deste exemplo": "Abrir la vista previa del sitio de este ejemplo",
+        "Nome do seu negócio, pra ver no celular": "Nombre de tu negocio, para verlo en el celular",
+        "Digite o nome do seu negócio": "Escribe el nombre de tu negocio",
+        "Resumo do portfólio": "Resumen del portafolio",
+        "Calculadora rápida de orçamento": "Calculadora rápida de presupuesto",
+        "Seu negócio sem site e com site": "Tu negocio sin sitio y con sitio",
+        "Arraste pra comparar: à esquerda sem site, à direita com site": "Arrastra para comparar: a la izquierda sin sitio, a la derecha con sitio",
+        "Nome do seu negócio (opcional)": "Nombre de tu negocio (opcional)",
+        "Escolha uma situação": "Elige una situación",
+        "Com site": "Con sitio",
+        "Sem site": "Sin sitio",
+        "Ver aqui, sem sair da página": "Ver aquí, sin salir de la página",
+        "Ver o código no GitHub": "Ver el código en GitHub",
+        "Ver Eldev Music aqui, sem sair da página": "Ver Eldev Music aquí, sin salir de la página",
+        "Ver o código de Eldev Music no GitHub": "Ver el código de Eldev Music en GitHub",
+        "Ver Glitch District aqui, sem sair da página": "Ver Glitch District aquí, sin salir de la página",
+        "Ver o código de Glitch District no GitHub": "Ver el código de Glitch District en GitHub",
+        "Ver Fatia Nobre aqui, sem sair da página": "Ver Fatia Nobre aquí, sin salir de la página",
+        "Ver o código de Fatia Nobre no GitHub": "Ver el código de Fatia Nobre en GitHub",
+        "Ver Conta a Dois aqui, sem sair da página": "Ver Conta a Dois aquí, sin salir de la página",
+        "Ver o código de Conta a Dois no GitHub": "Ver el código de Conta a Dois en GitHub",
+        "Ver TaskFlow aqui, sem sair da página": "Ver TaskFlow aquí, sin salir de la página",
+        "Ver o código de TaskFlow no GitHub": "Ver el código de TaskFlow en GitHub",
+        "Ver FocusFlow aqui, sem sair da página": "Ver FocusFlow aquí, sin salir de la página",
+        "Ver o código de FocusFlow no GitHub": "Ver el código de FocusFlow en GitHub",
+        "Ver FlowBoard aqui, sem sair da página": "Ver FlowBoard aquí, sin salir de la página",
+        "Ver o código de FlowBoard no GitHub": "Ver el código de FlowBoard en GitHub",
+        "App de música no celular: disco de vinil girando, a tela inicial com músicas em alta e o player": "App de música en el celular: disco de vinilo girando, la pantalla de inicio con canciones en tendencia y el reproductor",
+        "Vitrine da loja com fotos de parka, moletom, calça cargo, coturno e óculos, o carrinho com 3 peças e a loja aberta no celular": "Vitrina de la tienda con fotos de parka, buzo, pantalón cargo, borcegos y lentes, el carrito con 3 piezas y la tienda abierta en el celular",
+        "Chat da pizzaria respondendo sozinho o horário de funcionamento e a entrega": "Chat de la pizzería respondiendo solo el horario de atención y el delivery",
+        "O app no computador e no celular, mostrando que Bruno deve R$ 68,75 pra Ana e a lista de gastos dos dois": "La app en la computadora y en el celular, mostrando que Bruno le debe R$ 68,75 a Ana y la lista de gastos de los dos",
+        "Lista de tarefas do dia com prioridade alta, média e baixa, e o progresso do dia": "Lista de tareas del día con prioridad alta, media y baja, y el progreso del día",
+        "Cronômetro de 25 minutos de foco rodando, com os botões de pausa curta e longa": "Cronómetro de 25 minutos de foco corriendo, con los botones de pausa corta y larga",
+        "Quadro com três colunas de tarefas: a fazer, em andamento e concluído": "Tablero con tres columnas de tareas: por hacer, en curso y terminado",
+        "Conte sua ideia": "Cuenta tu idea",
+        "Ex.: tenho uma pizzaria e queria um site pros clientes pedirem pelo WhatsApp…": "Ej.: tengo una pizzería y quiero un sitio para que los clientes pidan por WhatsApp…",
+        "Como funciona": "Cómo funciona",
+        "Interface de Programação de Aplicações: a porta por onde outros programas conversam com um sistema": "Interfaz de Programación de Aplicaciones: la puerta por donde otros programas conversan con un sistema",
+        "Progressive Web App: um site que dá pra instalar como aplicativo": "Progressive Web App: un sitio que se puede instalar como aplicación",
+        "Volume da música": "Volumen de la música",
+        "salão": "salón",
+        "salão de beleza": "salón de belleza",
+        /* antes × depois do topo (antes-depois.js) e vitrine do celular */
+        "Boa noite! Vocês tão abertos? Queria 2 calabresa 🍕": "¡Buenas noches! ¿Están abiertos? Quería 2 de calabresa 🍕",
+        "deixa, pedi em outro lugar 👋": "deja, pedí en otro lado 👋",
+        "Abertos até 23h30! 🍕 2 calabresa = R$ 90. Chega em 40 min.": "¡Abiertos hasta las 23:30! 🍕 2 de calabresa = R$ 90. Llega en 40 min.",
+        "Fechado! 🙌": "¡Listo! 🙌",
+        "Fala! Tem horário hoje à tarde? Corte + barba": "¡Buenas! ¿Hay turno hoy a la tarde? Corte + barba",
+        "achei outra barbearia, valeu": "encontré otra barbería, gracias",
+        "Tem sim ✂️ 16h30 ou 18h. Toca no horário pra agendar 👇": "Sí ✂️ 16:30 o 18:00. Toca el horario para agendar 👇",
+        "18h! 🙌": "¡18:00! 🙌",
+        "Oi! Tem o moletom preto no M?": "¡Hola! ¿Tienen el buzo negro en M?",
+        "oi??": "¿hola??",
+        "comprei em outra loja 👋": "compré en otra tienda 👋",
+        "Tem! 🖤 Moletom M = R$ 189. Pix ou cartão?": "¡Sí! 🖤 Buzo M = R$ 189. ¿Pix o tarjeta?",
+        "Pix! 🙌": "¡Pix! 🙌",
+        "Oi, tem horário pra escova no sábado?": "Hola, ¿hay turno para brushing el sábado?",
+        "alguém?": "¿alguien?",
+        "marquei em outro salão 👋": "reservé en otro salón 👋",
+        "Tem! 💇‍♀️ Sábado 10h ou 14h. Qual prefere?": "¡Sí! 💇‍♀️ Sábado 10:00 o 14:00. ¿Cuál prefieres?",
+        "10h! 🙌": "¡10:00! 🙌",
+        "Bom dia! Como faço pra treinar aí?": "¡Buen día! ¿Cómo hago para entrenar ahí?",
+        "fechei com outra academia": "me anoté en otro gimnasio",
+        "Bora! 💪 Aula experimental grátis hoje às 18h. Te espero!": "¡Vamos! 💪 Clase de prueba gratis hoy a las 18:00. ¡Te espero!",
+        "Tô dentro! 🙌": "¡Me anoto! 🙌",
+        "Boa noite, tem consulta com clínico essa semana?": "Buenas noches, ¿hay consulta con clínico esta semana?",
+        "olá?": "¿hola?",
+        "consegui em outra clínica": "conseguí en otra clínica",
+        "Temos! 🩺 Quinta 9h ou 14h. Qual fica melhor?": "¡Sí! 🩺 Jueves 9:00 o 14:00. ¿Cuál te queda mejor?",
+        "Quinta 9h, obrigada!": "Jueves 9:00, ¡gracias!",
+        "+1 HORÁRIO": "+1 TURNO",
+        "+1 VENDA": "+1 VENTA",
+        "+1 AGENDAMENTO": "+1 TURNO",
+        "+1 ALUNO": "+1 ALUMNO",
+        "R$ 99/mês": "R$ 99/mes",
+        "marcada": "agendada",
+        "você viu às": "lo viste a las",
+        "resposta automática": "respuesta automática",
+        "Cliente novo": "Cliente nuevo",
+        "visto por último às": "últ. vez a las",
+        "foi pro concorrente": "se fue a la competencia",
+        "arrasta ↔": "arrastra ↔",
+        "pizzaria": "pizzería",
+        "barbearia": "barbería",
+        "loja": "tienda",
+        "academia": "gimnasio",
+        "Ver exemplo de outro ramo": "Ver ejemplo de otro rubro",
+        "digite o nome do seu negócio aqui embaixo, ou toque no celular pra prévia completa 👆": "escribe el nombre de tu negocio aquí abajo, o toca el celular para la vista previa completa 👆",
+        /* script.js: orçamento em passos (perguntas, opções, botões e a mensagem final) */
+        "2 a 5 pessoas": "2 a 5 personas",
+        "6 a 20 pessoas": "6 a 20 personas",
+        "Agendamento": "Agenda de citas",
+        "Ainda não": "Todavía no",
+        "Ainda não controlo": "Todavía no lo controlo",
+        "Ainda não sei": "Todavía no sé",
+        "Ainda não sei o que preciso": "Todavía no sé qué necesito",
+        "Ainda não tenho": "Todavía no tengo",
+        "Aplicativo de celular": "Aplicación para celular",
+        "Automação (acabar com tarefa repetitiva)": "Automatización (acabar con tareas repetitivas)",
+        "Avisos por WhatsApp ou e-mail": "Avisos por WhatsApp o e-mail",
+        "Baixar em PDF": "Descargar en PDF",
+        "Blog ou novidades": "Blog o novedades",
+        "Botão de WhatsApp": "Botón de WhatsApp",
+        "Cadastro de clientes": "Registro de clientes",
+        "Caderno ou papel": "Cuaderno o papel",
+        "Com que frequência ela acontece?": "¿Con qué frecuencia ocurre?",
+        "Como controla hoje": "Cómo lo controla hoy",
+        "Como posso te chamar?": "¿Cómo te llamas?",
+        "Como você controla isso hoje?": "¿Cómo controlas eso hoy?",
+        "Confira e mude o que quiser. Ao clicar em enviar, o WhatsApp abre com este texto. Falta só apertar enviar por lá.": "Revisa y cambia lo que quieras. Al tocar en enviar, WhatsApp se abre con este texto. Solo falta tocar enviar allí.",
+        "Continuamos de onde você parou.": "Seguimos desde donde lo dejaste.",
+        "Copiar resumo": "Copiar resumen",
+        "Câmera e fotos": "Cámara y fotos",
+        "Ele precisa funcionar sem internet?": "¿Necesita funcionar sin internet?",
+        "Em cerca de 1 mês": "En aproximadamente 1 mes",
+        "Escreva seu nome para eu saber com quem estou falando.": "Escribe tu nombre para saber con quién estoy hablando.",
+        "Ex.: copiar os dados dos e-mails para uma planilha": "Ej.: copiar los datos de los e-mails a una planilla",
+        "Ex.: instagram.com/seunegocio": "Ej.: instagram.com/tunegocio",
+        "Ex.: link de um site que você gosta, ou algo importante que eu deva saber": "Ej.: el link de un sitio que te guste, o algo importante que deba saber",
+        "Ex.: perco muito tempo respondendo as mesmas perguntas": "Ej.: pierdo mucho tiempo respondiendo las mismas preguntas",
+        "Ex.: sou dentista e atendo em Campo Grande": "Ej.: soy dentista y atiendo en Campo Grande",
+        "Formulário de contato": "Formulario de contacto",
+        "Frequência": "Frecuencia",
+        "Funcionar sem internet": "Funcionar sin internet",
+        "Galeria de fotos": "Galería de fotos",
+        "Já tem domínio": "Ya tiene dominio",
+        "Já tem site ou rede social do negócio? (opcional)": "¿Ya tienes sitio o red social del negocio? (opcional)",
+        "Ler PDFs e documentos": "Leer PDFs y documentos",
+        "Login de usuários": "Login de usuarios",
+        "Logo e cores": "Logo y colores",
+        "Loja online": "Tienda online",
+        "Mais de 20": "Más de 20",
+        "Mais detalhes:": "Más detalles:",
+        "Mapa e localização": "Mapa y ubicación",
+        "Marque o que quiser. Pode pular.": "Marca lo que quieras. Puedes saltarlo.",
+        "Me chamo": "Me llamo",
+        "Mensagem para o WhatsApp": "Mensaje para WhatsApp",
+        "Notificações": "Notificaciones",
+        "Não deu para copiar. Selecione o texto e copie.": "No se pudo copiar. Selecciona el texto y cópialo.",
+        "Não sei": "No sé",
+        "Não sei o que é isso": "No sé qué es eso",
+        "O quanto antes": "Lo antes posible",
+        "O que o projeto precisa ter?": "¿Qué necesita tener el proyecto?",
+        "O que quer resolver": "Qué quiere resolver",
+        "O que você faz ou vende?": "¿Qué haces o vendes?",
+        "Oi, Samuel!": "¡Hola, Samuel!",
+        "Os dois": "Los dos",
+        "Outro sistema": "Otro sistema",
+        "Pagamento online": "Pago online",
+        "Painel com gráficos": "Panel con gráficos",
+        "Painel para administrar": "Panel para administrar",
+        "Para qual celular?": "¿Para qué celular?",
+        "Para quando você precisa?": "¿Para cuándo lo necesitas?",
+        "Pedir orçamento": "Pedir presupuesto",
+        "Pedir orçamento disso": "Pedir presupuesto de esto",
+        "Pergunta": "Pregunta",
+        "Planilha": "Planilla",
+        "Planilhas (Excel ou Google)": "Planillas (Excel o Google)",
+        "Precisa ter": "Necesita tener",
+        "Progresso do orçamento": "Progreso del presupuesto",
+        "Projeto:": "Proyecto:",
+        "Pular": "Saltar",
+        "Qual problema você quer resolver ou o que quer melhorar?": "¿Qué problema quieres resolver o qué quieres mejorar?",
+        "Qual tarefa você repete todo dia ou toda semana?": "¿Qué tarea repites todos los días o todas las semanas?",
+        "Quantas pessoas vão usar": "Cuántas personas lo van a usar",
+        "Quantas pessoas vão usar o sistema?": "¿Cuántas personas van a usar el sistema?",
+        "Que tipo de projeto você quer?": "¿Qué tipo de proyecto quieres?",
+        "Quer acrescentar algo? (opcional)": "¿Quieres agregar algo? (opcional)",
+        "Recomeçar": "Empezar de nuevo",
+        "Recomeçar do zero": "Empezar desde cero",
+        "Referência: projeto": "Referencia: proyecto",
+        "Relatórios em PDF ou Excel": "Informes en PDF o Excel",
+        "Relatórios prontos": "Informes listos",
+        "Resumo copiado!": "¡Resumen copiado!",
+        "Sem pressa": "Sin prisa",
+        "Sim, tenho os dois": "Sí, tengo los dos",
+        "Sistema web (cadastro, controle, painel)": "Sistema web (registro, control, panel)",
+        "Site ou página de vendas": "Sitio o página de ventas",
+        "Site/rede social atual:": "Sitio/red social actual:",
+        "Sobre o negócio": "Sobre el negocio",
+        "Sua mensagem está pronta": "Tu mensaje está listo",
+        "Só eu": "Solo yo",
+        "Só o logo": "Solo el logo",
+        "Tarefa que se repete": "Tarea que se repite",
+        "Tirar dúvida": "Sacar una duda",
+        "Toda semana": "Todas las semanas",
+        "Todo dia": "Todos los días",
+        "Todo mês": "Todos los meses",
+        "Tudo certo!": "¡Todo listo!",
+        "Ver minha mensagem": "Ver mi mensaje",
+        "Vi seu portfólio": "Vi tu portafolio",
+        "Vim pelo": "Llegué por",
+        "Você está no navegador do Instagram. Se o WhatsApp não abrir, toque em Copiar resumo e me chame por lá.": "Estás en el navegador de Instagram. Si WhatsApp no se abre, toca en Copiar resumen y escríbeme por allí.",
+        "Você já tem logo e cores da sua marca?": "¿Ya tienes logo y colores de tu marca?",
+        "Você já tem um endereço na internet (domínio)?": "¿Ya tienes una dirección en internet (dominio)?",
+        "e quero pedir um orçamento.": "y quiero pedir un presupuesto.",
+        "link que você me mandou": "link que me enviaste",
+        "← Voltar": "← Volver",
+        "← Voltar e mudar respostas": "← Volver y cambiar respuestas",
+        "Novidades": "Novedades",
+        "amanhã": "mañana",
+        "· Edição #1 · Impresso em Campo Grande - MS": "· Edición #1 · Impreso en Campo Grande - MS",
+        "Alguém": "Alguien",
+        /* cantinho místico: horóscopo, grimório, arcanos, caixa, presente, boneca e a Nyx */
+        "Lua cheia": "Luna llena",
+        "Com a {fase}, tudo fica mais intenso, até o look.": "Con la {fase}, todo se vuelve más intenso, hasta el look.",
+        "Com a {fase}, é dia de começar algo do zero.": "Con la {fase}, es día de empezar algo desde cero.",
+        "Com a lua {fase}, o que você plantar hoje cresce rápido.": "En {fase}, lo que siembres hoy crece rápido.",
+        "Com a lua {fase}, é hora de desapegar do que não te veste mais.": "En {fase}, es hora de soltar lo que ya no te viste.",
+        "Previsão de {data}. Muda todo dia: volta amanhã ✦": "Predicción del {data}. Cambia todos los días: vuelve mañana ✦",
+        "Escolha o seu signo": "Elige tu signo",
+        "Magias da loja": "Magias de la tienda",
+        "Áries": "Aries",
+        "Touro": "Tauro",
+        "Gêmeos": "Géminis",
+        "Câncer": "Cáncer",
+        "Leão": "Leo",
+        "Virgem": "Virgo",
+        "Escorpião": "Escorpio",
+        "Sagitário": "Sagitario",
+        "Capricórnio": "Capricornio",
+        "Aquário": "Acuario",
+        "Peixes": "Piscis",
+        "Hoje sua energia está em brasa:": "Hoy tu energía está al rojo vivo:",
+        "O fogo do seu signo anda inquieto:": "El fuego de tu signo anda inquieto:",
+        "Tem faísca no ar pra você:": "Hay chispas en el aire para ti:",
+        "Seu brilho não cabe em meia-luz hoje:": "Tu brillo no cabe en la penumbra hoy:",
+        "Hoje o dia pede raiz e ritual:": "Hoy el día pide raíz y ritual:",
+        "Seu signo quer algo que dure:": "Tu signo quiere algo que dure:",
+        "A terra sussurra paciência:": "La tierra susurra paciencia:",
+        "Hoje você merece conforto com um pé no macabro:": "Hoy mereces comodidad con un pie en lo macabro:",
+        "Hoje as ideias voam feito morcego ao entardecer:": "Hoy las ideas vuelan como murciélago al atardecer:",
+        "O vento traz novidade pro seu lado:": "El viento trae novedades a tu lado:",
+        "Sua cabeça está nas nuvens (e as nuvens estão roxas):": "Tu cabeza está en las nubes (y las nubes son moradas):",
+        "Hoje a conversa flui, e o estilo também:": "Hoy la conversación fluye, y el estilo también:",
+        "Hoje sua intuição está afiada:": "Hoy tu intuición está afilada:",
+        "As águas do seu signo andam profundas:": "Las aguas de tu signo andan profundas:",
+        "Tem mistério rondando você hoje:": "Hay misterio rondándote hoy:",
+        "Seu sexto sentido está no máximo:": "Tu sexto sentido está al máximo:",
+        "aposte numa peça que ninguém espera de você.": "apuesta por una pieza que nadie espera de ti.",
+        "use preto como quem veste armadura.": "usa negro como quien se pone una armadura.",
+        "um detalhe de renda resolve o dia inteiro.": "un detalle de encaje resuelve el día entero.",
+        "deixe o delineado mais afiado que a língua.": "deja el delineado más afilado que la lengua.",
+        "combine algo fofo com algo que assusta.": "combina algo tierno con algo que asuste.",
+        "prata ou dourado? Os dois. Hoje pode.": "¿plata o dorado? Los dos. Hoy se puede.",
+        "tire aquela peça do fundo do armário e dê uma chance.": "saca esa pieza del fondo del armario y dale una oportunidad.",
+        "menos explicação, mais presença.": "menos explicación, más presencia.",
+        "um choker no pescoço e o mundo te respeita.": "un choker en el cuello y el mundo te respeta.",
+        "coloque a playlist mais dramática que você tem.": "pon la playlist más dramática que tengas.",
+        "saia na rua como se fosse capa de revista antiga.": "sal a la calle como si fueras portada de revista antigua.",
+        "acenda uma vela e peça algo com fé.": "enciende una vela y pide algo con fe.",
+        "lilás": "lila",
+        "vinho": "vino",
+        "preto veludo": "negro terciopelo",
+        "marfim": "marfil",
+        "rosa bebê": "rosa bebé",
+        "dourado": "dorado",
+        "Cor do dia": "Color del día",
+        "Número da sorte": "Número de la suerte",
+        "Peça do dia": "Pieza del día",
+        "Ver a peça": "Ver la pieza",
+        "HORÓSCOPO ALT DO DIA": "HORÓSCOPO ALT DEL DÍA",
+        "PEÇA DO DIA": "PIEZA DEL DÍA",
+        "cor do dia: {cor}  ✦  número da sorte: {n}": "color del día: {cor}  ✦  número de la suerte: {n}",
+        "veja o seu no link da bio ✦ @eclipse_studiocg": "mira el tuyo en el link de la bio ✦ @eclipse_studiocg",
+        "Não consegui montar a imagem agora. Tente de novo ou tire um print.": "No pude armar la imagen ahora. Intenta de nuevo o haz una captura.",
+        "A porta está aberta ✦ boas-vindas ao drop secreto.": "La puerta está abierta ✦ bienvenida al drop secreto.",
+        "Seu navegador não abre essa porta. Tente outro navegador.": "Tu navegador no abre esta puerta. Prueba otro navegador.",
+        "A porta não reconheceu essa palavra 🔒 Ela aparece nos close friends do @eclipse_studiocg.": "La puerta no reconoció esa palabra 🔒 Aparece en los mejores amigos de @eclipse_studiocg.",
+        "Grimório da Eclipse Studio": "Grimorio de Eclipse Studio",
+        "da Eclipse Studio": "de Eclipse Studio",
+        "receitas de estilo ✦ vire a página": "recetas de estilo ✦ pasa la página",
+        "Continua na próxima lua cheia…": "Continúa en la próxima luna llena…",
+        "Novas receitas chegam junto com as peças novas.": "Las recetas nuevas llegan junto con las piezas nuevas.",
+        "ver tudo da vibe {vibe} →": "ver todo de la vibra {vibe} →",
+        "capa": "portada",
+        "fim": "fin",
+        "Pegue um espartilho, uma pitada de renda marfim e um camafeu preso na gola. Misture à meia-luz e sirva com olhar de retrato antigo.": "Toma un corsé, una pizca de encaje marfil y un camafeo prendido en el cuello. Mezcla a media luz y sirve con mirada de retrato antiguo.",
+        "Derreta veludo preto em fogo baixo, junte um rosário longo e uma rosa vermelha no pescoço. Deixe descansar até a meia-noite e saia pra rua.": "Derrite terciopelo negro a fuego lento, añade un rosario largo y una rosa roja en el cuello. Deja reposar hasta la medianoche y sal a la calle.",
+        "Numa noite de lua, junte uma capa de veludo, uma bola de cristal no peito e um olho que tudo vê no dedo. Mexa três vezes em sentido anti-horário.": "En una noche de luna, junta una capa de terciopelo, una bola de cristal en el pecho y un ojo que todo lo ve en el dedo. Revuelve tres veces en sentido antihorario.",
+        "Bata lilás, rosa e menta até ficar fofo. Acrescente uma cruz, um morceguinho e uma gota de trevas. Sirva com laço.": "Bate lila, rosa y menta hasta que quede tierno. Agrega una cruz, un murcielaguito y una gota de tinieblas. Sirve con moño.",
+        "Desligar o clima sonoro": "Apagar el ambiente",
+        "arraste pra mover, setas também movem": "arrastra para mover, las flechas también mueven",
+        "Look com 1 peça: {total}": "Look con 1 pieza: {total}",
+        "Look com {n} peças: {total}": "Look con {n} piezas: {total}",
+        "itens a combinar": "artículos a acordar",
+        "A boneca está só de anágua. Escolha uma peça ✦": "La muñeca está solo en enagua. Elige una pieza ✦",
+        "Meu look de boneca": "Mi look de muñeca",
+        "monte o seu no link da bio ✦ @eclipse_studiocg": "arma el tuyo en el link de la bio ✦ @eclipse_studiocg",
+        "Vista a boneca primeiro ✦": "Viste la muñeca primero ✦",
+        "✦ O look da boneca caiu no caldeirão": "✦ El look de la muñeca cayó en el caldero",
+        "Toque nas peças pra vestir a boneca e arraste pra arrumar. Gostou do look? Salva pro story ou põe tudo na sacola.": "Toca las piezas para vestir la muñeca y arrastra para acomodarlas. ¿Te gustó el look? Guárdalo para el story o ponlo todo en la bolsa.",
+        "Boneca vestida com as peças escolhidas": "Muñeca vestida con las piezas elegidas",
+        "Peça selecionada": "Pieza seleccionada",
+        "Diminuir a peça": "Achicar la pieza",
+        "Aumentar a peça": "Agrandar la pieza",
+        "(toque pra vestir ou tirar)": "(toca para poner o quitar)",
+        "Oi, {nome}!": "¡Hola, {nome}!",
+        "Oi!": "¡Hola!",
+        "Separei umas peças na {loja} que eu ia amar ganhar de presente 🖤": "Elegí unas piezas en {loja} que me encantaría recibir de regalo 🖤",
+        "É só abrir a cartinha:": "Solo abre la cartita:",
+        "Ponha as peças que você quer ganhar na sacola primeiro ✦": "Primero pon en la bolsa las piezas que quieres recibir ✦",
+        "🎁 Carta pronta: escolha pra quem mandar no WhatsApp.": "🎁 Carta lista: elige a quién mandarla por WhatsApp.",
+        "Carta copiada ✦ cola na conversa que quiser.": "Carta copiada ✦ pégala en la conversación que quieras.",
+        "{de} te mandou uma carta": "{de} te mandó una carta",
+        "{de} separou estas peças na {loja} e ia amar ganhar de presente:": "{de} eligió estas piezas en {loja} y le encantaría recibirlas de regalo:",
+        "É presente pra {de} 🎁": "Es regalo para {de} 🎁",
+        "🎁 O presente pra {de} está na sacola": "🎁 El regalo para {de} está en la bolsa",
+        "{n} peças surpresa da vibe que você escolher, por {preco}. Toca na caixa pra sacudir 😉": "{n} piezas sorpresa de la vibra que elijas, por {preco}. Toca la caja para sacudirla 😉",
+        "Numa caixa {vibe} pode vir qualquer uma destas (ou outras da mesma vibe):": "En una caja {vibe} puede venir cualquiera de estas (u otras de la misma vibra):",
+        "Quero a caixa {vibe}": "Quiero la caja {vibe}",
+        "Caixa {vibe} no caldeirão": "Caja {vibe} en el caldero",
+        "Coleção completa! Seu código {codigo} já vai sozinho no pedido: {premio}.": "¡Colección completa! Tu código {codigo} ya va solo en el pedido: {premio}.",
+        "Cada dia que você visita a loja, ganha uma carta. Junte as {total} e ganhe um código: {premio}. Você tem {n} de {total}.": "Cada día que visitas la tienda, ganas una carta. Junta las {total} y gana un código: {premio}. Tienes {n} de {total}.",
+        "Carta ainda escondida": "Carta todavía escondida",
+        "volte amanhã": "vuelve mañana",
+        "Sua primeira visita trouxe uma carta ✦": "Tu primera visita trajo una carta ✦",
+        "A última carta! Coleção completa ✦": "¡La última carta! Colección completa ✦",
+        "Você voltou, e trouxe uma carta nova ✦": "Volviste, y trajiste una carta nueva ✦",
+        "Seu código é {codigo}: {premio}. Ele já vai sozinho na mensagem do pedido.": "Tu código es {codigo}: {premio}. Ya va solo en el mensaje del pedido.",
+        "{n} de {total} cartas. Volte amanhã pra próxima.": "{n} de {total} cartas. Vuelve mañana por la próxima.",
+        "🃏 Você ganhou sua primeira carta de arcano!": "🃏 ¡Ganaste tu primera carta de arcano!",
+        "🃏 Carta nova na sua coleção!": "🃏 ¡Carta nueva en tu colección!",
+        "Frete grátis acima de {valor} na entrega em Campo Grande. Eu conferi 🐾": "Envío gratis desde {valor} en entregas en Campo Grande. Lo verifiqué 🐾",
+        "Já tirou o tarô do look? As cartas não mentem (eu às vezes sim).": "¿Ya sacaste el tarot del look? Las cartas no mienten (yo a veces sí).",
+        "Psiu… apaga as velas lá em cima. Tem um primo meu escondido no escuro.": "Psst… apaga las velas allá arriba. Hay un primo mío escondido en la oscuridad.",
+        "Lua de hoje: {fase}. Peça nova chega na lua cheia.": "Luna de hoy: {fase}. Las piezas nuevas llegan en luna llena.",
+        "Dizem que tem uma porta secreta aqui embaixo. A palavra sai nos close friends 👀": "Dicen que hay una puerta secreta aquí abajo. La palabra sale en los mejores amigos 👀",
+        "Quer ganhar de presente? Monta a sacola e toca em “Pedir de presente”.": "¿Quieres que te lo regalen? Arma la bolsa y toca “Pedir de regalo”.",
+        "Volta amanhã que tem carta de arcano nova pra você 🃏": "Vuelve mañana que hay carta de arcano nueva para ti 🃏",
+        "Já viu seu horóscopo alt de hoje? Muda todo dia.": "¿Ya viste tu horóscopo alt de hoy? Cambia todos los días.",
+        "Mrrrau! Caiu no caldeirão ✦": "¡Mrrrau! Cayó en el caldero ✦",
+        "Boa escolha. Eu aprovo 🐾": "Buena elección. La apruebo 🐾",
+        "Hmm, essa combina com você.": "Mmm, esa va contigo.",
+        "Ronronando aqui de felicidade.": "Ronroneando aquí de felicidad.",
+        "Mandar a Nyx cochilar hoje": "Mandar a Nyx a dormir la siesta hoy",
+        "Tá bom, vou cochilar. Até amanhã 😴": "Está bien, voy a dormir la siesta. Hasta mañana 😴",
+        "Pensando em {peca}? Combina demais com {par} ✦": "¿Pensando en {peca}? Combina muchísimo con {par} ✦",
+        "Voltou! Senti sua falta 🐾": "¡Volviste! Te extrañé 🐾",
+        "Miau. Eu sou a Nyx, a gata da loja 🐈‍⬛ Toca em mim que eu dou dicas.": "Miau. Soy Nyx, la gata de la tienda 🐈‍⬛ Tócame y te doy consejos.",
+        "✦ Pronto! A Eclipse está na sua tela inicial.": "✦ ¡Listo! Eclipse está en tu pantalla de inicio.",
         "hoje é lua cheia!": "¡hoy es luna llena!",
         "drop na lua cheia amanhã": "drop en la luna llena mañana",
         "drop na lua cheia em": "drop en la luna llena en",
@@ -1771,23 +2161,46 @@
     var listaAtributos = []; // { el, atributo, original }
     var ATRIBUTOS_TRADUZIVEIS = ["aria-label", "title", "placeholder"];
 
-    function montarListas() {
-        var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null);
-        var no;
-        while ((no = walker.nextNode())) {
-            if (!no.nodeValue || !no.nodeValue.trim()) continue;
-            if (dentroDeIgnorado(no)) continue;
-            var chave = normalizar(no.nodeValue);
-            if (DICIONARIO[chave]) listaTextos.push({ no: no, original: no.nodeValue });
-        }
-        ATRIBUTOS_TRADUZIVEIS.forEach(function (atributo) {
-            document.querySelectorAll("[" + atributo + "]").forEach(function (el) {
-                if (dentroDeIgnorado(el)) return;
-                var valor = el.getAttribute(atributo);
-                var chave = normalizar(valor || "");
-                if (DICIONARIO[chave]) listaAtributos.push({ el: el, atributo: atributo, original: valor });
+    /* Guarda o texto original (português) de cada nó que tem tradução. Pode ser chamada de novo pra
+       um pedaço novo da página: o que já está guardado não entra duas vezes. Devolve só o que é novo. */
+    var conhecidos = new WeakSet();       // nós de texto já guardados
+    var atributosConhecidos = new WeakMap(); // elemento -> atributos já guardados
+    function montarListas(raiz) {
+        raiz = raiz || document.body;
+        var novos = { textos: [], atributos: [] };
+        if (raiz.nodeType === 3) {
+            guardarTexto(raiz, novos);
+        } else if (raiz.nodeType === 1) {
+            var walker = document.createTreeWalker(raiz, NodeFilter.SHOW_TEXT, null);
+            var no;
+            while ((no = walker.nextNode())) guardarTexto(no, novos);
+            var elementos = Array.prototype.slice.call(raiz.querySelectorAll("[aria-label], [title], [placeholder]"));
+            if (raiz.matches && raiz.matches("[aria-label], [title], [placeholder]")) elementos.push(raiz);
+            elementos.forEach(function (el) {
+                ATRIBUTOS_TRADUZIVEIS.forEach(function (atributo) {
+                    var valor = el.getAttribute(atributo);
+                    if (!valor || !DICIONARIO[normalizar(valor)]) return;
+                    var ja = atributosConhecidos.get(el);
+                    if (ja && ja[atributo]) return;
+                    if (dentroDeIgnorado(el)) return;
+                    if (!ja) { ja = {}; atributosConhecidos.set(el, ja); }
+                    ja[atributo] = true;
+                    var item = { el: el, atributo: atributo, original: valor };
+                    listaAtributos.push(item);
+                    novos.atributos.push(item);
+                });
             });
-        });
+        }
+        return novos;
+    }
+    function guardarTexto(no, novos) {
+        if (conhecidos.has(no) || !no.nodeValue || !no.nodeValue.trim()) return;
+        if (!DICIONARIO[normalizar(no.nodeValue)]) return; // primeiro o dicionário (barato), depois a subida na árvore
+        if (dentroDeIgnorado(no)) return;
+        conhecidos.add(no);
+        var item = { no: no, original: no.nodeValue };
+        listaTextos.push(item);
+        novos.textos.push(item);
     }
 
     /* Função global pra scripts de páginas de projeto traduzirem texto que eles mesmos geram em
@@ -1815,8 +2228,11 @@
         document.documentElement.dataset.idioma = idioma;
     })();
 
-    function aplicar(idioma) {
-        listaTextos.forEach(function (item) {
+    /* Em português (o caso comum) a página já está no idioma certo e não precisa varrer nada na
+       abertura. As listas são montadas quando o espanhol entra (na abertura ou no botão): nessa hora o
+       texto ainda está em português, então o original guardado é o certo. */
+    function traduzirItens(novos, idioma) {
+        novos.textos.forEach(function (item) {
             var chave = normalizar(item.original);
             if (idioma === "es" && DICIONARIO[chave]) {
                 var antes = item.original.match(/^\s*/)[0];
@@ -1826,11 +2242,38 @@
                 item.no.nodeValue = item.original;
             }
         });
-        listaAtributos.forEach(function (item) {
+        novos.atributos.forEach(function (item) {
             var chave = normalizar(item.original || "");
             if (idioma === "es" && DICIONARIO[chave]) item.el.setAttribute(item.atributo, DICIONARIO[chave]);
             else item.el.setAttribute(item.atributo, item.original);
         });
+    }
+
+    /* Conteúdo que entra depois (scripts carregados mais tarde, telas montadas por JavaScript): enquanto
+       estiver em espanhol, cada pedaço novo da página é traduzido assim que aparece. Só olha nós
+       adicionados (não mudanças de texto), então a própria tradução não dispara outra volta. */
+    var observador = null, pendentes = [], agendado = false;
+    function vigiar(ligar) {
+        if (!("MutationObserver" in window)) return;
+        if (!ligar) { if (observador) observador.disconnect(); pendentes = []; return; }
+        if (!observador) observador = new MutationObserver(function (registros) {
+            registros.forEach(function (r) { for (var i = 0; i < r.addedNodes.length; i++) pendentes.push(r.addedNodes[i]); });
+            if (agendado) return;
+            agendado = true;
+            setTimeout(function () {
+                agendado = false;
+                var lote = pendentes; pendentes = [];
+                if (document.documentElement.lang !== "es") return;
+                lote.forEach(function (no) { if (no.isConnected) traduzirItens(montarListas(no), "es"); });
+            }, 30);
+        });
+        observador.observe(document.body, { childList: true, subtree: true });
+    }
+
+    function aplicar(idioma) {
+        if (idioma === "es") montarListas(document.body);
+        traduzirItens({ textos: listaTextos, atributos: listaAtributos }, idioma);
+        vigiar(idioma === "es");
         var heroTexto = document.getElementById("heroTextoDigitado");
         if (heroTexto) heroTexto.textContent = idioma === "es" ? TEXTO_HERO_ES : TEXTO_HERO_PT;
         document.documentElement.dataset.idioma = idioma;
@@ -1883,7 +2326,6 @@
     }
 
     function iniciar() {
-        montarListas();
         var idioma = idiomaInicial();
         aplicar(idioma);
 

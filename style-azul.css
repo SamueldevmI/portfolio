@@ -1620,6 +1620,13 @@ html.sem-animacoes, html.sem-animacoes *, html.sem-animacoes *::before, html.sem
 #servicos .titulo-secao > h2 + p { color: var(--muted); }
 .desconto-depoimento { margin-top: 10px; padding: 12px 16px; border-left: 3px solid var(--urgencia); border-radius: 0 10px 10px 0; background: rgba(var(--urgencia-rgb), .08); color: var(--text) !important; }
 .desconto-depoimento b { color: var(--cyan); }
+/* depoimentos de clientes (depoimentos.js): só aparecem quando tiver algum */
+.depoimentos { margin-top: 40px; }
+.depoimentos-lista { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+.depoimento { margin: 0; padding: 22px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); }
+.depoimento p { margin: 8px 0 12px; color: var(--text); font-size: 1rem; line-height: 1.55; }
+.depoimento footer { color: var(--muted); font: .78rem "DM Mono", monospace; }
+.depoimento-estrelas { color: #f5c542; letter-spacing: .12em; }
 @media (max-width: 720px) { .promo-faixa { gap: 6px 8px; padding: 8px 12px 8px 8px; border-radius: 14px; font-size: .82rem; } .promo-faixa span { display: none; } }
 [data-promo-ate][hidden] { display: none; }
 
@@ -2810,6 +2817,13 @@ html.gibi-pb .gibi-pb-trama { opacity: .15; }
 @media print { .gibi-dogear { display: none; } }
 @media (prefers-reduced-motion: reduce) { .gibi-pb-trama { transition: none; } .botao-principal::after { transition: none; } }
 @media print { .gibi-legenda, .gibi-nota, .gibi-fim, .gibi-continua, .gibi-pow, .gibi-velocidade, .gibi-explosao { display: none !important; } .gibi-pb-trama, .botao-principal::after { display: none !important; } }
+
+/* ---------- Atividade do GitHub vira um painel de gibi: moldura grossa de nanquim, a mesma
+   trama de pontos (halftone) dos outros quadros da edição e sombra de adesivo. ---------- */
+.github-atividade { position: relative; border: 3px solid #0b101b; border-radius: 10px;
+    background: radial-gradient(circle, rgba(46,126,255,.14) 1.3px, transparent 1.7px) 0 0 / 10px 10px, rgba(13,19,31,.92);
+    box-shadow: 0 0 0 3px #eff1f5, 8px 8px 0 3px rgba(46,126,255,.45); }
+@media (max-width: 999px) { .github-atividade { box-shadow: 0 0 0 2px #eff1f5, 5px 5px 0 2px rgba(46,126,255,.45); } }
 
 /* ---------- Orçamento em quadrinho: a caixa vira um quadro de HQ, a pergunta vira balão de fala
    e as respostas viram botões de gibi (contorno de nanquim, sombra dura, amarelo no mouse). ---------- */
