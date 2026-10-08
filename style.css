@@ -3343,3 +3343,28 @@ html.modo-simples :is(.reticula-lente, .faisca-rastro, .gibi-velocidade, .gibi-p
 .aviso-simples { position: fixed; z-index: 70; left: 50%; top: 84px; padding: 9px 16px 7px; border: 3px solid #111111; border-radius: 999px; background: #ffe14d; color: #111111; font: 700 .9rem "Space Grotesk", sans-serif; box-shadow: 4px 4px 0 #111111; cursor: var(--cursor-mao, pointer); opacity: 0; transform: translate(-50%, -10px); transition: opacity .3s ease, transform .3s ease; white-space: nowrap; }
 .aviso-simples.visivel { opacity: 1; transform: translate(-50%, 0); }
 @media print { .aviso-simples { display: none !important; } }
+
+/* ---------- Menu de temas (script.js): 5 opções com amostra de cor ---------- */
+.tema-menu { position: absolute; z-index: 60; top: calc(100% + 8px); right: 0; width: min(290px, calc(100vw - 32px)); padding: 12px; border: 3px solid #111111; border-radius: 10px; background: #f3ead6; color: #111111; box-shadow: 6px 6px 0 #111111; }
+.tema-menu[hidden] { display: none; }
+.tema-menu-titulo { margin: 0 0 8px; font: 400 1.15rem/1 "Bangers", Impact, sans-serif; letter-spacing: .05em; }
+.tema-menu button { display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto; column-gap: 10px; align-items: center; width: 100%; margin: 0 0 6px; padding: 8px 10px; border: 2px solid #111111; border-radius: 8px; background: #ffffff; color: #111111; text-align: left; cursor: var(--cursor-mao, pointer); }
+.tema-menu button:last-child { margin-bottom: 0; }
+.tema-menu button b { grid-column: 2; font: 700 .95rem "Space Grotesk", sans-serif; }
+.tema-menu button small { grid-column: 2; color: #4a4030; font-size: .78rem; }
+.tema-menu button[aria-checked="true"] { background: #ffe14d; box-shadow: 3px 3px 0 #111111; }
+.tema-menu button:focus-visible { outline: 3px solid #111111; outline-offset: 2px; }
+.tema-amostra { grid-row: 1 / span 2; display: flex; }
+.tema-amostra i { width: 16px; height: 30px; border: 2px solid #111111; margin-left: -2px; } /* manter-cor */
+.tema-amostra i:first-child { margin-left: 0; border-radius: 4px 0 0 4px; }
+.tema-amostra i:last-child { border-radius: 0 4px 4px 0; }
+@media print { .tema-menu { display: none !important; } }
+
+/* ---------- Cor pelo ramo (antes-depois.js): quem escolhe um ramo vê o destaque do site na cor dele ---------- */
+html[data-ramo-cor="pizzaria"] { --cyan: #e8452c; --cyan-rgb: 232, 69, 44; --acento-texto: #ff8a6e; --pink: #ffc93c; --pink-rgb: 255, 201, 60; } /* manter-cor */
+html[data-ramo-cor="barbearia"] { --cyan: #d4a24c; --cyan-rgb: 212, 162, 76; --acento-texto: #e8c27a; --pink: #c9a46a; --pink-rgb: 201, 164, 106; } /* manter-cor */
+html[data-ramo-cor="loja"] { --cyan: #a26bff; --cyan-rgb: 162, 107, 255; --acento-texto: #c4a1ff; --pink: #ff6fb5; --pink-rgb: 255, 111, 181; } /* manter-cor */
+html[data-ramo-cor="salao"] { --cyan: #ff5fa2; --cyan-rgb: 255, 95, 162; --acento-texto: #ff9cc6; --pink: #c94a7e; --pink-rgb: 201, 74, 126; } /* manter-cor */
+html[data-ramo-cor="academia"] { --cyan: #ff6a1a; --cyan-rgb: 255, 106, 26; --acento-texto: #ff9d5c; --pink: #ffd23f; --pink-rgb: 255, 210, 63; } /* manter-cor */
+html[data-ramo-cor="clinica"] { --cyan: #2bb5a3; --cyan-rgb: 43, 181, 163; --acento-texto: #6fd8c9; --pink: #7cc4ff; --pink-rgb: 124, 196, 255; } /* manter-cor */
+html[data-ramo-cor] .botao-principal { transition: background-color .4s ease, border-color .4s ease; }

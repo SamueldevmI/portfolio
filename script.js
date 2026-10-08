@@ -1988,52 +1988,86 @@ if (paletaOverlay) {
     setTimeout(terminou, 15000); // se o serviço do gráfico não responder, não deixa o esqueleto brilhando para sempre
 })();
 
-/* Troca de tema (vermelho <-> azul): carrega a outra folha de estilo e só tira a antiga quando a nova
-   chegou, pra página não ficar sem estilo no meio da troca. A escolha fica guardada neste aparelho. */
+/* Troca de tema: o botão abre um menu com os 5 temas (vermelho, azul, cerrado, neon e gibi de 1985). Carrega a
+   folha do tema novo e só tira a antiga quando a nova chegou, pra página não ficar sem estilo no meio da troca.
+   A escolha fica guardada neste aparelho. Os style-<tema>.css saem de ferramentas/gerar-tema-azul.js. */
 (function () {
     const botao = document.getElementById("botaoTema");
     if (!botao) return;
     const raiz = document.documentElement;
+    const tr = (t) => (window.traduzir ? window.traduzir(t) : t);
+    const TEMAS = [
+        { id: "vermelho", nome: "Vermelho", desc: "o clássico", cores: ["#ff2a3d", "#161616", "#ffe14d"], barra: "#161616" },
+        { id: "azul", nome: "Azul", desc: "elétrico", cores: ["#2e7dff", "#0e1422", "#ffe14d"], barra: "#0e1422" },
+        { id: "cerrado", nome: "Cerrado", desc: "terra, ipê-amarelo e ipê-roxo", cores: ["#e36a46", "#f6bf28", "#a35eba"], barra: "#1e1510" },
+        { id: "neon", nome: "Neon", desc: "lanchonete de madrugada", cores: ["#ff2e8f", "#b1ff3d", "#ff871f"], barra: "#0d0b1e" },
+        { id: "gibi85", nome: "Gibi 1985", desc: "revista de banca", cores: ["#ce6490", "#50a2b4", "#f2be31"], barra: "#1b1815" },
+    ];
+    const temaAtual = () => raiz.dataset.tema || "vermelho";
     const atualizarBotao = () => {
-        const azul = raiz.dataset.tema === "azul";
-        botao.setAttribute("aria-label", azul ? "Trocar para o tema vermelho" : "Trocar para o tema azul");
-        botao.title = azul ? "Tema vermelho" : "Tema azul";
+        const t = TEMAS.find((x) => x.id === temaAtual()) || TEMAS[0];
+        botao.setAttribute("aria-label", `${tr("Escolher o tema de cores")} (${tr(t.nome)})`);
+        botao.title = tr("Temas de cor");
     };
     // O que não vem da folha de estilo: selo de visitas (cor no link da imagem). Avisa os outros scripts
     // (ex.: anéis dos stories no celular) com o evento "temaTrocado".
     const pintarExtras = () => {
-        const azul = raiz.dataset.tema === "azul";
+        const azul = temaAtual() === "azul";
         const selo = document.querySelector(".selo-visitas");
         if (selo) selo.src = selo.src.replace(/color=[0-9a-f]{6}/i, "color=" + (azul ? "1a3e8b" : "8b1a1a"));
     };
-    if (raiz.dataset.tema === "azul") pintarExtras();
+    if (temaAtual() === "azul") pintarExtras();
     atualizarBotao();
+
+    const menu = document.createElement("div");
+    menu.className = "tema-menu";
+    menu.id = "temaMenu";
+    menu.setAttribute("role", "menu");
+    menu.hidden = true;
+    menu.innerHTML = `<p class="tema-menu-titulo">${tr("Escolha as cores")}</p>` + TEMAS.map((t) => `<button type="button" role="menuitemradio" data-tema="${t.id}" aria-checked="false"><span class="tema-amostra" aria-hidden="true">${t.cores.map((c) => `<i style="background:${c}"></i>`).join("")}</span><b>${tr(t.nome)}</b><small>${tr(t.desc)}</small></button>`).join("");
+    botao.after(menu);
+    botao.setAttribute("aria-haspopup", "true");
+    botao.setAttribute("aria-controls", "temaMenu");
+    botao.setAttribute("aria-expanded", "false");
+    const marcar = () => menu.querySelectorAll("button").forEach((b) => b.setAttribute("aria-checked", String(b.dataset.tema === temaAtual())));
+    const abrir = (sim) => {
+        menu.hidden = !sim;
+        botao.setAttribute("aria-expanded", String(sim));
+        if (sim) { marcar(); menu.querySelector('[aria-checked="true"]')?.focus(); }
+    };
+    botao.addEventListener("click", (e) => { e.stopPropagation(); abrir(menu.hidden); });
+    document.addEventListener("click", (e) => { if (!menu.hidden && !menu.contains(e.target)) abrir(false); });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !menu.hidden) { abrir(false); botao.focus(); } });
+
     let trocando = false;
-    botao.addEventListener("click", () => {
+    function trocar(novoTema) {
+        if (novoTema === temaAtual()) { delete raiz.dataset.ramoCor; return abrir(false); } // mesmo tema: só tira a cor do ramo
         if (trocando) return;
         const atual = document.getElementById("folhaTema");
         if (!atual) return;
         trocando = true;
-        const novoTema = raiz.dataset.tema === "azul" ? "vermelho" : "azul";
         const nova = document.createElement("link");
         nova.rel = "stylesheet";
-        nova.href = atual.href.replace(/style(-azul)?\.css/, novoTema === "azul" ? "style-azul.css" : "style.css");
+        nova.href = atual.href.replace(/style(-[a-z0-9]+)?\.css/, novoTema === "vermelho" ? "style.css" : `style-${novoTema}.css`);
         nova.onload = () => {
             atual.remove();
             nova.id = "folhaTema";
             raiz.dataset.tema = novoTema;
             const cor = document.querySelector('meta[name="theme-color"]');
-            if (cor) cor.content = novoTema === "azul" ? "#0e1422" : "#161616";
+            if (cor) cor.content = (TEMAS.find((t) => t.id === novoTema) || TEMAS[0]).barra;
             try { localStorage.setItem("portfolio-tema", novoTema); } catch (e) { /* sem armazenamento: só não lembra */ }
             atualizarBotao();
             pintarExtras();
+            marcar();
             document.dispatchEvent(new CustomEvent("temaTrocado", { detail: novoTema }));
             trocando = false;
+            abrir(false);
             if (window.musicaSite && window.musicaSite.pode()) window.musicaSite.curtir();
         };
-        nova.onerror = () => { nova.remove(); trocando = false; mostrarToast("Não deu pra trocar o tema agora. Tente de novo."); };
+        nova.onerror = () => { nova.remove(); trocando = false; mostrarToast(tr("Não deu pra trocar o tema agora. Tente de novo.")); };
         atual.after(nova);
-    });
+    }
+    menu.addEventListener("click", (e) => { const b = e.target.closest("button[data-tema]"); if (b) trocar(b.dataset.tema); });
 })();
 
 /* ---------- Prévia do site do cliente ----------

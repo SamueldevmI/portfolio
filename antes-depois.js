@@ -128,7 +128,23 @@
     seletor.value = inicial;
     mostrarRamo(inicial);
     document.addEventListener("idiomaMudou", () => mostrarRamo(seletor.value));
+    /* Cor pelo ramo: quem escolhe um ramo vê o site puxar pras cores dele (style.css, html[data-ramo-cor]).
+       Só por escolha da pessoa nesta visita; trocar o tema lá em cima volta às cores normais. */
+    const COR_DO_RAMO = { pizzaria: "pizzaria", barbearia: "barbearia", "loja de roupa": "loja", "salão": "salao", academia: "academia", "clínica": "clinica" };
+    let avisouCor = false;
+    function pintarPeloRamo(ramo) {
+        const cor = COR_DO_RAMO[ramo];
+        if (!cor || document.documentElement.dataset.ramoCor === cor) return;
+        document.documentElement.dataset.ramoCor = cor;
+        if (!avisouCor && typeof mostrarToast === "function") {
+            avisouCor = true;
+            mostrarToast(tr("🎨 O site pegou as cores do seu ramo. Pra voltar, é só escolher um tema lá em cima."));
+        }
+    }
+    document.addEventListener("temaTrocado", () => { delete document.documentElement.dataset.ramoCor; });
+    document.addEventListener("click", (e) => { const b = e.target.closest(".vitrine-ramos button[data-ramo]"); if (b) pintarPeloRamo(b.dataset.ramo); });
     seletor.addEventListener("change", () => {
+        pintarPeloRamo(seletor.value);
         mostrarRamo(seletor.value);
         raiz.querySelector(`.cmp-tipos button[data-tipo="${CSS.escape(seletor.value)}"]`)?.click();
     });

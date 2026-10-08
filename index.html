@@ -64,20 +64,21 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bangers&family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bangers&family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap"></noscript>
     <script>
-        /* Tema: vermelho (padrão) ou azul. Escolhido antes de desenhar a página, pra não piscar a cor errada.
-           O style-azul.css é gerado a partir do style.css (ferramentas/gerar-tema-azul.js). */
+        /* Tema: vermelho (padrão), azul, cerrado, neon ou gibi85. Escolhido antes de desenhar a página, pra não
+           piscar a cor errada. Os style-<tema>.css são gerados a partir do style.css (ferramentas/gerar-tema-azul.js). */
         (function () {
             var tema = "vermelho";
             try {
                 var salvo = localStorage.getItem("portfolio-tema");
                 if (!salvo && localStorage.getItem("tema") === "aranha") salvo = "azul"; // quem tinha escolhido o antigo tema Aranha
-                if (salvo === "azul") tema = "azul";
+                if (/^(azul|cerrado|neon|gibi85)$/.test(salvo)) tema = salvo;
             } catch (e) { /* sem armazenamento */ }
             document.documentElement.dataset.tema = tema;
             var hora = new Date().getHours();
             document.documentElement.dataset.periodo = hora >= 5 && hora < 12 ? "manha" : hora >= 12 && hora < 18 ? "tarde" : "noite";
-            if (tema === "azul") document.querySelector('meta[name="theme-color"]').content = "#0e1422";
-            document.write('<link rel="stylesheet" id="folhaTema" href="' + (tema === "azul" ? "style-azul.css" : "style.css") + '?v=20261009leve">');
+            var barra = { azul: "#0e1422", cerrado: "#1e1510", neon: "#0d0b1e", gibi85: "#1b1815" }[tema];
+            if (barra) document.querySelector('meta[name="theme-color"]').content = barra;
+            document.write('<link rel="stylesheet" id="folhaTema" href="' + (tema === "vermelho" ? "style.css" : "style-" + tema + ".css") + '?v=20261009cores">');
         })();
         /* Idioma: detectado cedo (antes do resto da página rodar) só pra avisar efeitos como a
            digitação do texto do hero, que senão sobrescreveriam a tradução feita pelo idioma.js. */
@@ -91,7 +92,7 @@
             document.documentElement.dataset.idioma = idioma;
         })();
     </script>
-    <noscript><link rel="stylesheet" href="style.css?v=20261009leve"></noscript>
+    <noscript><link rel="stylesheet" href="style.css?v=20261009cores"></noscript>
     <title id="tituloPagina">Samuel Mickael | Desenvolvedor Web &amp; Mobile</title>
     <script type="application/ld+json">
     {
@@ -938,20 +939,20 @@
     </div>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-    <script src="estatisticas.js?v=20261009leve" defer></script>
+    <script src="estatisticas.js?v=20261009cores" defer></script>
     <script src="servicos.js?v=20261002" defer></script>
-    <script src="previa-celular.js?v=20261009leve" defer></script>
-    <script src="filme-celular.js?v=20261009leve" defer></script>
+    <script src="previa-celular.js?v=20261009cores" defer></script>
+    <script src="filme-celular.js?v=20261009cores" defer></script>
     <script src="depoimentos.js?v=20261007" defer></script>
-    <script src="script.js?v=20261009leve" defer></script>
-    <script src="antes-depois.js?v=20261009leve" defer></script>
+    <script src="script.js?v=20261009cores" defer></script>
+    <script src="antes-depois.js?v=20261009cores" defer></script>
     <!-- espanhol sob demanda: o botão ES é leve e o idioma.js só baixa quando alguém pede (os scripts acima se redesenham no "idiomaMudou") -->
-    <script src="idioma-leve.js?v=20261009leve" defer></script>
+    <script src="idioma-leve.js?v=20261009cores" defer></script>
 <script>
     /* Scripts que a página não precisa pra aparecer: o mobile.js só baixa em tela de toque (no computador
        ele não faz nada) e a música só depois que a página terminou de carregar. */
     (function () {
-        var versao = "?v=20261009leve";
+        var versao = "?v=20261009cores";
         function carregar(arquivo) { var s = document.createElement("script"); s.src = arquivo + versao; s.async = false; document.body.appendChild(s); }
         var toque = matchMedia("(pointer: coarse)").matches;
         // o pedido de "instalar app" pode chegar antes do mobile.js: fica guardado pra ele usar

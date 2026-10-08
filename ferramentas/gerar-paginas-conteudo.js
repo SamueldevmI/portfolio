@@ -96,8 +96,8 @@ function pagina({ pasta, titulo, descricao, schemas, corpo, contar, largo, lang 
         (function () {
             var azul = false;
             try { azul = localStorage.getItem("portfolio-tema") === "azul"; } catch (e) { /* sem armazenamento */ }
-            document.documentElement.dataset.tema = azul ? "azul" : "vermelho";
-            document.write('<link rel="stylesheet" href="${"../".repeat(pasta.split("/").length)}' + (azul ? "style-azul.css" : "style.css") + '?v=${VERSAO}">');
+            document.documentElement.dataset.tema = (function(){try{var t=localStorage.getItem("portfolio-tema");return /^(azul|cerrado|neon|gibi85)$/.test(t)?t:"vermelho"}catch(e){return "vermelho"}})();
+            document.write('<link rel="stylesheet" href="${"../".repeat(pasta.split("/").length)}' + ((function(){try{var t=localStorage.getItem("portfolio-tema");return /^(azul|cerrado|neon|gibi85)$/.test(t)?"style-"+t+".css":"style.css"}catch(e){return "style.css"}})()) + '?v=${VERSAO}">');
         })();
     </script>
     <noscript><link rel="stylesheet" href="${"../".repeat(pasta.split("/").length)}style.css"></noscript>
