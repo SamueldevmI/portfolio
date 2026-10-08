@@ -1718,10 +1718,10 @@ html.sem-animacoes, html.sem-animacoes *, html.sem-animacoes *::before, html.sem
    digitar continua). Um anel em volta cresce sobre o que é clicável. */
 @media (hover: hover) and (pointer: fine) {
 }
-.faisca-rastro { position: fixed; z-index: 2147482999; width: 7px; height: 7px; border-radius: 50%; background: radial-gradient(circle, #ffffff 0%, var(--cyan) 42%, transparent 72%); box-shadow: 0 0 6px 1px rgba(var(--cyan-rgb), .85), 0 0 16px 4px rgba(var(--cyan-rgb), .35); pointer-events: none; user-select: none; animation: faisca-cai .65s ease-out forwards; }
+.faisca-rastro { position: fixed; z-index: 3; width: 7px; height: 7px; border-radius: 50%; background: radial-gradient(circle, #ffffff 0%, var(--cyan) 42%, transparent 72%); box-shadow: 0 0 6px 1px rgba(var(--cyan-rgb), .85), 0 0 16px 4px rgba(var(--cyan-rgb), .35); mix-blend-mode: screen; pointer-events: none; user-select: none; animation: faisca-cai .65s ease-out forwards; }
 .faisca-rastro.faisca-branca { background: radial-gradient(circle, #ffffff 0%, #ffffff 36%, transparent 72%); box-shadow: 0 0 6px 1px rgba(255,255,255,.9), 0 0 18px 5px rgba(var(--cyan-rgb), .45); }
 @keyframes faisca-cai {
-    0%   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    0%   { opacity: .6; transform: translate(-50%, -50%) scale(1); }
     100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(.15); }
 }
 @media print { .faisca-rastro { display: none !important; } }
