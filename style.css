@@ -1471,10 +1471,10 @@ html.sem-animacoes, html.sem-animacoes *, html.sem-animacoes *::before, html.sem
     .lista-projetos .destaques::-webkit-scrollbar { display: none; }
     .lista-projetos .destaques:not(:has(.card-projeto:not(.card-oculto))) { display: none; }
     .lista-projetos .destaques .card-projeto { flex: 0 0 min(86%, 360px); scroll-snap-align: start; }
-    .lista-projetos > .card-projeto { flex: none; }
-    .lista-projetos > .card-projeto .projeto-visual { height: 170px; }
-    .lista-projetos > .card-projeto .card-conteudo { padding: 20px; }
-    .lista-projetos > .card-projeto .card-conteudo h3 { font-size: 1.3rem; }
+    .lista-projetos .outros-projetos > .card-projeto { flex: none; }
+    .lista-projetos .outros-projetos > .card-projeto .projeto-visual { height: 170px; }
+    .lista-projetos .outros-projetos > .card-projeto .card-conteudo { padding: 20px; }
+    .lista-projetos .outros-projetos > .card-projeto .card-conteudo h3 { font-size: 1.3rem; }
     .lista-projetos .card-conteudo::after { font-size: 2.4rem; right: 16px; }
     .carrossel-pontos { margin: -6px 0 10px; }
     .chat-bolhas { right: 10px; bottom: 42px; gap: 5px; width: 84%; }
@@ -1530,8 +1530,8 @@ html.sem-animacoes, html.sem-animacoes *, html.sem-animacoes *::before, html.sem
 }
 
 /* Os 3 projetos menores ficam enxutos: nome, frase e os botões. O resto continua nos 4 destaques. */
-#lista-projetos > .card-projeto :is(.projeto-resumo, .projeto-serve, .projeto-meta, .card-orcamento) { display: none; }
-#lista-projetos > .card-projeto .links-projeto { margin-top: 18px; }
+#lista-projetos .outros-projetos > .card-projeto :is(.projeto-resumo, .projeto-serve, .projeto-meta, .card-orcamento) { display: none; }
+#lista-projetos .outros-projetos > .card-projeto .links-projeto { margin-top: 18px; }
 
 /* ---------- Ajustes finos de visual (2026-09-24, parte 2) ---------- */
 
@@ -2862,8 +2862,7 @@ header.hero { overflow-x: clip; }
 #mais-projetos .eyebrow::before { content: "03 / "; }
 #servicos .eyebrow::before { content: "04 / "; }
 #orcamento .eyebrow::before { content: "05 / "; }
-#jornada .eyebrow::before { content: "06 / "; }
-#contato .eyebrow::before { content: "07 / "; }
+#contato .eyebrow::before { content: "06 / "; }
 /* o balão é branco: o texto fica sempre escuro, mesmo onde a seção pinta os parágrafos de branco */
 .gibi-nota { color: #111111 !important; }
 
@@ -3094,7 +3093,7 @@ header.hero { overflow-x: clip; }
 
 /* ---------- "Quanto custaria o seu?" como máquina de orçamento de gibi: cartões de papel pros tipos,
    medidor grosso com os níveis escritos e o preço num estouro amarelo que pula quando muda ---------- */
-.hero-conteudo .calc-rapida { display: grid; grid-template-columns: minmax(0, 1fr) 290px; grid-template-areas: "titulo res" "tipos res" "slider res" "niveis cta" "aviso aviso"; align-items: center; gap: 12px 34px; max-width: none; margin-top: 30px; padding: 22px 26px 18px; border: 3px solid #111111; border-radius: 10px;
+#servicos .calc-rapida { display: grid; grid-template-columns: minmax(0, 1fr) 290px; grid-template-areas: "titulo res" "tipos res" "slider res" "niveis cta" "aviso aviso"; align-items: center; gap: 12px 34px; max-width: none; margin-top: 30px; padding: 22px 26px 18px; border: 3px solid #111111; border-radius: 10px;
     background: radial-gradient(circle, rgba(255,42,61,.12) 1.3px, transparent 1.7px) 0 0 / 10px 10px, #1b1b1b; box-shadow: 0 0 0 3px #f2f2f2, 9px 9px 0 3px rgba(255,42,61,.45); }
 .calc-rapida .calc-titulo { grid-area: titulo; justify-self: start; margin: 0; padding: 6px 14px 5px; border: 3px solid #111111; background: #ffe14d; color: #111111; font: 400 1.35rem/1 "Bangers", Impact, sans-serif; letter-spacing: .05em; text-transform: uppercase; box-shadow: 3px 3px 0 #111111; transform: rotate(-1.5deg); }
 .calc-rapida .calc-tipos { grid-area: tipos; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 6px 0 4px; }
@@ -3125,7 +3124,7 @@ header.hero { overflow-x: clip; }
 @media (hover: hover) { .calc-rapida .calc-cta:hover { background: #d42a33; transform: translate(-2px, -2px); box-shadow: 6px 6px 0 #111111; } }
 .calc-rapida .calc-aviso { grid-area: aviso; margin: 4px 0 0; font-size: .74rem; }
 @media (max-width: 860px) {
-    .hero-conteudo .calc-rapida { grid-template-columns: minmax(0, 1fr); grid-template-areas: "titulo" "tipos" "slider" "niveis" "res" "cta" "aviso"; gap: 12px; padding: 18px 16px 14px; box-shadow: 0 0 0 3px #f2f2f2, 6px 6px 0 3px rgba(255,42,61,.45); }
+    #servicos .calc-rapida { grid-template-columns: minmax(0, 1fr); grid-template-areas: "titulo" "tipos" "slider" "niveis" "res" "cta" "aviso"; gap: 12px; padding: 18px 16px 14px; box-shadow: 0 0 0 3px #f2f2f2, 6px 6px 0 3px rgba(255,42,61,.45); }
     .calc-rapida .calc-tipos { gap: 8px; }
     .calc-rapida .calc-tipo { padding: 10px 8px 8px; }
     .calc-rapida .calc-tipo b { font-size: 1.05rem; }
@@ -3196,3 +3195,39 @@ html.edicao-rara::after { content: ""; position: fixed; inset: 0; z-index: 99; p
 .projeto-preco .pp-promo b, .mini-projeto-preco .pp-promo b { color: #c41f2a; font: 400 1.25rem/1 "Bangers", Impact, sans-serif; letter-spacing: .03em; text-shadow: none; }
 .projeto-preco .pp-promo::after, .mini-projeto-preco .pp-promo::after { content: ""; position: absolute; top: -2px; right: -2px; width: 0; height: 0; border-radius: 0 4px 0 0; background: linear-gradient(225deg, #1b1b1b 50%, #d9bd36 50%); box-shadow: -1px 1px 2px rgba(0,0,0,.3); transition: width .2s ease, height .2s ease; }
 @media (hover: hover) { .card-projeto:hover .pp-promo::after, .mini-projeto:hover .pp-promo::after { width: 16px; height: 16px; } }
+
+/* ---------- Faxina (2026-10-08) ---------- */
+/* o que saiu da tela fica no HTML só porque os scripts ainda usam: o FAQ (textos do chat), o campo de nome
+   das demos e a calculadora "quanto você perde" do comparador */
+.faq[hidden], .nome-demo[hidden], .cmp-calc[hidden] { display: none !important; }
+/* a máquina de orçamento mora agora nos Serviços, embaixo dos anúncios */
+#servicos .calc-rapida { grid-column: 1 / -1; margin-top: 44px; }
+/* a jornada em tirinha entrou dentro das Conquistas */
+.jornada-tirinha { margin-top: 70px; }
+.jornada-tirinha .titulo-secao { margin-bottom: 22px; }
+.jornada-titulo { margin: 0; font-size: clamp(1.7rem, 3.4vw, 2.6rem); line-height: 1.05; letter-spacing: -.04em; }
+/* Indique e ganhe, agora no Contato */
+.indique-caixa { max-width: 640px; margin: 14px auto 0; padding: 12px 18px; border: 2px dashed rgba(255,255,255,.35); border-radius: 10px; text-align: left; }
+.indique-caixa summary { cursor: var(--cursor-mao, pointer); font-weight: 700; }
+.indique-caixa summary::before { content: "🤝 "; }
+.indique-caixa p { margin: 10px 0 0; }
+
+/* os 3 projetos menores: no computador seguem na grade normal; no celular viram fileira de arrastar,
+   como os destaques (antes ficavam empilhados e somavam quase 2 telas) */
+.lista-projetos .outros-projetos { display: contents; }
+@media (max-width: 720px) {
+    .lista-projetos .outros-projetos { display: flex; gap: 14px; margin-inline: -22px; padding: 8px 22px 20px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scroll-padding-inline: 22px; scrollbar-width: none; }
+    .lista-projetos .outros-projetos::-webkit-scrollbar { display: none; }
+    .lista-projetos .outros-projetos:not(:has(.card-projeto:not(.card-oculto))) { display: none; }
+    .lista-projetos .outros-projetos > .card-projeto { flex: 0 0 min(78%, 320px); scroll-snap-align: start; }
+}
+/* celular: anúncios de serviços e conquistas também viram fileira de arrastar (empilhados somavam ~3 telas) */
+@media (max-width: 720px) {
+    #servicos .lista-servicos, .lista-conquistas { display: flex; gap: 16px; margin-inline: -22px; padding: 24px 22px 22px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scroll-padding-inline: 22px; scrollbar-width: none; }
+    #servicos .lista-servicos::-webkit-scrollbar, .lista-conquistas::-webkit-scrollbar { display: none; }
+    #servicos .lista-servicos > article { flex: 0 0 min(84%, 330px); scroll-snap-align: start; }
+    .lista-conquistas > li { flex: 0 0 min(82%, 320px); scroll-snap-align: start; }
+    .lista-conquistas .conquista-bloqueada { grid-column: auto; }
+    .arraste-dica { display: block; margin: -8px 0 0; color: var(--muted); font: .74rem "DM Mono", monospace; text-align: right; }
+}
+.arraste-dica { display: none; }

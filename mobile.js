@@ -721,8 +721,10 @@
         atualizar();
     }
 
-    /* 7) Calculadora: quanto você deixa de ganhar sem site */
-    const servicos = document.querySelector("#servicos .lista-servicos");
+    /* 7) Calculadora: quanto você deixa de ganhar sem site
+       Desligada na faxina de 2026-10-08: o antes × depois do topo já mostra o cliente perdido, e os preços
+       ficam na máquina de orçamento dos Serviços. Pra religar, troque o false por true. */
+    const servicos = false && document.querySelector("#servicos .lista-servicos");
     if (servicos) {
         const TIPOS = { "Loja de roupa ou acessórios": 120, "Restaurante, lanchonete ou doceria": 60, "Salão, barbearia ou estética": 70, "Clínica ou consultório": 200, "Prestador de serviço": 250, "Outro": 100 };
         const calc = el("div", "calc-perda", `

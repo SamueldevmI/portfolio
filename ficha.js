@@ -286,7 +286,10 @@
             const p = alvo.matches("p") ? alvo : alvo.querySelector("p");
             const copia = p.cloneNode(true);
             copia.querySelectorAll("[hidden]").forEach((x) => x.remove());
-            return copia.textContent.replace(/\s+/g, " ").trim();
+            let texto = copia.textContent.replace(/\s+/g, " ").trim();
+            // indicação: o gerador do link fica no Contato
+            if (id === "faq-indicacao") texto = texto.replace(/\s*Gere o seu link aqui:?$/, "") + " O gerador do seu link fica lá no Contato, no fim da página 👇";
+            return texto;
         }
         // resposta comprida vira duas ou três bolhas, como gente digita no WhatsApp
         function picotar(texto) {
@@ -335,6 +338,16 @@
             ocupado = false;
         }
         perguntas.forEach((b) => b.addEventListener("click", () => perguntar(b)));
+
+        // link antigo pra uma pergunta do FAQ (ex.: #faq-prazo): o FAQ agora é este chat, então pergunta aqui
+        const pedido = location.hash.match(/^#(faq-[\w-]+)$/);
+        const botaoPedido = pedido && raiz.querySelector(`.papo-perguntas button[data-faq="${pedido[1]}"]`);
+        if (botaoPedido && pedido[1] !== "faq-indicacao") {
+            addEventListener("load", () => setTimeout(() => {
+                raiz.scrollIntoView({ block: "center" });
+                perguntar(botaoPedido);
+            }, 400), { once: true });
+        }
 
         // trocou o idioma: a conversa recomeça (a saudação fixa já vem traduzida pelo idioma.js)
         document.addEventListener("idiomaMudou", () => {
