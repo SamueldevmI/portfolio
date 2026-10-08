@@ -3134,3 +3134,65 @@ header.hero { overflow-x: clip; }
     .calc-rapida .calc-resultado strong { font-size: 2.05rem; }
 }
 @media (prefers-reduced-motion: reduce) { .calc-rapida .calc-tipo, .calc-niveis span { transition: none; } .calc-rapida .calc-resultado.pulou { animation: none; } }
+
+/* ---------- Depoimento de cliente (aparece só quando o HTML tiver a frase de verdade) ---------- */
+.depoimento { max-width: 760px; margin: 46px auto 0; }
+.depoimento[hidden] { display: none; }
+.depoimento blockquote { position: relative; margin: 0; padding: 22px 26px; border: 3px solid #0b101b; border-radius: 30px; background: #ffffff; color: #0b101b; box-shadow: 6px 6px 0 #0b101b, 6px 6px 0 3px rgba(46,126,255,.45); }
+.depoimento blockquote::after { content: ""; position: absolute; left: 54px; bottom: -22px; width: 30px; height: 22px; background: #0b101b; clip-path: polygon(0 0, 100% 0, 10% 100%); }
+.depoimento blockquote p { margin: 0; color: #0b101b !important; font: 600 clamp(1.05rem, 2vw, 1.3rem)/1.45 "Space Grotesk", sans-serif; text-shadow: none; }
+.depoimento blockquote p::before { content: "“"; margin-right: 2px; color: #4583e8; font: 400 2.2rem/0 "Bangers", Impact, sans-serif; vertical-align: -.35em; }
+.depoimento figcaption { display: flex; align-items: center; gap: 12px; margin: 30px 0 0 34px; color: var(--muted); font-size: .88rem; }
+.depoimento figcaption img { width: 48px; height: 48px; border: 3px solid #0b101b; border-radius: 50%; }
+.depoimento figcaption span { display: grid; line-height: 1.35; }
+.depoimento figcaption b { color: var(--text); font-size: 1rem; }
+.depoimento figcaption a { color: var(--acento-texto); }
+
+/* ---------- Diagnóstico grátis em destaque no orçamento (cupom tracejado) ---------- */
+.diagnostico-cupom { position: relative; display: grid; gap: 4px; margin: 18px 0 6px; padding: 16px 18px 14px; border: 2px dashed #0b101b; border-radius: 6px; background: #f3ead6; color: #0b101b; text-decoration: none; box-shadow: 5px 5px 0 #0b101b; transform: rotate(-.8deg); transition: transform .2s ease, background-color .2s ease; }
+.diagnostico-cupom b { color: #4a85e2; font: 400 1.45rem/1 "Bangers", Impact, sans-serif; letter-spacing: .04em; text-transform: uppercase; }
+.diagnostico-cupom span { color: #1b2843; font-size: .9rem; line-height: 1.45; }
+.diagnostico-cupom i { color: #0b101b; font: 400 1.05rem/1 "Bangers", Impact, sans-serif; font-style: normal; letter-spacing: .05em; text-transform: uppercase; }
+.diagnostico-cupom .dc-selo { position: absolute; top: -12px; right: 14px; padding: 4px 10px 3px; border: 2px solid #0b101b; background: #ffe14d; color: #0b101b; font: 400 .95rem/1 "Bangers", Impact, sans-serif; letter-spacing: .06em; text-transform: uppercase; transform: rotate(6deg); }
+@media (hover: hover) { .diagnostico-cupom:hover { background: #fff7d6; transform: rotate(0deg) translateY(-2px); } }
+.diagnostico-cupom:focus-visible { outline: 3px solid var(--cyan); outline-offset: 3px; }
+
+/* ---------- Contato: sugestões de horário pra conversa de 15 min ---------- */
+.agenda-conversa { max-width: 640px; margin: 22px auto 0; padding: 16px 18px; border: 2px solid #0b101b; border-radius: 10px; background: rgba(11,16,27,.55); }
+.agenda-conversa p { margin: 0 0 12px; font-size: .9rem; }
+.agenda-conversa p b { color: #ffe14d; }
+.agenda-horarios { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.agenda-horario { display: grid; justify-items: center; min-width: 92px; padding: 7px 12px 6px; border: 2px solid #0b101b; border-radius: 8px; background: #f3ead6; color: #0b101b; text-decoration: none; box-shadow: 3px 3px 0 #0b101b; transition: transform .15s ease, background-color .15s ease; }
+.agenda-horario small { color: #4a4030; font: 600 .66rem "DM Mono", monospace; text-transform: uppercase; }
+.agenda-horario b { font: 400 1.3rem/1 "Bangers", Impact, sans-serif; letter-spacing: .04em; }
+@media (hover: hover) { .agenda-horario:hover { background: #ffe14d; transform: translate(-2px, -2px); } }
+.agenda-horario:focus-visible { outline: 3px solid var(--cyan); outline-offset: 2px; }
+
+/* ---------- Motoboy na barra de progresso (gibi.js move só com transform) ---------- */
+.motoboy { position: fixed; z-index: 91; top: 1px; left: 0; width: 34px; height: 24px; pointer-events: none; opacity: 0; transition: opacity .3s ease; will-change: transform; }
+.motoboy.visivel { opacity: 1; }
+.motoboy-moto { display: block; font-size: 20px; line-height: 24px; transform: scaleX(-1); filter: drop-shadow(0 1px 0 #0b101b); }
+.motoboy-balao { position: absolute; top: 26px; right: 0; padding: 4px 9px 3px; border: 2px solid #0b101b; border-radius: 10px; background: #ffe14d; color: #0b101b; font: 400 .95rem/1 "Bangers", Impact, sans-serif; letter-spacing: .05em; white-space: nowrap; box-shadow: 2px 2px 0 #0b101b; opacity: 0; transform: translateY(-6px) scale(.6); transform-origin: top right; transition: opacity .25s ease, transform .35s cubic-bezier(.2, 1.6, .4, 1); }
+.motoboy.entregue .motoboy-balao { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { .motoboy { display: none; } }
+@media print { .motoboy, .gibi-pagina, .selo-rara { display: none !important; } }
+
+/* ---------- Virar a página (computador, ao pular de seção pelo menu) ---------- */
+.gibi-pagina { position: fixed; z-index: 95; top: -10%; bottom: -10%; left: 0; width: 70vw; pointer-events: none; border-left: 5px solid #0b101b; border-right: 5px solid #0b101b;
+    background: radial-gradient(circle, rgba(11,16,27,.22) 1.6px, transparent 2px) 0 0 / 12px 12px, #f3ead6; box-shadow: -18px 0 40px rgba(0,0,0,.35); transform: translateX(110vw) skewX(-12deg); animation: gibi-pagina .62s cubic-bezier(.65, 0, .35, 1) forwards; }
+@keyframes gibi-pagina { from { transform: translateX(110vw) skewX(-12deg); } to { transform: translateX(-90vw) skewX(-12deg); } }
+
+/* ---------- Edição especial secreta (digitar "gibi" ou 5 toques no "#1" da capa) ---------- */
+/* o filtro vai no conteúdo (não no body, que quebraria o menu e os botões fixos) e uma camada leve por cima faz o papel velho */
+html.edicao-rara :is(.hero-conteudo, main, .gibi-fim, .contracapa, .rodape-ramos) { filter: sepia(.5) saturate(.7) contrast(.95); }
+html.edicao-rara::after { content: ""; position: fixed; inset: 0; z-index: 99; pointer-events: none; background: radial-gradient(ellipse at center, transparent 55%, rgba(120,80,20,.22) 100%), radial-gradient(circle, rgba(120,90,40,.08) 1px, transparent 1.4px) 0 0 / 5px 5px; }
+.selo-rara { position: fixed; z-index: 100; right: 16px; bottom: 90px; display: grid; justify-items: center; padding: 10px 14px 8px; border: 3px solid #0b101b; border-radius: 50% / 40%; background: #ffe14d; color: #0b101b; box-shadow: 4px 4px 0 #0b101b; transform: rotate(-10deg); cursor: var(--cursor-mao, pointer); }
+.selo-rara[hidden] { display: none; }
+.selo-rara b { font: 400 1.35rem/1 "Bangers", Impact, sans-serif; letter-spacing: .06em; text-transform: uppercase; }
+.selo-rara small { font: 600 .56rem "DM Mono", monospace; }
+
+/* ---------- Preços dos projetos como etiqueta de gibi antigo, que descola o cantinho no mouse ---------- */
+.projeto-preco .pp-promo:not([hidden]), .mini-projeto-preco .pp-promo:not([hidden]) { position: relative; padding: 5px 12px 4px; border: 2px solid #0b101b; border-radius: 6px; background: #ffe14d; color: #0b101b; font-weight: 600; box-shadow: 3px 3px 0 #0b101b; transform: rotate(-2deg); }
+.projeto-preco .pp-promo b, .mini-projeto-preco .pp-promo b { color: #4a85e2; font: 400 1.25rem/1 "Bangers", Impact, sans-serif; letter-spacing: .03em; text-shadow: none; }
+.projeto-preco .pp-promo::after, .mini-projeto-preco .pp-promo::after { content: ""; position: absolute; top: -2px; right: -2px; width: 0; height: 0; border-radius: 0 4px 0 0; background: linear-gradient(225deg, #11192a 50%, #d9bd36 50%); box-shadow: -1px 1px 2px rgba(0,0,0,.3); transition: width .2s ease, height .2s ease; }
+@media (hover: hover) { .card-projeto:hover .pp-promo::after, .mini-projeto:hover .pp-promo::after { width: 16px; height: 16px; } }

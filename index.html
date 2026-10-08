@@ -61,7 +61,7 @@
             } catch (e) { /* sem armazenamento */ }
             document.documentElement.dataset.tema = tema;
             if (tema === "azul") document.querySelector('meta[name="theme-color"]').content = "#0e1422";
-            document.write('<link rel="stylesheet" id="folhaTema" href="' + (tema === "azul" ? "style-azul.css" : "style.css") + '?v=20261007calculadora">');
+            document.write('<link rel="stylesheet" id="folhaTema" href="' + (tema === "azul" ? "style-azul.css" : "style.css") + '?v=20261008ideias">');
         })();
         /* Idioma: detectado cedo (antes do resto da página rodar) só pra avisar efeitos como a
            digitação do texto do hero, que senão sobrescreveriam a tradução feita pelo idioma.js. */
@@ -75,7 +75,7 @@
             document.documentElement.dataset.idioma = idioma;
         })();
     </script>
-    <noscript><link rel="stylesheet" href="style.css?v=20261007calculadora"></noscript>
+    <noscript><link rel="stylesheet" href="style.css?v=20261008ideias"></noscript>
     <title id="tituloPagina">Samuel Mickael | Desenvolvedor Web &amp; Mobile</title>
     <script type="application/ld+json">
     {
@@ -577,6 +577,12 @@
                 </article>
             </div>
             <p class="gibi-continua" aria-hidden="true"><span>continua</span><b aria-hidden="true">→</b></p>
+            <!-- Depoimento de cliente de verdade: escreva a frase da Elizabeth no <p> e apague o "hidden".
+                 Não inventar: só aparece com as palavras dela. -->
+            <figure class="depoimento" hidden>
+                <blockquote><p></p></blockquote>
+                <figcaption><img src="eclipse-studio/app/icone-192.png" alt="" width="48" height="48" loading="lazy" decoding="async"><span><b>Elizabeth</b>Eclipse Studio · <a href="case-eclipse.html">ver o case</a></span></figcaption>
+            </figure>
         </section>
 
         <section id="mais-projetos" class="secao mais-projetos">
@@ -647,6 +653,7 @@
                     <h2>Conte seu projeto em 1&nbsp;minuto.</h2>
                     <p>Responda algumas perguntas rapidinho — a mensagem já sai pronta pro WhatsApp, sem digitar nada.</p>
                 </div>
+                <a class="diagnostico-cupom" href="./teste.html"><span class="dc-selo">Grátis</span><b>Não sabe o que precisa?</b><span>Faça o diagnóstico de 1 minuto: nota de 0 a 10 e as 3 coisas que mais estão te fazendo perder cliente.</span><i>Fazer o diagnóstico →</i></a>
                 <p class="orcamento-direto">Prefere falar direto? <a href="https://wa.me/5567996034205?text=Oi%2C%20Samuel%21%20Vi%20seu%20portf%C3%B3lio%20e%20queria%20pedir%20um%20or%C3%A7amento.%20Meu%20projeto%20%C3%A9%3A%20" target="_blank" rel="noopener noreferrer">Chamar no WhatsApp ↗</a></p>
             </div>
 
@@ -756,6 +763,10 @@
                 <button type="button" class="botao botao-secundario" id="botaoSocio" hidden>📤 Mandar pro seu sócio</button>
                 <button type="button" class="botao botao-secundario" id="botaoResumo" hidden>🎴 Meu resumo da visita</button>
             </div>
+            <div class="agenda-conversa" id="agendaConversa">
+                <p><b>Prefere marcar uma conversa de 15 min?</b> Toque num horário e a mensagem já vai pronta. Se não der pra mim, eu te sugiro outro.</p>
+                <div class="agenda-horarios" role="group" aria-label="Sugestões de horário"></div>
+            </div>
             <p class="selo-legenda">Gente de verdade passou por aqui:</p>
             <div class="selo-brilho"><span class="selo-ponto" aria-hidden="true"></span><img class="selo-visitas" src="https://visitor-badge.laobi.icu/badge?page_id=samueldevmi.github.io.portfolio&color=8b1a1a&text_color=f6f6f6&left_text=visitas" alt="Contador de visitas do portfólio" loading="lazy" width="94" height="20"></div>
         </section>
@@ -845,21 +856,21 @@
     </div>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-    <script src="estatisticas.js?v=20261007calculadora" defer></script>
+    <script src="estatisticas.js?v=20261008ideias" defer></script>
     <script src="servicos.js?v=20261002" defer></script>
-    <script src="previa-celular.js?v=20261007calculadora" defer></script>
-    <script src="filme-celular.js?v=20261007calculadora" defer></script>
-    <script src="script.js?v=20261007calculadora" defer></script>
-    <script src="antes-depois.js?v=20261007calculadora" defer></script>
-<script src="acabamento.js?v=20261007calculadora" defer></script>
-<script src="ficha.js?v=20261007calculadora" defer></script>
-<script src="gibi.js?v=20261007calculadora" defer></script>
-<script src="idioma.js?v=20261007calculadora" defer></script>
+    <script src="previa-celular.js?v=20261008ideias" defer></script>
+    <script src="filme-celular.js?v=20261008ideias" defer></script>
+    <script src="script.js?v=20261008ideias" defer></script>
+    <script src="antes-depois.js?v=20261008ideias" defer></script>
+<script src="acabamento.js?v=20261008ideias" defer></script>
+<script src="ficha.js?v=20261008ideias" defer></script>
+<script src="gibi.js?v=20261008ideias" defer></script>
+<script src="idioma.js?v=20261008ideias" defer></script>
 <script>
     /* Scripts que a página não precisa pra aparecer: o mobile.js só baixa em tela de toque (no computador
        ele não faz nada) e a música só depois que a página terminou de carregar. */
     (function () {
-        var versao = "?v=20261007calculadora";
+        var versao = "?v=20261008ideias";
         function carregar(arquivo) { var s = document.createElement("script"); s.src = arquivo + versao; document.body.appendChild(s); }
         var toque = matchMedia("(pointer: coarse)").matches;
         // o pedido de "instalar app" pode chegar antes do mobile.js: fica guardado pra ele usar

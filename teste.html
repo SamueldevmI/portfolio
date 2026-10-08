@@ -13,7 +13,7 @@
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bangers&family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap">
     <script>
         (function () {
             var azul = false;
@@ -54,6 +54,24 @@
         .tt-mais { margin-top: 14px; font-size: .9rem; }
         .tt-mais a { color: var(--acento-texto); font-weight: 600; }
         @media (max-width: 480px) { .tt-ramos { grid-template-columns: 1fr; } .tt-nota { flex-direction: column; align-items: flex-start; } }
+        /* versão gibi: a caixa vira quadro de HQ, as respostas viram botões de papel e o resultado um relatório */
+        .tt-caixa { border: 3px solid #111111; border-radius: 10px; background: radial-gradient(circle, rgba(255,42,61,.12) 1.3px, transparent 1.7px) 0 0 / 10px 10px, #1b1b1b; box-shadow: 0 0 0 3px #f2f2f2, 8px 8px 0 3px rgba(255,42,61,.45); }
+        .tt-contador { display: inline-block; padding: 4px 10px 3px; border: 2px solid #111111; background: #ffe14d; color: #111111 !important; font: 400 1rem/1 "Bangers", Impact, sans-serif; letter-spacing: .06em; box-shadow: 2px 2px 0 #111111; transform: rotate(-1.5deg); }
+        .tt-pergunta { margin-top: 10px; }
+        .tt-opcoes button, .tt-ramos button { border: 3px solid #111111; border-radius: 8px; background: #f3ead6; color: #111111; box-shadow: 4px 4px 0 #ff2a3d; }
+        .tt-opcoes button:hover, .tt-ramos button:hover { border-color: #111111; background: #ffe14d; }
+        .tt-progresso { height: 12px; border: 2px solid #f2f2f2; background: #111111; }
+        .tt-progresso span { background: repeating-linear-gradient(-45deg, #ff2a3d 0 8px, #c41f2a 8px 16px); }
+        .tt-nome { display: grid; gap: 6px; margin: 4px 0 14px; color: var(--muted); font-size: .9rem; }
+        .tt-nome input { min-height: 46px; padding: 0 14px; border: 3px solid #111111; border-radius: 8px; background: #ffffff; color: #111111; font: 600 1rem "Space Grotesk", Arial, sans-serif; }
+        .tt-anel { width: 150px; height: 150px; border-radius: 0; background: #ffe14d; color: #111111; filter: drop-shadow(4px 4px 0 #111111); clip-path: polygon(50% 0%, 61% 14%, 78% 6%, 81% 24%, 100% 25%, 91% 41%, 100% 57%, 83% 64%, 88% 83%, 68% 81%, 58% 100%, 46% 85%, 28% 95%, 23% 76%, 3% 74%, 12% 57%, 0% 41%, 17% 33%, 13% 14%, 33% 18%); }
+        .tt-anel b { color: #d11a2a; font: 400 3.4rem/1 "Bangers", Impact, sans-serif; }
+        .tt-anel small { color: #111111; }
+        .tt-nota h2 { font: 400 2rem/1 "Bangers", Impact, sans-serif; letter-spacing: .03em; text-transform: uppercase; }
+        .tt-dicas li { border: 3px solid #111111; border-radius: 6px; background: #f3ead6; box-shadow: 4px 4px 0 #111111; }
+        .tt-dicas b { color: #c41f2a; font: 400 1.25rem/1.1 "Bangers", Impact, sans-serif; letter-spacing: .03em; text-transform: uppercase; }
+        .tt-dicas span { color: #2b2b2b; }
+        .tt-dicas *, .tt-opcoes button, .tt-ramos button, .tt-nome input { text-shadow: none; }
     </style>
 </head>
 <body>
@@ -61,7 +79,7 @@
         <a class="tt-voltar" href="./">← voltar pro portfólio</a>
         <p class="eyebrow">TESTE DE 1 MINUTO</p>
         <h1>Seu negócio tá pronto pra vender online?</h1>
-        <p>8 perguntas rápidas, sem cadastro. No final você vê sua nota de 0 a 10 e 3 dicas pra melhorar, mesmo que não feche nada comigo.</p>
+        <p>8 perguntas rápidas, sem cadastro. No final você vê sua nota de 0 a 10 e as 3 coisas que mais estão te fazendo perder cliente, com dica pra resolver, mesmo que não feche nada comigo.</p>
         <section class="tt-caixa" id="ttCaixa" aria-live="polite"></section>
     </main>
     <script src="estatisticas.js?v=20261002"></script>
@@ -91,6 +109,7 @@
                   dica: ["Comece a medir", "Com um site dá pra ver quantas pessoas visitaram e quantas clicaram no WhatsApp. Saber o número mostra onde está escapando cliente."] },
             ];
             let ramo = null, i = 0;
+            let nome = (() => { try { return (localStorage.getItem("portfolio-nome-negocio") || "").slice(0, 40); } catch (e) { return ""; } })();
             const respostas = [];
             const el = (tag, props, ...filhos) => { const e = Object.assign(document.createElement(tag), props || {}); e.append(...filhos); return e; };
 
@@ -103,7 +122,10 @@
                 const outro = el("button", { type: "button", textContent: "✨ outro tipo de negócio" });
                 outro.addEventListener("click", () => { ramo = null; pergunta(); });
                 grade.append(outro);
-                caixa.replaceChildren(el("p", { className: "tt-contador", textContent: "PRA COMEÇAR" }), el("h2", { className: "tt-pergunta", textContent: "Qual é o seu negócio?" }), grade);
+                const campo = el("input", { type: "text", maxLength: 40, value: nome, placeholder: "ex.: Pizzaria do João ou @pizzariadojoao", autocomplete: "organization" });
+                campo.addEventListener("input", () => { nome = campo.value.trim(); try { localStorage.setItem("portfolio-nome-negocio", nome); } catch (e) { /* sem armazenamento */ } });
+                const rotulo = el("label", { className: "tt-nome" }, "Nome do negócio ou @ do Instagram (opcional)", campo);
+                caixa.replaceChildren(el("p", { className: "tt-contador", textContent: "PRA COMEÇAR" }), el("h2", { className: "tt-pergunta", textContent: "Qual é o seu negócio?" }), rotulo, grade);
             }
             function pergunta() {
                 const q = PERGUNTAS[i];
@@ -130,7 +152,7 @@
                 const fracas = PERGUNTAS.map((q, k) => ({ q, v: respostas[k], k })).filter((x) => x.v < 2).sort((a, b) => a.v - b.v).slice(0, 3);
                 const anel = el("div", { className: "tt-anel" }, el("span", {}, el("b", { textContent: String(nota) }), el("small", { textContent: "/10" })));
                 anel.style.setProperty("--p", nota * 10);
-                const nomeRamo = ramo ? ramo.nome : "meu negócio";
+                const nomeRamo = (nome ? nome + ", " : "") + (ramo ? ramo.nome : "meu negócio");
                 const resumo = PERGUNTAS.map((q, k) => `${k + 1}. ${q.o[2 - respostas[k]]}`).join("\n");
                 const zap = el("a", { className: "botao botao-principal", href: S.linkWhats(`Oi, Samuel! Fiz o teste do seu site e tirei ${nota}/10 (${nomeRamo}). Quero ajuda pra melhorar isso.\n\nMinhas respostas:\n${resumo}`), target: "_blank", rel: "noopener noreferrer", textContent: "Quero que você resolva isso" });
                 zap.addEventListener("click", () => est && est.contar("/evento/teste-whatsapp", "Teste: chamou no WhatsApp", true));
@@ -146,7 +168,7 @@
                 const previa = new URL("./", location.href); if (ramo) previa.searchParams.set("ramo", ramo.id); previa.searchParams.set("previa", "1");
                 caixa.replaceChildren(
                     el("div", { className: "tt-nota" }, anel, el("div", {}, el("h2", { textContent: titulo }), el("p", { textContent: frase }))),
-                    ...(fracas.length ? [el("p", { className: "tt-contador", style: "margin-top:22px", textContent: "SUAS 3 DICAS" }), el("ol", { className: "tt-dicas" }, ...fracas.map((x) => el("li", {}, el("b", { textContent: x.q.dica[0] }), el("span", { textContent: x.q.dica[1] }))))] : []),
+                    ...(fracas.length ? [el("p", { className: "tt-contador", style: "margin-top:22px", textContent: fracas.length === 1 ? "O QUE ESTÁ TE FAZENDO PERDER CLIENTE" : `${fracas.length} COISAS QUE ESTÃO TE FAZENDO PERDER CLIENTE` }), el("ol", { className: "tt-dicas" }, ...fracas.map((x) => el("li", {}, el("b", { textContent: x.q.dica[0] }), el("span", { textContent: x.q.dica[1] }))))] : []),
                     el("div", { className: "tt-acoes" }, zap, compartilhar),
                     el("p", { className: "tt-mais" }, "Ou: ", el("a", { href: previa.toString(), textContent: "veja como ficaria o seu site" }), " · ", el("a", { href: monte.toString(), textContent: "monte o seu e veja o preço" })),
                     refazer);
