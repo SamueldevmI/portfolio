@@ -179,9 +179,11 @@
     }, { passive: true });
 
     /* ---------- Linhas de velocidade quando rola rápido ----------
-       A camada só existe enquanto a página está voando: some e sai do DOM logo depois que para. */
-    function desenhoDasLinhas() {
-        let svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" preserveAspectRatio="none"><g fill="#ffffff">';
+       A camada só existe enquanto a página está voando: some e sai do DOM logo depois que para.
+       Três efeitos pra descer (branco, "mergulhando" na leitura) e três pra subir (dourado, tipo
+       flashback/voltando) — escolhidos à sorte a cada arrancada, sem repetir o mesmo direto. */
+    function radial(cor) {
+        let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" preserveAspectRatio="none"><g fill="${cor}">`;
         const n = 64;
         for (let i = 0; i < n; i++) {
             const a = (i / n) * Math.PI * 2 + (Math.random() - .5) * .06;
@@ -190,9 +192,43 @@
             const ponto = (r, ang) => (100 + Math.cos(ang) * r).toFixed(1) + "," + (100 + Math.sin(ang) * r).toFixed(1);
             svg += `<polygon opacity="${(.35 + Math.random() * .5).toFixed(2)}" points="${ponto(dentro, a)} ${ponto(150, a - largura)} ${ponto(150, a + largura)}"/>`;
         }
-        return "data:image/svg+xml," + encodeURIComponent(svg + "</g></svg>");
+        return svg + "</g></svg>";
     }
-    let linhas = null, camada = null, ultimoY = scrollY, ultimoT = performance.now(), quadro = 0, parar = 0;
+    function paralelas(cor, desce) {
+        let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" preserveAspectRatio="none"><g stroke="${cor}" stroke-linecap="round">`;
+        const n = 46;
+        for (let i = 0; i < n; i++) {
+            const x = Math.random() * 200;
+            const desvio = (Math.random() - .5) * 16;
+            const comprimento = 70 + Math.random() * 110;
+            const y1 = desce ? -20 : 220;
+            const y2 = desce ? y1 + comprimento : y1 - comprimento;
+            svg += `<line x1="${x.toFixed(1)}" y1="${y1}" x2="${(x + desvio).toFixed(1)}" y2="${y2}" stroke-width="${(.4 + Math.random() * 1.2).toFixed(2)}" opacity="${(.3 + Math.random() * .5).toFixed(2)}"/>`;
+        }
+        return svg + "</g></svg>";
+    }
+    function trama(cor) {
+        let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" preserveAspectRatio="none"><g fill="${cor}">`;
+        const n = 110;
+        for (let i = 0; i < n; i++) {
+            svg += `<circle cx="${(Math.random() * 200).toFixed(1)}" cy="${(Math.random() * 200).toFixed(1)}" r="${(.6 + Math.random() * 2.1).toFixed(2)}" opacity="${(.22 + Math.random() * .48).toFixed(2)}"/>`;
+        }
+        return svg + "</g></svg>";
+    }
+    const imagem = (svg) => "data:image/svg+xml," + encodeURIComponent(svg);
+    const EFEITOS = {
+        desce: [
+            { classe: "v-radial", gerar: () => imagem(radial("#ffffff")) },
+            { classe: "v-paralelas", gerar: () => imagem(paralelas("#ffffff", true)) },
+            { classe: "v-trama", gerar: () => imagem(trama("#ffffff")) },
+        ],
+        sobe: [
+            { classe: "v-radial v-sobe", gerar: () => imagem(radial("#ffe14d")) },
+            { classe: "v-paralelas v-sobe", gerar: () => imagem(paralelas("#ffe14d", false)) },
+            { classe: "v-flash", gerar: null },
+        ],
+    };
+    let camada = null, ultimoY = scrollY, ultimoT = performance.now(), quadro = 0, parar = 0, ultimoEfeito = "";
     function apagar() {
         if (!camada) return;
         const saindo = camada;
@@ -202,17 +238,20 @@
     }
     function medir() {
         quadro = 0;
-        const agora = performance.now(), y = scrollY;
+        const agora = performance.now(), y = scrollY, desce = y > ultimoY;
         const velocidade = Math.abs(y - ultimoY) / Math.max(16, agora - ultimoT); // px por ms
         ultimoY = y; ultimoT = agora;
         const forca = Math.min(1, Math.max(0, (velocidade - 2.6) / 5));
         if (forca < .05) return;
         if (!camada) {
-            linhas = linhas || desenhoDasLinhas();
+            const lista = EFEITOS[desce ? "desce" : "sobe"];
+            let opcoes = lista.filter((e) => e.classe !== ultimoEfeito);
+            const efeito = opcoes[Math.floor(Math.random() * opcoes.length)];
+            ultimoEfeito = efeito.classe;
             camada = document.createElement("div");
-            camada.className = "gibi-velocidade";
+            camada.className = "gibi-velocidade " + efeito.classe;
             camada.setAttribute("aria-hidden", "true");
-            camada.style.backgroundImage = `url("${linhas}")`;
+            if (efeito.gerar) camada.style.backgroundImage = `url("${efeito.gerar()}")`;
             document.body.appendChild(camada);
             void camada.offsetWidth;
         }

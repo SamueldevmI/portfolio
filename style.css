@@ -2775,7 +2775,8 @@ html.secoes-montadas main > section.secao, html.secoes-montadas main > .secao { 
 @keyframes gibi-pow { 0% { opacity: 1; transform: translate(-50%, -50%) rotate(var(--giro)) scale(.2); } 35% { opacity: 1; transform: translate(-50%, -110%) rotate(var(--giro)) scale(1.1); } 70% { opacity: 1; transform: translate(-50%, -120%) rotate(var(--giro)) scale(1); } 100% { opacity: 0; transform: translate(-50%, -135%) rotate(var(--giro)) scale(.9); } }
 
 /* linhas de velocidade quando a página voa */
-.gibi-velocidade { position: fixed; inset: 0; z-index: 85; background-position: center; background-repeat: no-repeat; background-size: 100% 100%; opacity: 0; pointer-events: none; transition: opacity .16s linear; }
+.gibi-velocidade { position: fixed; inset: 0; z-index: 85; background-position: center; background-repeat: no-repeat; background-size: 100% 100%; opacity: 0; pointer-events: none; transition: opacity .16s linear; mix-blend-mode: screen; }
+.gibi-velocidade.v-flash { background-image: radial-gradient(circle, rgba(255,255,255,.95), rgba(255,255,255,0) 68%); }
 
 @media (max-width: 720px) {
     .gibi-capa { gap: 10px; margin-bottom: 22px; padding-bottom: 10px; border-bottom-width: 2px; }
