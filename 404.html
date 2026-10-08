@@ -20,23 +20,26 @@
     </script>
     <noscript><link rel="stylesheet" href="style.css"></noscript>
     <title>404 | Samuel Mickael</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bangers&display=swap">
     <style>
-        .pagina-404 { min-height:90vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:24px; }
-        /* caixinha de terminal (as regras dela saíram do style.css junto com o terminal da página inicial) */
-        .terminal-interativo { position:relative; z-index:1; border:1px solid var(--line); border-radius:6px; overflow:hidden; background:#101010; box-shadow:var(--shadow); }
-        .terminal-titulo { margin-left:8px; color:var(--muted); font:.78rem "DM Mono",monospace; }
-        .pagina-404 .terminal-interativo { width:min(560px,100%); margin:0 0 28px; text-align:left; animation:none; }
-        .pagina-404 .terminal-corpo p { color:var(--text); }
-        .pagina-404 .terminal-corpo p.erro-404 { color:var(--acento-texto); }
-        .pagina-404 h1 { font-size:clamp(2.2rem,7vw,3.4rem); margin-bottom:10px; letter-spacing:-.04em; }
-        .pagina-404 p.desc { color:var(--muted); max-width:420px; margin:0 auto 28px; }
-        .botao-tema-404 { position:fixed; top:20px; right:20px; }
+        /* 404 de gibi: o vilão roubou a página */
+        .pagina-404 { min-height: 92vh; display: grid; place-items: center; padding: 24px 16px; }
+        .quadro-404 { position: relative; width: min(560px, 100%); padding: 26px 22px 24px; border: 4px solid #111111; border-radius: 6px; background: radial-gradient(circle, rgba(17,17,17,.14) 1.6px, transparent 2px) 0 0 / 12px 12px, #f3ead6; color: #111111; text-align: center; box-shadow: 9px 9px 0 #111111; transform: rotate(-.6deg); }
+        .legenda-404 { position: absolute; top: -18px; left: 16px; margin: 0; padding: 5px 12px 3px; border: 3px solid #111111; background: #ffe14d; font: 400 1rem/1 "Bangers", Impact, sans-serif; letter-spacing: .06em; transform: rotate(-2deg); }
+        .numero-404 { display: block; margin: 8px 0 0; color: #ff2a3d; font: 400 clamp(5rem, 24vw, 8.5rem)/.9 "Bangers", Impact, sans-serif; letter-spacing: .04em; -webkit-text-stroke: 3px #111111; paint-order: stroke fill; text-shadow: 6px 6px 0 #111111; }
+        .vilao-404 { display: block; width: 120px; height: 90px; margin: 4px auto 6px; }
+        .quadro-404 h1 { margin: 0 0 8px; color: #111111; font: 400 clamp(1.9rem, 7vw, 2.6rem)/1 "Bangers", Impact, sans-serif; letter-spacing: .04em; text-transform: uppercase; }
+        .quadro-404 p.desc { max-width: 400px; margin: 0 auto 20px; color: #2b2b2b; }
+        .quadro-404 code { padding: 1px 6px; border: 1px solid #111111; background: #ffffff; font: .82rem "DM Mono", monospace; word-break: break-all; }
+        .quadro-404 .botao-principal { border: 3px solid #111111; box-shadow: 4px 4px 0 #111111; font-weight: 700; }
+        .rodape-404 { margin: 16px 0 0; font: .78rem "DM Mono", monospace; }
+        .rodape-404 a { color: #c41f2a; }
+        .botao-tema-404 { position: fixed; top: 20px; right: 20px; }
         @media (prefers-reduced-motion: no-preference) {
-            .pagina-404 h1, .pagina-404 p.desc, .pagina-404 > a.botao { opacity: 0; animation: entrada-404 .5s ease forwards; }
-            .pagina-404 h1 { animation-delay: .1s; }
-            .pagina-404 p.desc { animation-delay: .2s; }
-            .pagina-404 > a.botao { animation-delay: .3s; }
-            @keyframes entrada-404 { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+            .quadro-404 { animation: quadro-404 .45s cubic-bezier(.2, .9, .3, 1.2) both; }
+            @keyframes quadro-404 { from { opacity: 0; transform: rotate(-6deg) scale(.85); } to { opacity: 1; transform: rotate(-.6deg) scale(1); } }
+            .vilao-404 { animation: vilao-404 1.6s ease-in-out infinite alternate; }
+            @keyframes vilao-404 { from { transform: translateX(-10px) rotate(-3deg); } to { transform: translateX(10px) rotate(3deg); } }
         }
     </style>
 </head>
@@ -44,19 +47,17 @@
     <button id="botaoTema" class="botao-som botao-tema botao-tema-404" type="button" aria-label="Trocar para o tema azul" title="Tema azul">
         <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8"/><path class="tema-metade" d="M12 4a8 8 0 0 1 0 16z"/></svg>
     </button>
-    <div class="pagina-404">
-        <div class="terminal-interativo" aria-hidden="true">
-            <div class="terminal-topo"><i></i><i></i><i></i><span class="terminal-titulo">samuel@portfolio:~</span></div>
-            <div class="terminal-corpo">
-                <p><span class="terminal-prompt">$</span> cd <span id="rotaPedida">/rota-que-voce-tentou</span></p>
-                <p class="erro-404">bash: cd: rota não encontrada (erro 404)</p>
-                <p class="terminal-cursor">$ <span></span></p>
-            </div>
+    <main class="pagina-404">
+        <div class="quadro-404">
+            <p class="legenda-404">Enquanto isso, no esconderijo…</p>
+            <span class="numero-404" aria-hidden="true">404</span>
+            <svg class="vilao-404" viewBox="0 0 120 90" aria-hidden="true"><path d="M20 70 Q60 20 100 70 Z" fill="#111111"/><circle cx="60" cy="40" r="22" fill="#111111"/><rect x="36" y="32" width="48" height="12" rx="6" fill="#ff2a3d"/><circle cx="50" cy="38" r="3" fill="#ffffff"/><circle cx="70" cy="38" r="3" fill="#ffffff"/><path d="M88 58 l22 -8 -4 22 z" fill="#ffffff" stroke="#111111" stroke-width="3"/><path d="M93 60 h10 M94 65 h8" stroke="#111111" stroke-width="2"/></svg>
+            <h1>Ops! Essa página foi roubada pelo vilão.</h1>
+            <p class="desc">Ele levou <code id="rotaPedida">/essa-pagina</code> e sumiu. Mas a edição completa continua lá no início.</p>
+            <a class="botao botao-principal" href="/portfolio/">Voltar pro gibi →</a>
+            <p class="rodape-404">ou <a href="/portfolio/#orcamento">pede um orçamento</a> · <a href="/portfolio/dicas/">dicas grátis</a></p>
         </div>
-        <h1>Essa página não existe.</h1>
-        <p class="desc">O link que você seguiu não existe (ou foi movido). Que tal voltar pro início?</p>
-        <a class="botao botao-principal" href="/portfolio/">Voltar ao portfólio</a>
-    </div>
+    </main>
     <script>
         const botaoTema = document.getElementById("botaoTema");
         function rotularTema() {
