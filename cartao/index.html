@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Samuel Mickael | Cartão de visita</title>
+    <meta name="description" content="Samuel Mickael, desenvolvedor web em Campo Grande - MS: sites, cardápios com pedido no WhatsApp, agendamento e lojas online.">
+    <link rel="canonical" href="https://samueldevmi.github.io/portfolio/cartao/">
+    <meta property="og:type" content="profile">
+    <meta property="og:title" content="Samuel Mickael | Cartão de visita">
+    <meta property="og:description" content="Sites e sistemas pro seu negócio, em Campo Grande - MS. Salve meu contato com um toque.">
+    <meta property="og:url" content="https://samueldevmi.github.io/portfolio/cartao/">
+    <meta property="og:image" content="https://samueldevmi.github.io/portfolio/imagem/og/cartao.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="theme-color" content="#161616">
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bangers&family=DM+Mono:wght@500&family=Space+Grotesk:wght@500;600;700&display=swap">
+    <style>
+        * { box-sizing: border-box; }
+        body { min-height: 100vh; margin: 0; display: grid; place-items: center; padding: 24px 16px; background: radial-gradient(circle, rgba(255,42,61,.18) 1.4px, transparent 1.8px) 0 0 / 12px 12px, #161616; color: #111111; font: 500 16px/1.45 "Space Grotesk", system-ui, sans-serif; }
+        .cartao { position: relative; width: min(400px, 100%); padding: 28px 22px 22px; border: 4px solid #111111; border-radius: 12px; background: radial-gradient(circle, rgba(17,17,17,.1) 1.5px, transparent 2px) 0 0 / 12px 12px, #f3ead6; box-shadow: 0 0 0 3px #f2f2f2, 10px 10px 0 3px rgba(255,42,61,.55); text-align: center; }
+        .selo { position: absolute; top: -16px; left: 18px; margin: 0; padding: 5px 12px 3px; border: 3px solid #111111; background: #ffe14d; font: 400 1rem/1 "Bangers", Impact, sans-serif; letter-spacing: .06em; transform: rotate(-2deg); }
+        .foto { display: block; width: 120px; height: 120px; margin: 4px auto 12px; border: 4px solid #111111; border-radius: 50%; object-fit: cover; box-shadow: 5px 5px 0 #111111; }
+        h1 { margin: 0; color: #c41f2a; font: 400 2.6rem/1 "Bangers", Impact, sans-serif; letter-spacing: .04em; -webkit-text-stroke: 1px #111111; }
+        .cargo { margin: 6px 0 4px; font-weight: 700; }
+        .cidade { margin: 0 0 18px; color: #4a4030; font: 500 .8rem "DM Mono", monospace; letter-spacing: .06em; }
+        .faz { margin: 0 0 20px; color: #2b2b2b; }
+        .acoes { display: grid; gap: 10px; }
+        .acoes a, .acoes button { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 50px; padding: 10px 16px; border: 3px solid #111111; border-radius: 8px; background: #ffffff; color: #111111; font: 700 1rem "Space Grotesk", sans-serif; text-decoration: none; box-shadow: 4px 4px 0 #111111; cursor: pointer; }
+        .acoes .zap { background: #25d366; }
+        .acoes .salvar { background: #ffe14d; }
+        .acoes a:active, .acoes button:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 #111111; }
+        .linha { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+        .linha a { min-height: 44px; font-size: .86rem; padding: 8px; }
+        .qr-caixa { display: none; margin-top: 18px; }
+        .qr-caixa.aberta { display: block; }
+        .qr-caixa canvas { width: 220px; height: 220px; border: 4px solid #111111; background: #ffffff; image-rendering: pixelated; }
+        .qr-caixa p { margin: 8px 0 0; color: #4a4030; font-size: .85rem; }
+        .rodape { margin: 16px 0 0; font-size: .82rem; }
+        .rodape a { color: #b0222a; }
+    </style>
+</head>
+<body>
+    <main class="cartao">
+        <p class="selo">Cartão de visita</p>
+        <img class="foto" src="../imagem/samuel-rosto-320.webp" alt="Foto de Samuel Mickael" width="120" height="120">
+        <h1>Samuel Mickael</h1>
+        <p class="cargo">Desenvolvedor web &amp; mobile</p>
+        <p class="cidade">CAMPO GRANDE - MS</p>
+        <p class="faz">Sites, cardápio com pedido no WhatsApp, agendamento e loja online pro seu negócio. Só paga se gostar da prévia.</p>
+        <div class="acoes">
+            <a class="zap" href="https://wa.me/5567996034205?text=Oi%2C%20Samuel%21%20Peguei%20seu%20cart%C3%A3o%20e%20queria%20conversar%20sobre%20um%20site." target="_blank" rel="noopener noreferrer">💬 Chamar no WhatsApp</a>
+            <button type="button" class="salvar" id="salvarContato">📇 Salvar meu contato</button>
+            <div class="linha">
+                <a href="../">Portfólio</a>
+                <a href="https://www.linkedin.com/in/samuelrondon-dev/?utm_source=portfolio&amp;utm_medium=cartao" target="_blank" rel="me noopener noreferrer">LinkedIn</a>
+                <a href="https://github.com/SamueldevmI" target="_blank" rel="me noopener noreferrer">GitHub</a>
+            </div>
+            <button type="button" id="mostrarQr" aria-expanded="false">🔳 Mostrar QR deste cartão</button>
+        </div>
+        <div class="qr-caixa" id="qrCaixa">
+            <canvas id="qrCartao" width="220" height="220" role="img" aria-label="QR Code que abre este cartão"></canvas>
+            <p>Aponte a câmera pra abrir este cartão</p>
+        </div>
+        <p class="rodape"><a href="../qr/">Faça o QR Code do seu negócio, grátis →</a></p>
+    </main>
+    <script src="../qr/qrcode.js"></script>
+    <script src="../estatisticas.js?v=20261009"></script>
+    <script>
+        (function () {
+            "use strict";
+            const $ = (id) => document.getElementById(id);
+            const ENDERECO = "https://samueldevmi.github.io/portfolio/cartao/";
+            // Contato no formato vCard: o celular abre direto a tela de "adicionar contato"
+            $("salvarContato").addEventListener("click", () => {
+                const vcard = [
+                    "BEGIN:VCARD", "VERSION:3.0",
+                    "N:Mickael;Samuel;;;", "FN:Samuel Mickael",
+                    "TITLE:Desenvolvedor web e mobile",
+                    "TEL;TYPE=CELL:+5567996034205",
+                    "URL:https://samueldevmi.github.io/portfolio/",
+                    "ADR;TYPE=WORK:;;;Campo Grande;MS;;Brasil",
+                    "NOTE:Sites\\, cardápio com pedido no WhatsApp\\, agendamento e loja online.",
+                    "END:VCARD",
+                ].join("\r\n");
+                const a = document.createElement("a");
+                a.href = URL.createObjectURL(new Blob([vcard], { type: "text/vcard" }));
+                a.download = "Samuel Mickael.vcf";
+                document.body.appendChild(a); a.click(); a.remove();
+                setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+                window.ESTATISTICAS && window.ESTATISTICAS.contar("/evento/cartao-salvou", "cartão: salvou o contato", true);
+            });
+            let desenhado = false;
+            $("mostrarQr").addEventListener("click", () => {
+                const caixa = $("qrCaixa"), aberto = caixa.classList.toggle("aberta");
+                $("mostrarQr").setAttribute("aria-expanded", String(aberto));
+                if (!aberto || desenhado || typeof qrcode !== "function") return;
+                const tela = $("qrCartao"), ctx = tela.getContext("2d"), qr = qrcode(0, "M");
+                qr.addData(ENDERECO); qr.make();
+                const n = qr.getModuleCount(), m = Math.floor(200 / n), x0 = Math.floor((220 - n * m) / 2);
+                ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, 220, 220); ctx.fillStyle = "#111111";
+                for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (qr.isDark(r, c)) ctx.fillRect(x0 + c * m, x0 + r * m, m, m);
+                desenhado = true;
+            });
+            window.ESTATISTICAS && window.ESTATISTICAS.contar("/cartao/", "Cartão de visita", true);
+        })();
+    </script>
+</body>
+</html>
