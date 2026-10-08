@@ -63,7 +63,7 @@
             var hora = new Date().getHours();
             document.documentElement.dataset.periodo = hora >= 5 && hora < 12 ? "manha" : hora >= 12 && hora < 18 ? "tarde" : "noite";
             if (tema === "azul") document.querySelector('meta[name="theme-color"]').content = "#0e1422";
-            document.write('<link rel="stylesheet" id="folhaTema" href="' + (tema === "azul" ? "style-azul.css" : "style.css") + '?v=20261008visual">');
+            document.write('<link rel="stylesheet" id="folhaTema" href="' + (tema === "azul" ? "style-azul.css" : "style.css") + '?v=20261008sons">');
         })();
         /* Idioma: detectado cedo (antes do resto da página rodar) só pra avisar efeitos como a
            digitação do texto do hero, que senão sobrescreveriam a tradução feita pelo idioma.js. */
@@ -77,7 +77,7 @@
             document.documentElement.dataset.idioma = idioma;
         })();
     </script>
-    <noscript><link rel="stylesheet" href="style.css?v=20261008visual"></noscript>
+    <noscript><link rel="stylesheet" href="style.css?v=20261008sons"></noscript>
     <title id="tituloPagina">Samuel Mickael | Desenvolvedor Web &amp; Mobile</title>
     <script type="application/ld+json">
     {
@@ -144,6 +144,11 @@
             </button>
             <button id="botaoSom" class="botao-som" type="button" aria-pressed="false" aria-label="Ligar música de fundo" title="Ligar música" hidden>
                 <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="som-caixa" d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path class="som-onda som-onda1" d="M15.2 9.3a3.8 3.8 0 0 1 0 5.4"/><path class="som-onda som-onda2" d="M17.8 6.8a7.4 7.4 0 0 1 0 10.4"/><path class="som-x" d="M16 9.8l4.4 4.4M20.4 9.8 16 14.2"/></svg>
+            </button>
+            <!-- Álbum de figurinhas (figurinhas.js): vai desbloqueando conforme explora o site -->
+            <button id="botaoFigurinhas" class="botao-som" type="button" aria-label="Álbum de figurinhas" title="Álbum de figurinhas">
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2.5l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L12 16.6l-5.6 3 1.4-6.3-4.8-4.3 6.4-.6z"/></svg>
+                <b class="fig-contagem" aria-hidden="true"></b>
             </button>
         </nav>
 
@@ -884,26 +889,26 @@
     </div>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-    <script src="estatisticas.js?v=20261008visual" defer></script>
+    <script src="estatisticas.js?v=20261008sons" defer></script>
     <script src="servicos.js?v=20261002" defer></script>
-    <script src="previa-celular.js?v=20261008visual" defer></script>
-    <script src="filme-celular.js?v=20261008visual" defer></script>
+    <script src="previa-celular.js?v=20261008sons" defer></script>
+    <script src="filme-celular.js?v=20261008sons" defer></script>
     <script src="depoimentos.js?v=20261007" defer></script>
-    <script src="script.js?v=20261008visual" defer></script>
-    <script src="antes-depois.js?v=20261008visual" defer></script>
+    <script src="script.js?v=20261008sons" defer></script>
+    <script src="antes-depois.js?v=20261008sons" defer></script>
     <!-- espanhol sob demanda: o botão ES é leve e o idioma.js só baixa quando alguém pede (os scripts acima se redesenham no "idiomaMudou") -->
-    <script src="idioma-leve.js?v=20261008visual" defer></script>
+    <script src="idioma-leve.js?v=20261008sons" defer></script>
 <script>
     /* Scripts que a página não precisa pra aparecer: o mobile.js só baixa em tela de toque (no computador
        ele não faz nada) e a música só depois que a página terminou de carregar. */
     (function () {
-        var versao = "?v=20261008visual";
+        var versao = "?v=20261008sons";
         function carregar(arquivo) { var s = document.createElement("script"); s.src = arquivo + versao; s.async = false; document.body.appendChild(s); }
         var toque = matchMedia("(pointer: coarse)").matches;
         // o pedido de "instalar app" pode chegar antes do mobile.js: fica guardado pra ele usar
         if (toque) addEventListener("beforeinstallprompt", function (e) { e.preventDefault(); window.pedidoInstalar = e; });
         // o mobile.js também espera a página aparecer: assim não disputa o processador com a primeira tela
-        function depois() { (window.requestIdleCallback || setTimeout)(function () { carregar("acabamento.js"); carregar("ficha.js"); carregar("gibi.js"); carregar("visual.js"); if (toque) carregar("mobile.js"); carregar("musica.js"); }, { timeout: 1500 }); }
+        function depois() { (window.requestIdleCallback || setTimeout)(function () { carregar("acabamento.js"); carregar("ficha.js"); carregar("gibi.js"); carregar("visual.js"); carregar("figurinhas.js"); if (toque) carregar("mobile.js"); carregar("musica.js"); }, { timeout: 1500 }); }
         if (document.readyState === "complete") depois(); else addEventListener("load", depois, { once: true });
     })();
 </script>
