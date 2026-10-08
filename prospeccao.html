@@ -199,6 +199,36 @@
             </div>
         </section>
 
+        <section class="gl-depois" aria-labelledby="mpTitulo">
+            <h2 id="mpTitulo">📨 Depois que fechou</h2>
+            <p>Mensagens prontas pra cada etapa, do “gostei da prévia” até um mês depois do site no ar. Escolha o momento, confira e mande.</p>
+            <div class="gl-caixa">
+                <label>Momento<select id="mpMomento">
+                    <option value="pagar">Gostou da prévia: pedir os primeiros 50%</option>
+                    <option value="material">Pedir fotos, preços e o resto do material</option>
+                    <option value="sumiu">Cliente sumiu no meio do projeto</option>
+                    <option value="ajustes">Site quase pronto: pedir os ajustes</option>
+                    <option value="entrega">Site no ar: entregar e combinar os outros 50%</option>
+                    <option value="divulgar">Como divulgar o site (dicas pro cliente)</option>
+                    <option value="mes">Um mês depois: como está indo?</option>
+                    <option value="caro">Respondeu “tá caro”</option>
+                </select></label>
+                <div class="gl-linha">
+                    <label>Nome da pessoa<input type="text" id="mpNome" maxlength="40" placeholder="Ex.: João"></label>
+                    <label>Link do site (se já tiver)<input type="url" id="mpLink" placeholder="https://..."></label>
+                </div>
+                <div class="gl-linha">
+                    <label>Valor dessa parte (R$, opcional)<input type="text" id="mpValor" inputmode="decimal" placeholder="Ex.: 225"></label>
+                    <label>WhatsApp (opcional)<input type="tel" id="mpTel" placeholder="(67) 99999-9999"></label>
+                </div>
+                <label>Mensagem (dá pra editar)<textarea id="mpMsg" rows="7"></textarea></label>
+                <div class="gl-acoes">
+                    <button type="button" class="botao botao-principal" id="mpWhats">Enviar no WhatsApp</button>
+                    <button type="button" class="botao botao-secundario" id="mpCopiar">Copiar mensagem</button>
+                </div>
+            </div>
+        </section>
+
         <section class="gl-proposta" id="glProposta" aria-labelledby="gpTitulo">
             <h2 id="gpTitulo">📄 Fazer proposta</h2>
             <p>Gera uma página com o nome do cliente, o que ele leva, prazo, valor e o botão “Aceito” que cai no seu WhatsApp.</p>
@@ -711,6 +741,46 @@
             }
             ramo.addEventListener("change", () => { montar(); if (lote) { lote.value = ramo.value.split("|")[0]; lote.dispatchEvent(new Event("change")); } });
             onde.addEventListener("input", montar);
+            montar();
+        })();
+    </script>
+    <script>
+        /* Mensagens prontas depois que o cliente fechou. Preço mínimo e regra de pagamento vêm do servicos.js. */
+        (function () {
+            "use strict";
+            const $ = (id) => document.getElementById(id);
+            if (!$("mpMomento") || !window.SERVICOS) return;
+            const S = window.SERVICOS;
+            let editada = false;
+            const MODELOS = {
+                pagar: (d) => `Oi${d.nome}! Que bom que você gostou da prévia 🙌\n\nPra eu seguir e terminar o site, é só fazer o Pix dos primeiros 50%${d.valor ? ` (R$ ${d.valor})` : ""}. Os outros 50% ficam pra entrega, com o site no ar.\n\nAssim que cair, já começo a parte final e te mando o prazo certinho 😉`,
+                material: (d) => `Oi${d.nome}! Pra deixar o site com a cara de vocês, vou precisar de:\n\n• Logo (se tiver) e as cores da marca\n• Fotos dos produtos, do espaço ou do trabalho\n• Preços, horários, endereço e formas de pagamento\n• O WhatsApp que vai receber os pedidos\n\nPode mandar aos poucos, por aqui mesmo. O que faltar a gente resolve junto 😉`,
+                sumiu: (d) => `Oi${d.nome}! Tudo bem? O site de vocês tá bem encaminhado, só falta o material que combinamos pra eu finalizar.\n\nQuando der, me manda por aqui que eu termino rapidinho 😉`,
+                ajustes: (d) => `Oi${d.nome}! O site tá quase pronto 🎉${d.link ? `\n${d.link}` : ""}\n\nDá uma olhada com calma, no celular e no computador, e me manda numa mensagem só tudo que quiser mudar: texto, foto, preço, cor. Eu ajusto tudo de uma vez.`,
+                entrega: (d) => `Tá no ar! 🎉${d.link ? `\n${d.link}` : ""}\n\nAgora é divulgar: coloca o link na bio do Instagram, no status do WhatsApp e no perfil do Google Maps. Se aparecer qualquer erro, me chama que eu corrijo.\n\nPra fechar, fica o acerto dos outros 50%${d.valor ? ` (R$ ${d.valor})` : ""} pelo Pix. Obrigado pela confiança${d.nomeSo ? ", " + d.nomeSo : ""} 🙏`,
+                divulgar: (d) => `Algumas ideias pra divulgar o site${d.link ? ` (${d.link})` : ""}:\n\n1. Link na bio do Instagram\n2. Story com “pede pelo link 👆”\n3. Status do WhatsApp toda semana\n4. No campo “site” do Google Maps\n5. QR Code no balcão (dá pra fazer grátis aqui: ${S.SITE}qr/)\n\nQuanto mais o cliente vê o link, mais ele usa 😉`,
+                mes: (d) => `Oi${d.nome}! Faz um mês que o site foi pro ar 🎉 Como tá sendo? Chegou pedido ou cliente novo por ele?\n\nSe quiser mudar alguma coisa, é só me falar. E se tiver gostado, uma indicação ou um depoimento curtinho me ajuda demais 🙏`,
+                caro: (d) => `Entendo${d.nomeSo ? ", " + d.nomeSo : ""}! Só pra deixar claro como funciona:\n\n• O valor é pago uma vez só, sem mensalidade\n• Você só paga se gostar da prévia: ${S.GARANTIA.pagamento}\n• Dá pra começar menor: o site de apresentação é a partir de ${S.reais(S.PACOTES.site.preco)}, e cresce depois\n\nSe quiser, te mostro uma prévia sem compromisso 😉`,
+            };
+            function montar() {
+                if (editada) return;
+                const nomeSo = $("mpNome").value.trim();
+                const d = { nome: nomeSo ? ", " + nomeSo : "", nomeSo, link: $("mpLink").value.trim(), valor: $("mpValor").value.trim().replace(/^R\$\s*/i, "") };
+                $("mpMsg").value = MODELOS[$("mpMomento").value](d);
+            }
+            $("mpMsg").addEventListener("input", () => { editada = true; });
+            ["mpMomento", "mpNome", "mpLink", "mpValor"].forEach((id) => $(id).addEventListener("input", () => { editada = false; montar(); }));
+            $("mpMomento").addEventListener("change", () => { editada = false; montar(); });
+            $("mpWhats").addEventListener("click", () => {
+                const tel = $("mpTel").value.replace(/\D/g, "");
+                const numero = tel ? (tel.length <= 11 ? "55" + tel : tel) : "";
+                window.open(`https://wa.me/${numero}?text=${encodeURIComponent($("mpMsg").value)}`, "_blank", "noopener");
+            });
+            $("mpCopiar").addEventListener("click", async () => {
+                try { await navigator.clipboard.writeText($("mpMsg").value); $("mpCopiar").textContent = "Copiada ✓"; }
+                catch (erro) { $("mpMsg").select(); }
+                setTimeout(() => { $("mpCopiar").textContent = "Copiar mensagem"; }, 1800);
+            });
             montar();
         })();
     </script>

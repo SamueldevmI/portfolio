@@ -29,6 +29,9 @@ const PAGINAS = [
     ["monte", "Preço na hora", "Monte seu site e veja *o preço*", `Pacotes a partir de ${R(P.site.preco)}, pagamento único`],
     ["como-trabalho", "Sem surpresa", "Como eu *trabalho*", "Só paga se gostar da prévia · tudo por escrito"],
     ["como-foi-feito", "Bastidores", "Como este site *foi feito*", "Música no navegador, gibi leve e testes automáticos"],
+    ["how-it-was-built", "Behind the scenes", "How this portfolio *was built*", "Browser-made music, a light comic look, automated checks"],
+    ["cartao", "Cartão de visita", "Samuel Mickael, *dev web*", "Salve meu contato com um toque"],
+    ["para-agencias", "Pra agências", "Você vende. *Eu desenvolvo.*", "Sites, landing pages e lojas pros clientes da sua agência"],
     ...Object.entries(PASTAS_RAMO).map(([k, pasta]) => {
         const r = S.RAMOS[k], p = P[r.pacote];
         return [pasta, "Site pro seu ramo", `Site para *${r.titulo}*`, `${p.nome} · a partir de ${R(p.preco)}`];
