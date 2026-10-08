@@ -3337,3 +3337,10 @@ a.gibi-continua:focus-visible { outline: 3px solid #ffe14d; outline-offset: 3px;
     /* tarja "continua" mais colada no fim da seção */
     a.gibi-continua { margin-top: 12px; }
 }
+
+/* ---------- Versão leve (botão no rodapé): sem animação, sem música, sem efeito de mouse ---------- */
+html.modo-simples *, html.modo-simples *::before, html.modo-simples *::after { animation-duration: .001ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; transition-delay: 0s !important; scroll-behavior: auto !important; }
+html.modo-simples :is(.reticula-lente, .faisca-rastro, .gibi-velocidade, .gibi-pow, .gibi-pagina, .figurinha-brilho) { display: none !important; }
+.aviso-simples { position: fixed; z-index: 70; left: 50%; top: 84px; padding: 9px 16px 7px; border: 3px solid #111111; border-radius: 999px; background: #ffe14d; color: #111111; font: 700 .9rem "Space Grotesk", sans-serif; box-shadow: 4px 4px 0 #111111; cursor: var(--cursor-mao, pointer); opacity: 0; transform: translate(-50%, -10px); transition: opacity .3s ease, transform .3s ease; white-space: nowrap; }
+.aviso-simples.visivel { opacity: 1; transform: translate(-50%, 0); }
+@media print { .aviso-simples { display: none !important; } }

@@ -76,6 +76,15 @@ window.ESTATISTICAS?.contar("/", "Portfólio", true);
     const q = new URLSearchParams(location.search);
     if (q.get("origem") === "assinatura") window.ESTATISTICAS?.contar(`/origem/assinatura-${window.ESTATISTICAS.slug(q.get("de") || "site")}`, `veio pela assinatura: ${q.get("de") || "site"}`, true);
 }
+// De madrugada (horário de Campo Grande), quem chama no WhatsApp fica sabendo que a mensagem chegou e quando
+// esperar resposta, em vez de achar que foi ignorado. Não muda a mensagem: só avisa na volta pra página.
+document.addEventListener("click", (evento) => {
+    if (!evento.target.closest('a[href*="wa.me/5567996034205"]')) return;
+    let hora = new Date().getHours();
+    try { hora = Number(new Intl.DateTimeFormat("pt-BR", { hour: "numeric", hourCycle: "h23", timeZone: "America/Campo_Grande" }).format(new Date())); } catch (e) { /* fuso indisponível: usa o do aparelho */ }
+    if (hora >= 22 || hora < 7) setTimeout(() => mostrarToast(window.traduzir ? window.traduzir("🌙 Já é tarde aqui em Campo Grande: sua mensagem chega agora e eu te respondo amanhã, em até 24h.") : "🌙 Já é tarde aqui em Campo Grande: sua mensagem chega agora e eu te respondo amanhã, em até 24h."), 400);
+});
+
 // qualquer toque num botão que leve pro meu WhatsApp (o fim do funil no painel)
 document.addEventListener("click", (evento) => {
     if (evento.target.closest('a[href*="wa.me/5567996034205"], [data-orcamento-tipo], .cmp-querer, .previa-quero')) window.ESTATISTICAS?.contar("/evento/whatsapp", "tocou no WhatsApp/orçamento", true);

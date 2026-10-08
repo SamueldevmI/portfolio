@@ -49,6 +49,23 @@ const DICAS = [
         ["texto", "Faça a conta", "Pegue os pedidos do mês no app e a comissão do último extrato. Esse valor saiu do seu bolso pra vender pra quem, muitas vezes, *já era seu cliente*."],
         ["lista", "O jeito que funciona", ["No app: ser descoberto", "No seu link: quem já é cliente pede direto", "Dê um motivo: preço de balcão ou um brinde"]],
     ], legenda: "Site próprio ou iFood: onde a pizzaria lucra mais? Spoiler: usando os dois do jeito certo 🍕" },
+    { pasta: "link-na-bio", titulo: "O que colocar no *link da bio*", slides: [
+        ["texto", "A porta da loja", "Quase todo cliente que te acha no Instagram passa pelo link da bio. Se ali tiver *bagunça*, ele vai pro próximo perfil."],
+        ["lista", "O que o cliente procura", ["Como pedir ou agendar", "O preço", "Onde fica e o horário", "Seu WhatsApp"]],
+        ["texto", "Menos é mais", "Cada botão a mais é uma decisão a mais. Coloque *o que vende em primeiro* e no máximo 3 ou 4 opções."],
+        ["texto", "Teste no seu celular", "Com o 4G: abriu rápido e deu pra pedir em poucos toques? *Então tá bom.* PDF pesado e página cheia de botões espantam cliente."],
+    ], legenda: "O link da bio é a porta da sua loja no Instagram. O que colocar (e o que tirar) pra ele vender 👆" },
+    { pasta: "cardapio-digital-gratis", titulo: "Cardápio digital *grátis*: dá certo?", slides: [
+        ["texto", "Dá pra começar sem gastar", "E muita gente deveria começar assim. Mas *cada opção grátis tem um limite*."],
+        ["compara", "Onde cada uma trava", ["Bom pra", "Trava em"], [["Foto no destaque", "Começar hoje", "Preço desatualiza"], ["PDF na bio", "Cardápio grande", "Pesado no celular"], ["Catálogo do WhatsApp", "Quem já vende lá", "Não aparece no Google"]]],
+        ["lista", "Hora do próximo passo", ["Responde o mesmo preço várias vezes por dia", "Pedido chega errado, anotado na mão", "Quer aparecer no Google na sua região"]],
+    ], legenda: "Cardápio digital grátis dá certo? Pra começar, sim. Mas cada opção tem um limite: veja qual 📋" },
+    { pasta: "responder-no-whatsapp", titulo: "Responder no *WhatsApp* sem perder venda", slides: [
+        ["texto", "Quem responde primeiro leva", "Quem manda mensagem pra um negócio geralmente mandou pra outros dois. *Quem responde primeiro, e direito, leva o pedido.*"],
+        ["lista", "Grátis no WhatsApp Business", ["Mensagem de saudação com o link do cardápio", "Mensagem de ausência com o horário", "Respostas rápidas pra preço e entrega", "Etiquetas: novo, pago, entregue"]],
+        ["lista", "Como responder pra fechar", ["Responda o que ele perguntou, com preço", "Uma pergunta por vez", "Termine com o próximo passo"]],
+        ["texto", "Mensagem de ausência", "“Agora estamos fechados, mas voltamos amanhã às 18h 😊 Já dá pra ver o cardápio e *deixar o pedido pronto* aqui: [link]”"],
+    ], legenda: "Cliente que espera, desiste. Os recursos grátis do WhatsApp Business que respondem por você 💬" },
 ];
 
 const esc = (t) => String(t).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));

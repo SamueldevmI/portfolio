@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /* Gera as páginas feitas pra aparecer no Google e trazer gente nova:
      criacao-de-sites-campo-grande/index.html   ("criação de sites em Campo Grande")
-     dicas/index.html + artigos curtos (Google Maps, cardápio, preço de site, catálogo do WhatsApp, avaliações, iFood)
+     dicas/index.html + artigos curtos (Google Maps, cardápio, preço de site, catálogo, avaliações, iFood, link na bio, WhatsApp…)
    Preço, prazo, extras e garantia vêm do servicos.js: mudou lá, rode de novo.
        node ferramentas/gerar-paginas-conteudo.js            (gera)
        node ferramentas/gerar-paginas-conteudo.js --conferir (só confere se está em dia; usado no CI) */
@@ -42,6 +42,9 @@ const CSS = `
         .ct-tabela th { color: var(--text); font-size: .9rem; }
         .ct-tabela td { color: var(--muted); }
         .ct-tabela td b { color: var(--ouro); }
+        .ct-rolagem { margin: 14px 0; overflow-x: auto; overscroll-behavior-x: contain; }
+        .ct-rolagem .ct-tabela { margin: 0; }
+        @media (max-width: 600px) { .ct-tabela-larga { min-width: 560px; font-size: .9rem; } }
         .ct-pacotes { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin: 18px 0; }
         .ct-pacote { padding: 18px; border: 3px solid #111111; border-radius: 8px; background: #f3ead6; box-shadow: 5px 5px 0 #111111; }
         .ct-pacote h3 { margin: 0 0 6px; color: #111111; }
@@ -333,6 +336,104 @@ ${fim("Quer aparecer melhor no Google? O diagnóstico leva 1 minuto e mostra o q
             <p><b>Cardápio com pedido no WhatsApp:</b> ${esc(P.pedidos.resumo)} A partir de <b>${R(P.pedidos.preco)}</b>, pagamento único, sem taxa por pedido. <a href="../../site-para-pizzaria/">Veja como fica pra pizzaria</a>.</p>
         </div>
 ${fim("Quer ver como ficaria o cardápio da sua pizzaria? A prévia é por minha conta.", "Oi, Samuel! Li sua dica sobre site e iFood e queria ver como ficaria o meu cardápio. Minha pizzaria é: ")}`,
+    },
+    {
+        pasta: "dicas/link-na-bio", data: "2026-10-09",
+        titulo: "O que colocar no link da bio do Instagram (pra vender, não só pra enfeitar)",
+        resumo: "O link da bio é a porta da sua loja no Instagram. O que colocar, em que ordem e o erro que faz o cliente desistir.",
+        corpo: () => `        <p class="ct-lead">Quase todo cliente que te acha no Instagram passa pelo link da bio antes de comprar. Se ali tiver uma lista enorme de botões, ou um link que não abre direito no celular, ele desiste e vai pro próximo perfil.</p>
+        <h2>O que o cliente procura no link</h2>
+        <ol class="ct-passos">
+            <li><b>Como pedir ou agendar</b>: cardápio, catálogo ou agenda.</li>
+            <li><b>Preço</b>: quem não acha o preço, pergunta no direct, e muitos nem perguntam.</li>
+            <li><b>Onde fica e o horário</b>: endereço com mapa e "aberto agora?".</li>
+            <li><b>Seu WhatsApp</b>, pra quem prefere conversar.</li>
+        </ol>
+        <h2>Menos é mais</h2>
+        <p>O Instagram deixa colocar mais de um link na bio, mas cada botão a mais é uma decisão a mais pro cliente. Deixe o principal (o que vende) em primeiro e no máximo 3 ou 4 opções.</p>
+        <div class="ct-caixa">
+            <p><b>O erro mais comum:</b> o link levar pra um PDF pesado ou pra uma página cheia de botões iguais. Teste no seu próprio celular, com o 4G: abriu rápido e deu pra pedir em poucos toques? Então tá bom.</p>
+        </div>
+        <h2>Divulgue o link</h2>
+        <p>Nos stories ("pede pelo link da bio 👆"), na legenda dos posts com produto e no status do WhatsApp. E coloque o mesmo link no seu perfil do Google Maps.</p>
+${fim("Quer um link na bio que já leva pro pedido pronto? Me conta o que você vende.", "Oi, Samuel! Li sua dica sobre o link da bio e queria ajuda com o meu. Meu negócio é: ")}`,
+    },
+    {
+        pasta: "dicas/cardapio-digital-gratis", data: "2026-10-09",
+        titulo: "Cardápio digital grátis: dá certo?",
+        resumo: "Foto no destaque, PDF ou aplicativo grátis: o que funciona pra começar, onde cada um trava e a hora de dar o próximo passo.",
+        corpo: () => `        <p class="ct-lead">Dá pra começar sem gastar nada, e muita gente deveria começar assim. Mas cada opção grátis tem um limite, e é bom saber qual antes de ele começar a custar pedido.</p>
+        <table class="ct-tabela">
+            <thead><tr><th>Opção grátis</th><th>Bom pra</th><th>Onde trava</th></tr></thead>
+            <tbody>
+                <tr><th>Foto no destaque do Instagram</th><td>Começar hoje</td><td>Preço desatualiza, letra pequena no celular, o pedido continua no direct</td></tr>
+                <tr><th>PDF no link da bio</th><td>Cardápio grande e organizado</td><td>Demora pra abrir no 4G e é ruim de ler no celular</td></tr>
+                <tr><th>Catálogo do WhatsApp Business</th><td>Quem já vende pelo WhatsApp</td><td>Não aparece no Google e tem pouca personalização</td></tr>
+                <tr><th>Aplicativo de cardápio com plano grátis</th><td>Testar pedido online</td><td>Leia as regras: pode ter anúncio, marca da plataforma, limite de itens ou cobrança depois</td></tr>
+            </tbody>
+        </table>
+        <h2>A hora de dar o próximo passo</h2>
+        <ul>
+            <li>Você responde a mesma pergunta ("quanto tá a grande?") várias vezes por dia.</li>
+            <li>Pedido chega errado porque foi anotado na mão.</li>
+            <li>Você quer aparecer no Google quando procuram o seu ramo na região.</li>
+        </ul>
+        <div class="ct-caixa">
+            <p><b>Cardápio próprio com pedido no WhatsApp:</b> ${esc(P.pedidos.resumo)} A partir de <b>${R(P.pedidos.preco)}</b>, pagamento único, sem taxa por pedido e com a cara do seu negócio. <a href="../../site-para-pizzaria/">Veja como fica</a>.</p>
+        </div>
+${fim("Quer ver como ficaria o seu cardápio? A prévia é por minha conta.", "Oi, Samuel! Li sua dica sobre cardápio digital grátis e queria ver como ficaria o meu. Meu negócio é: ")}`,
+    },
+    {
+        pasta: "dicas/responder-no-whatsapp", data: "2026-10-09",
+        titulo: "Como responder cliente no WhatsApp sem perder venda",
+        resumo: "Cliente que espera, desiste. Os recursos grátis do WhatsApp Business que respondem por você e as mensagens que fecham pedido.",
+        corpo: () => `        <p class="ct-lead">Quem manda mensagem pra um negócio geralmente mandou pra outros dois ao mesmo tempo. Quem responde primeiro, e responde direito, leva o pedido.</p>
+        <h2>Deixe o WhatsApp Business trabalhar</h2>
+        <p>Todos esses são grátis, nas configurações de "Ferramentas comerciais":</p>
+        <ul>
+            <li><b>Mensagem de saudação:</b> quem chama pela primeira vez recebe na hora o link do cardápio e o horário.</li>
+            <li><b>Mensagem de ausência:</b> fora do horário, o cliente sabe quando você volta, em vez de achar que foi ignorado.</li>
+            <li><b>Respostas rápidas:</b> preço, taxa de entrega e forma de pagamento num atalho, sem digitar tudo de novo.</li>
+            <li><b>Etiquetas:</b> marque "novo pedido", "pago", "entregue" e não perca ninguém no meio do dia.</li>
+        </ul>
+        <h2>Como responder pra fechar</h2>
+        <ol class="ct-passos">
+            <li><b>Responda o que ele perguntou, com preço.</b> "Tem sim! A grande de calabresa é R$ 45."</li>
+            <li><b>Faça uma pergunta só por vez.</b> Três perguntas numa mensagem viram nenhuma resposta.</li>
+            <li><b>Termine com o próximo passo.</b> "Quer que eu já separe? Me passa o endereço 😉"</li>
+        </ol>
+        <div class="ct-caixa">
+            <p><b>Mensagem de ausência pronta:</b> "Oi! Agora estamos fechados, mas voltamos amanhã às 18h 😊 Já dá pra ver o cardápio e deixar o pedido pronto aqui: [link]. Assim que abrirmos, a gente confirma!"</p>
+        </div>
+${fim("Quer que o pedido chegue pronto no seu WhatsApp, até de madrugada? Me conta o que você vende.", "Oi, Samuel! Li sua dica sobre responder no WhatsApp e queria o pedido chegando pronto. Meu negócio é: ")}`,
+    },
+    {
+        pasta: "dicas/wix-agencia-ou-freelancer", data: "2026-10-09",
+        titulo: "Wix, agência ou freelancer: quem faz o site do seu negócio?",
+        resumo: "Fazer sozinho numa plataforma, contratar agência ou um freelancer: o que cada um entrega, o que fica por sua conta e as 5 perguntas pra fazer antes de pagar qualquer um.",
+        corpo: () => `        <p class="ct-lead">Eu sou freelancer, então leve isso em conta. Mas cada caminho serve pra um tipo de negócio, e dá pra comparar com honestidade.</p>
+        <div class="ct-rolagem"><table class="ct-tabela ct-tabela-larga">
+            <thead><tr><th></th><th>Você mesmo numa plataforma (Wix e parecidas)</th><th>Agência</th><th>Freelancer</th></tr></thead>
+            <tbody>
+                <tr><th>Quem faz</th><td>Você</td><td>Uma equipe</td><td>Uma pessoa</td></tr>
+                <tr><th>Como você paga</th><td>Plano da plataforma, geralmente mensal ou anual</td><td>Projeto e, às vezes, mensalidade</td><td>Depende de cada um: confira na proposta</td></tr>
+                <tr><th>Tempo seu</th><td><b>Muito</b>: montar, escrever, ajustar</td><td>Pouco</td><td>Pouco</td></tr>
+                <tr><th>Se parar de pagar</th><td>Leia as regras do plano antes de começar</td><td>Depende do contrato</td><td>Depende do contrato</td></tr>
+                <tr><th>Bom pra</th><td>Quem tem tempo e gosta de mexer</td><td>Marca maior, com campanhas e muita coisa ao mesmo tempo</td><td>Negócio local que quer algo sob medida, sem estrutura de agência</td></tr>
+            </tbody>
+        </table></div>
+        <h2>5 perguntas pra fazer antes de pagar qualquer um</h2>
+        <ol class="ct-passos">
+            <li><b>O domínio (.com.br) fica no meu nome?</b> Se ficar no nome de outra pessoa, o endereço não é seu.</li>
+            <li><b>Vou receber todos os acessos, por escrito?</b></li>
+            <li><b>Tem mensalidade? O que acontece se eu parar de pagar?</b></li>
+            <li><b>Posso ver um trabalho seu que está no ar?</b> Site de verdade, de cliente de verdade.</li>
+            <li><b>Tem contrato com o que está incluso, o prazo e o valor?</b></li>
+        </ol>
+        <div class="ct-caixa">
+            <p><b>As minhas respostas:</b> domínio no seu nome, acessos por escrito, nenhuma mensalidade obrigatória, um cliente no ar (<a href="../../case-eclipse.html">a loja da Eclipse Studio</a>) e um <a href="../../contrato.html">contrato simples, de uma página</a>. E ${esc(S.GARANTIA.titulo.toLowerCase())}: ${esc(S.GARANTIA.pagamento)}.</p>
+        </div>
+${fim("Ficou em dúvida sobre qual caminho é o seu? Me conta do seu negócio que eu te digo com sinceridade, mesmo que a resposta não seja eu.", "Oi, Samuel! Li sua comparação entre Wix, agência e freelancer e fiquei em dúvida. Meu negócio é: ")}`,
     },
 ];
 
