@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Relatório do mês | Samuel Mickael</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <style>
+        :root { --tinta: #1d1b22; --suave: #6b6676; --linha: #e6e2ec; --fundo: #f4f2f7; --papel: #fff; --cor: #7a4fd0; --cor-clara: #efe8fb; --sobe: #1f8f5f; --desce: #c0392b; }
+        * { box-sizing: border-box; }
+        [hidden] { display: none !important; }
+        body { margin: 0; background: var(--fundo); color: var(--tinta); font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+        .folha { width: min(760px, calc(100% - 24px)); margin: 20px auto 60px; padding: clamp(20px, 5vw, 48px); border-radius: 18px; background: var(--papel); box-shadow: 0 10px 40px rgba(40, 20, 80, .08); }
+        .topo { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 8px 20px; padding-bottom: 18px; border-bottom: 1px solid var(--linha); }
+        .eyebrow { margin: 0 0 4px; color: var(--cor); font-size: .75rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+        h1 { margin: 0; font-size: clamp(1.6rem, 5vw, 2.2rem); line-height: 1.1; letter-spacing: -.02em; }
+        .topo small { color: var(--suave); }
+        h2 { margin: 34px 0 12px; font-size: 1.05rem; }
+        .numeros { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 24px; }
+        .numero { padding: 16px; border: 1px solid var(--linha); border-radius: 14px; }
+        .numero b { display: block; font-size: clamp(1.7rem, 6vw, 2.4rem); line-height: 1.1; letter-spacing: -.02em; }
+        .numero span { display: block; margin-top: 2px; color: var(--suave); font-size: .85rem; }
+        .numero i { display: inline-block; margin-top: 8px; padding: 2px 8px; border-radius: 99px; background: var(--fundo); color: var(--suave); font: 600 .75rem/1.6 system-ui, sans-serif; font-style: normal; }
+        .numero i.sobe { background: #e3f5ec; color: var(--sobe); }
+        .numero i.desce { background: #fbe6e3; color: var(--desce); }
+        .resumo { margin: 18px 0 0; padding: 14px 16px; border-radius: 12px; background: var(--cor-clara); }
+        .barras { margin: 0; padding: 0; list-style: none; }
+        .barras li { display: grid; grid-template-columns: minmax(110px, 38%) 1fr 3ch; align-items: center; gap: 10px; padding: 6px 0; font-size: .92rem; }
+        .barras .trilho { height: 12px; border-radius: 99px; background: var(--fundo); overflow: hidden; }
+        .barras .trilho span { display: block; height: 100%; border-radius: inherit; background: var(--cor); }
+        .barras b { text-align: right; font-variant-numeric: tabular-nums; }
+        .lista { margin: 0; padding-left: 0; list-style: none; }
+        .lista li { position: relative; padding: 6px 0 6px 28px; border-bottom: 1px dashed var(--linha); }
+        .lista li::before { content: "✓"; position: absolute; left: 4px; color: var(--sobe); font-weight: 700; }
+        .lista.prox li::before { content: "→"; color: var(--cor); }
+        .vazio { color: var(--suave); font-size: .92rem; }
+        .aviso { margin-top: 20px; padding: 12px 16px; border: 1px dashed var(--linha); border-radius: 12px; color: var(--suave); font-size: .88rem; }
+        .rodape { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-top: 36px; padding-top: 18px; border-top: 1px solid var(--linha); color: var(--suave); font-size: .85rem; }
+        .rodape a:not(.botao) { color: inherit; }
+        .acoes { display: flex; flex-wrap: wrap; gap: 8px; }
+        .botao { display: inline-flex; align-items: center; justify-content: center; min-height: 42px; padding: 9px 16px; border: 1px solid var(--cor); border-radius: 10px; background: var(--cor); color: #fff; font: 600 .9rem system-ui, sans-serif; text-decoration: none; cursor: pointer; }
+        .botao.claro { background: transparent; color: var(--cor); }
+        /* editor (só pro Samuel) */
+        .editor label { display: grid; gap: 6px; margin-top: 14px; color: var(--suave); font-size: .85rem; }
+        .editor input, .editor select, .editor textarea { width: 100%; padding: 10px 12px; border: 1px solid var(--linha); border-radius: 10px; background: #fff; color: var(--tinta); font: 1rem system-ui, sans-serif; }
+        .editor textarea { min-height: 110px; resize: vertical; line-height: 1.45; }
+        .editor .linha { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .editor .link { margin-top: 14px; padding: 10px 12px; border-radius: 10px; background: var(--fundo); font: .8rem ui-monospace, monospace; word-break: break-all; }
+        @media (max-width: 560px) { .numeros, .editor .linha { grid-template-columns: 1fr; } }
+        @media print {
+            body { background: #fff; }
+            .folha { width: auto; margin: 0; padding: 0; box-shadow: none; }
+            .acoes, .aviso.so-tela { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <main class="folha" id="relatorio" hidden>
+        <header class="topo">
+            <div><p class="eyebrow" id="rMes">Relatório do mês</p><h1 id="rNome">Seu site</h1></div>
+            <small>preparado por Samuel Mickael</small>
+        </header>
+
+        <div class="numeros">
+            <div class="numero"><b id="nVisitas">–</b><span>visitas no site</span><i id="dVisitas" hidden></i></div>
+            <div class="numero"><b id="nPedidos">–</b><span>pedidos chegaram no WhatsApp</span><i id="dPedidos" hidden></i></div>
+            <div class="numero"><b id="nTaxa">–</b><span>das visitas viraram pedido</span><i id="dTaxa" hidden></i></div>
+        </div>
+        <p class="resumo" id="rResumo" hidden></p>
+
+        <section id="sOrigens" hidden>
+            <h2>De onde vieram os pedidos</h2>
+            <ul class="barras" id="rOrigens"></ul>
+        </section>
+
+        <section id="sPecas" hidden>
+            <h2>O que mais chamou atenção</h2>
+            <ul class="barras" id="rPecas"></ul>
+        </section>
+
+        <section id="sFeito" hidden>
+            <h2>O que eu fiz no site este mês</h2>
+            <ul class="lista" id="rFeito"></ul>
+        </section>
+
+        <section id="sProx" hidden>
+            <h2>Próximo mês</h2>
+            <ul class="lista prox" id="rProx"></ul>
+        </section>
+
+        <p class="aviso so-tela" id="rAviso" hidden></p>
+
+        <footer class="rodape">
+            <span>Dúvida ou ideia pro site? É só me chamar.</span>
+            <span class="acoes">
+                <a class="botao" id="rWhats" href="https://wa.me/5567996034205" target="_blank" rel="noopener">Falar com o Samuel</a>
+                <button class="botao claro" type="button" onclick="window.print()">Salvar em PDF</button>
+            </span>
+        </footer>
+    </main>
+
+    <main class="folha editor" id="editor" hidden>
+        <p class="eyebrow">Só pra você</p>
+        <h1>Montar relatório do mês</h1>
+        <p class="vazio">Os números vêm sozinhos do contador do site do cliente (quando estiver ligado). Escreva o que você fez e o que vem por aí, e mande o link.</p>
+        <form id="form" autocomplete="off">
+            <div class="linha">
+                <label>Cliente<select id="eCliente"></select></label>
+                <label>Mês<input type="month" id="eMes" required></label>
+            </div>
+            <div class="linha">
+                <label>Visitas (se o contador estiver desligado)<input type="number" id="eVisitas" min="0" placeholder="automático"></label>
+                <label>Pedidos (se o contador estiver desligado)<input type="number" id="ePedidos" min="0" placeholder="automático"></label>
+            </div>
+            <label>O que eu fiz no site este mês (um por linha)<textarea id="eFeito"></textarea></label>
+            <label>Próximo mês (um por linha)<textarea id="eProx"></textarea></label>
+            <div class="link" id="eLink">…</div>
+            <div class="acoes" style="margin-top:14px">
+                <button class="botao" type="button" id="eWhats">Enviar no WhatsApp do cliente</button>
+                <button class="botao claro" type="button" id="eCopiar">Copiar link</button>
+                <a class="botao claro" id="eVer" href="#" target="_blank" rel="noopener">Ver o relatório ↗</a>
+            </div>
+        </form>
+    </main>
+
+    <script>
+        (function () {
+            "use strict";
+            /* Clientes com contador ligado no site. Pra um cliente novo: copie o bloco e troque os caminhos
+               (são os mesmos que o contador do site dele conta). */
+            const CLIENTES = {
+                eclipse: {
+                    nome: "Eclipse Studio", dono: "Elizabeth", tel: "5567999750866", cor: "#7a4fd0",
+                    contador: "eclipse-studio/contador.js?v=20261008f", global: "CONTADOR_ECLIPSE",
+                    visitas: "/eclipse/", pedidos: "/eclipse/pedido", pedidosDe: "/eclipse/pedido/", peca: "/eclipse/peca/",
+                    catalogo: "eclipse-studio/script.js",
+                    origens: { instagram: "Instagram", qr: "QR do cartão de visita", status: "Status do WhatsApp", tiktok: "TikTok", amiga: "Indicação de amiga" },
+                    feito: ["Atualizei as peças e os preços da vitrine", "Conferi o site no celular e no computador"], // sugestão: edite antes de mandar
+                },
+            };
+            const $ = (id) => document.getElementById(id);
+            const q = new URLSearchParams(location.search);
+            const linhas = (t) => String(t || "").split("\n").map((x) => x.trim()).filter(Boolean).slice(0, 12);
+            const n = (v) => (v == null ? "–" : Number(v).toLocaleString("pt-BR"));
+            const pad = (x) => String(x).padStart(2, "0");
+            const nomeMes = (ano, mes) => new Date(ano, mes - 1, 1).toLocaleDateString("pt-BR", { month: "long", year: "numeric" });
+            function periodo(ano, mes) {
+                const fim = new Date(ano, mes, 0).getDate();
+                return { inicio: `${ano}-${pad(mes)}-01`, fim: `${ano}-${pad(mes)}-${pad(fim)}` };
+            }
+            function mesPadrao() {
+                // até o dia 7 o relatório é do mês que acabou; depois, do mês corrente
+                const d = new Date();
+                if (d.getDate() <= 7) d.setMonth(d.getMonth() - 1);
+                return `${d.getFullYear()}-${pad(d.getMonth() + 1)}`;
+            }
+            function carregarScript(src) {
+                return new Promise((ok) => { const s = document.createElement("script"); s.src = src; s.onload = ok; s.onerror = ok; document.head.appendChild(s); });
+            }
+
+            /* ---------- relatório (o que o cliente vê) ---------- */
+            async function relatorio(chave) {
+                const c = CLIENTES[chave];
+                $("relatorio").hidden = false;
+                document.documentElement.style.setProperty("--cor", c.cor);
+                const [ano, mes] = (/^\d{4}-\d{2}$/.test(q.get("mes") || "") ? q.get("mes") : mesPadrao()).split("-").map(Number);
+                const titulo = nomeMes(ano, mes);
+                $("rMes").textContent = `Relatório de ${titulo}`;
+                $("rNome").textContent = c.nome;
+                document.title = `${c.nome} · relatório de ${titulo}`;
+                $("rWhats").href = `https://wa.me/5567996034205?text=${encodeURIComponent(`Oi, Samuel! Vi o relatório de ${titulo} da ${c.nome}.`)}`;
+
+                const feito = linhas(q.get("feito")), prox = linhas(q.get("prox"));
+                const lista = (el, itens) => { $(el).replaceChildren(...itens.map((t) => Object.assign(document.createElement("li"), { textContent: t }))); };
+                if (feito.length) { lista("rFeito", feito); $("sFeito").hidden = false; }
+                if (prox.length) { lista("rProx", prox); $("sProx").hidden = false; }
+
+                await carregarScript(c.contador);
+                const cont = window[c.global];
+                const ligado = cont && cont.configurado;
+                const atual = periodo(ano, mes), antes = periodo(mes === 1 ? ano - 1 : ano, mes === 1 ? 12 : mes - 1);
+                const manual = (k) => (q.get(k) !== null && q.get(k) !== "" && !isNaN(q.get(k)) ? Number(q.get(k)) : null);
+                let visitas = manual("v"), pedidos = manual("p"), visitasAntes = null, pedidosAntes = null;
+                if (ligado) {
+                    const [v, p, va, pa] = await Promise.all([cont.quantos(c.visitas, atual), cont.quantos(c.pedidos, atual), cont.quantos(c.visitas, antes), cont.quantos(c.pedidos, antes)]);
+                    if (visitas == null) visitas = v;
+                    if (pedidos == null) pedidos = p;
+                    visitasAntes = va; pedidosAntes = pa;
+                }
+                $("nVisitas").textContent = n(visitas);
+                $("nPedidos").textContent = n(pedidos);
+                const taxa = visitas && pedidos != null ? (pedidos / visitas) * 100 : null;
+                $("nTaxa").textContent = taxa == null ? "–" : `${taxa.toLocaleString("pt-BR", { maximumFractionDigits: 1 })}%`;
+                const comparar = (el, agora, antes) => {
+                    if (agora == null || antes == null || (agora === 0 && antes === 0)) return;
+                    const i = $(el); i.hidden = false;
+                    if (!antes) { i.textContent = "novo este mês"; i.className = "sobe"; return; }
+                    const dif = Math.round(((agora - antes) / antes) * 100);
+                    i.textContent = dif === 0 ? "igual ao mês passado" : `${dif > 0 ? "▲" : "▼"} ${Math.abs(dif)}% vs mês passado`;
+                    i.className = dif > 0 ? "sobe" : dif < 0 ? "desce" : "";
+                };
+                comparar("dVisitas", visitas, visitasAntes);
+                comparar("dPedidos", pedidos, pedidosAntes);
+                if (visitas != null && pedidos != null) {
+                    $("rResumo").hidden = false;
+                    $("rResumo").textContent = pedidos
+                        ? `Em ${titulo}, ${n(visitas)} pessoas visitaram o site e ${n(pedidos)} ${pedidos === 1 ? "chegou" : "chegaram"} no WhatsApp com o pedido pronto: ${pedidos === 1 ? "um pedido" : "pedidos"} que não ${pedidos === 1 ? "precisou" : "precisaram"} de ninguém respondendo na hora.`
+                        : `Em ${titulo}, ${n(visitas)} pessoas visitaram o site.`;
+                }
+
+                if (ligado) {
+                    // de onde vieram os pedidos
+                    const origens = await Promise.all(Object.entries(c.origens).map(async ([k, nome]) => [nome, await cont.quantos(c.pedidosDe + k, atual)]));
+                    const comOrigem = origens.filter(([, v]) => v > 0);
+                    const soma = comOrigem.reduce((t, [, v]) => t + v, 0);
+                    if (pedidos > soma) comOrigem.push(["Direto no site", pedidos - soma]);
+                    barras("rOrigens", "sOrigens", comOrigem);
+                    // peças mais abertas
+                    try {
+                        const texto = await (await fetch(c.catalogo, { cache: "no-store" })).text();
+                        const pecas = [...texto.matchAll(/id: "([^"]+)", nome: "([^"]+)"/g)].map((m) => ({ id: m[1], nome: m[2] })).filter((p) => p.id !== "caixa");
+                        const vistas = await Promise.all(pecas.map(async (p) => [p.nome, await cont.quantos(c.peca + p.id, atual)]));
+                        barras("rPecas", "sPecas", vistas.filter(([, v]) => v > 0).sort((a, b) => b[1] - a[1]).slice(0, 5));
+                    } catch (e) { /* sem catálogo: a seção fica escondida */ }
+                } else if (visitas == null) {
+                    $("rAviso").hidden = false;
+                    $("rAviso").textContent = "Os números do mês aparecem aqui quando o contador de visitas do site estiver ligado.";
+                }
+            }
+            function barras(lista, secao, itens) {
+                if (!itens.length) return;
+                const maior = Math.max(...itens.map(([, v]) => v));
+                $(lista).replaceChildren(...itens.map(([nome, v]) => {
+                    const li = document.createElement("li");
+                    const rotulo = document.createElement("span"); rotulo.textContent = nome;
+                    const trilho = document.createElement("span"); trilho.className = "trilho";
+                    const barra = document.createElement("span"); barra.style.width = Math.max(4, Math.round((v / maior) * 100)) + "%";
+                    trilho.appendChild(barra);
+                    const valor = document.createElement("b"); valor.textContent = n(v);
+                    li.append(rotulo, trilho, valor);
+                    return li;
+                }));
+                $(secao).hidden = false;
+            }
+
+            /* ---------- editor (o que você usa pra montar e mandar) ---------- */
+            function editor() {
+                $("editor").hidden = false;
+                const sel = $("eCliente");
+                Object.entries(CLIENTES).forEach(([k, c]) => sel.append(new Option(c.nome, k)));
+                $("eMes").value = mesPadrao();
+                const preencher = () => { if (!$("eFeito").dataset.mexeu) $("eFeito").value = CLIENTES[sel.value].feito.join("\n"); };
+                preencher();
+                $("eFeito").addEventListener("input", () => { $("eFeito").dataset.mexeu = "1"; });
+                function link() {
+                    const u = new URL("relatorio.html", location.href);
+                    u.search = "";
+                    u.searchParams.set("c", sel.value);
+                    u.searchParams.set("mes", $("eMes").value);
+                    if ($("eVisitas").value !== "") u.searchParams.set("v", $("eVisitas").value);
+                    if ($("ePedidos").value !== "") u.searchParams.set("p", $("ePedidos").value);
+                    if (linhas($("eFeito").value).length) u.searchParams.set("feito", linhas($("eFeito").value).join("\n"));
+                    if (linhas($("eProx").value).length) u.searchParams.set("prox", linhas($("eProx").value).join("\n"));
+                    return u.toString();
+                }
+                const atualizar = () => { const l = link(); $("eLink").textContent = l; $("eVer").href = l; };
+                $("form").addEventListener("input", atualizar);
+                sel.addEventListener("change", () => { preencher(); atualizar(); });
+                atualizar();
+                const mensagem = () => {
+                    const c = CLIENTES[sel.value], [ano, mes] = $("eMes").value.split("-").map(Number);
+                    return `Oi, ${c.dono}! 🖤 Saiu o relatório de ${nomeMes(ano, mes)} da ${c.nome}: quantas pessoas visitaram o site, quantos pedidos chegaram e de onde vieram. É só abrir:\n\n${link()}`;
+                };
+                $("eWhats").addEventListener("click", () => window.open(`https://wa.me/${CLIENTES[sel.value].tel}?text=${encodeURIComponent(mensagem())}`, "_blank", "noopener"));
+                $("eCopiar").addEventListener("click", async () => {
+                    try { await navigator.clipboard.writeText(link()); $("eCopiar").textContent = "Copiado ✓"; } catch (e) { prompt("Copie o link:", link()); }
+                    setTimeout(() => { $("eCopiar").textContent = "Copiar link"; }, 1800);
+                });
+            }
+
+            const chave = q.get("c");
+            if (chave && CLIENTES[chave] && !q.has("editar")) relatorio(chave);
+            else editor();
+        })();
+    </script>
+</body>
+</html>

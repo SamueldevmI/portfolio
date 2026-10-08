@@ -59,10 +59,15 @@ const HALLOWEEN = (() => {
     const c = window.CONTADOR_ECLIPSE;
     if (!c || !c.ligado) return;
     c.contar("/eclipse/", "Eclipse Studio · visita");
+    const de = new URLSearchParams(location.search).get("de");
+    if (de && ORIGENS_LOJA[de.toLowerCase()]) c.contar(`/eclipse/origem/${de.toLowerCase()}`, `Chegou por: ${ORIGENS_LOJA[de.toLowerCase()]}`);
     document.addEventListener("click", (e) => {
         const peca = e.target.closest("[data-abrir]");
         if (peca) c.contar(`/eclipse/peca/${peca.dataset.abrir}`, `Peça aberta: ${produto(peca.dataset.abrir)?.nome || peca.dataset.abrir}`);
-        if (e.target.closest("#enviarZap")) c.contar("/eclipse/pedido", "Pedido enviado no WhatsApp");
+        if (e.target.closest("#enviarZap")) {
+            c.contar("/eclipse/pedido", "Pedido enviado no WhatsApp");
+            if (origemChave()) c.contar(`/eclipse/pedido/${origemChave()}`, `Pedido de quem chegou por: ${origemDaCliente()}`);
+        }
     }, true);
     document.addEventListener("sacola:caiu", (e) => e.detail.ids.forEach((id) => c.contar(`/eclipse/sacola/${id}`, `Na sacola: ${produto(id)?.nome || id}`)));
 })();
