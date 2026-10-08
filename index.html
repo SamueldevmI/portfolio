@@ -143,6 +143,11 @@
             <button id="botaoSom" class="botao-som" type="button" aria-pressed="false" aria-label="Ligar música de fundo" title="Ligar música" hidden>
                 <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="som-caixa" d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path class="som-onda som-onda1" d="M15.2 9.3a3.8 3.8 0 0 1 0 5.4"/><path class="som-onda som-onda2" d="M17.8 6.8a7.4 7.4 0 0 1 0 10.4"/><path class="som-x" d="M16 9.8l4.4 4.4M20.4 9.8 16 14.2"/></svg>
             </button>
+            <!-- Álbum de figurinhas (figurinhas.js): vai desbloqueando conforme explora o site -->
+            <button id="botaoFigurinhas" class="botao-som" type="button" aria-label="Álbum de figurinhas" title="Álbum de figurinhas">
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2.5l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L12 16.6l-5.6 3 1.4-6.3-4.8-4.3 6.4-.6z"/></svg>
+                <b class="fig-contagem" aria-hidden="true"></b>
+            </button>
         </nav>
 
         <div class="hero-conteudo">
@@ -896,7 +901,7 @@
         // o pedido de "instalar app" pode chegar antes do mobile.js: fica guardado pra ele usar
         if (toque) addEventListener("beforeinstallprompt", function (e) { e.preventDefault(); window.pedidoInstalar = e; });
         // o mobile.js também espera a página aparecer: assim não disputa o processador com a primeira tela
-        function depois() { (window.requestIdleCallback || setTimeout)(function () { carregar("acabamento.js"); carregar("ficha.js"); carregar("gibi.js"); if (toque) carregar("mobile.js"); carregar("musica.js"); }, { timeout: 1500 }); }
+        function depois() { (window.requestIdleCallback || setTimeout)(function () { carregar("acabamento.js"); carregar("ficha.js"); carregar("gibi.js"); carregar("figurinhas.js"); if (toque) carregar("mobile.js"); carregar("musica.js"); }, { timeout: 1500 }); }
         if (document.readyState === "complete") depois(); else addEventListener("load", depois, { once: true });
     })();
 </script>
