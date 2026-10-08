@@ -2829,8 +2829,8 @@ html.gibi-pb .gibi-pb-trama { opacity: .15; }
    explora o site, igual revista de banca com figurinha colecionável. ---------- */
 #botaoFigurinhas { position: relative; }
 .fig-contagem:empty { display: none; }
-.fig-contagem { position: absolute; top: -6px; right: -6px; min-width: 16px; height: 16px; padding: 0 3px; border-radius: 999px; background: var(--cyan); color: #161616; font: 700 .62rem/16px "Space Grotesk", sans-serif; text-align: center; }
-.fig-overlay { position: fixed; inset: 0; z-index: 85; display: flex; align-items: center; justify-content: center; padding: 20px; background: rgba(5,8,15,.78); backdrop-filter: blur(4px); }
+.fig-contagem { position: absolute; top: -6px; right: -6px; min-width: 16px; height: 16px; padding: 0 3px; border-radius: 999px; background: var(--cyan); color: #0e1422; font: 700 .62rem/16px "Space Grotesk", sans-serif; text-align: center; }
+.fig-overlay { position: fixed; inset: 0; z-index: 85; display: flex; align-items: center; justify-content: center; padding: 20px; background: rgba(6,9,16,.78); backdrop-filter: blur(4px); }
 .fig-overlay[hidden] { display: none; }
 .fig-caixa { position: relative; width: min(560px, 100%); max-height: 86vh; overflow: auto; padding: 26px 26px 22px; border: 3px solid #0b101b; border-radius: 10px;
     background: radial-gradient(circle, rgba(46,126,255,.14) 1.3px, transparent 1.7px) 0 0 / 10px 10px, rgba(13,19,31,.97);
@@ -2841,7 +2841,7 @@ html.gibi-pb .gibi-pb-trama { opacity: .15; }
 .fig-ajuda { margin: 0 0 18px; color: var(--muted); font-size: .86rem; }
 .fig-fechar { position: absolute; top: 14px; right: 14px; display: grid; place-items: center; width: 32px; height: 32px; border: 1px solid var(--line); border-radius: 50%; background: rgba(19,27,45,.6); color: var(--text); cursor: var(--cursor-mao, pointer); }
 .fig-grade { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 14px; }
-.fig-item { display: grid; justify-items: center; gap: 4px; padding: 14px 8px 10px; border: 3px solid #0b101b; border-radius: 14px; background: #1b2740; color: var(--muted); text-align: center; opacity: .55; transform: rotate(var(--giro, 0deg)); transition: transform .2s ease; }
+.fig-item { display: grid; justify-items: center; gap: 4px; padding: 14px 8px 10px; border: 3px solid #0b101b; border-radius: 14px; background: #18233b; color: var(--muted); text-align: center; opacity: .55; transform: rotate(var(--giro, 0deg)); transition: transform .2s ease; }
 .fig-item.is-achada { background: #ffe14d; color: #0b101b; opacity: 1; box-shadow: 3px 3px 0 #0b101b; }
 .fig-item .fig-emoji { font-size: 1.8rem; line-height: 1; }
 .fig-item b { font: 400 .95rem/1.1 "Bangers", Impact, sans-serif; letter-spacing: .03em; }
