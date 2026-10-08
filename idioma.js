@@ -140,6 +140,7 @@
         "fim da edição #1. a #2 depende de você.": "fin de la edición #1. la #2 depende de ti.",
         "Você": "Tú",
         "Quero o meu!": "¡Quiero el mío!",
+        "🎧 Aperte o play da edição": "🎧 Dale play a la edición",
         "continua na próxima página": "continúa en la próxima página",
         "lendária": "legendaria",
         "rara": "rara",

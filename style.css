@@ -3367,3 +3367,9 @@ a.gibi-continua:focus-visible { outline: 3px solid #ffe14d; outline-offset: 3px;
 @keyframes carimbo-bate { 0% { opacity: 0; transform: translate(-50%, -50%) rotate(-12deg) scale(2.6); } 70% { opacity: 1; transform: translate(-50%, -50%) rotate(-12deg) scale(.94); } 100% { opacity: 1; transform: translate(-50%, -50%) rotate(-12deg) scale(1); } }
 @media print { .carimbo-aprovado, .requadro, .figurinha, .figurinha-brilho { display: none !important; } }
 .secao > a.gibi-continua { grid-column: 1 / -1; justify-self: center; }
+
+/* Convite da trilha: balão de gibi embaixo do ícone de som (musica.js), uma vez por aparelho */
+.som-convite { position: absolute; z-index: 60; top: calc(100% + 10px); right: 0; padding: 7px 12px 5px; border: 2px solid #111111; border-radius: 6px; background: #ffe14d; color: #111111; font: 400 1rem/1.1 "Bangers", Impact, sans-serif; letter-spacing: .05em; white-space: nowrap; box-shadow: 3px 3px 0 #111111; cursor: var(--cursor-mao, pointer); opacity: 0; pointer-events: none; transform: translateY(-6px) rotate(-2deg); transition: opacity .3s ease, transform .3s ease; }
+.som-convite::before { content: ""; position: absolute; right: 12px; top: -9px; border: 8px solid transparent; border-top: 0; border-bottom: 9px solid #111111; }
+.som-convite.visivel { opacity: 1; pointer-events: auto; transform: rotate(-2deg); }
+@media print { .som-convite { display: none !important; } }
