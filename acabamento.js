@@ -160,7 +160,8 @@
         }
 
         // Só busca quando o gráfico está perto de aparecer: no celular poupa uma conexão e dados na abertura da página.
-        const caixa = desenho.parentElement;
+        // com o quadro escondido (faxina), o número ainda aparece na ficha: espera a ficha chegar perto
+        const caixa = desenho.parentElement.getClientRects().length ? desenho.parentElement : (document.getElementById("fichaGithub") || desenho.parentElement);
         if ("IntersectionObserver" in window && caixa) {
             const observador = new IntersectionObserver(function (entradas) {
                 if (entradas.some(function (e) { return e.isIntersecting; })) {

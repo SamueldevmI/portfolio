@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code grátis pro seu WhatsApp ou cardápio | Samuel Mickael</title>
+    <meta name="description" content="Gere grátis um QR Code pro WhatsApp, cardápio ou Instagram do seu negócio, num cartão pronto pra imprimir e colar no balcão. Sem cadastro.">
+    <link rel="canonical" href="https://samueldevmi.github.io/portfolio/qr/">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="QR Code grátis pro seu WhatsApp ou cardápio">
+    <meta property="og:description" content="Gere e baixe um QR Code num cartão pronto pra imprimir e colar no balcão. Sem cadastro.">
+    <meta property="og:url" content="https://samueldevmi.github.io/portfolio/qr/">
+    <meta property="og:image" content="https://samueldevmi.github.io/portfolio/imagem/og-image-v5.jpg">
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bangers&family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+    <script>
+        (function () {
+            var azul = false;
+            try { azul = localStorage.getItem("portfolio-tema") === "azul"; } catch (e) { /* sem armazenamento */ }
+            document.documentElement.dataset.tema = azul ? "azul" : "vermelho";
+            document.write('<link rel="stylesheet" href="../' + (azul ? "style-azul.css" : "style.css") + '?v=20261008">');
+        })();
+    </script>
+    <noscript><link rel="stylesheet" href="../style.css"></noscript>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"QR Code grátis pro WhatsApp ou cardápio","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"BRL"},"author":{"@type":"Person","name":"Samuel Mickael","url":"https://samueldevmi.github.io/portfolio/"}}</script>
+    <style>
+        .qr { width: min(1000px, calc(100% - 32px)); margin: 24px auto 80px; }
+        .qr-voltar { display: inline-block; margin-bottom: 16px; color: var(--muted); font-size: .9rem; text-decoration: none; }
+        .qr-selo { display: inline-block; margin: 0 0 10px; padding: 5px 12px 4px; border: 2px solid #111111; background: #ffe14d; color: #111111; font: 400 1.05rem/1 "Bangers", Impact, sans-serif; letter-spacing: .06em; text-transform: uppercase; box-shadow: 3px 3px 0 #111111; transform: rotate(-1.5deg); }
+        .qr h1 { margin: 4px 0 10px; font-size: clamp(2rem, 6vw, 3.2rem); line-height: 1.05; letter-spacing: -.04em; }
+        .qr h1 em { color: var(--cyan); font-style: normal; }
+        .qr > p { max-width: 60ch; color: var(--muted); line-height: 1.6; }
+        .qr-grade { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px; align-items: start; margin-top: 24px; }
+        .qr-form { display: grid; gap: 14px; padding: 20px; border: 3px solid #111111; border-radius: 10px; background: radial-gradient(circle, rgba(255,42,61,.12) 1.3px, transparent 1.7px) 0 0 / 10px 10px, #1b1b1b; box-shadow: 0 0 0 3px #f2f2f2, 8px 8px 0 3px rgba(255,42,61,.45); }
+        .qr-form label { display: grid; gap: 6px; color: var(--muted); font-size: .9rem; }
+        .qr-form input, .qr-form textarea { min-height: 46px; padding: 10px 12px; border: 3px solid #111111; border-radius: 8px; background: #ffffff; color: #111111; font: 600 1rem "Space Grotesk", Arial, sans-serif; }
+        .qr-form textarea { min-height: 80px; resize: vertical; }
+        .qr-tipos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+        .qr-tipos button { padding: 10px 6px; border: 3px solid #111111; border-radius: 8px; background: #f3ead6; color: #111111; font: 400 1.1rem/1 "Bangers", Impact, sans-serif; letter-spacing: .04em; box-shadow: 3px 3px 0 #111111; cursor: var(--cursor-mao, pointer); }
+        .qr-tipos button[aria-pressed="true"] { background: #ffe14d; box-shadow: 3px 3px 0 #ff2a3d; }
+        .qr-erro { margin: 0; color: #ffb3b3; font-size: .88rem; }
+        .qr-saida { display: grid; gap: 12px; justify-items: center; }
+        .qr-saida canvas { width: 100%; max-width: 420px; height: auto; border: 3px solid #111111; border-radius: 8px; box-shadow: 6px 6px 0 #111111; background: #ffffff; }
+        .qr-acoes { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+        .qr-acoes .botao { cursor: var(--cursor-mao, pointer); }
+        .qr-dica { color: var(--muted); font-size: .86rem; text-align: center; }
+        .qr-fim { margin-top: 48px; padding: 22px; border: 2px dashed rgba(255,255,255,.3); border-radius: 10px; text-align: center; }
+        .qr-fim p { margin: 0 0 12px; color: var(--muted); }
+        .qr-fim a { color: var(--acento-texto); font-weight: 600; }
+        @media (max-width: 760px) { .qr-grade { grid-template-columns: 1fr; } }
+        @media print { body * { visibility: hidden; } .qr-saida canvas, .qr-saida canvas * { visibility: visible; } .qr-saida canvas { position: fixed; left: 0; top: 0; width: 100%; max-width: none; border: 0; box-shadow: none; } }
+        [hidden] { display: none !important; }
+    </style>
+</head>
+<body>
+    <main class="qr">
+        <a class="qr-voltar" href="../">← portfólio do Samuel</a>
+        <p class="qr-selo">Ferramenta grátis</p>
+        <h1>QR Code do seu <em>WhatsApp ou cardápio</em>, pronto pra imprimir</h1>
+        <p>Preencha, baixe e cole no balcão, na mesa ou na embalagem. O cliente aponta a câmera e já cai no seu WhatsApp (com a mensagem escrita) ou no seu cardápio. Grátis e sem cadastro: nada do que você digita sai do seu celular.</p>
+        <div class="qr-grade">
+            <form class="qr-form" id="qrForm" autocomplete="off">
+                <div class="qr-tipos" role="group" aria-label="Pra onde o QR Code leva">
+                    <button type="button" data-tipo="whats" aria-pressed="true">WhatsApp</button>
+                    <button type="button" data-tipo="link" aria-pressed="false">Cardápio / site</button>
+                    <button type="button" data-tipo="insta" aria-pressed="false">Instagram</button>
+                </div>
+                <label>Nome do negócio<input id="qrNome" maxlength="32" placeholder="ex.: Pizzaria do João"></label>
+                <label data-campo="whats">WhatsApp com DDD<input id="qrNumero" inputmode="tel" maxlength="20" placeholder="ex.: 67 99999-9999"></label>
+                <label data-campo="whats">Mensagem que já vem escrita<textarea id="qrMensagem" maxlength="200">Oi! Vi o QR Code no balcão e queria fazer um pedido.</textarea></label>
+                <label data-campo="link" hidden>Link do cardápio ou site<input id="qrLink" inputmode="url" maxlength="300" placeholder="ex.: https://meucardapio.com.br"></label>
+                <label data-campo="insta" hidden>@ do Instagram<input id="qrInsta" maxlength="40" placeholder="ex.: @pizzariadojoao"></label>
+                <label>Frase em cima do QR Code<input id="qrChamada" maxlength="28" value="Peça pelo WhatsApp!"></label>
+                <p class="qr-erro" id="qrErro" role="alert" hidden></p>
+            </form>
+            <div class="qr-saida">
+                <canvas id="qrTela" width="1200" height="1600" role="img" aria-label="Cartão com o QR Code"></canvas>
+                <div class="qr-acoes">
+                    <button type="button" class="botao botao-principal" id="qrBaixar">Baixar imagem</button>
+                    <button type="button" class="botao botao-secundario" id="qrImprimir">Imprimir</button>
+                </div>
+                <p class="qr-dica">Dica: teste com a câmera do seu celular antes de imprimir.</p>
+            </div>
+        </div>
+        <section class="qr-fim">
+            <p>O QR Code leva pro seu WhatsApp. Um site leva o cliente direto pro pedido pronto, com cardápio e preço.</p>
+            <a href="../site-para-pizzaria/">Veja como ficaria o seu site →</a>
+        </section>
+    </main>
+    <script src="qrcode.js"></script>
+    <script src="../estatisticas.js?v=20261008"></script>
+    <script>
+        (function () {
+            "use strict";
+            const $ = (id) => document.getElementById(id);
+            const tela = $("qrTela"), ctx = tela.getContext("2d"), erro = $("qrErro");
+            let tipo = "whats";
+            const CHAMADAS = { whats: "Peça pelo WhatsApp!", link: "Veja o cardápio!", insta: "Siga a gente!" };
+            const campoChamada = $("qrChamada");
+
+            function destino() {
+                if (tipo === "whats") {
+                    let n = $("qrNumero").value.replace(/\D/g, "");
+                    if (n.length === 10 || n.length === 11) n = "55" + n;
+                    if (n.length < 12) return { erro: "Digite o WhatsApp com DDD (ex.: 67 99999-9999)." };
+                    const msg = $("qrMensagem").value.trim();
+                    return { url: "https://wa.me/" + n + (msg ? "?text=" + encodeURIComponent(msg) : "") };
+                }
+                if (tipo === "insta") {
+                    const u = $("qrInsta").value.trim().replace(/^@/, "").replace(/[^\w.]/g, "");
+                    if (!u) return { erro: "Digite o @ do Instagram." };
+                    return { url: "https://instagram.com/" + u };
+                }
+                let l = $("qrLink").value.trim();
+                if (!l) return { erro: "Cole o link do cardápio ou do site." };
+                if (!/^https?:\/\//i.test(l)) l = "https://" + l;
+                try { new URL(l); } catch (e) { return { erro: "Esse link parece incompleto." }; }
+                return { url: l };
+            }
+
+            function quebrar(texto, largura) {
+                const palavras = texto.split(" "), linhas = [];
+                let atual = "";
+                palavras.forEach((p) => { const t = atual ? atual + " " + p : p; if (ctx.measureText(t).width > largura && atual) { linhas.push(atual); atual = p; } else atual = t; });
+                if (atual) linhas.push(atual);
+                return linhas;
+            }
+
+            function desenhar() {
+                const d = destino();
+                const W = tela.width, H = tela.height;
+                // papel amarelado com retícula e moldura de gibi
+                ctx.fillStyle = "#f3ead6"; ctx.fillRect(0, 0, W, H);
+                ctx.fillStyle = "rgba(139,26,26,.10)";
+                for (let y = 10; y < H; y += 22) for (let x = (y / 22) % 2 ? 21 : 10; x < W; x += 22) { ctx.beginPath(); ctx.arc(x, y, 3, 0, Math.PI * 2); ctx.fill(); }
+                ctx.lineWidth = 16; ctx.strokeStyle = "#111111"; ctx.strokeRect(24, 24, W - 48, H - 48);
+                // chamada num balão amarelo
+                ctx.save();
+                ctx.translate(W / 2, 190); ctx.rotate(-0.03);
+                ctx.font = "400 104px Bangers, Impact, sans-serif";
+                const chamada = (campoChamada.value.trim() || CHAMADAS[tipo]).toUpperCase();
+                const lc = Math.min(W - 160, ctx.measureText(chamada).width + 80);
+                ctx.fillStyle = "#111111"; ctx.fillRect(-lc / 2 + 12, -82, lc, 150);
+                ctx.fillStyle = "#ffe14d"; ctx.fillRect(-lc / 2, -94, lc, 150);
+                ctx.lineWidth = 8; ctx.strokeRect(-lc / 2, -94, lc, 150);
+                ctx.fillStyle = "#111111"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+                ctx.fillText(chamada, 0, -16, lc - 50);
+                ctx.restore();
+                // QR Code
+                const q0 = 180, tamanho = W - 2 * q0, qy = 330;
+                ctx.fillStyle = "#111111"; ctx.fillRect(q0 - 24 + 16, qy - 24 + 16, tamanho + 48, tamanho + 48);
+                ctx.fillStyle = "#ffffff"; ctx.fillRect(q0 - 24, qy - 24, tamanho + 48, tamanho + 48);
+                ctx.lineWidth = 8; ctx.strokeStyle = "#111111"; ctx.strokeRect(q0 - 24, qy - 24, tamanho + 48, tamanho + 48);
+                if (d.url) {
+                    const qr = qrcode(0, "M");
+                    qr.addData(d.url);
+                    qr.make();
+                    const n = qr.getModuleCount(), m = tamanho / n;
+                    ctx.fillStyle = "#111111";
+                    for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (qr.isDark(r, c)) ctx.fillRect(Math.floor(q0 + c * m), Math.floor(qy + r * m), Math.ceil(m), Math.ceil(m));
+                    erro.hidden = true;
+                } else {
+                    ctx.fillStyle = "#999999"; ctx.font = "600 44px 'Space Grotesk', Arial, sans-serif"; ctx.textAlign = "center";
+                    quebrar(d.erro, tamanho - 80).forEach((l, i) => ctx.fillText(l, W / 2, qy + tamanho / 2 + i * 56));
+                    erro.textContent = d.erro; erro.hidden = !document.activeElement || !document.activeElement.closest("#qrForm");
+                }
+                // nome do negócio
+                const nome = $("qrNome").value.trim() || "Seu negócio";
+                ctx.textAlign = "center"; ctx.textBaseline = "alphabetic";
+                ctx.font = "400 120px Bangers, Impact, sans-serif";
+                ctx.fillStyle = "#111111"; ctx.fillText(nome.toUpperCase(), W / 2 + 6, qy + tamanho + 196, W - 160);
+                ctx.fillStyle = "#c41f2a"; ctx.fillText(nome.toUpperCase(), W / 2, qy + tamanho + 190, W - 160);
+                ctx.font = "500 34px 'DM Mono', monospace"; ctx.fillStyle = "#4a4030";
+                ctx.fillText("aponte a câmera do celular 📷", W / 2, qy + tamanho + 260);
+                ctx.font = "500 26px 'DM Mono', monospace"; ctx.fillStyle = "#6b5a3c";
+                ctx.fillText("QR grátis: samueldevmi.github.io/portfolio/qr", W / 2, H - 60);
+                return d;
+            }
+
+            document.querySelectorAll(".qr-tipos button").forEach((b) => b.addEventListener("click", () => {
+                const antes = CHAMADAS[tipo];
+                tipo = b.dataset.tipo;
+                document.querySelectorAll(".qr-tipos button").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+                document.querySelectorAll("[data-campo]").forEach((l) => { l.hidden = l.dataset.campo !== tipo; });
+                if (!campoChamada.value.trim() || campoChamada.value === antes) campoChamada.value = CHAMADAS[tipo];
+                desenhar();
+            }));
+            $("qrForm").addEventListener("input", desenhar);
+            $("qrForm").addEventListener("submit", (e) => e.preventDefault());
+
+            $("qrBaixar").addEventListener("click", () => {
+                const d = desenhar();
+                if (!d.url) { erro.textContent = d.erro; erro.hidden = false; return; }
+                tela.toBlob((blob) => {
+                    const a = document.createElement("a");
+                    a.href = URL.createObjectURL(blob);
+                    a.download = "qr-code-" + ($("qrNome").value.trim().toLowerCase().normalize("NFD").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "meu-negocio") + ".png";
+                    document.body.appendChild(a); a.click(); a.remove();
+                    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+                }, "image/png");
+                window.ESTATISTICAS && window.ESTATISTICAS.contar("/evento/qr-baixou", "QR: baixou o cartão", true);
+            });
+            $("qrImprimir").addEventListener("click", () => { const d = desenhar(); if (!d.url) { erro.textContent = d.erro; erro.hidden = false; return; } window.print(); });
+
+            (document.fonts ? Promise.all(["400 100px Bangers", "500 30px 'DM Mono'"].map((f) => document.fonts.load(f).catch(() => null))) : Promise.resolve()).then(desenhar);
+            desenhar();
+            window.ESTATISTICAS && window.ESTATISTICAS.contar("/qr/", "QR Code grátis", true);
+        })();
+    </script>
+</body>
+</html>
