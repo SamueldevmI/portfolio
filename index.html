@@ -61,7 +61,7 @@
             } catch (e) { /* sem armazenamento */ }
             document.documentElement.dataset.tema = tema;
             if (tema === "azul") document.querySelector('meta[name="theme-color"]').content = "#0e1422";
-            document.write('<link rel="stylesheet" id="folhaTema" href="' + (tema === "azul" ? "style-azul.css" : "style.css") + '?v=20261007b">');
+            document.write('<link rel="stylesheet" id="folhaTema" href="' + (tema === "azul" ? "style-azul.css" : "style.css") + '?v=20261008a">');
         })();
         /* Idioma: detectado cedo (antes do resto da página rodar) só pra avisar efeitos como a
            digitação do texto do hero, que senão sobrescreveriam a tradução feita pelo idioma.js. */
@@ -75,7 +75,7 @@
             document.documentElement.dataset.idioma = idioma;
         })();
     </script>
-    <noscript><link rel="stylesheet" href="style.css?v=20261007b"></noscript>
+    <noscript><link rel="stylesheet" href="style.css?v=20261008a"></noscript>
     <title id="tituloPagina">Samuel Mickael | Desenvolvedor Web &amp; Mobile</title>
     <script type="application/ld+json">
     {
@@ -159,6 +159,8 @@
                         <!-- samuel-rosto-320.webp e a versao pequena de samuel-rosto.jpg: ao trocar a foto, gerar as duas de novo (e a versao desenhada, samuel-rosto-hq-168.webp, em ferramentas/foto-hq.html) -->
                         <span class="avatar-hq" title="Passe o mouse pra ver o modo desenho"><img class="hero-avatar" src="imagem/samuel-rosto-320.webp" srcset="imagem/samuel-rosto-320.webp 320w, imagem/samuel-rosto.jpg 640w" sizes="56px" alt="Foto de Samuel Mickael" width="56" height="56" fetchpriority="high"><img class="avatar-desenho" src="imagem/samuel-rosto-hq-168.webp" alt="" width="56" height="56" decoding="async"></span>
                         <p class="hero-ola">Olá! Me chamo <strong>Samuel Mickael</strong>.</p>
+                        <!-- cumprimento pelo horário já na primeira pintura (se trocasse depois, a linha crescia e empurrava o título) -->
+                        <script>(function(){var t=document.querySelector(".hero-ola").firstChild,h=new Date().getHours();t.textContent=t.textContent.replace("Olá",h<6?"Boa madrugada":h<12?"Bom dia":h<18?"Boa tarde":"Boa noite");})();</script>
                     </div>
                     <h1>Sites e sistemas que <span>trabalham por você.</span></h1>
                     <p class="hero-texto" id="heroTextoDigitado">Site e sistema sob medida pro seu negócio: aparece no Google, responde no WhatsApp sozinho e funciona no celular.</p>
@@ -827,19 +829,20 @@
     </div>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-    <script src="estatisticas.js?v=20261007b" defer></script>
+    <!-- idioma.js primeiro: os outros scripts já encontram o tradutor (window.traduzir) quando montam a tela -->
+    <script src="idioma.js?v=20261008a" defer></script>
+    <script src="estatisticas.js?v=20261008a" defer></script>
     <script src="servicos.js?v=20261002" defer></script>
-    <script src="previa-celular.js?v=20261007b" defer></script>
-    <script src="filme-celular.js?v=20261007b" defer></script>
+    <script src="previa-celular.js?v=20261008a" defer></script>
+    <script src="filme-celular.js?v=20261008a" defer></script>
     <script src="depoimentos.js?v=20261007" defer></script>
-    <script src="script.js?v=20261007b" defer></script>
-    <script src="antes-depois.js?v=20261007b" defer></script>
-<script src="idioma.js?v=20261007b" defer></script>
+    <script src="script.js?v=20261008a" defer></script>
+    <script src="antes-depois.js?v=20261008a" defer></script>
 <script>
     /* Scripts que a página não precisa pra aparecer: o mobile.js só baixa em tela de toque (no computador
        ele não faz nada) e a música só depois que a página terminou de carregar. */
     (function () {
-        var versao = "?v=20261007b";
+        var versao = "?v=20261008a";
         function carregar(arquivo) { var s = document.createElement("script"); s.src = arquivo + versao; s.async = false; document.body.appendChild(s); }
         var toque = matchMedia("(pointer: coarse)").matches;
         // o pedido de "instalar app" pode chegar antes do mobile.js: fica guardado pra ele usar

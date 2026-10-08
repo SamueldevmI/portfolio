@@ -249,6 +249,16 @@ document.querySelectorAll(".botao").forEach((botao) => {
     const palco = { sem: $('.cmp-palco[data-lado="sem"]'), com: $('.cmp-palco[data-lado="com"]') };
     const placar = { sem: $('.cmp-metricas[data-lado="sem"]'), com: $('.cmp-metricas[data-lado="com"]') };
     const campoNome = $(".cmp-nome input"), campoNomeProjetos = document.getElementById("nomeNegocio");
+    // o rodapé do comparador fica fora da varredura do idioma.js (as cenas trocam esse texto): o botão de partida traduz aqui
+    const quererOriginal = querer?.textContent || "";
+    const versoesQuerer = new Set([quererOriginal]);
+    const traduzirQuerer = () => {
+        if (!querer || !versoesQuerer.has(querer.textContent)) return; // uma cena já trocou o texto: não mexe
+        querer.textContent = window.traduzir ? window.traduzir(quererOriginal) : quererOriginal;
+        versoesQuerer.add(querer.textContent);
+    };
+    traduzirQuerer();
+    document.addEventListener("idiomaMudou", traduzirQuerer);
     const semMovimento = prefereMenosMovimento;
     const espera = (ms) => new Promise((r) => setTimeout(r, semMovimento ? 0 : ms));
     const ler = (k) => { try { return localStorage.getItem(k) || ""; } catch (e) { return ""; } };
@@ -2094,12 +2104,25 @@ ${celular(ramo, marca)}
         const salvo = ler("portfolio-tipo-negocio");
         const filme = !prefereMenosMovimento && window.FilmeCelular; // filme-celular.js: o cliente comprando de madrugada
         let i = Math.max(0, ordem.indexOf(salvo)), pausado = false, visivel = true, relogio = 0, rolagem = 0, cena = null, geracao = 0;
+        // a vitrine fica fora da varredura do idioma.js (ela se redesenha sozinha): traduz os próprios textos
+        const tr = (texto) => (window.traduzir ? window.traduzir(texto) : texto);
         const LEGENDA = "digite o nome do seu negócio aqui embaixo, ou toque no celular pra prévia completa 👆";
         caixa.innerHTML = `
-            <div class="vitrine-ramos" role="group" aria-label="Ver exemplo de outro ramo">${ordem.map((k) => `<button type="button" data-ramo="${esc(k)}">${esc(RAMOS[k].rotulo)}</button>`).join("")}</div>
-            <div class="vitrine-palco" role="button" tabindex="0" aria-label="Abrir a prévia do site deste exemplo"></div>
-            <p class="vitrine-legenda">${LEGENDA}</p>
-            <label class="vitrine-nome"><span aria-hidden="true">✏️</span><input type="text" maxlength="40" placeholder="Digite o nome do seu negócio" autocomplete="organization" enterkeyhint="done" aria-label="Nome do seu negócio, pra ver no celular"></label>`;
+            <div class="vitrine-ramos" role="group"></div>
+            <div class="vitrine-palco" role="button" tabindex="0"></div>
+            <p class="vitrine-legenda">${esc(tr(LEGENDA))}</p>
+            <label class="vitrine-nome"><span aria-hidden="true">✏️</span><input type="text" maxlength="40" autocomplete="organization" enterkeyhint="done"></label>`;
+        function textosFixos() {
+            const grupo = caixa.querySelector(".vitrine-ramos"), entrada = caixa.querySelector(".vitrine-nome input");
+            grupo.setAttribute("aria-label", tr("Ver exemplo de outro ramo"));
+            caixa.querySelector(".vitrine-palco").setAttribute("aria-label", tr("Abrir a prévia do site deste exemplo"));
+            entrada.placeholder = tr("Digite o nome do seu negócio");
+            entrada.setAttribute("aria-label", tr("Nome do seu negócio, pra ver no celular"));
+            if (!grupo.children.length) grupo.innerHTML = ordem.map((k) => `<button type="button" data-ramo="${esc(k)}"></button>`).join("");
+            [...grupo.children].forEach((b) => { b.textContent = tr(RAMOS[b.dataset.ramo].rotulo); });
+        }
+        textosFixos();
+        document.addEventListener("idiomaMudou", () => { textosFixos(); if (!filme) caixa.querySelector(".vitrine-legenda").textContent = tr(LEGENDA); });
         const palco = caixa.querySelector(".vitrine-palco");
         const legenda = caixa.querySelector(".vitrine-legenda");
         const campoNome = caixa.querySelector(".vitrine-nome input");
