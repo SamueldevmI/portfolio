@@ -26,6 +26,7 @@
             resposta: "Consulta marcada! 🩺 Segunda às 9h. Qualquer dúvida é só chamar.",
             avisos: ["Nova consulta · seg 9h", "Nova consulta · ter 14h", "Nova consulta · qua 10h"], resumo: "3 consultas marcadas enquanto você dormia", acha: "acha a {m} no Google" },
     };
+    const tr = (texto) => (window.traduzir ? window.traduzir(texto) : texto); // legendas no idioma da página
     const esc = (t) => String(t).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
     const somaMin = (hora, min) => {
         const [h, m] = hora.split(":").map(Number);
@@ -85,7 +86,7 @@
         }
 
         async function filme() {
-            op.legenda(`🌙 ${h.hora}. Um cliente ${h.acha.replace("{m}", `<b data-marca>${esc(marca())}</b>`)}…`);
+            op.legenda(`🌙 ${h.hora}. ${tr("Um cliente")} ${tr(h.acha).replace("{m}", `<b data-marca>${esc(marca())}</b>`)}…`);
             await esperar(1100);
             // 1. escolhe no site
             const el = alvo();
@@ -114,7 +115,7 @@
             tela.appendChild(zap);
             void zap.offsetWidth;
             zap.classList.add("entrou");
-            op.legenda("…a mensagem chega pronta no WhatsApp e <b>já é respondida sozinha</b>…");
+            op.legenda(tr("…a mensagem chega pronta no WhatsApp e <b>já é respondida sozinha</b>…"));
             const conversa = zap.querySelector(".filme-zap-conversa");
             const status = zap.querySelector(".filme-zap-topo small");
             const bolha = (texto, classe, extra) => {
@@ -152,7 +153,7 @@
             void bloqueio.offsetWidth;
             bloqueio.classList.add("entrou");
             if (relogio) relogio.textContent = "7:00";
-            op.legenda(`…e você acorda com <b>${esc(h.resumo.split(" enquanto")[0])}</b>. 💰`);
+            op.legenda(`${tr("…e você acorda com")} <b>${esc(tr(h.resumo.split(" enquanto")[0]))}</b>. 💰`);
             await esperar(700);
             for (const aviso of bloqueio.querySelectorAll(".filme-aviso")) {
                 aviso.classList.add("chegou");

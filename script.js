@@ -1443,10 +1443,13 @@ if (paletaOverlay) {
     let larguraAnterior = 0;
     let bloqueado = false;
 
+    // Em espanhol, tudo o que aparece passa pelo dicionário do idioma.js (o que não tem tradução fica igual).
+    // As respostas continuam guardadas em português: só o que se vê e a mensagem final mudam.
+    const tr = (texto) => (window.traduzir ? window.traduzir(texto) : texto);
     const criar = (tag, classe, texto) => {
         const elemento = document.createElement(tag);
         if (classe) elemento.className = classe;
-        if (texto !== undefined) elemento.textContent = texto;
+        if (texto !== undefined) elemento.textContent = tr(texto);
         return elemento;
     };
 
@@ -1502,30 +1505,30 @@ if (paletaOverlay) {
     function compor() {
         const tipo = tipoAtual();
         const nome = typeof resp.nome === "string" ? resp.nome.trim() : "";
-        const abertura = `Oi, Samuel! ${nome ? `Me chamo ${nome}. ` : ""}${ORIGEM ? `Vim pelo ${ORIGEM}` : "Vi seu portfólio"} e quero pedir um orçamento.`;
+        const abertura = `${tr("Oi, Samuel!")} ${nome ? `${tr("Me chamo")} ${nome}. ` : ""}${ORIGEM ? `${tr("Vim pelo")} ${tr(ORIGEM)}` : tr("Vi seu portfólio")} ${tr("e quero pedir um orçamento.")}`;
         const linhas = [abertura, ""];
-        if (tipo) linhas.push(`Projeto: ${tipo.rotulo}`);
-        if (resp.ref) linhas.push(`Referência: projeto ${resp.ref}`);
+        if (tipo) linhas.push(`${tr("Projeto:")} ${tr(tipo.rotulo)}`);
+        if (resp.ref) linhas.push(`${tr("Referência: projeto")} ${resp.ref}`);
         passos().forEach((passo) => {
             if (passo.id === "tipo" || passo.id === "contato") return;
             const valor = passo.id === "recursos"
-                ? (Array.isArray(resp.recursos) ? resp.recursos.filter((item) => passo.opcoes.includes(item)).join(", ") : "")
-                : resp[passo.id];
-            if (valor) linhas.push(`${passo.rotuloMsg}: ${valor}`);
+                ? (Array.isArray(resp.recursos) ? resp.recursos.filter((item) => passo.opcoes.includes(item)).map(tr).join(", ") : "")
+                : resp[passo.id] && tr(resp[passo.id]);
+            if (valor) linhas.push(`${tr(passo.rotuloMsg)}: ${valor}`);
         });
-        if (resp.siteAtual) linhas.push(`Site/rede social atual: ${resp.siteAtual}`);
-        if (resp.obs) linhas.push(`Mais detalhes: ${resp.obs}`);
+        if (resp.siteAtual) linhas.push(`${tr("Site/rede social atual:")} ${resp.siteAtual}`);
+        if (resp.obs) linhas.push(`${tr("Mais detalhes:")} ${resp.obs}`);
         return linhas.join("\n");
     }
 
     async function copiarTexto(campo) {
         try {
             await navigator.clipboard.writeText(campo.value);
-            mostrarToast("Resumo copiado!");
+            mostrarToast(tr("Resumo copiado!"));
         } catch (erro) {
             campo.select();
             const copiou = typeof document.execCommand === "function" && document.execCommand("copy");
-            mostrarToast(copiou ? "Resumo copiado!" : "Não deu para copiar. Selecione o texto e copie.");
+            mostrarToast(tr(copiou ? "Resumo copiado!" : "Não deu para copiar. Selecione o texto e copie."));
         }
     }
 
@@ -1566,10 +1569,10 @@ if (paletaOverlay) {
     /* Desenho */
     function criarProgresso(feitos, total, pronto) {
         const caixa = criar("div", "orc-progresso");
-        caixa.append(criar("p", "orc-etapa", pronto ? "Tudo certo!" : `Pergunta ${feitos + 1} de ${total}`));
+        caixa.append(criar("p", "orc-etapa", pronto ? "Tudo certo!" : `${tr("Pergunta")} ${feitos + 1} ${tr("de")} ${total}`));
         const trilho = criar("div", "orc-trilho");
         trilho.setAttribute("role", "progressbar");
-        trilho.setAttribute("aria-label", "Progresso do orçamento");
+        trilho.setAttribute("aria-label", tr("Progresso do orçamento"));
         trilho.setAttribute("aria-valuemin", "0");
         trilho.setAttribute("aria-valuemax", String(total));
         trilho.setAttribute("aria-valuenow", String(feitos));
@@ -1584,7 +1587,8 @@ if (paletaOverlay) {
     }
 
     function criarNotaRetomado() {
-        const nota = criar("p", "orc-retomado", "Continuamos de onde você parou. ");
+        const nota = criar("p", "orc-retomado", "Continuamos de onde você parou.");
+        nota.append(" ");
         const botao = criar("button", "orc-link", "Recomeçar do zero");
         botao.type = "button";
         botao.addEventListener("click", recomecar);
@@ -1652,7 +1656,7 @@ if (paletaOverlay) {
             const lista = passo.opcoes.filter((item) => marcados.has(item));
             if (lista.length) resp.recursos = lista;
             else delete resp.recursos;
-            if (principal) principal.textContent = lista.length ? "Próximo" : "Pular";
+            if (principal) principal.textContent = tr(lista.length ? "Próximo" : "Pular");
             salvar();
         };
         passo.opcoes.forEach((opcao) => {
@@ -1676,7 +1680,7 @@ if (paletaOverlay) {
         if (passo.longo) campo.rows = 3;
         else campo.type = "text";
         campo.value = typeof resp[passo.id] === "string" ? resp[passo.id] : "";
-        campo.placeholder = passo.dica || "";
+        campo.placeholder = tr(passo.dica || "");
         campo.maxLength = passo.max || 160;
         campo.autocomplete = "off";
         campo.setAttribute("aria-labelledby", "orcPergunta");
@@ -1686,7 +1690,7 @@ if (paletaOverlay) {
             const texto = campo.value.trim();
             if (texto) resp[passo.id] = texto;
             else delete resp[passo.id];
-            if (principal) principal.textContent = texto ? "Próximo" : "Pular";
+            if (principal) principal.textContent = tr(texto ? "Próximo" : "Pular");
             salvar();
         });
         if (!passo.longo) {
@@ -1708,7 +1712,7 @@ if (paletaOverlay) {
         nome.type = "text";
         nome.maxLength = 60;
         nome.autocomplete = "given-name";
-        nome.placeholder = "Ex.: Ana";
+        nome.placeholder = tr("Ex.: Ana");
         nome.value = typeof resp.nome === "string" ? resp.nome : "";
         const rotuloSite = criar("label", "orc-rotulo", "Já tem site ou rede social do negócio? (opcional)");
         rotuloSite.htmlFor = "orcSiteAtual";
@@ -1717,7 +1721,7 @@ if (paletaOverlay) {
         site.type = "text";
         site.maxLength = 200;
         site.inputMode = "url";
-        site.placeholder = "Ex.: instagram.com/seunegocio";
+        site.placeholder = tr("Ex.: instagram.com/seunegocio");
         site.value = typeof resp.siteAtual === "string" ? resp.siteAtual : "";
         const rotuloObs = criar("label", "orc-rotulo", "Quer acrescentar algo? (opcional)");
         rotuloObs.htmlFor = "orcObs";
@@ -1725,7 +1729,7 @@ if (paletaOverlay) {
         obs.id = "orcObs";
         obs.rows = 3;
         obs.maxLength = 500;
-        obs.placeholder = "Ex.: link de um site que você gosta, ou algo importante que eu deva saber";
+        obs.placeholder = tr("Ex.: link de um site que você gosta, ou algo importante que eu deva saber");
         obs.value = typeof resp.obs === "string" ? resp.obs : "";
         const erro = criar("p", "orc-erro", "Escreva seu nome para eu saber com quem estou falando.");
         erro.setAttribute("role", "alert");
@@ -1776,7 +1780,7 @@ if (paletaOverlay) {
             icone.setAttribute("aria-hidden", "true");
             titulo.append(icone);
         }
-        titulo.append(document.createTextNode(passo.pergunta));
+        titulo.append(document.createTextNode(tr(passo.pergunta)));
         titulo.id = "orcPergunta";
         titulo.tabIndex = -1;
         titulo.dataset.foco = "";
@@ -1794,7 +1798,7 @@ if (paletaOverlay) {
         const titulo = criar("h3", "orc-pergunta");
         const icone = criar("span", "orc-pergunta-icone", "✅");
         icone.setAttribute("aria-hidden", "true");
-        titulo.append(icone, document.createTextNode("Sua mensagem está pronta"));
+        titulo.append(icone, document.createTextNode(tr("Sua mensagem está pronta")));
         titulo.tabIndex = -1;
         titulo.dataset.foco = "";
         caixa.append(titulo, criar("p", "orc-ajuda", "Confira e mude o que quiser. Ao clicar em enviar, o WhatsApp abre com este texto. Falta só apertar enviar por lá."));
@@ -1802,7 +1806,7 @@ if (paletaOverlay) {
         const campo = criar("textarea", "orc-campo orc-mensagem");
         campo.rows = 10;
         campo.maxLength = 1500;
-        campo.setAttribute("aria-label", "Mensagem para o WhatsApp");
+        campo.setAttribute("aria-label", tr("Mensagem para o WhatsApp"));
         campo.value = compor();
 
         const enviar = criar("a", "botao botao-principal", "Enviar pelo WhatsApp");
@@ -1875,6 +1879,9 @@ if (paletaOverlay) {
         if (foco) raiz.querySelector("[data-foco]")?.focus({ preventScroll: true });
         salvar();
     }
+
+    // trocou o idioma: redesenha o passo atual (a mensagem final é montada de novo, já no idioma novo)
+    document.addEventListener("idiomaMudou", () => desenhar(false));
 
     carregar();
     if (resp.tipo && !TIPOS[resp.tipo]) {

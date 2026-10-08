@@ -556,7 +556,7 @@ campoNome.value = ler(CHAVE_NOME, "");
 /* ===== Catálogo na tela ===== */
 function tamanhosHtml(p, prefixo) {
     if (!p.tam) return `<p class="tam-unico">${t("Tamanho único")}</p>`;
-    const opcoes = p.tam.map((tam) => `<label class="tam"><input type="radio" name="${prefixo}-${p.id}" value="${tam}"><span>${tam}</span></label>`).join("");
+    const opcoes = p.tam.map((tam) => `<label class="tam"><input type="radio" name="${prefixo}-${p.id}" value="${tam}"><span>${t(tam)}</span></label>`).join("");
     return `<fieldset class="tamanhos"><legend>${t(p.rotulo || "Tamanho")}</legend>${opcoes}</fieldset><p class="dica" role="alert" hidden>${t("Escolha um tamanho.")}</p>`;
 }
 
@@ -830,7 +830,7 @@ function renderBarraSacola(vazia, quantidade) {
     $("#barraTotal").textContent = brl(totalCentavos() + taxaEntrega()) + (temSobConsulta() ? " +" : "");
     barraSacola.setAttribute("aria-label", `${t("Sacola:")} ${$("#barraQtd").textContent}, ${$("#barraTotal").textContent}. ${t("Fechar pedido")}`);
 }
-const rotuloTam = (i) => (i.tam ? `${t(produto(i.id).rotulo || "Tamanho")} ${i.tam}` : t("Tamanho único"));
+const rotuloTam = (i) => (i.tam ? `${t(produto(i.id).rotulo || "Tamanho")} ${t(i.tam)}` : t("Tamanho único")); // t(): a vibe da caixa (P, M, G ficam iguais)
 
 function montarMensagem() {
     const linhas = [`${t("Oi! 🔮 Quero encomendar esta poção na")} ${LOJA.nome} 🖤`, "", `*${t("Ingredientes:")}*`];

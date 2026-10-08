@@ -1409,7 +1409,209 @@
         "Quarto minguante": "Cuarto menguante",
         "Lua minguante": "Luna menguante",
 
+        /* página inicial: garantia, indicação, monte o seu, filme do celular, calculadora do celular e rótulos de acessibilidade */
+        "Um cliente": "Un cliente",
+        "acha a {m} no Google": "encuentra {m} en Google",
+        "acha o {m} no Google": "encuentra {m} en Google",
+        "acha a {m} no Instagram": "encuentra {m} en Instagram",
+        "…a mensagem chega pronta no WhatsApp e <b>já é respondida sozinha</b>…": "…el mensaje llega listo a WhatsApp y <b>se responde solo</b>…",
+        "…e você acorda com": "…y te despiertas con",
+        "3 horários marcados": "3 turnos agendados",
+        "3 vendas": "3 ventas",
+        "3 clientes agendaram": "3 clientes agendaron",
+        "3 alunos novos": "3 alumnos nuevos",
+        "3 consultas marcadas": "3 consultas agendadas",
+        "ou veja o preço na hora →": "o mira el precio al instante →",
+        "Só paga se gostar da prévia": "Solo pagas si te gusta la vista previa",
+        "como funciona?": "¿cómo funciona?",
+        "📝 Não sabe se precisa?": "📝 ¿No sabes si lo necesitas?",
+        "Faça o teste de 1 minuto": "Haz el test de 1 minuto",
+        "monte o seu e veja o preço": "arma el tuyo y mira el precio",
+        "Qual é a sua cara?": "¿Cuál es tu estilo?",
+        "deixando um depoimento (10% off)": "dejando un testimonio (10% off)",
+        "Meu primeiro site": "Mi primer sitio",
+        "Monte o seu e veja o preço na hora →": "Arma el tuyo y mira el precio al instante →",
+        "Salão, barbearia ou estética": "Salón, barbería o estética",
+        "Prestador de serviço": "Prestador de servicios",
+        "Um site a partir de R$ 250 se paga com": "Un sitio desde R$ 250 se paga con",
+        "É uma estimativa, só pra ter ideia do tamanho da coisa.": "Es una estimación, solo para tener idea del tamaño.",
+        "Toque no campo e aperte o": "Toca el campo y aprieta el",
+        "microfone do teclado": "micrófono del teclado",
+        ". Fala do seu jeito que o texto sai pronto pro WhatsApp.": ". Habla a tu manera y el texto sale listo para WhatsApp.",
+        "💬 Mandar minha ideia": "💬 Enviar mi idea",
+        "Você só paga se gostar da prévia.": "Solo pagas si te gusta la vista previa.",
+        "Eu monto a primeira versão do seu site antes de qualquer pagamento. Gostou? Aí você paga 50% e eu termino; os outros 50% ficam pra entrega. Não gostou? Não paga nada. Pix, cartão ou o que combinarmos na proposta.": "Armo la primera versión de tu sitio antes de cualquier pago. ¿Te gustó? Entonces pagas el 50% y lo termino; el otro 50% queda para la entrega. ¿No te gustó? No pagas nada. Pix, tarjeta o lo que acordemos en la propuesta.",
+        "Indiquei alguém. Ganho alguma coisa?": "Recomendé a alguien. ¿Gano algo?",
+        "Ganha! Quem chega pelo seu link tem": "¡Sí! Quien llega por tu link tiene",
+        "10% de desconto no primeiro site": "10% de descuento en el primer sitio",
+        ". Gere o seu link aqui:": ". Genera tu link aquí:",
+        "Gerar meu link": "Generar mi link",
+        "Mandar pro seu sócio": "Enviar a tu socio",
+        "Meu resumo da visita": "Mi resumen de la visita",
+        "Instalar o portfólio": "Instalar el portafolio",
+        "monte o seu": "arma el tuyo",
+        "como eu trabalho": "cómo trabajo",
+        "Navegação rápida por seção": "Navegación rápida por sección",
+        "Navegação principal": "Navegación principal",
+        "Navegação rápida": "Navegación rápida",
+        "Chamar no WhatsApp": "Escribir por WhatsApp",
+        "Passe o mouse pra ver o modo desenho": "Pasa el mouse para ver el modo dibujo",
+        "Stories dos projetos": "Stories de los proyectos",
+        "Abrir a prévia do site deste exemplo": "Abrir la vista previa del sitio de este ejemplo",
+        "Nome do seu negócio, pra ver no celular": "Nombre de tu negocio, para verlo en el celular",
+        "Digite o nome do seu negócio": "Escribe el nombre de tu negocio",
+        "Resumo do portfólio": "Resumen del portafolio",
+        "Calculadora rápida de orçamento": "Calculadora rápida de presupuesto",
+        "Seu negócio sem site e com site": "Tu negocio sin sitio y con sitio",
+        "Arraste pra comparar: à esquerda sem site, à direita com site": "Arrastra para comparar: a la izquierda sin sitio, a la derecha con sitio",
+        "Nome do seu negócio (opcional)": "Nombre de tu negocio (opcional)",
+        "Escolha uma situação": "Elige una situación",
+        "Com site": "Con sitio",
+        "Sem site": "Sin sitio",
+        "Ver aqui, sem sair da página": "Ver aquí, sin salir de la página",
+        "Ver o código no GitHub": "Ver el código en GitHub",
+        "Ver Eldev Music aqui, sem sair da página": "Ver Eldev Music aquí, sin salir de la página",
+        "Ver o código de Eldev Music no GitHub": "Ver el código de Eldev Music en GitHub",
+        "Ver Glitch District aqui, sem sair da página": "Ver Glitch District aquí, sin salir de la página",
+        "Ver o código de Glitch District no GitHub": "Ver el código de Glitch District en GitHub",
+        "Ver Fatia Nobre aqui, sem sair da página": "Ver Fatia Nobre aquí, sin salir de la página",
+        "Ver o código de Fatia Nobre no GitHub": "Ver el código de Fatia Nobre en GitHub",
+        "Ver Conta a Dois aqui, sem sair da página": "Ver Conta a Dois aquí, sin salir de la página",
+        "Ver o código de Conta a Dois no GitHub": "Ver el código de Conta a Dois en GitHub",
+        "Ver TaskFlow aqui, sem sair da página": "Ver TaskFlow aquí, sin salir de la página",
+        "Ver o código de TaskFlow no GitHub": "Ver el código de TaskFlow en GitHub",
+        "Ver FocusFlow aqui, sem sair da página": "Ver FocusFlow aquí, sin salir de la página",
+        "Ver o código de FocusFlow no GitHub": "Ver el código de FocusFlow en GitHub",
+        "Ver FlowBoard aqui, sem sair da página": "Ver FlowBoard aquí, sin salir de la página",
+        "Ver o código de FlowBoard no GitHub": "Ver el código de FlowBoard en GitHub",
+        "App de música no celular: disco de vinil girando, a tela inicial com músicas em alta e o player": "App de música en el celular: disco de vinilo girando, la pantalla de inicio con canciones en tendencia y el reproductor",
+        "Vitrine da loja com fotos de parka, moletom, calça cargo, coturno e óculos, o carrinho com 3 peças e a loja aberta no celular": "Vitrina de la tienda con fotos de parka, buzo, pantalón cargo, borcegos y lentes, el carrito con 3 piezas y la tienda abierta en el celular",
+        "Chat da pizzaria respondendo sozinho o horário de funcionamento e a entrega": "Chat de la pizzería respondiendo solo el horario de atención y el delivery",
+        "O app no computador e no celular, mostrando que Bruno deve R$ 68,75 pra Ana e a lista de gastos dos dois": "La app en la computadora y en el celular, mostrando que Bruno le debe R$ 68,75 a Ana y la lista de gastos de los dos",
+        "Lista de tarefas do dia com prioridade alta, média e baixa, e o progresso do dia": "Lista de tareas del día con prioridad alta, media y baja, y el progreso del día",
+        "Cronômetro de 25 minutos de foco rodando, com os botões de pausa curta e longa": "Cronómetro de 25 minutos de foco corriendo, con los botones de pausa corta y larga",
+        "Quadro com três colunas de tarefas: a fazer, em andamento e concluído": "Tablero con tres columnas de tareas: por hacer, en curso y terminado",
+        "Conte sua ideia": "Cuenta tu idea",
+        "Ex.: tenho uma pizzaria e queria um site pros clientes pedirem pelo WhatsApp…": "Ej.: tengo una pizzería y quiero un sitio para que los clientes pidan por WhatsApp…",
+        "Como funciona": "Cómo funciona",
+        "Interface de Programação de Aplicações: a porta por onde outros programas conversam com um sistema": "Interfaz de Programación de Aplicaciones: la puerta por donde otros programas conversan con un sistema",
+        "Progressive Web App: um site que dá pra instalar como aplicativo": "Progressive Web App: un sitio que se puede instalar como aplicación",
+        "Volume da música": "Volumen de la música",
+        "salão": "salón",
+        "salão de beleza": "salón de belleza",
+        /* script.js: orçamento em passos (perguntas, opções, botões e a mensagem final) */
+        "2 a 5 pessoas": "2 a 5 personas",
+        "6 a 20 pessoas": "6 a 20 personas",
+        "Agendamento": "Agenda de citas",
+        "Ainda não": "Todavía no",
+        "Ainda não controlo": "Todavía no lo controlo",
+        "Ainda não sei": "Todavía no sé",
+        "Ainda não sei o que preciso": "Todavía no sé qué necesito",
+        "Ainda não tenho": "Todavía no tengo",
+        "Aplicativo de celular": "Aplicación para celular",
+        "Automação (acabar com tarefa repetitiva)": "Automatización (acabar con tareas repetitivas)",
+        "Avisos por WhatsApp ou e-mail": "Avisos por WhatsApp o e-mail",
+        "Baixar em PDF": "Descargar en PDF",
+        "Blog ou novidades": "Blog o novedades",
+        "Botão de WhatsApp": "Botón de WhatsApp",
+        "Cadastro de clientes": "Registro de clientes",
+        "Caderno ou papel": "Cuaderno o papel",
+        "Com que frequência ela acontece?": "¿Con qué frecuencia ocurre?",
+        "Como controla hoje": "Cómo lo controla hoy",
+        "Como posso te chamar?": "¿Cómo te llamas?",
+        "Como você controla isso hoje?": "¿Cómo controlas eso hoy?",
+        "Confira e mude o que quiser. Ao clicar em enviar, o WhatsApp abre com este texto. Falta só apertar enviar por lá.": "Revisa y cambia lo que quieras. Al tocar en enviar, WhatsApp se abre con este texto. Solo falta tocar enviar allí.",
+        "Continuamos de onde você parou.": "Seguimos desde donde lo dejaste.",
+        "Copiar resumo": "Copiar resumen",
+        "Câmera e fotos": "Cámara y fotos",
+        "Ele precisa funcionar sem internet?": "¿Necesita funcionar sin internet?",
+        "Em cerca de 1 mês": "En aproximadamente 1 mes",
+        "Escreva seu nome para eu saber com quem estou falando.": "Escribe tu nombre para saber con quién estoy hablando.",
+        "Ex.: copiar os dados dos e-mails para uma planilha": "Ej.: copiar los datos de los e-mails a una planilla",
+        "Ex.: instagram.com/seunegocio": "Ej.: instagram.com/tunegocio",
+        "Ex.: link de um site que você gosta, ou algo importante que eu deva saber": "Ej.: el link de un sitio que te guste, o algo importante que deba saber",
+        "Ex.: perco muito tempo respondendo as mesmas perguntas": "Ej.: pierdo mucho tiempo respondiendo las mismas preguntas",
+        "Ex.: sou dentista e atendo em Campo Grande": "Ej.: soy dentista y atiendo en Campo Grande",
+        "Formulário de contato": "Formulario de contacto",
+        "Frequência": "Frecuencia",
+        "Funcionar sem internet": "Funcionar sin internet",
+        "Galeria de fotos": "Galería de fotos",
+        "Já tem domínio": "Ya tiene dominio",
+        "Já tem site ou rede social do negócio? (opcional)": "¿Ya tienes sitio o red social del negocio? (opcional)",
+        "Ler PDFs e documentos": "Leer PDFs y documentos",
+        "Login de usuários": "Login de usuarios",
+        "Logo e cores": "Logo y colores",
+        "Loja online": "Tienda online",
+        "Mais de 20": "Más de 20",
+        "Mais detalhes:": "Más detalles:",
+        "Mapa e localização": "Mapa y ubicación",
+        "Marque o que quiser. Pode pular.": "Marca lo que quieras. Puedes saltarlo.",
+        "Me chamo": "Me llamo",
+        "Mensagem para o WhatsApp": "Mensaje para WhatsApp",
+        "Notificações": "Notificaciones",
+        "Não deu para copiar. Selecione o texto e copie.": "No se pudo copiar. Selecciona el texto y cópialo.",
+        "Não sei": "No sé",
+        "Não sei o que é isso": "No sé qué es eso",
+        "O quanto antes": "Lo antes posible",
+        "O que o projeto precisa ter?": "¿Qué necesita tener el proyecto?",
+        "O que quer resolver": "Qué quiere resolver",
+        "O que você faz ou vende?": "¿Qué haces o vendes?",
+        "Oi, Samuel!": "¡Hola, Samuel!",
+        "Os dois": "Los dos",
+        "Outro sistema": "Otro sistema",
+        "Pagamento online": "Pago online",
+        "Painel com gráficos": "Panel con gráficos",
+        "Painel para administrar": "Panel para administrar",
+        "Para qual celular?": "¿Para qué celular?",
+        "Para quando você precisa?": "¿Para cuándo lo necesitas?",
+        "Pedir orçamento": "Pedir presupuesto",
+        "Pedir orçamento disso": "Pedir presupuesto de esto",
+        "Pergunta": "Pregunta",
+        "Planilha": "Planilla",
+        "Planilhas (Excel ou Google)": "Planillas (Excel o Google)",
+        "Precisa ter": "Necesita tener",
+        "Progresso do orçamento": "Progreso del presupuesto",
+        "Projeto:": "Proyecto:",
+        "Pular": "Saltar",
+        "Qual problema você quer resolver ou o que quer melhorar?": "¿Qué problema quieres resolver o qué quieres mejorar?",
+        "Qual tarefa você repete todo dia ou toda semana?": "¿Qué tarea repites todos los días o todas las semanas?",
+        "Quantas pessoas vão usar": "Cuántas personas lo van a usar",
+        "Quantas pessoas vão usar o sistema?": "¿Cuántas personas van a usar el sistema?",
+        "Que tipo de projeto você quer?": "¿Qué tipo de proyecto quieres?",
+        "Quer acrescentar algo? (opcional)": "¿Quieres agregar algo? (opcional)",
+        "Recomeçar": "Empezar de nuevo",
+        "Recomeçar do zero": "Empezar desde cero",
+        "Referência: projeto": "Referencia: proyecto",
+        "Relatórios em PDF ou Excel": "Informes en PDF o Excel",
+        "Relatórios prontos": "Informes listos",
+        "Resumo copiado!": "¡Resumen copiado!",
+        "Sem pressa": "Sin prisa",
+        "Sim, tenho os dois": "Sí, tengo los dos",
+        "Sistema web (cadastro, controle, painel)": "Sistema web (registro, control, panel)",
+        "Site ou página de vendas": "Sitio o página de ventas",
+        "Site/rede social atual:": "Sitio/red social actual:",
+        "Sobre o negócio": "Sobre el negocio",
+        "Sua mensagem está pronta": "Tu mensaje está listo",
+        "Só eu": "Solo yo",
+        "Só o logo": "Solo el logo",
+        "Tarefa que se repete": "Tarea que se repite",
+        "Tirar dúvida": "Sacar una duda",
+        "Toda semana": "Todas las semanas",
+        "Todo dia": "Todos los días",
+        "Todo mês": "Todos los meses",
+        "Tudo certo!": "¡Todo listo!",
+        "Ver minha mensagem": "Ver mi mensaje",
+        "Vi seu portfólio": "Vi tu portafolio",
+        "Vim pelo": "Llegué por",
+        "Você está no navegador do Instagram. Se o WhatsApp não abrir, toque em Copiar resumo e me chame por lá.": "Estás en el navegador de Instagram. Si WhatsApp no se abre, toca en Copiar resumen y escríbeme por allí.",
+        "Você já tem logo e cores da sua marca?": "¿Ya tienes logo y colores de tu marca?",
+        "Você já tem um endereço na internet (domínio)?": "¿Ya tienes una dirección en internet (dominio)?",
+        "e quero pedir um orçamento.": "y quiero pedir un presupuesto.",
+        "link que você me mandou": "link que me enviaste",
+        "← Voltar": "← Volver",
+        "← Voltar e mudar respostas": "← Volver y cambiar respuestas",
         "Novidades": "Novedades",
+        "Alguém": "Alguien",
         /* cantinho místico: horóscopo, grimório, arcanos, caixa, presente, boneca e a Nyx */
         "Lua cheia": "Luna llena",
         "Com a {fase}, tudo fica mais intenso, até o look.": "Con la {fase}, todo se vuelve más intenso, hasta el look.",
@@ -1885,23 +2087,46 @@
     var listaAtributos = []; // { el, atributo, original }
     var ATRIBUTOS_TRADUZIVEIS = ["aria-label", "title", "placeholder"];
 
-    function montarListas() {
-        var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null);
-        var no;
-        while ((no = walker.nextNode())) {
-            if (!no.nodeValue || !no.nodeValue.trim()) continue;
-            if (dentroDeIgnorado(no)) continue;
-            var chave = normalizar(no.nodeValue);
-            if (DICIONARIO[chave]) listaTextos.push({ no: no, original: no.nodeValue });
-        }
-        ATRIBUTOS_TRADUZIVEIS.forEach(function (atributo) {
-            document.querySelectorAll("[" + atributo + "]").forEach(function (el) {
-                if (dentroDeIgnorado(el)) return;
-                var valor = el.getAttribute(atributo);
-                var chave = normalizar(valor || "");
-                if (DICIONARIO[chave]) listaAtributos.push({ el: el, atributo: atributo, original: valor });
+    /* Guarda o texto original (português) de cada nó que tem tradução. Pode ser chamada de novo pra
+       um pedaço novo da página: o que já está guardado não entra duas vezes. Devolve só o que é novo. */
+    var conhecidos = new WeakSet();       // nós de texto já guardados
+    var atributosConhecidos = new WeakMap(); // elemento -> atributos já guardados
+    function montarListas(raiz) {
+        raiz = raiz || document.body;
+        var novos = { textos: [], atributos: [] };
+        if (raiz.nodeType === 3) {
+            guardarTexto(raiz, novos);
+        } else if (raiz.nodeType === 1) {
+            var walker = document.createTreeWalker(raiz, NodeFilter.SHOW_TEXT, null);
+            var no;
+            while ((no = walker.nextNode())) guardarTexto(no, novos);
+            var elementos = Array.prototype.slice.call(raiz.querySelectorAll("[aria-label], [title], [placeholder]"));
+            if (raiz.matches && raiz.matches("[aria-label], [title], [placeholder]")) elementos.push(raiz);
+            elementos.forEach(function (el) {
+                ATRIBUTOS_TRADUZIVEIS.forEach(function (atributo) {
+                    var valor = el.getAttribute(atributo);
+                    if (!valor || !DICIONARIO[normalizar(valor)]) return;
+                    var ja = atributosConhecidos.get(el);
+                    if (ja && ja[atributo]) return;
+                    if (dentroDeIgnorado(el)) return;
+                    if (!ja) { ja = {}; atributosConhecidos.set(el, ja); }
+                    ja[atributo] = true;
+                    var item = { el: el, atributo: atributo, original: valor };
+                    listaAtributos.push(item);
+                    novos.atributos.push(item);
+                });
             });
-        });
+        }
+        return novos;
+    }
+    function guardarTexto(no, novos) {
+        if (conhecidos.has(no) || !no.nodeValue || !no.nodeValue.trim()) return;
+        if (!DICIONARIO[normalizar(no.nodeValue)]) return; // primeiro o dicionário (barato), depois a subida na árvore
+        if (dentroDeIgnorado(no)) return;
+        conhecidos.add(no);
+        var item = { no: no, original: no.nodeValue };
+        listaTextos.push(item);
+        novos.textos.push(item);
     }
 
     /* Função global pra scripts de páginas de projeto traduzirem texto que eles mesmos geram em
@@ -1929,19 +2154,11 @@
         document.documentElement.dataset.idioma = idioma;
     })();
 
-    /* Em português (o caso comum) a página já está no idioma certo: percorrer o texto todo pode
-       esperar o navegador ficar livre, em vez de atrasar a primeira tela. Se a pessoa trocar pra
-       espanhol antes disso, as listas são montadas na hora (o texto ainda está em português). */
-    var listasProntas = false;
-    function prepararListas() {
-        if (listasProntas) return;
-        listasProntas = true;
-        montarListas();
-    }
-
-    function aplicar(idioma) {
-        if (idioma === "es") prepararListas();
-        listaTextos.forEach(function (item) {
+    /* Em português (o caso comum) a página já está no idioma certo e não precisa varrer nada na
+       abertura. As listas são montadas quando o espanhol entra (na abertura ou no botão): nessa hora o
+       texto ainda está em português, então o original guardado é o certo. */
+    function traduzirItens(novos, idioma) {
+        novos.textos.forEach(function (item) {
             var chave = normalizar(item.original);
             if (idioma === "es" && DICIONARIO[chave]) {
                 var antes = item.original.match(/^\s*/)[0];
@@ -1951,11 +2168,38 @@
                 item.no.nodeValue = item.original;
             }
         });
-        listaAtributos.forEach(function (item) {
+        novos.atributos.forEach(function (item) {
             var chave = normalizar(item.original || "");
             if (idioma === "es" && DICIONARIO[chave]) item.el.setAttribute(item.atributo, DICIONARIO[chave]);
             else item.el.setAttribute(item.atributo, item.original);
         });
+    }
+
+    /* Conteúdo que entra depois (scripts carregados mais tarde, telas montadas por JavaScript): enquanto
+       estiver em espanhol, cada pedaço novo da página é traduzido assim que aparece. Só olha nós
+       adicionados (não mudanças de texto), então a própria tradução não dispara outra volta. */
+    var observador = null, pendentes = [], agendado = false;
+    function vigiar(ligar) {
+        if (!("MutationObserver" in window)) return;
+        if (!ligar) { if (observador) observador.disconnect(); pendentes = []; return; }
+        if (!observador) observador = new MutationObserver(function (registros) {
+            registros.forEach(function (r) { for (var i = 0; i < r.addedNodes.length; i++) pendentes.push(r.addedNodes[i]); });
+            if (agendado) return;
+            agendado = true;
+            setTimeout(function () {
+                agendado = false;
+                var lote = pendentes; pendentes = [];
+                if (document.documentElement.lang !== "es") return;
+                lote.forEach(function (no) { if (no.isConnected) traduzirItens(montarListas(no), "es"); });
+            }, 30);
+        });
+        observador.observe(document.body, { childList: true, subtree: true });
+    }
+
+    function aplicar(idioma) {
+        if (idioma === "es") montarListas(document.body);
+        traduzirItens({ textos: listaTextos, atributos: listaAtributos }, idioma);
+        vigiar(idioma === "es");
         var heroTexto = document.getElementById("heroTextoDigitado");
         if (heroTexto) heroTexto.textContent = idioma === "es" ? TEXTO_HERO_ES : TEXTO_HERO_PT;
         document.documentElement.dataset.idioma = idioma;
@@ -2009,8 +2253,6 @@
 
     function iniciar() {
         var idioma = idiomaInicial();
-        if (idioma === "es") prepararListas();
-        else (window.requestIdleCallback || setTimeout)(prepararListas, { timeout: 3000 });
         aplicar(idioma);
 
         var nav = document.querySelector(".nav");

@@ -52,7 +52,7 @@ const somarNaSacola = (id, tam, qtd = 1) => {
     /* quem recebe: abre o link e vê a carta com selo de cera */
     const q = new URLSearchParams(location.search);
     if (!q.has("presente")) return;
-    const de = (q.get("de") || "Alguém").trim().slice(0, 40);
+    const de = (q.get("de") || t("Alguém")).trim().slice(0, 40);
     const paraBruto = (q.get("para") || "").trim().slice(0, 40);
     const para = paraBruto.charAt(0).toUpperCase() + paraBruto.slice(1);
     const itens = (q.get("presente") || "").split(",").slice(0, 20).map((parte) => {
@@ -67,7 +67,7 @@ const somarNaSacola = (id, tam, qtd = 1) => {
     document.getElementById("cartaTexto").textContent = `${para ? `${para}, ` : ""}${tf("{de} separou estas peças na {loja} e ia amar ganhar de presente:", { de, loja: LOJA.nome })}`;
     document.getElementById("cartaItens").innerHTML = itens.map((i) => {
         const p = produto(i.id);
-        return `<li><span class="carta-item-arte tom-${p.tom}">${arte(p)}</span><span>${i.qtd > 1 ? i.qtd + "× " : ""}${esc(t(p.nome))}${i.tam ? ` <small>(${esc(i.tam)})</small>` : ""}</span><b>${precoTexto(p, i.qtd)}</b></li>`;
+        return `<li><span class="carta-item-arte tom-${p.tom}">${arte(p)}</span><span>${i.qtd > 1 ? i.qtd + "× " : ""}${esc(t(p.nome))}${i.tam ? ` <small>(${esc(t(i.tam))})</small>` : ""}</span><b>${precoTexto(p, i.qtd)}</b></li>`;
     }).join("");
     document.getElementById("cartaTotal").textContent = `${t("Total estimado:")} ${brl(total)}${itens.some((i) => produto(i.id).preco == null) ? " + " + t("itens a combinar") : ""}`;
     document.getElementById("cartaComprar").addEventListener("click", () => {
