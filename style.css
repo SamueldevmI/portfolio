@@ -3246,9 +3246,9 @@ html.edicao-rara::after { content: ""; position: fixed; inset: 0; z-index: 99; p
 }
 .arraste-dica { display: none; }
 
-/* ---------- Faxina, parte 2: sai o gráfico do GitHub (o número continua na ficha) e os 3 passos do
-   orçamento (o próprio formulário já é o passo a passo); o céu do Contato fica mais baixo ---------- */
-.github-atividade, .orcamento .lista-passos { display: none; }
+/* ---------- Faxina, parte 2: saem os 3 passos do orçamento (o próprio formulário já é o passo a
+   passo); o céu do Contato fica mais baixo. O gráfico do GitHub voltou: ganhou moldura de gibi. ---------- */
+.orcamento .lista-passos { display: none; }
 #contato { padding-top: 170px; --sinal-y: 76px; }
 .sinal-ceu { height: 210px; }
 @media (max-width: 720px) {
