@@ -94,7 +94,10 @@
         const brilho = document.createElement("span");
         brilho.className = "figurinha-brilho";
         brilho.setAttribute("aria-hidden", "true");
-        visual.append(selo, brilho);
+        const acao = document.createElement("span");
+        acao.className = "projeto-acao";
+        acao.setAttribute("aria-hidden", "true");
+        visual.append(selo, brilho, acao);
     });
     // no celular (sem hover), o brilho passa uma vez quando a figurinha entra na tela
     if (!mouseFino && !semMovimento && "IntersectionObserver" in window) {
