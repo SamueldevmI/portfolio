@@ -78,7 +78,7 @@
             document.documentElement.dataset.periodo = hora >= 5 && hora < 12 ? "manha" : hora >= 12 && hora < 18 ? "tarde" : "noite";
             var barra = { azul: "#0e1422", cerrado: "#1e1510", neon: "#0d0b1e", gibi85: "#1b1815" }[tema];
             if (barra) document.querySelector('meta[name="theme-color"]').content = barra;
-            document.write('<link rel="stylesheet" id="folhaTema" href="' + (tema === "vermelho" ? "style.css" : "style-" + tema + ".css") + '?v=20261009cores2">');
+            document.write('<link rel="stylesheet" id="folhaTema" href="' + (tema === "vermelho" ? "style.css" : "style-" + tema + ".css") + '?v=20261009ideias2">');
         })();
         /* Idioma: detectado cedo (antes do resto da página rodar) só pra avisar efeitos como a
            digitação do texto do hero, que senão sobrescreveriam a tradução feita pelo idioma.js. */
@@ -92,7 +92,7 @@
             document.documentElement.dataset.idioma = idioma;
         })();
     </script>
-    <noscript><link rel="stylesheet" href="style.css?v=20261009cores2"></noscript>
+    <noscript><link rel="stylesheet" href="style.css?v=20261009ideias2"></noscript>
     <title id="tituloPagina">Samuel Mickael | Desenvolvedor Web &amp; Mobile</title>
     <script type="application/ld+json">
     {
@@ -408,6 +408,7 @@
                 <h2>Projetos em destaque</h2>
                 <p>Teste agora, direto no navegador — <mark class="marca-texto">sem instalar nada</mark>. São parecidos com o que você pode encomendar.</p>
                 <p class="gibi-nota" aria-hidden="true">pode clicar em tudo: é tudo de verdade 👇</p>
+                <div class="producao" id="producao" hidden></div>
             </div>
             <div class="filtros-projetos" role="group" aria-label="Filtrar projetos por tipo">
                 <button type="button" class="chip-filtro is-ativo" data-filtro="todos">Todos</button>
@@ -830,6 +831,7 @@
             <p class="contato-personagem" aria-hidden="true"><b class="cp-nome">Você</b><span class="cp-fala">Quero o meu!</span></p>
             <div class="contato-acoes">
                 <a class="botao botao-principal" href="https://wa.me/5567996034205?text=Oi%2C%20Samuel%21%20Vi%20seu%20portf%C3%B3lio%20e%20queria%20pedir%20um%20or%C3%A7amento.%20Meu%20projeto%20%C3%A9%3A%20" target="_blank" rel="noopener noreferrer">Falar direto no WhatsApp</a>
+                <a class="botao botao-secundario botao-audio" href="https://wa.me/5567996034205?text=Oi%2C%20Samuel%21%20Vou%20te%20mandar%20um%20%C3%A1udio%20explicando%20minha%20ideia%20%F0%9F%8E%99%EF%B8%8F" target="_blank" rel="noopener noreferrer">🎙️ Prefere mandar áudio?</a>
                 <a class="botao botao-secundario" href="https://www.linkedin.com/in/samuelrondon-dev/?utm_source=portfolio&utm_medium=contato&utm_campaign=site" target="_blank" rel="me noopener noreferrer">LinkedIn ↗</a>
                 <a class="botao botao-secundario" href="https://github.com/SamueldevmI" target="_blank" rel="me noopener noreferrer">GitHub ↗</a>
                 <a class="botao botao-secundario" href="curriculo-samuel-mickael.pdf" download="Curriculo_Samuel_Mickael.pdf">Baixar currículo (PDF)</a>
@@ -840,6 +842,15 @@
             <div class="agenda-conversa" id="agendaConversa">
                 <p><b>Prefere marcar uma conversa de 15 min?</b> Toque num horário e a mensagem já vai pronta. Se não der pra mim, eu te sugiro outro.</p>
                 <div class="agenda-horarios" role="group" aria-label="Sugestões de horário"></div>
+            </div>
+            <div class="sem-coragem">
+                <h3>Perguntas que ninguém tem coragem de fazer 🙈</h3>
+                <details class="faq-item" name="coragem"><summary>E se você sumir no meio do projeto?</summary><p>Você só paga a primeira metade depois de aprovar a prévia, e a outra metade só com o site no ar. O domínio fica no seu nome e você recebe todos os acessos por escrito. Se eu sumir (não vou, mas vai que eu ganho na Mega-Sena), você não perde nada.</p></details>
+                <details class="faq-item" name="coragem"><summary>Não entendo nada de tecnologia. Vou passar vergonha?</summary><p>Zero vergonha. Você me manda foto, preço e o jeito que você atende, pelo WhatsApp mesmo. A parte chata é comigo. Se você sabe mandar áudio, já sabe o suficiente.</p></details>
+                <details class="faq-item" name="coragem"><summary>Por que tão barato? Qual é a pegadinha?</summary><p>Sem pegadinha: eu tô começando e quero clientes que falem bem de mim. Por isso o preço é de quem tá construindo nome, não de agência com escritório chique. E não tem mensalidade obrigatória.</p></details>
+                <details class="faq-item" name="coragem"><summary>Meu sobrinho faz de graça. Por que eu pagaria?</summary><p>Se o seu sobrinho entrega no prazo, responde no fim de semana e arruma quando quebra, contrata ele! 😅 Aqui tem contrato, prazo combinado e correção de erro sem custo por 30 dias depois da entrega.</p></details>
+                <details class="faq-item" name="coragem"><summary>E se eu odiar o site?</summary><p>Aí você não paga nada. Sério: eu monto a prévia antes de qualquer pagamento. Não gostou, a gente se despede numa boa e cada um segue a vida.</p></details>
+                <details class="faq-item" name="coragem"><summary>Já tenho Instagram. Pra que site?</summary><p>O Instagram mostra, o site vende: preço, cardápio, horário e o pedido chegando pronto no WhatsApp, sem você responder “quanto custa?” 40 vezes por dia. E ele aparece no Google pra quem nem te segue.</p></details>
             </div>
             <!-- Indique e ganhe (saiu do FAQ, que agora fica escondido) -->
             <details class="faq-item indique-caixa" id="faq-indicacao">
@@ -939,20 +950,21 @@
     </div>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-    <script src="estatisticas.js?v=20261009cores2" defer></script>
+    <script src="estatisticas.js?v=20261009ideias2" defer></script>
     <script src="servicos.js?v=20261002" defer></script>
-    <script src="previa-celular.js?v=20261009cores2" defer></script>
-    <script src="filme-celular.js?v=20261009cores2" defer></script>
+    <script src="previa-celular.js?v=20261009ideias2" defer></script>
+    <script src="filme-celular.js?v=20261009ideias2" defer></script>
     <script src="depoimentos.js?v=20261007" defer></script>
-    <script src="script.js?v=20261009cores2" defer></script>
-    <script src="antes-depois.js?v=20261009cores2" defer></script>
+    <script src="producao.js?v=20261009" defer></script>
+    <script src="script.js?v=20261009ideias2" defer></script>
+    <script src="antes-depois.js?v=20261009ideias2" defer></script>
     <!-- espanhol sob demanda: o botão ES é leve e o idioma.js só baixa quando alguém pede (os scripts acima se redesenham no "idiomaMudou") -->
-    <script src="idioma-leve.js?v=20261009cores2" defer></script>
+    <script src="idioma-leve.js?v=20261009ideias2" defer></script>
 <script>
     /* Scripts que a página não precisa pra aparecer: o mobile.js só baixa em tela de toque (no computador
        ele não faz nada) e a música só depois que a página terminou de carregar. */
     (function () {
-        var versao = "?v=20261009cores2";
+        var versao = "?v=20261009ideias2";
         function carregar(arquivo) { var s = document.createElement("script"); s.src = arquivo + versao; s.async = false; document.body.appendChild(s); }
         var toque = matchMedia("(pointer: coarse)").matches;
         // o pedido de "instalar app" pode chegar antes do mobile.js: fica guardado pra ele usar

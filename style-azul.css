@@ -3439,3 +3439,24 @@ html[data-ramo-cor="salao"] { --cyan: #ff5fa2; --cyan-rgb: 255, 95, 162; --acent
 html[data-ramo-cor="academia"] { --cyan: #ff6a1a; --cyan-rgb: 255, 106, 26; --acento-texto: #ff9d5c; --pink: #ffd23f; --pink-rgb: 255, 210, 63; } /* manter-cor */
 html[data-ramo-cor="clinica"] { --cyan: #2bb5a3; --cyan-rgb: 43, 181, 163; --acento-texto: #6fd8c9; --pink: #7cc4ff; --pink-rgb: 124, 196, 255; } /* manter-cor */
 html[data-ramo-cor] .botao-principal { transition: background-color .4s ease, border-color .4s ease; }
+
+/* "Em produção agora" (producao.js): o que está saindo do forno, no topo dos projetos */
+.producao { margin-top: 22px; padding: 16px 18px; border: 1px dashed rgba(var(--cyan-rgb), .5); border-radius: 12px; background: rgba(var(--cyan-rgb), .05); }
+.producao-titulo { margin: 0 0 10px !important; color: var(--text) !important; font: 600 .95rem "Space Grotesk", sans-serif; }
+.producao-lista { display: grid; gap: 14px; margin: 0; padding: 0; list-style: none; }
+.producao-lista > li { display: grid; gap: 6px; }
+.producao-nome { margin: 0 !important; color: var(--text) !important; font-weight: 700; text-decoration: none; }
+a.producao-nome:hover { text-decoration: underline; }
+.producao-nome span { color: var(--muted); font-weight: 400; }
+.producao-etapas { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; counter-reset: etapa; }
+.producao-etapas li { padding: 3px 10px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); font: 500 .72rem "DM Mono", monospace; }
+.producao-etapas li.feito { border-color: rgba(var(--cyan-rgb), .45); color: var(--text); }
+.producao-etapas li.feito::before { content: "✓ "; color: var(--cyan); }
+.producao-etapas li.atual { border-color: var(--cyan); background: var(--cyan); color: #0e1422; font-weight: 700; }
+.producao-lista small { color: var(--muted); font-size: .82rem; }
+
+/* "Perguntas que ninguém tem coragem de fazer" (contato) */
+.sem-coragem { max-width: 760px; margin: 34px auto 10px; text-align: left; }
+.sem-coragem h3 { margin: 0 0 4px; font-size: clamp(1.25rem, 3.4vw, 1.6rem); }
+.sem-coragem .faq-item { border-bottom: 1px solid var(--line); }
+.sem-coragem .faq-item p { margin: 0 0 18px; color: var(--muted); }

@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Plano de manutenção: seu site sempre atualizado, com relatório todo mês e alguém pra chamar quando precisar.">
+    <title>Plano de manutenção | Samuel Mickael</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+    <script>
+        /* Mesmo tema escolhido no portfólio (vermelho ou azul) */
+        (function () {
+            var azul = false;
+            try { azul = localStorage.getItem("portfolio-tema") === "azul"; } catch (e) { /* sem armazenamento */ }
+            document.documentElement.dataset.tema = (function(){try{var t=localStorage.getItem("portfolio-tema");return /^(azul|cerrado|neon|gibi85)$/.test(t)?t:"vermelho"}catch(e){return "vermelho"}})();
+            document.write('<link rel="stylesheet" href="' + ((function(){try{var t=localStorage.getItem("portfolio-tema");return /^(azul|cerrado|neon|gibi85)$/.test(t)?"style-"+t+".css":"style.css"}catch(e){return "style.css"}})()) + '">');
+        })();
+    </script>
+    <noscript><link rel="stylesheet" href="style.css"></noscript>
+    <style>
+        .pm { width: min(760px, calc(100% - 32px)); margin: 48px auto 80px; }
+        .pm .eyebrow::before { content: none; }
+        .pm h1 { margin: 6px 0 12px; font-size: clamp(2rem, 6vw, 3rem); line-height: 1.03; letter-spacing: -.03em; }
+        .pm h1 span { color: var(--cyan); }
+        .pm > p { color: var(--muted); }
+        .pm h2 { margin: 36px 0 12px; font-size: 1.25rem; }
+        .pm-plano { margin-top: 26px; padding: 24px; border: 2px solid var(--cyan); border-radius: 16px; background: var(--surface); box-shadow: 0 0 34px rgba(var(--cyan-rgb), .18); }
+        .pm-preco { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; }
+        .pm-preco b { font-size: clamp(2rem, 7vw, 2.8rem); letter-spacing: -.02em; }
+        .pm-preco span { color: var(--muted); }
+        .pm-inclui { display: grid; gap: 10px; margin: 18px 0 0; padding: 0; list-style: none; }
+        .pm-inclui li { display: grid; grid-template-columns: 28px 1fr; gap: 8px; }
+        .pm-inclui li::before { content: "✓"; color: var(--cyan); font-weight: 700; }
+        .pm-inclui small { display: block; color: var(--muted); }
+        .pm-comparar { width: 100%; margin-top: 8px; border-collapse: collapse; font-size: .92rem; }
+        .pm-comparar th, .pm-comparar td { padding: 10px 8px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+        .pm-comparar th { color: var(--muted); font: 500 .75rem "DM Mono", monospace; letter-spacing: .08em; text-transform: uppercase; }
+        .pm-comparar td:not(:first-child) { white-space: nowrap; }
+        .pm-acoes { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+        .pm-nota { margin-top: 18px; color: var(--muted); font-size: .88rem; }
+        @media (max-width: 560px) { .pm-comparar td:not(:first-child) { white-space: normal; } }
+    </style>
+</head>
+<body>
+    <main class="pm">
+        <p class="eyebrow">Depois que o site fica pronto</p>
+        <h1>Seu site <span>sempre em dia</span>, sem você esquentar a cabeça</h1>
+        <p>Mudou o preço, chegou produto novo, trocou o horário? Você manda no WhatsApp e eu atualizo. E todo mês você recebe um relatório mostrando quantas pessoas visitaram e quantos pedidos chegaram.</p>
+
+        <div class="pm-plano">
+            <div class="pm-preco"><b id="pmValor"></b><span id="pmPeriodo"></span></div>
+            <ul class="pm-inclui">
+                <li><div>Atualizações de conteúdo<small>preço, foto, texto, produto novo, horário: até <span id="pmAlteracoes"></span> pedidos por mês</small></div></li>
+                <li><div>Relatório do mês<small>visitas, pedidos, de onde vieram e o que mais chamou atenção (<a href="relatorio.html?c=exemplo&amp;v=842&amp;p=37&amp;feito=Atualizei%20o%20card%C3%A1pio%20e%20os%20pre%C3%A7os%0AColoquei%20a%20pizza%20do%20m%C3%AAs%20no%20topo&amp;prox=Card%C3%A1pio%20de%20Natal" target="_blank" rel="noopener">ver um exemplo ↗</a>)</small></div></li>
+                <li><div>Correção de erro sem custo<small>quebrou alguma coisa? eu arrumo, sem orçamento</small></div></li>
+                <li><div>Atendimento no WhatsApp<small>resposta no mesmo dia útil</small></div></li>
+                <li><div>Lembrete de renovação<small>domínio e o que mais vencer, antes de dar problema</small></div></li>
+            </ul>
+        </div>
+
+        <h2>Com plano × sem plano</h2>
+        <table class="pm-comparar">
+            <thead><tr><th></th><th>Com plano</th><th>Sem plano</th></tr></thead>
+            <tbody>
+                <tr><td>Trocar preço ou foto</td><td>incluso</td><td>orçado na hora</td></tr>
+                <tr><td>Relatório do mês</td><td>todo mês</td><td>—</td></tr>
+                <tr><td>Erro depois dos 30 dias da entrega</td><td>incluso</td><td>orçado na hora</td></tr>
+                <tr><td>Fidelidade</td><td id="pmFidelidade"></td><td>—</td></tr>
+            </tbody>
+        </table>
+        <p class="pm-nota">Prefere não ter plano? Tranquilo: o site é seu e funciona igual. Quando precisar mudar algo, é só chamar que eu passo o valor daquela mudança.</p>
+
+        <div class="pm-acoes">
+            <a class="botao botao-principal" id="pmWhats" href="#" target="_blank" rel="noopener noreferrer">Quero o plano</a>
+            <a class="botao botao-secundario" href="como-trabalho.html">Como eu trabalho</a>
+        </div>
+    </main>
+    <script src="estatisticas.js?v=20261009"></script>
+    <script>
+        (function () {
+            "use strict";
+            /* CONFIRME ANTES DE DIVULGAR: valor por mês (null = "valor no orçamento"), quantos pedidos de mudança
+               entram por mês e se tem fidelidade. */
+            const PLANO = { valor: null, alteracoes: 4, fidelidade: "não tem: cancela quando quiser" };
+            const $ = (id) => document.getElementById(id);
+            $("pmValor").textContent = PLANO.valor ? `R$ ${PLANO.valor}` : "Valor no orçamento";
+            $("pmPeriodo").textContent = PLANO.valor ? "por mês" : "combinado de acordo com o tamanho do seu site";
+            $("pmAlteracoes").textContent = PLANO.alteracoes;
+            $("pmFidelidade").textContent = PLANO.fidelidade;
+            $("pmWhats").href = "https://wa.me/5567996034205?text=" + encodeURIComponent("Oi, Samuel! Quero saber do plano de manutenção pro meu site.");
+            window.ESTATISTICAS?.contar("/manutencao", "Plano de manutenção", true);
+        })();
+    </script>
+</body>
+</html>

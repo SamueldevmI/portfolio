@@ -138,6 +138,11 @@
                     origens: { instagram: "Instagram", qr: "QR do cartão de visita", status: "Status do WhatsApp", tiktok: "TikTok", amiga: "Indicação de amiga" },
                     feito: ["Atualizei as peças e os preços da vitrine", "Conferi o site no celular e no computador"], // sugestão: edite antes de mandar
                 },
+                /* cliente de mentira, só pra mostrar como fica (link "ver um exemplo" do plano de manutenção) */
+                exemplo: {
+                    nome: "Pizzaria Exemplo", dono: "", tel: "", cor: "#e8590c", exemplo: true,
+                    origens: {}, feito: ["Atualizei o cardápio e os preços", "Coloquei a pizza do mês no topo"],
+                },
             };
             const $ = (id) => document.getElementById(id);
             const q = new URLSearchParams(location.search);
@@ -176,8 +181,9 @@
                 if (feito.length) { lista("rFeito", feito); $("sFeito").hidden = false; }
                 if (prox.length) { lista("rProx", prox); $("sProx").hidden = false; }
 
-                await carregarScript(c.contador);
-                const cont = window[c.global];
+                if (c.exemplo) { $("rAviso").hidden = false; $("rAviso").textContent = "Isto é um exemplo: o negócio e os números são de mentira, só pra mostrar como o relatório fica."; }
+                if (c.contador) await carregarScript(c.contador);
+                const cont = c.global ? window[c.global] : null;
                 const ligado = cont && cont.configurado;
                 const atual = periodo(ano, mes), antes = periodo(mes === 1 ? ano - 1 : ano, mes === 1 ? 12 : mes - 1);
                 const manual = (k) => (q.get(k) !== null && q.get(k) !== "" && !isNaN(q.get(k)) ? Number(q.get(k)) : null);
@@ -248,7 +254,7 @@
             function editor() {
                 $("editor").hidden = false;
                 const sel = $("eCliente");
-                Object.entries(CLIENTES).forEach(([k, c]) => sel.append(new Option(c.nome, k)));
+                Object.entries(CLIENTES).filter(([, c]) => !c.exemplo).forEach(([k, c]) => sel.append(new Option(c.nome, k)));
                 $("eMes").value = mesPadrao();
                 const preencher = () => { if (!$("eFeito").dataset.mexeu) $("eFeito").value = CLIENTES[sel.value].feito.join("\n"); };
                 preencher();
