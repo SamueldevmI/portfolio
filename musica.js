@@ -758,6 +758,7 @@
         hq() { if (!podeTocarEfeito()) return; const t = agoraMais(); bumbo(t, 0.9, efeitos); barulho(t, "bandpass", 1800, 0.25, 0.12, efeitos); sino(84, t + 0.04, 0.4, 0.5, efeitos); },
         passar() { if (!podeTocarEfeito()) return; varrida(agoraMais(), 2400, 500, 0.25); },
         surpresa() { if (!podeTocarEfeito()) return; const t = agoraMais(); [84, 79, 75, 72, 87].forEach((n, i) => sino(n, t + i * 0.06, 0.6, 0.5, efeitos)); },
+        pagina() { if (!podeTocarEfeito()) return; pagina(); }, // folha de papel virando (modo leitor)
         // "plim" de mensagem chegando no WhatsApp: duas notas curtinhas subindo
         plim() { if (!podeTocarEfeito()) return; const t = agoraMais(); tom(midi(88), "sine", t, 0.004, 0.05, 0.16, efeitos); tom(midi(93), "sine", t + 0.09, 0.004, 0.055, 0.28, efeitos); },
         // KA-CHING de caixa registradora: o "ka" (estalo) e o "ching" (moedinhas brilhando)
