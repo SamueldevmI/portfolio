@@ -3270,6 +3270,52 @@ html.edicao-rara::after { content: ""; position: fixed; inset: 0; z-index: 99; p
 @keyframes figurinha-reluz { 0% { opacity: 1; transform: translateX(-70%); } 100% { opacity: 1; transform: translateX(70%); } }
 @media (prefers-reduced-motion: reduce) { .figurinha-brilho { display: none; } }
 
+/* ---------- Braimstorm de letras e imagens: capitular, marca-texto, meio-tom e explosão de ação ---------- */
+
+/* Capitular: a primeira letra do texto de Sobre mim, do jeito que gibi/revista antiga abria o texto */
+.texto-sobre > p:first-child::first-letter {
+    float: left;
+    margin: 2px 10px -10px 0;
+    padding: 0 4px;
+    border: 3px solid #0a0917;
+    background: #b1ff3d;
+    font: 400 3.6rem/1 "Bangers", Impact, sans-serif;
+    color: #0a0917;
+    box-shadow: 3px 3px 0 #0a0917;
+    transform: rotate(-3deg);
+}
+@media (max-width: 720px) { .texto-sobre > p:first-child::first-letter { font-size: 2.9rem; margin-bottom: -6px; } }
+
+/* Marca-texto: um risco de marcador que "pinta" por baixo da frase quando ela entra na tela */
+mark.marca-texto { position: relative; z-index: 0; background: none; color: inherit; padding: 0 .12em; }
+mark.marca-texto::before {
+    content: ""; position: absolute; z-index: -1; left: -.12em; right: -.12em; top: .1em; bottom: 0;
+    background: color-mix(in srgb, #b1ff3d 70%, transparent);
+    clip-path: polygon(0 22%, 100% 0, 97% 82%, 3% 100%);
+    transform: scaleX(0); transform-origin: left; transition: transform .55s cubic-bezier(.2, .8, .2, 1);
+}
+mark.marca-texto.gibi-visivel::before { transform: scaleX(1); }
+@media (prefers-reduced-motion: reduce) { mark.marca-texto::before { transition: none; transform: scaleX(1); } }
+
+/* Meio-tom (Ben-Day dots): textura de impressão em pontos sobre as ilustrações dos projetos */
+.projeto-visual::before { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+    background-image: radial-gradient(circle, rgba(0,0,0,.6) 1.1px, transparent 1.3px);
+    background-size: 5px 5px;
+    mix-blend-mode: multiply;
+    opacity: .4;
+}
+
+/* Explosão de ação: linhas de velocidade estouram da imagem do projeto ao passar o mouse */
+.projeto-acao { position: absolute; z-index: 2; inset: -25%; pointer-events: none;
+    background: repeating-conic-gradient(from 0deg, rgba(255,255,255,.95) 0deg 2deg, transparent 2deg 15deg);
+    -webkit-mask-image: radial-gradient(circle, #000000 0 14%, transparent 55%);
+    mask-image: radial-gradient(circle, #000000 0 14%, transparent 55%);
+    opacity: 0; transform: scale(.55);
+    transition: opacity .3s ease, transform .5s cubic-bezier(.2, 1.6, .4, 1);
+}
+@media (hover: hover) { .card-projeto:hover .projeto-acao { opacity: .85; transform: scale(1); } }
+@media (prefers-reduced-motion: reduce) { .projeto-acao { display: none; } }
+
 /* "Continua na próxima página": tarja no fim de cada seção que leva pra seguinte */
 a.gibi-continua { margin-top: 20px; text-decoration: none; cursor: var(--cursor-mao, pointer); }
 @media (hover: hover) { a.gibi-continua:hover { background: #b1ff3d; } }

@@ -198,7 +198,7 @@
             e.target.classList.add("gibi-visivel");
             olho.unobserve(e.target);
         }), { threshold: .35, rootMargin: "0px 0px -6% 0px" });
-        document.querySelectorAll(".gibi-legenda, .gibi-nota, .gibi-fim, .gibi-continua, .titulo-secao, .contato > h2").forEach((el) => olho.observe(el));
+        document.querySelectorAll(".gibi-legenda, .gibi-nota, .gibi-fim, .gibi-continua, .titulo-secao, .contato > h2, .marca-texto").forEach((el) => olho.observe(el));
 
         /* ---------- Dog-ear: a quina da página "vira" sempre que um título de seção nova aparece ---------- */
         const dogEar = document.createElement("div");
