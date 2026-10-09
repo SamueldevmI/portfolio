@@ -167,14 +167,16 @@
             academia: ["mensalidade?", "abre domingo?", "aula experimental?", "tem personal?", "aceita pix?", "que horas abre?", "tem plano anual?"],
             "clínica": ["atende convênio?", "horário essa semana?", "quanto a consulta?", "tem estacionamento?", "aceita pix?", "precisa de pedido?", "atende sábado?"],
         };
-        const DURACAO = 20000, VIDA = semMovimento ? 3600 : 2900;
+        const DURACAO = 20000, VIDA = semMovimento ? 3000 : 2200;
+        // pegadinhas no meio dos clientes: tocar nelas tira 1 ponto
+        const SPAM = ["Bom dia 🌻 repassa pra 10 grupos", "Oi sumido(a) 👀", "🔥 PROMOÇÃO DE CHIP 🔥", "vc viu isso?? 😱 link", "Corrente da sorte 🍀 não quebre", "Parabéns! Você ganhou um iPhone 📱"];
         const CHAVE = "jogo-atende-recorde";
         let rodando = false, fim = 0, proximo = 0, total = 0, atendidos = 0, perdidos = 0, vagas = [], relogio = 0;
 
         function inicio() {
             const recorde = ler(CHAVE);
             tela.innerHTML = `<p class="jogo-selo">🎮 ${tr("MINI-JOGO")}</p><h3 class="jogo-titulo">${tr("Atende aí!")}</h3>
-                <p class="jogo-texto">${tr("As mensagens dos clientes vão chegar. Toque nelas antes que eles desistam. Você tem 20 segundos.")}</p>
+                <p class="jogo-texto">${tr("Toque nas mensagens dos clientes antes que eles desistam. Cuidado com corrente e spam: tocar neles tira ponto. Você tem 20 segundos.")}</p>
                 <button type="button" class="botao botao-principal jogo-comecar">${tr("Começar")} ▶</button>
                 ${recorde ? `<p class="jogo-recorde">🏆 ${tr("Seu recorde:")} ${recorde}</p>` : ""}`;
         }
@@ -193,14 +195,15 @@
             const t = tela.querySelector(".jogo-tempo"); if (t) t.textContent = Math.ceil(resta / 1000) + "s";
             if (resta <= 0) { terminar(); return; }
             if (agora >= proximo) {
-                novaMensagem(agora);
                 const progresso = 1 - resta / DURACAO;
-                proximo = agora + (1050 - progresso * 520) * (0.8 + Math.random() * 0.4); // vai apertando
+                novaMensagem(agora, progresso);
+                if (progresso > .45 && Math.random() < .35) novaMensagem(agora, progresso); // rajada: duas de uma vez
+                proximo = agora + (880 - progresso * 480) * (0.8 + Math.random() * 0.4); // vai apertando
             }
-            tela.querySelectorAll(".jogo-msg:not(.ok):not(.foi)").forEach((m) => { if (agora > Number(m.dataset.ate)) desistiu(m); });
+            tela.querySelectorAll(".jogo-msg:not(.ok):not(.foi)").forEach((m) => { if (agora > Number(m.dataset.ate)) (m.dataset.spam ? sumiu(m) : desistiu(m)); });
             relogio = requestAnimationFrame(passo);
         }
-        function novaMensagem(agora) {
+        function novaMensagem(agora, progresso) {
             const livres = vagas.map((v, i) => (v ? -1 : i)).filter((i) => i >= 0);
             if (!livres.length) return;
             const i = livres[Math.floor(Math.random() * livres.length)];
@@ -214,11 +217,16 @@
             m.style.setProperty("--vida", VIDA + "ms");
             m.dataset.ate = agora + VIDA;
             m.dataset.vaga = i;
-            m.innerHTML = `<span>${tr(lista[Math.floor(Math.random() * lista.length)])}</span><i aria-hidden="true"></i>`;
-            vagas[i] = m; total++;
+            const spam = progresso > .12 && Math.random() < .22;
+            const texto = spam ? SPAM[Math.floor(Math.random() * SPAM.length)] : lista[Math.floor(Math.random() * lista.length)];
+            if (spam) { m.dataset.spam = "1"; m.classList.add("spam"); }
+            m.innerHTML = `<span>${tr(texto)}</span><i aria-hidden="true"></i>`;
+            vagas[i] = m;
+            if (!spam) total++;
             area.appendChild(m);
             som()?.plim?.();
         }
+        function sumiu(m) { m.classList.add("foi"); liberar(m, 300); } // spam que ninguém tocou: só some, sem contar
         function liberar(m, ms) { setTimeout(() => { vagas[Number(m.dataset.vaga)] = null; m.remove(); }, ms); }
         function desistiu(m) {
             m.classList.add("foi"); m.querySelector("span").textContent = tr("desistiu 😤");
@@ -228,6 +236,14 @@
         }
         function atender(m) {
             if (!rodando || m.classList.contains("ok") || m.classList.contains("foi")) return;
+            if (m.dataset.spam) {
+                m.classList.add("foi", "caiu"); m.querySelector("span").textContent = tr("era spam! −1 😵");
+                atendidos = Math.max(0, atendidos - 1);
+                const a = tela.querySelector(".jogo-atendidos"); if (a) a.textContent = atendidos;
+                som()?.erro?.();
+                liberar(m, 600);
+                return;
+            }
             m.classList.add("ok"); m.querySelector("span").textContent = tr("respondido ✓");
             atendidos++;
             const a = tela.querySelector(".jogo-atendidos"); if (a) a.textContent = atendidos;
