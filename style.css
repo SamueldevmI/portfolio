@@ -3500,6 +3500,7 @@ a.producao-nome:hover { text-decoration: underline; }
 .jogo-titulo { margin: 0; font: 400 clamp(2.4rem, 8vw, 3.4rem)/1 Bangers, "Space Grotesk", sans-serif; letter-spacing: .03em; }
 .jogo-texto { max-width: 46ch; margin: 0; color: var(--muted); }
 .jogo-recorde { margin: 0; color: var(--muted); font: 500 .8rem "DM Mono", monospace; }
+.jogo-desafio { margin: 0; padding: 6px 12px; border: 2px dashed var(--cyan); border-radius: 10px; font: 600 .9rem "DM Mono", monospace; }
 .jogo-placar { display: flex; justify-content: space-between; align-self: stretch; font: 600 1rem "DM Mono", monospace; }
 .jogo-tempo { color: var(--cyan); font-weight: 700; }
 .jogo-area { position: relative; flex: 1; align-self: stretch; }
@@ -3515,7 +3516,7 @@ a.producao-nome:hover { text-decoration: underline; }
 .jogo-acoes { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
 @keyframes jogo-chega { from { transform: scale(.6); opacity: 0; } }
 @keyframes jogo-vida { to { transform: scaleX(0); } }
-@media (max-width: 560px) { .jogo { height: 500px; box-shadow: 5px 5px 0 var(--cyan); } .jogo-msg { font-size: .85rem; } }
+@media (max-width: 560px) { .jogo { height: 500px; box-shadow: 5px 5px 0 var(--cyan); } .jogo-msg { font-size: .85rem; } .jogo-tela { gap: 10px; padding: 16px 12px; } .jogo-acoes { gap: 6px; } .jogo-acoes .botao-secundario { min-height: 38px; padding: 6px 10px; font-size: .78rem; } }
 @media (prefers-reduced-motion: reduce) { .jogo-msg { animation: none; transition: none; } }
 
 /* Modo madrugada (0h às 5h): vinheta escura parada e uma luz que segue o mouse (só transform) */
