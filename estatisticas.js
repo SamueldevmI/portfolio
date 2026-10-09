@@ -13,7 +13,7 @@
    Visitas no localhost e links com &teste=1 (o "Testar" da prospeccao.html) não contam. */
 window.ESTATISTICAS = (function () {
     "use strict";
-    const CODIGO = ""; // ex.: "samueldevmi"
+    const CODIGO = "samueldevmi";
 
     const teste = /(^|[?&])teste=1(&|$)/.test(location.search);
     const local = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname) || location.protocol === "file:";
