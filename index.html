@@ -78,7 +78,7 @@
             document.documentElement.dataset.periodo = hora >= 5 && hora < 12 ? "manha" : hora >= 12 && hora < 18 ? "tarde" : "noite";
             var barra = { azul: "#0e1422", cerrado: "#1e1510", neon: "#0d0b1e", gibi85: "#1b1815" }[tema];
             if (barra) document.querySelector('meta[name="theme-color"]').content = barra;
-            document.write('<link rel="stylesheet" id="folhaTema" href="' + (tema === "vermelho" ? "style.css" : "style-" + tema + ".css") + '?v=20261009ideias2">');
+            document.write('<link rel="stylesheet" id="folhaTema" href="' + (tema === "vermelho" ? "style.css" : "style-" + tema + ".css") + '?v=20261009leitor">');
         })();
         /* Idioma: detectado cedo (antes do resto da página rodar) só pra avisar efeitos como a
            digitação do texto do hero, que senão sobrescreveriam a tradução feita pelo idioma.js. */
@@ -92,7 +92,7 @@
             document.documentElement.dataset.idioma = idioma;
         })();
     </script>
-    <noscript><link rel="stylesheet" href="style.css?v=20261009ideias2"></noscript>
+    <noscript><link rel="stylesheet" href="style.css?v=20261009leitor"></noscript>
     <title id="tituloPagina">Samuel Mickael | Desenvolvedor Web &amp; Mobile</title>
     <script type="application/ld+json">
     {
@@ -950,21 +950,21 @@
     </div>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-    <script src="estatisticas.js?v=20261009ideias2" defer></script>
+    <script src="estatisticas.js?v=20261009leitor" defer></script>
     <script src="servicos.js?v=20261002" defer></script>
-    <script src="previa-celular.js?v=20261009ideias2" defer></script>
-    <script src="filme-celular.js?v=20261009ideias2" defer></script>
+    <script src="previa-celular.js?v=20261009leitor" defer></script>
+    <script src="filme-celular.js?v=20261009leitor" defer></script>
     <script src="depoimentos.js?v=20261007" defer></script>
     <script src="producao.js?v=20261009" defer></script>
-    <script src="script.js?v=20261009ideias2" defer></script>
-    <script src="antes-depois.js?v=20261009ideias2" defer></script>
+    <script src="script.js?v=20261009leitor" defer></script>
+    <script src="antes-depois.js?v=20261009leitor" defer></script>
     <!-- espanhol sob demanda: o botão ES é leve e o idioma.js só baixa quando alguém pede (os scripts acima se redesenham no "idiomaMudou") -->
-    <script src="idioma-leve.js?v=20261009ideias2" defer></script>
+    <script src="idioma-leve.js?v=20261009leitor" defer></script>
 <script>
     /* Scripts que a página não precisa pra aparecer: o mobile.js só baixa em tela de toque (no computador
        ele não faz nada) e a música só depois que a página terminou de carregar. */
     (function () {
-        var versao = "?v=20261009ideias2";
+        var versao = "?v=20261009leitor";
         function carregar(arquivo) { var s = document.createElement("script"); s.src = arquivo + versao; s.async = false; document.body.appendChild(s); }
         var toque = matchMedia("(pointer: coarse)").matches;
         // o pedido de "instalar app" pode chegar antes do mobile.js: fica guardado pra ele usar
