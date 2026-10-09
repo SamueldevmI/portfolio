@@ -2164,13 +2164,16 @@ ${celular(ramo, marca)}
             <div class="vitrine-ramos" role="group"></div>
             <div class="vitrine-palco" role="button" tabindex="0"></div>
             <p class="vitrine-legenda">${esc(tr(LEGENDA))}</p>
-            <label class="vitrine-nome"><span aria-hidden="true">✏️</span><input type="text" maxlength="40" autocomplete="organization" enterkeyhint="done"></label>`;
+            <label class="vitrine-nome"><span aria-hidden="true">✏️</span><input type="text" maxlength="40" autocomplete="organization" enterkeyhint="done"><button type="button" class="vitrine-mic" hidden>🎙️</button></label>
+            <button type="button" class="vitrine-capa" data-capa-gibi>📰 <span></span></button>`;
         function textosFixos() {
             const grupo = caixa.querySelector(".vitrine-ramos"), entrada = caixa.querySelector(".vitrine-nome input");
             grupo.setAttribute("aria-label", tr("Ver exemplo de outro ramo"));
             caixa.querySelector(".vitrine-palco").setAttribute("aria-label", tr("Abrir a prévia do site deste exemplo"));
             entrada.placeholder = tr("Digite o nome do seu negócio");
             entrada.setAttribute("aria-label", tr("Nome do seu negócio, pra ver no celular"));
+            caixa.querySelector(".vitrine-mic").setAttribute("aria-label", tr("Falar o nome do negócio"));
+            caixa.querySelector(".vitrine-capa span").textContent = tr("Gerar a capa de gibi do seu negócio");
             if (!grupo.children.length) grupo.innerHTML = ordem.map((k) => `<button type="button" data-ramo="${esc(k)}"></button>`).join("");
             [...grupo.children].forEach((b) => { b.textContent = tr(RAMOS[b.dataset.ramo].rotulo); });
         }
@@ -2180,6 +2183,34 @@ ${celular(ramo, marca)}
         const palco = caixa.querySelector(".vitrine-palco");
         const legenda = caixa.querySelector(".vitrine-legenda");
         const campoNome = caixa.querySelector(".vitrine-nome input");
+        // a capa de gibi é desenhada pelo brincadeiras.js (carrega logo depois da página): se tocar antes, avisa
+        caixa.querySelector(".vitrine-capa").addEventListener("click", () => { if (!window.gerarCapaGibi) mostrarToast(window.traduzir ? window.traduzir("Um instantinho… toca de novo em 1 segundo") : "Um instantinho… toca de novo em 1 segundo"); });
+        // 🎙️ fala o nome do negócio (onde o navegador entende voz): o texto vira o nome no celular
+        (function falarNome() {
+            const Reconhecer = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const mic = caixa.querySelector(".vitrine-mic");
+            if (!Reconhecer || !mic) return;
+            mic.hidden = false;
+            let ouvindo = null;
+            mic.addEventListener("click", (e) => {
+                e.preventDefault();
+                if (ouvindo) { ouvindo.stop(); return; }
+                const r = new Reconhecer();
+                r.lang = document.documentElement.lang === "es" ? "es-ES" : "pt-BR";
+                r.interimResults = false; r.maxAlternatives = 1;
+                r.onresult = (ev) => {
+                    const texto = (ev.results[0][0].transcript || "").trim().replace(/[.!?]+$/, "").slice(0, 40);
+                    if (!texto) return;
+                    campoNome.value = texto.replace(/(^|\s)(\p{L})/gu, (m, a, b) => a + b.toUpperCase());
+                    campoNome.dispatchEvent(new Event("input", { bubbles: true }));
+                    window.ESTATISTICAS?.contar("/evento/falou-nome", "falou o nome do negócio", true);
+                };
+                r.onerror = () => mostrarToast(window.traduzir ? window.traduzir("Não deu pra ouvir. Tenta de novo ou digita 🙂") : "Não deu pra ouvir. Tenta de novo ou digita 🙂");
+                r.onend = () => { ouvindo = null; mic.classList.remove("ouvindo"); };
+                ouvindo = r; mic.classList.add("ouvindo");
+                try { r.start(); } catch (erro) { ouvindo = null; mic.classList.remove("ouvindo"); }
+            });
+        })();
         const botoes = [...caixa.querySelectorAll(".vitrine-ramos button")];
         campoNome.value = ler("portfolio-nome-negocio").trim().slice(0, 40);
         const nomeAtual = () => campoNome.value.trim() || RAMOS[ordem[i]].exemplo;

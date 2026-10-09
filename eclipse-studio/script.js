@@ -28,7 +28,13 @@ const LOJA = {
     caixa: { preco: 9900, pecas: 3 },
     /* coleção de arcanos: uma carta nova por dia de visita; completou as 4, ganha o código. Prêmio provisório */
     colecao: { codigo: "COVEN4", premio: "a Elizabeth manda um mimo surpresa junto com o pedido" },
+    /* Drop com data (ex.: o de Halloween): DESLIGADO enquanto data estiver vazia. A Elizabeth escolhe o dia.
+       Com data: até lá a loja mostra a contagem e esconde as peças do drop (drop: true na peça, ou a coluna
+       "drop" da planilha); na hora marcada elas aparecem como novidade. Ex.: data: "2026-10-31T19:00" */
+    drop: { nome: "Drop de Halloween", emoji: "🎃", data: "" },
 };
+const DROP_DATA = LOJA.drop && LOJA.drop.data ? new Date(LOJA.drop.data) : null;
+const dropFechado = () => Boolean(DROP_DATA && Date.now() < DROP_DATA.getTime());
 
 /* "Quem já é da coven": prints e elogios de clientes de verdade. Enquanto estiver vazio, a seção não aparece.
    Ex.: { texto: "amei o espartilho, veio cheiroso e embalado com carinho", nome: "Ana", insta: "anaalt", foto: "fotos/coven-ana.jpg" } */
@@ -496,11 +502,15 @@ const maxDe = (p) => (p && p.unica ? 1 : MAX_POR_ITEM);
 const fotosDe = (p) => p.fotos || (p.foto ? [p.foto] : []);
 
 /* peça vendida: em vez de botão morto, um pedido pra Elizabeth avisar se chegar algo parecido */
-const avisaParecida = (p) => `<a class="botao botao-cheio botao-avisa" href="${linkWhats(`Oi! Vi que ${p.nome} (${codigo(p.id)}) já tem dona 🕯 Me avisa se chegar algo parecido?`)}" target="_blank" rel="noopener noreferrer">${t("Me avisa se chegar parecida")}</a>`;
+const avisaParecida = (p) => p.esgotada && !p.vendida
+    ? `<a class="botao botao-cheio botao-avisa" href="${linkWhats(`Oi! A peça ${p.nome} (${codigo(p.id)}) esgotou 🖤 Me avisa quando voltar?`)}" target="_blank" rel="noopener noreferrer">${t("Me avisa quando voltar")}</a>`
+    : `<a class="botao botao-cheio botao-avisa" href="${linkWhats(`Oi! Vi que ${p.nome} (${codigo(p.id)}) já tem dona 🕯 Me avisa se chegar algo parecido?`)}" target="_blank" rel="noopener noreferrer">${t("Me avisa se chegar parecida")}</a>`;
+/* fora de estoque: peça única vendida ("já tem dona") ou peça que esgotou e pode voltar ("esgotada") */
+const fora = (p) => Boolean(p.vendida || p.esgotada);
 
 /* peça única que já foi vendida não pode ir pra sacola; caixa e drop secreto ficam fora da vitrine */
-const disponivel = (p) => !p.vendida;
-const naVitrine = (p) => !p.secreto && !p.oculto;
+const disponivel = (p) => !fora(p);
+const naVitrine = (p) => !p.secreto && !p.oculto && !(p.drop && dropFechado());
 
 const itemValido = (i) => {
     const p = i && produto(i.id);
@@ -564,12 +574,12 @@ const romano = (n) => [[10, "X"], [9, "IX"], [5, "V"], [4, "IV"], [1, "I"]].redu
 
 function cardHtml(p, indice) {
     const numero = romano(PRODUTOS.indexOf(p) + 1);
-    return `<li class="card${p.vendida ? " vendida" : ""}" data-id="${p.id}" style="--i:${indice}">
+    return `<li class="card${fora(p) ? " vendida" : ""}" data-id="${p.id}" style="--i:${indice}">
         <span class="card-num" aria-hidden="true">${numero}</span>
-        <button class="card-imagem tom-${p.tom}${fotosDe(p).length > 1 ? " duas-fotos" : ""}" type="button" data-abrir="${p.id}" aria-label="${t("Ver detalhes de")} ${esc(t(p.nome))}${p.novo ? ", " + t("peça nova") : ""}${p.unica ? ", " + t("peça única") : ""}${p.vendida ? ", " + t("já vendida") : ""}">
+        <button class="card-imagem tom-${p.tom}${fotosDe(p).length > 1 ? " duas-fotos" : ""}" type="button" data-abrir="${p.id}" aria-label="${t("Ver detalhes de")} ${esc(t(p.nome))}${p.novo ? ", " + t("peça nova") : ""}${p.unica ? ", " + t("peça única") : ""}${p.vendida ? ", " + t("já vendida") : p.esgotada ? ", " + t("esgotada") : ""}">
             ${arte(p)}
-            ${fotosDe(p).length > 1 && !p.vendida ? `<img class="foto foto-2" src="${esc(fotosDe(p)[1])}" alt="" width="400" height="400" loading="lazy" decoding="async">` : ""}
-            ${p.vendida ? `<span class="veu" aria-hidden="true"><b>${t("já tem dona")}</b><small>🕯</small></span>` : p.novo ? `<span class="selo-novo">${t("Novidade")}</span>` : ""}
+            ${fotosDe(p).length > 1 && !fora(p) ? `<img class="foto foto-2" src="${esc(fotosDe(p)[1])}" alt="" width="400" height="400" loading="lazy" decoding="async">` : ""}
+            ${fora(p) ? `<span class="veu" aria-hidden="true"><b>${p.vendida ? t("já tem dona") : t("esgotada")}</b><small>${p.vendida ? "🕯" : "🖤"}</small></span>` : p.novo ? `<span class="selo-novo">${t("Novidade")}</span>` : ""}
         </button>
         ${favBotao(p)}
         <div class="card-corpo">
@@ -578,8 +588,8 @@ function cardHtml(p, indice) {
             <p class="card-resumo">${esc(t(p.resumo))}</p>
             ${p.unica ? `<p class="selo-unica">🕯 ${t("Peça única")}<span class="selo-extra"> · ${t("só existe uma")}</span></p>` : ""}
             <p class="card-preco">${precoTexto(p)}</p>
-            ${p.vendida ? "" : tamanhosHtml(p, "tam")}
-            ${p.vendida ? avisaParecida(p) : `<button class="botao botao-cheio" type="button" data-add="${p.id}">${t("Pôr na sacola")}</button>`}
+            ${fora(p) ? "" : tamanhosHtml(p, "tam")}
+            ${fora(p) ? avisaParecida(p) : `<button class="botao botao-cheio" type="button" data-add="${p.id}">${t("Pôr na sacola")}</button>`}
         </div>
     </li>`;
 }
@@ -720,11 +730,11 @@ function abrirProduto(id) {
             <p class="dp-desc">${esc(p.desc)}</p>
             <ul class="dp-itens">${p.itens.map((item) => `<li>${esc(item)}</li>`).join("")}</ul>
             ${p.unica ? `<p class="selo-unica">🕯 ${t("Peça única")} · ${p.vendida ? t("essa já encontrou a dona dela") : t("só existe uma")}</p>` : ""}
-            ${p.vendida ? "" : tamanhosHtml(p, "dlg")}
-            ${p.vendida ? avisaParecida(p) : `<button class="botao botao-cheio" type="button" data-add="${p.id}">${t("Pôr na sacola")}</button>`}
+            ${fora(p) ? "" : tamanhosHtml(p, "dlg")}
+            ${fora(p) ? avisaParecida(p) : `<button class="botao botao-cheio" type="button" data-add="${p.id}">${t("Pôr na sacola")}</button>`}
             <div class="dp-extras">
                 ${favBotao(p, "fav-texto")}
-                ${p.vendida ? "" : `<a class="link-fraco" href="${linkWhats(`${t("Oi! Quais são as medidas da peça")} ${t(p.nome)} (${codigo(p.id)})? 🖤`)}" target="_blank" rel="noopener noreferrer">${t("Pedir as medidas")}</a>`}
+                ${fora(p) ? "" : `<a class="link-fraco" href="${linkWhats(`${t("Oi! Quais são as medidas da peça")} ${t(p.nome)} (${codigo(p.id)})? 🖤`)}" target="_blank" rel="noopener noreferrer">${t("Pedir as medidas")}</a>`}
                 <button class="link-fraco" type="button" data-compartilhar="${p.id}">${t("Compartilhar")}</button>
             </div>
             ${combinaHtml(p)}
@@ -834,7 +844,7 @@ const rotuloTam = (i) => (i.tam ? `${t(produto(i.id).rotulo || "Tamanho")} ${t(i
 
 /* De onde veio quem compra: links com ?de=instagram (bio), ?de=qr (cartão de visita), ?de=status… guardam a
    origem por 30 dias e ela vai no fim do pedido. Assim a Elizabeth sabe o que está trazendo venda. */
-const ORIGENS_LOJA = { instagram: "Instagram", qr: "QR do cartão de visita", status: "status do WhatsApp", tiktok: "TikTok", amiga: "indicação de amiga" };
+const ORIGENS_LOJA = { instagram: "Instagram", qr: "QR do cartão de visita", status: "status do WhatsApp", tiktok: "TikTok", amiga: "indicação de amiga", etiqueta: "etiqueta com QR (feira/arara)", google: "Google Shopping" };
 const CHAVE_ORIGEM = "es-origem";
 {
     const de = (new URLSearchParams(location.search).get("de") || "").toLowerCase();

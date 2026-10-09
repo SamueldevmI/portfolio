@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#150c1f">
+<title>Falta pouco pra loja abrir — Eclipse Studio</title>
+<meta property="og:type" content="website">
+<meta property="og:title" content="Falta pouco pra loja abrir 🖤">
+<meta property="og:description" content="O que ainda falta pra Eclipse Studio abrir as portas, um passo de cada vez.">
+<meta property="og:url" content="https://samueldevmi.github.io/portfolio/eclipse-studio/lancamento/">
+<meta property="og:image" content="https://samueldevmi.github.io/portfolio/eclipse-studio/compartilhar.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23150c1f'/%3E%3Ccircle cx='16' cy='16' r='10' fill='%23cdb4ff'/%3E%3Ccircle cx='20' cy='13' r='9' fill='%23150c1f'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,700;1,700&family=Quicksand:wght@500;600;700&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#150c1f; --papel:#231637; --papel-2:#1e1230; --texto:#f6eeff; --mudo:#cfc0e6; --linha:#3a2c52; --linha-forte:#5a4680;
+  --lilas:#cdb4ff; --rosa:#ffb8d9; --menta:#aef0d6; --ouro:#e9c46a; --tinta:#241a33;
+  --fonte:"Quicksand", system-ui, -apple-system, "Segoe UI", sans-serif; --serifa:"Cormorant Garamond", Georgia, serif; --gotica:"UnifrakturMaguntia", Georgia, serif;
+  accent-color:var(--rosa);
+}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0; background:radial-gradient(46% 34% at 8% 0%, rgba(160,110,230,.24), transparent 70%), radial-gradient(40% 30% at 96% 20%, rgba(255,184,217,.12), transparent 70%), var(--bg); color:var(--texto); font:500 1rem/1.6 var(--fonte)}
+h1,h2,p{margin:0}
+a{color:var(--rosa)}
+.pagina{max-width:720px; margin:0 auto; padding:40px 16px 80px}
+.marca{display:flex; align-items:center; gap:10px; font:400 1.6rem/1 var(--gotica)}
+.marca svg{width:30px; height:30px}
+h1{margin-top:22px; font:700 clamp(2.2rem, 8vw, 3.2rem)/1.05 var(--serifa)}
+h1 em{background:linear-gradient(90deg, var(--lilas), var(--rosa) 60%, var(--menta)); -webkit-background-clip:text; background-clip:text; color:transparent}
+.lead{margin-top:14px; color:var(--mudo)}
+.progresso{position:sticky; top:0; z-index:5; margin:24px -16px 0; padding:12px 16px; background:rgba(21,12,31,.94); border-bottom:1px solid var(--linha)}
+.progresso p{font-size:.9rem; color:var(--mudo)}
+.progresso strong{color:var(--rosa)}
+.trilho{height:8px; margin-top:8px; border-radius:99px; background:var(--linha); overflow:hidden}
+.trilho span{display:block; height:100%; width:calc(var(--p, 0) * 100%); background:linear-gradient(90deg, var(--lilas), var(--rosa), var(--ouro)); transition:width .5s}
+ol.itens{margin:22px 0 0; padding:0; list-style:none; display:grid; gap:12px}
+.item{padding:16px 18px; border:1px solid var(--linha); border-radius:16px; background:var(--papel-2)}
+.item h2{display:flex; align-items:center; gap:10px; font:700 1.25rem/1.2 var(--serifa)}
+.item h2 .marcador{flex:none; display:grid; place-items:center; width:28px; height:28px; border:2px solid var(--linha-forte); border-radius:50%; font:700 .85rem var(--fonte)}
+.item p{margin-top:6px; color:var(--mudo); font-size:.94rem}
+.item .acoes{display:flex; flex-wrap:wrap; gap:8px; margin-top:12px}
+.item.feito{border-color:rgba(174,240,214,.5); background:rgba(174,240,214,.06)}
+.item.feito .marcador{border-color:var(--menta); background:var(--menta); color:var(--tinta)}
+.item.mandou .marcador{border-color:var(--ouro); color:var(--ouro)}
+.estado{display:inline-block; margin-top:8px; padding:2px 10px; border-radius:999px; font-size:.78rem; font-weight:700}
+.feito .estado{background:rgba(174,240,214,.15); color:var(--menta)}
+.mandou .estado{background:rgba(233,196,106,.15); color:var(--ouro)}
+.botao{display:inline-flex; align-items:center; min-height:40px; padding:0 16px; border:2px solid var(--tinta); border-radius:999px; background:linear-gradient(135deg, var(--rosa), var(--lilas)); color:var(--tinta); font:700 .86rem var(--fonte); text-decoration:none; cursor:pointer}
+.botao--claro{border-color:var(--lilas); background:transparent; color:var(--lilas)}
+.fim{margin-top:28px; padding:18px; border:1px dashed var(--linha-forte); border-radius:16px; color:var(--mudo); font-size:.9rem; text-align:center}
+</style>
+</head>
+<body>
+<main class="pagina">
+    <p class="marca"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="10" fill="#cdb4ff"/><circle cx="20" cy="13" r="9" fill="#150c1f"/></svg>Eclipse Studio</p>
+    <h1>Falta pouco pra loja <em>abrir as portas</em></h1>
+    <p class="lead">Elizabeth, a loja já está pronta por dentro. O que falta é o que só você tem: as peças, os preços e algumas decisões. Faça um de cada vez, no seu tempo. Quando terminar um, toque em <strong>“Mandei pro Samuel”</strong> que já abre o WhatsApp.</p>
+
+    <div class="progresso" aria-live="polite">
+        <p id="resumo"></p>
+        <div class="trilho" aria-hidden="true"><span id="barra"></span></div>
+    </div>
+
+    <ol class="itens" id="itens"></ol>
+
+    <p class="fim">Dúvida em qualquer passo? <a id="duvida" href="#" target="_blank" rel="noopener noreferrer">Me chama no WhatsApp</a>. 🖤 Samuel</p>
+</main>
+<script>
+(function () {
+    "use strict";
+    const SAMUEL = "5567996034205";
+    /* O que já está confirmado (o Samuel atualiza aqui quando recebe e coloca no site).
+       true = feito de verdade. O "Mandei" que a Elizabeth toca fica só no aparelho dela, até virar true aqui. */
+    const FEITO = {
+        ficha: true,
+        fotos: false,
+        precos: false,
+        entregas: false,
+        drop: false,
+        premios: false,
+        transmissao: false,
+        contador: false,
+        google: false,
+    };
+    const ITENS = [
+        { id: "ficha", titulo: "Responder a ficha da loja", texto: "Nome, WhatsApp, Instagram, como você entrega e o jeito da marca.", links: [["Abrir a ficha", "../ficha/"]] },
+        { id: "fotos", titulo: "Fotografar as peças", texto: "Uma foto de frente e, se der, uma vestida. Luz de janela, fundo liso. Dá pra mandar uma por uma pelo cadastro rápido.", links: [["Como fotografar", "../fotos/"], ["Cadastro rápido de peça", "../cadastro/"]] },
+        { id: "precos", titulo: "Nomes, preços e tamanhos", texto: "Pelo cadastro rápido (peça por peça) ou pela planilha do Google, se preferir tudo de uma vez.", links: [["Cadastro rápido", "../cadastro/"], ["Usar a planilha", "../planilha/"]] },
+        { id: "entregas", titulo: "Taxa de entrega por região", texto: "Hoje a loja mostra valores de exemplo por bairro. Me diga quanto você cobra em cada região (ou se é só retirada) e a partir de quanto a entrega sai de graça." },
+        { id: "drop", titulo: "Escolher a data do Drop de Halloween", texto: "Um primeiro drop com 5 a 10 peças, com contagem regressiva na loja. É só me dizer o dia e quais peças entram." },
+        { id: "premios", titulo: "Decidir os mimos", texto: "Quem acha o gato preto e quem completa os arcanos ganha um mimo. E a caixa misteriosa precisa do preço final. O que você quer dar e cobrar?" },
+        { id: "transmissao", titulo: "Criar a lista de transmissão do drop", texto: "No WhatsApp Business: Nova lista de transmissão. Toda cliente que tocar em “Me avisa no próximo drop” entra nela." },
+        { id: "contador", titulo: "Contador de visitas (grátis)", texto: "Uma conta no GoatCounter pra ver quantas pessoas visitam a loja e de onde vêm os pedidos. Leva 5 minutos e eu te ajudo." },
+        { id: "google", titulo: "Perfil da loja no Google", texto: "Pra aparecer quando alguém procurar “loja alternativa Campo Grande” no Google e no Maps. Eu te mando os textos prontos pra colar." },
+    ];
+    const CHAVE = "es-lancamento-mandou";
+    let mandou = {};
+    try { mandou = JSON.parse(localStorage.getItem(CHAVE) || "{}"); } catch (e) { /* sem armazenamento */ }
+    const esc = (t) => String(t).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    const zap = (texto) => `https://wa.me/${SAMUEL}?text=${encodeURIComponent(texto)}`;
+    document.getElementById("duvida").href = zap("Oi, Samuel! Tô no checklist da loja e fiquei com uma dúvida: ");
+
+    function desenhar() {
+        const feitos = ITENS.filter((i) => FEITO[i.id]).length, enviados = ITENS.filter((i) => !FEITO[i.id] && mandou[i.id]).length;
+        document.getElementById("resumo").innerHTML = feitos === ITENS.length
+            ? "<strong>Tudo pronto!</strong> A loja pode abrir 🌕"
+            : `<strong>${feitos} de ${ITENS.length}</strong> prontos${enviados ? ` · ${enviados} já ${enviados === 1 ? "mandado" : "mandados"}, esperando eu colocar no site` : ""}`;
+        document.getElementById("barra").style.setProperty("--p", (feitos + enviados * 0.5) / ITENS.length);
+        document.getElementById("itens").innerHTML = ITENS.map((i, n) => {
+            const estado = FEITO[i.id] ? "feito" : mandou[i.id] ? "mandou" : "";
+            return `<li class="item ${estado}">
+                <h2><span class="marcador" aria-hidden="true">${FEITO[i.id] ? "✓" : n + 1}</span>${esc(i.titulo)}</h2>
+                <p>${esc(i.texto)}</p>
+                ${estado === "feito" ? '<span class="estado">Pronto ✓</span>' : estado === "mandou" ? '<span class="estado">Mandado, esperando o Samuel</span>' : ""}
+                ${FEITO[i.id] ? "" : `<div class="acoes">${(i.links || []).map(([r, h]) => `<a class="botao botao--claro" href="${h}">${esc(r)}</a>`).join("")}<a class="botao" data-mandei="${i.id}" href="${zap(`Oi, Samuel! Fiz este passo da loja: ${i.titulo}. `)}" target="_blank" rel="noopener noreferrer">Mandei pro Samuel</a></div>`}
+            </li>`;
+        }).join("");
+    }
+    document.getElementById("itens").addEventListener("click", (e) => {
+        const b = e.target.closest("[data-mandei]");
+        if (!b) return;
+        mandou[b.dataset.mandei] = true;
+        try { localStorage.setItem(CHAVE, JSON.stringify(mandou)); } catch (erro) { /* sem armazenamento */ }
+        setTimeout(desenhar, 300);
+    });
+    desenhar();
+})();
+</script>
+</body>
+</html>

@@ -97,3 +97,50 @@ const HALLOWEEN = (() => {
     const iphone = /iphone|ipad|ipod/i.test(navigator.userAgent) && /safari/i.test(navigator.userAgent) && !/crios|fxios/i.test(navigator.userAgent);
     if (iphone) document.getElementById("instalarIphone").hidden = false;
 })();
+
+/* ========== Drop com data (LOJA.drop no script.js) ==========
+   Sem data: não aparece nada. Com data: faixa com contagem regressiva e "me avisa" até a hora marcada
+   (as peças do drop ficam escondidas, ver naVitrine); depois, por 7 dias, "o drop chegou!" e elas viram novidade. */
+(function dropComData() {
+    if (!DROP_DATA || Number.isNaN(DROP_DATA.getTime())) return;
+    const nome = `${LOJA.drop.emoji || "✦"} ${t(LOJA.drop.nome)}`;
+    const SETE_DIAS = 7 * 864e5;
+    function marcarNovas() {
+        if (dropFechado()) return;
+        let mudou = false;
+        PRODUTOS.forEach((p) => { if (p.drop && !p.novo) { p.novo = true; mudou = true; } });
+        if (mudou && typeof renderGrade === "function") { renderChips(); renderGrade(); }
+    }
+    marcarNovas();
+    document.addEventListener("catalogo:atualizado", marcarNovas);
+    if (!dropFechado() && Date.now() - DROP_DATA.getTime() > SETE_DIAS) return;
+
+    const faixa = document.createElement("p");
+    faixa.className = "aviso-drop";
+    faixa.setAttribute("role", "status");
+    const halloween = document.querySelector(".aviso-halloween");
+    if (halloween) halloween.after(faixa); else document.body.prepend(faixa);
+    function contagem() {
+        const ms = DROP_DATA.getTime() - Date.now();
+        const min = Math.max(0, Math.floor(ms / 6e4)), d = Math.floor(min / 1440), h = Math.floor(min / 60) % 24, m = min % 60;
+        return d ? `${d} ${d === 1 ? t("dia") : t("dias")} ${t("e")} ${h} h` : h ? `${h} h ${t("e")} ${m} min` : `${m} min`;
+    }
+    function desenhar() {
+        if (dropFechado()) {
+            faixa.innerHTML = `${nome} ${t("abre em")} <b>${contagem()}</b> · <a href="${linkWhats(`Oi! Quero ser avisada quando o ${LOJA.drop.nome} abrir 🖤`)}" target="_blank" rel="noopener noreferrer">${t("Me avisa")}</a>`;
+        } else {
+            faixa.innerHTML = `${nome}: ${t("chegou!")} <a href="#novidades" data-ver-drop>${t("Ver as peças")}</a>`;
+            marcarNovas();
+        }
+    }
+    faixa.addEventListener("click", (e) => {
+        if (!e.target.closest("[data-ver-drop]")) return;
+        e.preventDefault();
+        filtro.cat = "novidades";
+        renderChips(); renderGrade();
+        document.getElementById("colecao")?.scrollIntoView({ block: "start" });
+    });
+    desenhar();
+    setInterval(() => { if (!document.hidden) desenhar(); }, 30000);
+    document.addEventListener("idiomaMudou", desenhar);
+})();

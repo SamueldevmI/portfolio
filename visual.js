@@ -98,6 +98,11 @@
         acao.className = "projeto-acao";
         acao.setAttribute("aria-hidden", "true");
         visual.append(selo, brilho, acao);
+        // no celular: a explosão aparece enquanto o dedo está na imagem e some quando solta (ou começa a rolar)
+        let soltar = 0;
+        visual.addEventListener("pointerdown", (e) => { if (e.pointerType === "mouse") return; clearTimeout(soltar); visual.classList.add("dedo-em-cima"); }, { passive: true });
+        const tirar = () => { clearTimeout(soltar); soltar = setTimeout(() => visual.classList.remove("dedo-em-cima"), 200); };
+        ["pointerup", "pointercancel", "pointerleave"].forEach((ev) => visual.addEventListener(ev, tirar, { passive: true }));
     });
     // no celular (sem hover), o brilho passa uma vez quando a figurinha entra na tela
     if (!mouseFino && !semMovimento && "IntersectionObserver" in window) {
