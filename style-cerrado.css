@@ -3313,7 +3313,9 @@ mark.marca-texto.gibi-visivel::before { transform: scaleX(1); }
     opacity: 0; transform: scale(.55);
     transition: opacity .3s ease, transform .5s cubic-bezier(.2, 1.6, .4, 1);
 }
-@media (hover: hover) { .card-projeto:hover .projeto-acao { opacity: .85; transform: scale(1); } }
+/* só com o mouse em cima da imagem (saiu pra descrição, some) ou com o dedo encostado nela (visual.js) */
+@media (hover: hover) { .projeto-visual:hover .projeto-acao { opacity: .85; transform: scale(1); } }
+.projeto-visual.dedo-em-cima .projeto-acao { opacity: .85; transform: scale(1); }
 @media (prefers-reduced-motion: reduce) { .projeto-acao { display: none; } }
 
 
