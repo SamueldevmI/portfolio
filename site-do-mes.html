@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Todo mês eu escolho um negócio pra ganhar uma prévia completa do site. Conta em uma frase por que o seu merece.">
+    <title>Site do mês | Samuel Mickael</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+    <script>
+        /* Mesmo tema escolhido no portfólio (vermelho ou azul) */
+        (function () {
+            var azul = false;
+            try { azul = localStorage.getItem("portfolio-tema") === "azul"; } catch (e) { /* sem armazenamento */ }
+            document.documentElement.dataset.tema = (function(){try{var t=localStorage.getItem("portfolio-tema");return /^(azul|cerrado|neon|gibi85)$/.test(t)?t:"vermelho"}catch(e){return "vermelho"}})();
+            document.write('<link rel="stylesheet" href="' + ((function(){try{var t=localStorage.getItem("portfolio-tema");return /^(azul|cerrado|neon|gibi85)$/.test(t)?"style-"+t+".css":"style.css"}catch(e){return "style.css"}})()) + '">');
+        })();
+    </script>
+    <noscript><link rel="stylesheet" href="style.css"></noscript>
+    <style>
+        .sm { width: min(720px, calc(100% - 32px)); margin: 48px auto 80px; }
+        .sm .eyebrow::before { content: none; }
+        .sm h1 { margin: 6px 0 12px; font-size: clamp(2rem, 6vw, 3.1rem); line-height: 1.02; letter-spacing: -.03em; }
+        .sm h1 span { color: var(--cyan); }
+        .sm > p { color: var(--muted); }
+        .sm h2 { margin: 36px 0 12px; font-size: 1.25rem; }
+        .sm-premio { position: relative; margin-top: 24px; padding: 22px 24px; border: 3px solid #111; background: #ffe14d; color: #111; box-shadow: 8px 8px 0 var(--cyan); transform: rotate(-1deg); }
+        .sm-premio small { display: block; font: 700 .75rem "DM Mono", monospace; letter-spacing: .14em; }
+        .sm-premio b { display: block; margin-top: 6px; font-size: clamp(1.25rem, 4vw, 1.6rem); line-height: 1.2; }
+        .sm-passos { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; counter-reset: passo; }
+        .sm-passos li { position: relative; padding: 14px 16px 14px 62px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); counter-increment: passo; }
+        .sm-passos li::before { content: counter(passo); position: absolute; left: 14px; top: 50%; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--cyan); color: #fff; font-weight: 700; transform: translateY(-50%); }
+        .sm-passos small { display: block; margin-top: 2px; color: var(--muted); }
+        .sm-regras { margin: 0; padding-left: 20px; color: var(--muted); font-size: .92rem; }
+        .sm-regras li + li { margin-top: 4px; }
+        .sm-ganhadores { color: var(--muted); }
+        .sm-acoes { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+        .sm-mes { color: var(--acento-texto, var(--cyan)); }
+    </style>
+</head>
+<body>
+    <main class="sm">
+        <p class="eyebrow">Site do mês · <span class="sm-mes" id="smMes">este mês</span></p>
+        <h1>Todo mês, um negócio daqui ganha um <span>empurrão</span> 🚀</h1>
+        <p>Eu escolho um negócio pra ganhar o site de presente. É um concurso cultural: não tem sorteio nem compra, ganha a melhor resposta.</p>
+
+        <div class="sm-premio"><small>O PRÊMIO</small><b id="smPremio"></b></div>
+
+        <h2>Como participar</h2>
+        <ol class="sm-passos">
+            <li>Responde o story do “Site do mês”<small>ou me chama no WhatsApp pelo botão aqui embaixo</small></li>
+            <li>Conta em uma frase por que o seu negócio merece<small>pode ser engraçada, emocionante ou as duas 😅</small></li>
+            <li>No último dia do mês eu anuncio nos stories<small>e falo com quem ganhou pelo direct</small></li>
+        </ol>
+
+        <h2>Regras rapidinhas</h2>
+        <ul class="sm-regras">
+            <li>Vale pra negócio de verdade (pode ser pequeno, pode ser em casa, pode ser só no Instagram).</li>
+            <li>Uma participação por negócio por mês. Não ganhou? Pode tentar de novo no mês seguinte.</li>
+            <li>A escolha é pela resposta mais criativa e pela história do negócio.</li>
+            <li>O prêmio não é trocado por dinheiro.</li>
+        </ul>
+
+        <h2>Quem já ganhou</h2>
+        <p class="sm-ganhadores" id="smGanhadores">Ninguém ainda: o primeiro pode ser você 👀</p>
+
+        <div class="sm-acoes">
+            <a class="botao botao-principal" id="smWhats" href="#" target="_blank" rel="noopener noreferrer">Quero participar</a>
+            <a class="botao botao-secundario" href="./">Ver o portfólio</a>
+        </div>
+    </main>
+    <script src="estatisticas.js?v=20261009"></script>
+    <script>
+        (function () {
+            "use strict";
+            /* PRÊMIO: confirme antes de divulgar. */
+            const PREMIO = "Um site de apresentação completo, com a cara do seu negócio e botão pro WhatsApp, de presente";
+            /* GANHADORES: o mais recente primeiro. Ex.: { mes: "outubro de 2026", nome: "Pizzaria do João", link: "..." } */
+            const GANHADORES = [];
+            const mes = new Date().toLocaleDateString("pt-BR", { month: "long", year: "numeric" });
+            document.getElementById("smMes").textContent = mes;
+            document.getElementById("smPremio").textContent = PREMIO;
+            document.getElementById("smWhats").href = "https://wa.me/5567996034205?text=" + encodeURIComponent(`Oi, Samuel! Quero participar do Site do mês de ${mes} 🚀\n\nMeu negócio: \nPor que ele merece: `);
+            if (GANHADORES.length) {
+                const lista = document.createElement("ul");
+                GANHADORES.forEach((g) => {
+                    const li = document.createElement("li");
+                    const nome = document.createElement(g.link ? "a" : "b");
+                    nome.textContent = g.nome;
+                    if (g.link) { nome.href = g.link; nome.target = "_blank"; nome.rel = "noopener"; }
+                    li.append(`${g.mes}: `, nome);
+                    lista.appendChild(li);
+                });
+                document.getElementById("smGanhadores").replaceWith(lista);
+            }
+            window.ESTATISTICAS?.contar("/site-do-mes", "Site do mês", true);
+            document.getElementById("smWhats").addEventListener("click", () => window.ESTATISTICAS?.contar("/evento/site-do-mes-participar", "quer participar do site do mês", true));
+        })();
+    </script>
+</body>
+</html>
