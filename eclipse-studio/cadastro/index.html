@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#150c1f">
+<title>Cadastro rápido de peça — Eclipse Studio</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23150c1f'/%3E%3Ccircle cx='16' cy='16' r='10' fill='%23cdb4ff'/%3E%3Ccircle cx='20' cy='13' r='9' fill='%23150c1f'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,700;1,700&family=Quicksand:wght@500;600;700&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#150c1f; --papel:#231637; --papel-2:#1e1230; --texto:#f6eeff; --mudo:#cfc0e6; --linha:#3a2c52; --linha-forte:#5a4680;
+  --lilas:#cdb4ff; --rosa:#ffb8d9; --menta:#aef0d6; --ouro:#e9c46a; --tinta:#241a33;
+  --fonte:"Quicksand", system-ui, -apple-system, "Segoe UI", sans-serif; --serifa:"Cormorant Garamond", Georgia, serif; --gotica:"UnifrakturMaguntia", Georgia, serif;
+  accent-color:var(--rosa);
+}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0; background:radial-gradient(46% 34% at 8% 0%, rgba(160,110,230,.24), transparent 70%), var(--bg); color:var(--texto); font:500 1rem/1.55 var(--fonte)}
+h1,p{margin:0}
+a{color:var(--rosa)}
+.pagina{max-width:640px; margin:0 auto; padding:36px 16px 90px}
+.marca{display:flex; align-items:center; gap:10px; font:400 1.5rem/1 var(--gotica)}
+.marca svg{width:28px; height:28px}
+h1{margin-top:18px; font:700 clamp(2rem, 8vw, 2.8rem)/1.05 var(--serifa)}
+.lead{margin-top:10px; color:var(--mudo); font-size:.95rem}
+form{display:grid; gap:16px; margin-top:22px}
+label, fieldset{display:grid; gap:6px; font-weight:700; font-size:.92rem}
+fieldset{margin:0; padding:0; border:0}
+legend{padding:0; margin-bottom:6px}
+small.ajuda{font-weight:500; color:var(--mudo)}
+input[type=text], input[type=number], input[inputmode], select, textarea{width:100%; min-height:46px; padding:10px 12px; border:1px solid var(--linha-forte); border-radius:12px; background:var(--papel-2); color:var(--texto); font:500 1rem var(--fonte)}
+textarea{min-height:90px; resize:vertical}
+.opcoes{display:flex; flex-wrap:wrap; gap:8px}
+.opcoes label{display:inline-flex; align-items:center; gap:6px; padding:8px 12px; border:1px solid var(--linha-forte); border-radius:999px; font-weight:600; cursor:pointer}
+.opcoes input:checked + span{color:var(--rosa)}
+.fotos{display:grid; grid-template-columns:repeat(3, 1fr); gap:8px}
+.fotos figure{position:relative; margin:0; aspect-ratio:1; border-radius:12px; overflow:hidden; border:1px solid var(--linha-forte)}
+.fotos img{width:100%; height:100%; object-fit:cover}
+.fotos button{position:absolute; top:4px; right:4px; width:28px; height:28px; border:0; border-radius:50%; background:rgba(21,12,31,.85); color:var(--texto); cursor:pointer}
+.botao{display:inline-flex; align-items:center; justify-content:center; min-height:50px; padding:0 20px; border:2px solid var(--tinta); border-radius:999px; background:linear-gradient(135deg, var(--rosa), var(--lilas)); color:var(--tinta); font:700 1rem var(--fonte); text-decoration:none; cursor:pointer}
+.botao--claro{border-color:var(--lilas); background:transparent; color:var(--lilas)}
+.foto-botao{display:flex; align-items:center; justify-content:center; gap:8px; min-height:56px; border:2px dashed var(--linha-forte); border-radius:14px; color:var(--lilas); font-weight:700; cursor:pointer}
+.foto-botao input{position:absolute; width:1px; height:1px; opacity:0}
+.enviar{position:sticky; bottom:0; display:grid; gap:8px; margin:6px -16px 0; padding:12px 16px; background:rgba(21,12,31,.95); border-top:1px solid var(--linha)}
+.aviso{padding:10px 14px; border-radius:12px; background:rgba(174,240,214,.1); color:var(--menta); font-size:.9rem}
+.aviso[hidden]{display:none}
+.feitas{margin-top:28px; color:var(--mudo); font-size:.88rem}
+.feitas li{margin:2px 0}
+</style>
+</head>
+<body>
+<main class="pagina">
+    <p class="marca"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="10" fill="#cdb4ff"/><circle cx="20" cy="13" r="9" fill="#150c1f"/></svg>Eclipse Studio</p>
+    <h1>Cadastro rápido de peça</h1>
+    <p class="lead">Uma peça de cada vez: tire a foto, preencha o que souber e toque em enviar. Vai tudo pro WhatsApp do Samuel, já no formato da loja. <a href="../fotos/">Dicas de como fotografar</a>.</p>
+
+    <form id="form" autocomplete="off">
+        <div>
+            <label class="foto-botao" id="fotoBotao">📷 Tirar ou escolher foto<input type="file" id="foto" accept="image/*" multiple></label>
+            <div class="fotos" id="fotos" style="margin-top:8px"></div>
+            <small class="ajuda">Até 4 fotos. A primeira é a de frente.</small>
+        </div>
+        <label>Nome da peça<input type="text" id="nome" maxlength="60" placeholder="ex.: Saia de renda Midnight" required></label>
+        <label>Categoria<select id="categoria">
+            <option>Roupas</option><option>Joias e bijuterias</option><option>Bolsas</option><option>Maquiagem e perfumes</option><option>Outros</option>
+        </select></label>
+        <label>Preço (R$)<input inputmode="decimal" id="preco" placeholder="ex.: 129,90 · deixe vazio se for sob consulta"></label>
+        <fieldset><legend>Tamanhos</legend>
+            <div class="opcoes" id="tamanhos">
+                <label><input type="checkbox" value="Único" checked><span>Único</span></label>
+                <label><input type="checkbox" value="PP"><span>PP</span></label><label><input type="checkbox" value="P"><span>P</span></label>
+                <label><input type="checkbox" value="M"><span>M</span></label><label><input type="checkbox" value="G"><span>G</span></label>
+                <label><input type="checkbox" value="GG"><span>GG</span></label>
+            </div>
+        </fieldset>
+        <fieldset><legend>Vibe <small class="ajuda">(pode marcar mais de uma)</small></legend>
+            <div class="opcoes" id="vibes">
+                <label><input type="checkbox" value="Vitoriana"><span>Vitoriana</span></label>
+                <label><input type="checkbox" value="Trad goth"><span>Trad goth</span></label>
+                <label><input type="checkbox" value="Bruxinha"><span>Bruxinha</span></label>
+                <label><input type="checkbox" value="Pastel goth"><span>Pastel goth</span></label>
+            </div>
+        </fieldset>
+        <div class="opcoes">
+            <label><input type="checkbox" id="unica"><span>🕯 Peça única (brechó)</span></label>
+            <label><input type="checkbox" id="novo" checked><span>✨ Novidade</span></label>
+        </div>
+        <label>Resumo curto <small class="ajuda">(aparece embaixo do nome)</small><input type="text" id="resumo" maxlength="60" placeholder="ex.: Rodada · barra dupla de renda"></label>
+        <label>Descrição<textarea id="descricao" maxlength="500" placeholder="Como ela é, com o que combina, o tecido…"></textarea></label>
+        <label>Detalhes <small class="ajuda">(um por linha: "cós alto", "forro"…)</small><textarea id="detalhes" maxlength="300"></textarea></label>
+        <p class="aviso" id="aviso" role="status" hidden></p>
+        <div class="enviar">
+            <button type="submit" class="botao">Enviar pro Samuel no WhatsApp</button>
+            <button type="button" class="botao botao--claro" id="limpar">Próxima peça (limpar)</button>
+        </div>
+    </form>
+    <div class="feitas" id="feitas"></div>
+</main>
+<script>
+(function () {
+    "use strict";
+    const SAMUEL = "5567996034205";
+    const $ = (id) => document.getElementById(id);
+    const CHAVE = "es-cadastro-enviadas";
+    let fotos = []; // { blob, url }
+    const slug = (t) => String(t || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 30) || "peca";
+    const marcados = (id) => [...$(id).querySelectorAll("input:checked")].map((i) => i.value);
+    const csv = (v) => (/[",\n]/.test(v) ? `"${String(v).replace(/"/g, '""')}"` : v);
+
+    /* foto do celular: diminui pra 1200 px e vira JPEG (fica leve pro WhatsApp e pro site) */
+    function reduzir(arquivo) {
+        return new Promise((ok, falha) => {
+            const img = new Image();
+            img.onload = () => {
+                const escala = Math.min(1, 1200 / Math.max(img.naturalWidth, img.naturalHeight));
+                const c = document.createElement("canvas");
+                c.width = Math.round(img.naturalWidth * escala); c.height = Math.round(img.naturalHeight * escala);
+                c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+                URL.revokeObjectURL(img.src);
+                c.toBlob((b) => (b ? ok(b) : falha()), "image/jpeg", 0.85);
+            };
+            img.onerror = falha;
+            img.src = URL.createObjectURL(arquivo);
+        });
+    }
+    function desenharFotos() {
+        $("fotos").innerHTML = fotos.map((f, i) => `<figure><img src="${f.url}" alt="Foto ${i + 1}"><button type="button" data-tirar="${i}" aria-label="Tirar foto ${i + 1}">×</button></figure>`).join("");
+        $("fotoBotao").firstChild.textContent = fotos.length ? "📷 Mais uma foto" : "📷 Tirar ou escolher foto";
+    }
+    $("foto").addEventListener("change", async (e) => {
+        for (const arq of [...e.target.files].slice(0, 4 - fotos.length)) {
+            try { const blob = await reduzir(arq); fotos.push({ blob, url: URL.createObjectURL(blob) }); } catch (erro) { /* foto que não abriu: ignora */ }
+        }
+        e.target.value = "";
+        desenharFotos();
+    });
+    $("fotos").addEventListener("click", (e) => { const b = e.target.closest("[data-tirar]"); if (!b) return; URL.revokeObjectURL(fotos[b.dataset.tirar].url); fotos.splice(Number(b.dataset.tirar), 1); desenharFotos(); });
+    $("tamanhos").addEventListener("change", (e) => {
+        if (e.target.value === "Único" && e.target.checked) $("tamanhos").querySelectorAll("input:not([value='Único'])").forEach((i) => { i.checked = false; });
+        else if (e.target.checked) $("tamanhos").querySelector("[value='Único']").checked = false;
+    });
+
+    function montar() {
+        const nome = $("nome").value.trim(), id = slug(nome);
+        const tam = marcados("tamanhos").filter((t) => t !== "Único");
+        const preco = $("preco").value.trim().replace(/^R\$\s*/i, "");
+        const detalhes = $("detalhes").value.split("\n").map((x) => x.trim()).filter(Boolean);
+        const nomesFotos = fotos.map((_, i) => `fotos/${id}-${i + 1}.jpg`);
+        const linha = [id, nome, $("categoria").value, preco, nomesFotos.join("; "), $("resumo").value.trim(), $("descricao").value.trim(), detalhes.join("; "), marcados("vibes").join(", "), tam.join(", "), $("unica").checked ? "sim" : "", "", $("novo").checked ? "sim" : "", "", ""].map(csv).join(",");
+        const texto = [
+            "🖤 Peça nova pra loja",
+            `Nome: ${nome}`,
+            `Categoria: ${$("categoria").value}`,
+            `Preço: ${preco ? "R$ " + preco : "sob consulta"}`,
+            `Tamanhos: ${tam.length ? tam.join(", ") : "único"}`,
+            marcados("vibes").length ? `Vibe: ${marcados("vibes").join(", ")}` : "",
+            $("unica").checked ? "🕯 Peça única" : "",
+            $("resumo").value.trim() ? `Resumo: ${$("resumo").value.trim()}` : "",
+            $("descricao").value.trim() ? `Descrição: ${$("descricao").value.trim()}` : "",
+            detalhes.length ? `Detalhes: ${detalhes.join("; ")}` : "",
+            fotos.length ? `Fotos: ${fotos.length} (${nomesFotos.join(", ")})` : "Fotos: mando depois",
+            "§",
+            "Linha da planilha:",
+            linha,
+        ].filter(Boolean).join("\n").replace("§", "");
+        return { id, nome, texto, arquivos: fotos.map((f, i) => new File([f.blob], `${id}-${i + 1}.jpg`, { type: "image/jpeg" })) };
+    }
+    function avisar(t) { $("aviso").textContent = t; $("aviso").hidden = false; }
+    function guardarEnviada(nome) {
+        let lista = [];
+        try { lista = JSON.parse(localStorage.getItem(CHAVE) || "[]"); } catch (e) { /* sem armazenamento */ }
+        lista.unshift({ nome, quando: new Date().toLocaleDateString("pt-BR") });
+        try { localStorage.setItem(CHAVE, JSON.stringify(lista.slice(0, 50))); } catch (e) { /* sem espaço */ }
+        mostrarEnviadas();
+    }
+    function mostrarEnviadas() {
+        let lista = [];
+        try { lista = JSON.parse(localStorage.getItem(CHAVE) || "[]"); } catch (e) { /* sem armazenamento */ }
+        $("feitas").innerHTML = lista.length ? `<p>Já enviadas deste celular (${lista.length}):</p><ul>${lista.map((p) => `<li>${p.nome.replace(/[<>&]/g, "")} · ${p.quando}</li>`).join("")}</ul>` : "";
+    }
+    $("form").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        if (!$("nome").value.trim()) { $("nome").focus(); return; }
+        const { nome, texto, arquivos } = montar();
+        // celular: compartilha as fotos já com o texto (escolha o WhatsApp e a conversa com o Samuel)
+        if (arquivos.length && navigator.canShare && navigator.canShare({ files: arquivos })) {
+            try {
+                await navigator.share({ files: arquivos, text: texto });
+                guardarEnviada(nome);
+                avisar("Enviada! Toque em “Próxima peça” pra cadastrar outra.");
+                return;
+            } catch (erro) { if (erro.name === "AbortError") return; }
+        }
+        // sem compartilhar arquivo: baixa as fotos e abre o WhatsApp com o texto (aí é só anexar as fotos baixadas)
+        arquivos.forEach((f) => { const a = document.createElement("a"); a.href = URL.createObjectURL(f); a.download = f.name; document.body.appendChild(a); a.click(); a.remove(); });
+        window.open(`https://wa.me/${SAMUEL}?text=${encodeURIComponent(texto)}`, "_blank", "noopener");
+        guardarEnviada(nome);
+        avisar(arquivos.length ? "As fotos foram salvas no seu celular. Anexe elas na conversa que abriu." : "Mensagem pronta no WhatsApp. As fotos você manda depois.");
+    });
+    $("limpar").addEventListener("click", () => { $("form").reset(); fotos.forEach((f) => URL.revokeObjectURL(f.url)); fotos = []; desenharFotos(); $("aviso").hidden = true; scrollTo(0, 0); });
+    mostrarEnviadas();
+})();
+</script>
+</body>
+</html>

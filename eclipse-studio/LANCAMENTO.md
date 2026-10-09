@@ -26,3 +26,28 @@ A ficha (`ficha/`) continua com `noindex` sempre.
 - **App:** já funciona (manifest e ícones em `app/`). No Android aparece "📲 Instalar o app da Eclipse" no rodapé; no iPhone, a dica de "Adicionar à Tela de Início".
 - **Halloween:** liga sozinho de 1º a 31 de outubro (prévia em outra época: `?festa=halloween`; desligar: `?festa=nao`).
 
+
+## Ferramentas novas (out/2026)
+
+- **Checklist pra Elizabeth:** `lancamento/` mostra o que falta pra abrir, com barra de progresso e o botão "Mandei pro Samuel".
+  Quando você receber e colocar no site, mude o item pra `true` em `FEITO`, no começo do script da página.
+- **Cadastro rápido de peça:** `cadastro/`. Ela tira a foto e preenche, e chega no seu WhatsApp:
+  - as fotos, já com o nome certo (`fotos/<id>-1.jpg`): salve em `fotos/`;
+  - a linha pronta da planilha (mesmas colunas do `planilha/modelo.csv`).
+- **Drop com data:** `LOJA.drop.data` no `script.js` (ex.: `"2026-10-31T19:00"`). Vazio = desligado.
+  - As peças do drop levam `drop: true` (ou a coluna `drop` da planilha) e ficam escondidas até a hora.
+  - Antes da hora, a faixa do topo conta o tempo e tem o botão "me avisa".
+  - Na hora marcada, as peças aparecem como novidade e a faixa fica 7 dias dizendo "chegou".
+- **Esgotada:** `esgotada: true` (ou a coluna `esgotada` da planilha) é peça que pode voltar: mostra "esgotada" e o botão "Me avisa quando voltar".
+  Peça única vendida continua com `vendida: true` ("já tem dona").
+- **Etiquetas com QR:** abra a loja com `?etiquetas` e imprima.
+  - O QR abre a peça na loja e marca a origem "etiqueta" no pedido.
+  - Também existe a origem `?de=google`, a do feed.
+- **Carrossel das peças novas:** `NODE_PATH=$(npm root -g) node ferramentas/gerar-carrossel-eclipse.js` grava em `kit/drop/`.
+  - Só peças com foto.
+  - Não roda com `demo: true`.
+  - Pra ver o visual sem gravar no site: `--teste <pasta>`.
+- **Google Shopping (grátis):** `node ferramentas/gerar-feed-eclipse.js` grava `produtos.xml`.
+  - Não roda com `demo: true`, pra peça de exemplo não ir pro Google.
+  - A Elizabeth cadastra o link do `produtos.xml` no Google Merchant Center.
+- **"Mostra o seu look":** botão no "Um lugar pra ser livre". Pede a foto e a autorização pra postar no "Quem já é da coven" (`DEPOIMENTOS`).

@@ -1307,3 +1307,36 @@ html.varinha :is(input[type="text"], input[type="search"], textarea) { cursor: t
     .botao-sacola { min-height: 38px; padding: 0 10px; gap: 6px; }
 }
 @media (max-width: 960px) { .topo nav { gap: 14px; } .topo-in { gap: 14px; } }
+
+/* faixa do drop com data (extras.js): só aparece quando LOJA.drop.data está preenchida */
+.aviso-drop { position: relative; z-index: 3; margin: 0; padding: 8px 16px; background: linear-gradient(90deg, #1e1230, #3a2152, #1e1230); color: #f6eeff; font: 700 .86rem var(--fonte); letter-spacing: .03em; text-align: center; border-bottom: 1px solid rgba(205,180,255,.3); }
+.aviso-drop b { color: #ffb8d9; }
+.aviso-drop a { color: #cdb4ff; margin-left: 4px; }
+/* "mostra seu look": pede a foto da cliente (e a autorização) pro "Quem já é da coven" */
+.mostra-look { display: inline-flex; align-items: center; gap: 6px; margin-top: 16px; }
+
+/* ========== Etiquetas com QR (etiquetas.js, só com ?etiquetas): some a loja, fica a folha pra imprimir ========== */
+html.modo-etiquetas body > *:not(.etiquetas) { display: none !important; }
+.etiquetas { max-width: 900px; margin: 0 auto; padding: 20px 16px 60px; color: #f6eeff; font-family: var(--fonte); }
+.etq-barra { display: grid; gap: 10px; margin-bottom: 18px; }
+.etq-acoes { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.etq-acoes button { min-height: 40px; padding: 0 16px; border: 1px solid #5a4680; border-radius: 999px; background: transparent; color: #f6eeff; font: 700 .86rem var(--fonte); cursor: pointer; }
+.etq-acoes button[aria-pressed="true"], .etq-acoes .etq-imprimir { background: linear-gradient(135deg, #ffb8d9, #cdb4ff); color: #241a33; border-color: transparent; }
+.etq-acoes a { color: #cdb4ff; }
+.etq-demo { padding: 8px 12px; border-radius: 10px; background: rgba(233,196,106,.12); color: #e9c46a; font-size: .86rem; }
+.etq-folha { display: grid; grid-template-columns: repeat(auto-fill, minmax(8.6cm, 1fr)); gap: 10px; }
+.etq { display: grid; grid-template-columns: 1fr 2.9cm; align-items: center; gap: 8px; height: 4.2cm; padding: .35cm .4cm; border: 1.5px dashed #5a4680; border-radius: 10px; background: #fffaf3; color: #1e1230; break-inside: avoid; }
+.etq-marca { margin: 0; font: 400 1rem/1 "UnifrakturMaguntia", Georgia, serif; color: #3a2152; }
+.etq h2 { margin: 6px 0 4px; font: 700 1.1rem/1.1 "Cormorant Garamond", Georgia, serif; }
+.etq-preco { margin: 0; font: 700 1.15rem var(--fonte); color: #b0306a; }
+.etq-cod { margin: 4px 0 0; font: 600 .7rem var(--fonte); color: #5a4680; letter-spacing: .04em; }
+.etq-qr { display: grid; justify-items: center; gap: 2px; }
+.etq-qr svg { width: 2.7cm; height: 2.7cm; }
+.etq-qr small { font: 600 .55rem var(--fonte); color: #5a4680; }
+@media print {
+    @page { size: A4; margin: 1cm; }
+    html.modo-etiquetas, html.modo-etiquetas body { background: #ffffff !important; }
+    .etq-barra { display: none; }
+    .etiquetas { padding: 0; max-width: none; }
+    .etq-folha { grid-template-columns: repeat(2, 8.8cm); gap: .3cm; }
+}

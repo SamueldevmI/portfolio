@@ -60,6 +60,14 @@ Mais de uma sessão do Claude trabalha neste site ao mesmo tempo. Leia isto ante
   - **Nada pode mudar a altura da página depois que ela abriu**: no iPhone isso faz a tela pular. Reserve o espaço no HTML ou no CSS.
 - **Ferramentas do Samuel** (escondidas do Google): `prospeccao.html` (links personalizados, mensagens prontas, proposta e depoimento), `painel.html`, `apresentar.html` e `instagram/`.
 
+## Loja da Eclipse Studio (`eclipse-studio/`, cliente: Elizabeth)
+
+- **Configuração:** fica no topo do `eclipse-studio/script.js` (`LOJA`, `PRODUTOS`, `DEPOIMENTOS`).
+- **Catálogo:** vem da planilha do Google quando `PLANILHA` (`planilha.js`) estiver preenchida.
+- **Demonstração:** a loja segue em modo demonstração (`demo: true`, `noindex`) até a vitrine ter só peças reais.
+- **Lançamento:** o passo a passo e as ferramentas (checklist `lancamento/`, `cadastro/`, `?etiquetas`, drop com data, carrossel e feed do Google) estão em `eclipse-studio/LANCAMENTO.md`.
+- **Decisões da Elizabeth:** prêmio, preço da caixa misteriosa, taxa de entrega e data de drop só entram no site quando ela decidir.
+
 ## O que nunca fazer
 
 - **Inventar fato pessoal do Samuel** (hobby, ponto fraco, número de clientes, horário de atendimento) ou depoimento. Só o que ele contou.

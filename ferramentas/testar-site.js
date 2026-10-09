@@ -59,6 +59,7 @@ const PAGINAS = [
     "", "dicas/", ...pastasCom("dicas"), "criacao-de-sites-campo-grande/", "qr/", "cartao/", "para-agencias/",
     "como-foi-feito/", "how-it-was-built/", "teste.html", "monte.html", "como-trabalho.html", "case-eclipse.html",
     "curriculo.html", "curriculo-en.html", "404.html",
+    "eclipse-studio/", "eclipse-studio/?etiquetas", "eclipse-studio/lancamento/", "eclipse-studio/cadastro/",
     ...fs.readdirSync(RAIZ).filter((n) => n.startsWith("site-para-")).map((n) => n + "/"),
 ];
 

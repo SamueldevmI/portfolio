@@ -80,6 +80,7 @@ const CATALOGO = (() => {
                 busca: pega(l, "busca", "palavraschave"),
                 unica: sim(pega(l, "unica", "pecaunica")), vendida: sim(pega(l, "vendida")), novo: sim(pega(l, "novo", "novidade")),
                 secreto: sim(pega(l, "secreta", "dropsecreto")),
+                esgotada: sim(pega(l, "esgotada", "esgotado")), drop: sim(pega(l, "drop", "drophalloween")),
             };
             if (fotos.length) { p.fotos = fotos; p.foto = fotos[0]; }
             p.estilos = [...new Set(lista(pega(l, "vibes", "vibe", "estilos"), /[,;/]+/).map((v) => VIBES[chave(v)]).filter(Boolean))];
