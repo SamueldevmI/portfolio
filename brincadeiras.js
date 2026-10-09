@@ -172,10 +172,13 @@
         const SPAM = ["Bom dia 🌻 repassa pra 10 grupos", "Oi sumido(a) 👀", "🔥 PROMOÇÃO DE CHIP 🔥", "vc viu isso?? 😱 link", "Corrente da sorte 🍀 não quebre", "Parabéns! Você ganhou um iPhone 📱"];
         const CHAVE = "jogo-atende-recorde";
         let rodando = false, fim = 0, proximo = 0, total = 0, atendidos = 0, perdidos = 0, vagas = [], relogio = 0;
+        // veio pelo link de desafio de um amigo (?desafio=18): mostra o placar a bater
+        const desafio = Math.min(60, Math.max(0, parseInt(new URLSearchParams(location.search).get("desafio"), 10) || 0));
 
         function inicio() {
             const recorde = ler(CHAVE);
             tela.innerHTML = `<p class="jogo-selo">🎮 ${tr("MINI-JOGO")}</p><h3 class="jogo-titulo">${tr("Atende aí!")}</h3>
+                ${desafio ? `<p class="jogo-desafio">🎯 ${tr("Seu amigo atendeu")} <b>${desafio}</b>. ${tr("Bate isso!")}</p>` : ""}
                 <p class="jogo-texto">${tr("Toque nas mensagens dos clientes antes que eles desistam. Cuidado com corrente e spam: tocar neles tira ponto. Você tem 20 segundos.")}</p>
                 <button type="button" class="botao botao-principal jogo-comecar">${tr("Começar")} ▶</button>
                 ${recorde ? `<p class="jogo-recorde">🏆 ${tr("Seu recorde:")} ${recorde}</p>` : ""}`;
@@ -256,13 +259,18 @@
             const recorde = Number(ler(CHAVE)) || 0;
             const novo = atendidos > recorde;
             if (novo) gravar(CHAVE, String(atendidos));
+            document.dispatchEvent(new CustomEvent("jogoAtendeFim", { detail: { atendidos, total } })); // o álbum de figurinhas escuta
             if (atendidos && perdidos === 0) som()?.kaching?.(); else som()?.erro?.();
             conta("/evento/jogo-terminou", "terminou o Atende aí!");
             const frase = perdidos === 0
                 ? tr("Atendeu todo mundo! Agora imagina fazer isso o dia inteiro, todo dia… O site faz.")
                 : `${perdidos} ${perdidos === 1 ? tr("cliente desistiu e foi pro concorrente.") : tr("clientes desistiram e foram pro concorrente.")} ${tr("O site teria atendido os")} ${total}. ${tr("Enquanto você dormia.")}`;
+            const placarDesafio = !desafio ? "" : atendidos > desafio
+                ? `<p class="jogo-desafio">🥇 ${tr("Ganhou do seu amigo!")} (${atendidos} × ${desafio})</p>`
+                : atendidos === desafio ? `<p class="jogo-desafio">🤝 ${tr("Empatou com seu amigo!")} (${atendidos} × ${desafio})</p>`
+                : `<p class="jogo-desafio">😅 ${tr("Seu amigo ainda ganha")} (${atendidos} × ${desafio})</p>`;
             tela.innerHTML = `<p class="jogo-selo">${novo ? "🏆 " + tr("NOVO RECORDE!") : "⏱️ " + tr("ACABOU O TEMPO")}</p>
-                <p class="jogo-resultado"><b>${atendidos}</b> ${tr("de")} ${total}</p>
+                <p class="jogo-resultado"><b>${atendidos}</b> ${tr("de")} ${total}</p>${placarDesafio}
                 <p class="jogo-texto">${frase}</p>
                 <div class="jogo-acoes">
                     <button type="button" class="botao botao-principal" data-orcamento-tipo="site">${tr("Quero um site que atende sozinho")}</button>
@@ -273,7 +281,7 @@
         }
         async function desafiar() {
             const texto = `${tr("Atendi")} ${tela.dataset.atendidos} ${tr("de")} ${tela.dataset.total} ${tr("clientes no “Atende aí!” do Samuel. Duvido você bater 😏")}`;
-            const url = `${location.origin}${location.pathname}#jogoAtende`;
+            const url = `${location.origin}${location.pathname}?desafio=${Number(tela.dataset.atendidos) || 0}#jogoAtende`;
             try { if (navigator.share) { await navigator.share({ text: texto, url }); return; } } catch (e) { if (e.name === "AbortError") return; }
             try { await navigator.clipboard.writeText(`${texto} ${url}`); avisar(tr("Desafio copiado! Cola no WhatsApp de alguém 😈")); } catch (e) { /* sem área de transferência */ }
         }

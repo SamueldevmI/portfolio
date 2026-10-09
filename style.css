@@ -3475,6 +3475,7 @@ a.producao-nome:hover { text-decoration: underline; }
 .jogo-titulo { margin: 0; font: 400 clamp(2.4rem, 8vw, 3.4rem)/1 Bangers, "Space Grotesk", sans-serif; letter-spacing: .03em; }
 .jogo-texto { max-width: 46ch; margin: 0; color: var(--muted); }
 .jogo-recorde { margin: 0; color: var(--muted); font: 500 .8rem "DM Mono", monospace; }
+.jogo-desafio { margin: 0; padding: 6px 12px; border: 2px dashed var(--cyan); border-radius: 10px; font: 600 .9rem "DM Mono", monospace; }
 .jogo-placar { display: flex; justify-content: space-between; align-self: stretch; font: 600 1rem "DM Mono", monospace; }
 .jogo-tempo { color: var(--cyan); font-weight: 700; }
 .jogo-area { position: relative; flex: 1; align-self: stretch; }

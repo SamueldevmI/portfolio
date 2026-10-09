@@ -19,6 +19,7 @@
         { id: "rara", emoji: "💎", titulo: "Edição rara", desc: "Achou o segredo escondido no site." },
         { id: "zap", emoji: "💬", titulo: "Chamou no zap", desc: "Clicou pra chamar no WhatsApp." },
         { id: "fim", emoji: "🏁", titulo: "Até o fim", desc: "Leu a revista inteira." },
+        { id: "atendente", emoji: "⚡", titulo: "Atendente nota 10", desc: "Fez 25 ou mais no Atende aí!" },
         { id: "fiel", emoji: "🔁", titulo: "Leitor fiel", desc: "Voltou outro dia pra ver mais." },
     ];
 
@@ -134,6 +135,11 @@
     });
 
     document.addEventListener("temaTrocado", () => desbloquear("roupa-nova"));
+
+    // mini-jogo: vale o recorde já guardado (o jogo pode ter rodado antes do álbum carregar) e cada partida nova
+    const ATENDENTE = 25;
+    try { if (Number(localStorage.getItem("jogo-atende-recorde")) >= ATENDENTE) desbloquear("atendente"); } catch (e) { /* sem armazenamento */ }
+    document.addEventListener("jogoAtendeFim", (e) => { if (e.detail && e.detail.atendidos >= ATENDENTE) desbloquear("atendente"); });
 
     new MutationObserver(() => {
         const raiz = document.documentElement;
