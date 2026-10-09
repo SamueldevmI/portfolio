@@ -78,7 +78,7 @@
             document.documentElement.dataset.periodo = hora >= 5 && hora < 12 ? "manha" : hora >= 12 && hora < 18 ? "tarde" : "noite";
             var barra = { azul: "#0e1422", cerrado: "#1e1510", neon: "#0d0b1e", gibi85: "#1b1815" }[tema];
             if (barra) document.querySelector('meta[name="theme-color"]').content = barra;
-            document.write('<link rel="stylesheet" id="folhaTema" href="' + (tema === "vermelho" ? "style.css" : "style-" + tema + ".css") + '?v=20261009leitor">');
+            document.write('<link rel="stylesheet" id="folhaTema" href="' + (tema === "vermelho" ? "style.css" : "style-" + tema + ".css") + '?v=20261009brinc">');
         })();
         /* Idioma: detectado cedo (antes do resto da página rodar) só pra avisar efeitos como a
            digitação do texto do hero, que senão sobrescreveriam a tradução feita pelo idioma.js. */
@@ -92,7 +92,7 @@
             document.documentElement.dataset.idioma = idioma;
         })();
     </script>
-    <noscript><link rel="stylesheet" href="style.css?v=20261009leitor"></noscript>
+    <noscript><link rel="stylesheet" href="style.css?v=20261009brinc"></noscript>
     <title id="tituloPagina">Samuel Mickael | Desenvolvedor Web &amp; Mobile</title>
     <script type="application/ld+json">
     {
@@ -742,6 +742,8 @@
                 <button type="button" class="botao botao-secundario calc-cta" id="calcCta" data-orcamento-tipo="site">Pedir esse orçamento →</button>
                 <p class="calc-aviso">Só um ponto de partida — o valor exato vem na proposta, depois que eu entender sua ideia.</p>
             </div>
+            <!-- Mini-jogo "Atende aí!" (brincadeiras.js). A altura fica reservada no CSS: nada pula quando ele carrega -->
+            <div class="jogo" id="jogoAtende"><div class="jogo-tela"><p class="jogo-selo">🎮 MINI-JOGO</p><h3 class="jogo-titulo">Atende aí!</h3><p class="jogo-texto">As mensagens dos clientes vão chegar. Toque nelas antes que eles desistam. Você tem 20 segundos.</p><button type="button" class="botao botao-principal jogo-comecar">Começar ▶</button></div></div>
             <div class="depoimentos" id="depoimentos" hidden></div>
             <a class="gibi-continua" href="#orcamento"><span>continua na próxima página</span><b aria-hidden="true">→</b></a>
         </section>
@@ -950,27 +952,27 @@
     </div>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-    <script src="estatisticas.js?v=20261009leitor" defer></script>
+    <script src="estatisticas.js?v=20261009brinc" defer></script>
     <script src="servicos.js?v=20261002" defer></script>
-    <script src="previa-celular.js?v=20261009leitor" defer></script>
-    <script src="filme-celular.js?v=20261009leitor" defer></script>
+    <script src="previa-celular.js?v=20261009brinc" defer></script>
+    <script src="filme-celular.js?v=20261009brinc" defer></script>
     <script src="depoimentos.js?v=20261007" defer></script>
     <script src="producao.js?v=20261009" defer></script>
-    <script src="script.js?v=20261009leitor" defer></script>
-    <script src="antes-depois.js?v=20261009leitor" defer></script>
+    <script src="script.js?v=20261009brinc" defer></script>
+    <script src="antes-depois.js?v=20261009brinc" defer></script>
     <!-- espanhol sob demanda: o botão ES é leve e o idioma.js só baixa quando alguém pede (os scripts acima se redesenham no "idiomaMudou") -->
-    <script src="idioma-leve.js?v=20261009leitor" defer></script>
+    <script src="idioma-leve.js?v=20261009brinc" defer></script>
 <script>
     /* Scripts que a página não precisa pra aparecer: o mobile.js só baixa em tela de toque (no computador
        ele não faz nada) e a música só depois que a página terminou de carregar. */
     (function () {
-        var versao = "?v=20261009leitor";
+        var versao = "?v=20261009brinc";
         function carregar(arquivo) { var s = document.createElement("script"); s.src = arquivo + versao; s.async = false; document.body.appendChild(s); }
         var toque = matchMedia("(pointer: coarse)").matches;
         // o pedido de "instalar app" pode chegar antes do mobile.js: fica guardado pra ele usar
         if (toque) addEventListener("beforeinstallprompt", function (e) { e.preventDefault(); window.pedidoInstalar = e; });
         // o mobile.js também espera a página aparecer: assim não disputa o processador com a primeira tela
-        function depois() { (window.requestIdleCallback || setTimeout)(function () { carregar("acabamento.js"); carregar("ficha.js"); carregar("gibi.js"); carregar("visual.js"); carregar("figurinhas.js"); carregar("leitor.js"); if (toque) carregar("mobile.js"); if (!document.documentElement.classList.contains("modo-simples")) carregar("musica.js"); }, { timeout: 1500 }); }
+        function depois() { (window.requestIdleCallback || setTimeout)(function () { carregar("acabamento.js"); carregar("ficha.js"); carregar("gibi.js"); carregar("visual.js"); carregar("figurinhas.js"); carregar("brincadeiras.js"); carregar("leitor.js"); if (toque) carregar("mobile.js"); if (!document.documentElement.classList.contains("modo-simples")) carregar("musica.js"); }, { timeout: 1500 }); }
         if (document.readyState === "complete") depois(); else addEventListener("load", depois, { once: true });
     })();
 </script>

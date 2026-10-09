@@ -758,6 +758,30 @@
         hq() { if (!podeTocarEfeito()) return; const t = agoraMais(); bumbo(t, 0.9, efeitos); barulho(t, "bandpass", 1800, 0.25, 0.12, efeitos); sino(84, t + 0.04, 0.4, 0.5, efeitos); },
         passar() { if (!podeTocarEfeito()) return; varrida(agoraMais(), 2400, 500, 0.25); },
         surpresa() { if (!podeTocarEfeito()) return; const t = agoraMais(); [84, 79, 75, 72, 87].forEach((n, i) => sino(n, t + i * 0.06, 0.6, 0.5, efeitos)); },
+        // "plim" de mensagem chegando no WhatsApp: duas notas curtinhas subindo
+        plim() { if (!podeTocarEfeito()) return; const t = agoraMais(); tom(midi(88), "sine", t, 0.004, 0.05, 0.16, efeitos); tom(midi(93), "sine", t + 0.09, 0.004, 0.055, 0.28, efeitos); },
+        // KA-CHING de caixa registradora: o "ka" (estalo) e o "ching" (moedinhas brilhando)
+        kaching() {
+            if (!podeTocarEfeito()) return;
+            const t = agoraMais();
+            barulho(t, "highpass", 2500, 0.16, 0.05, efeitos);
+            tom(midi(57), "square", t, 0.002, 0.025, 0.06, efeitos);
+            [96, 100, 103, 108].forEach((n, i) => { tom(midi(n), "sine", t + 0.08 + i * 0.035, 0.002, 0.03, 0.45, efeitos); tom(midi(n) * 2.76, "sine", t + 0.08 + i * 0.035, 0.002, 0.006, 0.12, efeitos); });
+        },
+        // tecla de teclado mecânico (campos de texto): um clique curtinho, com tom levemente diferente a cada vez
+        tecla() { if (!podeTocarEfeito()) return; const t = agoraMais(); barulho(t, "bandpass", 2600 + Math.random() * 1400, 0.05, 0.025, efeitos); tom(170 + Math.random() * 40, "triangle", t, 0.001, 0.012, 0.03, efeitos); },
+        // chuva triste do lado "sem site": um chiado filtrado que entra e sai devagar (duracao em segundos)
+        chuva(duracao) {
+            if (!podeTocarEfeito()) return;
+            const t = agoraMais(), d = Math.min(4, duracao || 1.6);
+            const s = ctx.createBufferSource(); s.buffer = ruido; s.loop = true;
+            const f = ctx.createBiquadFilter(); f.type = "lowpass"; f.frequency.value = 1400;
+            const g = ctx.createGain();
+            g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.05, t + 0.4); g.gain.setValueAtTime(0.05, t + d - 0.5); g.gain.exponentialRampToValueAtTime(0.0001, t + d);
+            s.connect(f).connect(g).connect(efeitos);
+            s.start(t, Math.random()); s.stop(t + d + 0.05);
+            [0.5, 1.1].forEach((x) => { if (x < d) tom(midi(55), "sine", t + x, 0.02, 0.012, 0.6, efeitos); }); // gotinha grave
+        },
     };
 
     // Efeitos de interação (tocam com ou sem a música, depois que o áudio foi liberado)

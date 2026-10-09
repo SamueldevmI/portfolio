@@ -69,6 +69,19 @@
         alca.setAttribute("aria-valuenow", String(Math.round(pos * 100)));
         quadro.classList.toggle("ad-so-sem", pos > .92);
         quadro.classList.toggle("ad-so-com", pos < .08);
+        somDaZona();
+    }
+    /* som (musica.js): só quando é a pessoa que arrasta, nunca no passeio sozinho.
+       Lado "sem site" inteiro: chuva triste. Lado "com site" inteiro: plim de mensagem + KA-CHING. */
+    let zona = "meio";
+    function somDaZona() {
+        const agora = pos > .92 ? "sem" : pos < .08 ? "com" : "meio";
+        if (agora === zona) return;
+        zona = agora;
+        const som = window.musicaSite;
+        if (!tocou || !som) return;
+        if (agora === "sem") som.chuva?.(2.2);
+        else if (agora === "com") { som.plim?.(); setTimeout(() => som.kaching?.(), 260); }
     }
     addEventListener("resize", () => { largura = quadro.clientWidth; aplicar(); });
 
