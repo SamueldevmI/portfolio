@@ -276,6 +276,7 @@
                     <button type="button" class="botao botao-principal" data-orcamento-tipo="site">${tr("Quero um site que atende sozinho")}</button>
                     <button type="button" class="botao botao-secundario jogo-de-novo">${tr("Jogar de novo")} ↻</button>
                     <button type="button" class="botao botao-secundario jogo-desafiar">${tr("Desafiar um amigo")} 🤝</button>
+                    <button type="button" class="botao botao-secundario jogo-story">${tr("Postar no story")} 📸</button>
                 </div>`;
             tela.dataset.atendidos = atendidos; tela.dataset.total = total;
         }
@@ -285,10 +286,77 @@
             try { if (navigator.share) { await navigator.share({ text: texto, url }); return; } } catch (e) { if (e.name === "AbortError") return; }
             try { await navigator.clipboard.writeText(`${texto} ${url}`); avisar(tr("Desafio copiado! Cola no WhatsApp de alguém 😈")); } catch (e) { /* sem área de transferência */ }
         }
+        /* imagem 1080 × 1920 com o placar, pra postar no story (mesma cara da capa de gibi) */
+        async function desenharStory(feitos, de) {
+            await Promise.all(['400 100px "Bangers"', '700 40px "Space Grotesk"', '500 24px "DM Mono"'].map((f) => document.fonts.load(f).catch(() => null)));
+            const W = 1080, H = 1920, c = document.createElement("canvas");
+            c.width = W; c.height = H;
+            const ctx = c.getContext("2d");
+            ctx.fillStyle = "#ffe14d"; ctx.fillRect(0, 0, W, H);
+            ctx.fillStyle = "rgba(255,140,0,.22)";
+            for (let y = 0; y < H; y += 22) for (let x = (y / 22) % 2 ? 11 : 0; x < W; x += 22) { ctx.beginPath(); ctx.arc(x, y, 4, 0, Math.PI * 2); ctx.fill(); }
+            const cy = 900;
+            ctx.save(); ctx.translate(W / 2, cy); ctx.fillStyle = "rgba(255,255,255,.35)";
+            for (let i = 0; i < 18; i++) { ctx.rotate(Math.PI / 9); ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(-70, -1400); ctx.lineTo(70, -1400); ctx.fill(); }
+            ctx.restore();
+            // faixa do topo
+            ctx.fillStyle = "#111"; ctx.fillRect(0, 150, W, 150);
+            ctx.textBaseline = "middle"; ctx.textAlign = "left"; ctx.fillStyle = "#fff"; ctx.font = '400 72px "Bangers"';
+            ctx.fillText("🎮 " + tr("ATENDE AÍ!"), 50, 228);
+            ctx.textAlign = "right"; ctx.font = '500 30px "DM Mono"'; ctx.fillStyle = "#ffe14d";
+            ctx.fillText(tr("MINI-JOGO"), W - 50, 228);
+            // frase de cima
+            ctx.textAlign = "center"; ctx.lineJoin = "round";
+            const contorno = (texto, y, tam, cor) => {
+                ctx.font = `400 ${tam}px "Bangers"`;
+                ctx.lineWidth = 14; ctx.strokeStyle = "#111"; ctx.strokeText(texto, W / 2 + 7, y + 7); ctx.fillStyle = "#111"; ctx.fillText(texto, W / 2 + 7, y + 7);
+                ctx.strokeText(texto, W / 2, y); ctx.fillStyle = cor; ctx.fillText(texto, W / 2, y);
+            };
+            contorno(tr("ATENDI"), 470, 150, "#ff2a3d");
+            // explosão com o placar
+            estrela(ctx, W / 2 + 12, cy + 12, 16, 330, 250, 0.1); ctx.fillStyle = "#111"; ctx.fill();
+            estrela(ctx, W / 2, cy, 16, 330, 250, 0.1); ctx.fillStyle = "#fff"; ctx.fill(); ctx.lineWidth = 8; ctx.strokeStyle = "#111"; ctx.stroke();
+            ctx.fillStyle = "#111"; ctx.font = '400 300px "Bangers"'; ctx.fillText(String(feitos), W / 2, cy + 6);
+            ctx.font = '700 44px "Space Grotesk"'; ctx.fillText(`${tr("de")} ${de}`, W / 2, cy + 165);
+            contorno(tr("CLIENTES EM 20s"), 1330, 120, "#fff");
+            // balão "duvido"
+            ctx.save(); ctx.font = '400 66px "Bangers"';
+            const frase = tr("DUVIDO VOCÊ BATER 😏"), larg = Math.min(W - 120, ctx.measureText(frase).width + 60), metade = larg / 2;
+            ctx.translate(W / 2, 1520); ctx.rotate(-0.04);
+            ctx.fillStyle = "#111"; ctx.fillRect(-metade + 9, -60 + 9, larg, 120);
+            ctx.fillStyle = "#ff2a3d"; ctx.fillRect(-metade, -60, larg, 120); ctx.lineWidth = 6; ctx.strokeRect(-metade, -60, larg, 120);
+            ctx.fillStyle = "#fff"; ctx.fillText(frase, 0, 4, larg - 40);
+            ctx.restore();
+            // legenda e endereço
+            ctx.fillStyle = "#111"; ctx.font = '700 40px "Space Grotesk"';
+            ctx.fillText(tr("O site atende todo mundo. Até de madrugada."), W / 2, 1660, W - 100);
+            ctx.font = '500 32px "DM Mono"'; ctx.fillStyle = "rgba(17,17,17,.8)";
+            ctx.fillText("samueldevmi.github.io/portfolio", W / 2, 1730);
+            return c;
+        }
+        async function postarStory() {
+            const feitos = Number(tela.dataset.atendidos) || 0, de = Number(tela.dataset.total) || 0;
+            som()?.hq?.();
+            const canvas = await desenharStory(feitos, de);
+            const blob = await new Promise((ok) => canvas.toBlob(ok, "image/jpeg", 0.9));
+            const arquivo = `atende-ai-${feitos}.jpg`;
+            conta("/evento/jogo-story", "gerou o story do Atende aí!");
+            try {
+                const f = new File([blob], arquivo, { type: "image/jpeg" });
+                if (navigator.canShare && navigator.canShare({ files: [f] })) { await navigator.share({ files: [f] }); return; }
+            } catch (erro) { if (erro && erro.name === "AbortError") return; }
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(blob); a.download = arquivo;
+            document.body.appendChild(a); a.click(); a.remove();
+            setTimeout(() => URL.revokeObjectURL(a.href), 3000);
+            avisar(tr("📸 Imagem salva! Posta no story e me marca 😎"));
+        }
+        window.desenharStoryAtende = desenharStory; // usado no teste
         caixa.addEventListener("click", (e) => {
             const msg = e.target.closest(".jogo-msg"); if (msg) { atender(msg); return; }
             if (e.target.closest(".jogo-comecar, .jogo-de-novo")) comecar();
             else if (e.target.closest(".jogo-desafiar")) desafiar();
+            else if (e.target.closest(".jogo-story")) postarStory();
         });
         document.addEventListener("idiomaMudou", () => { if (!rodando) inicio(); });
         inicio();

@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Andamento do seu site | Samuel Mickael</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bangers&family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+    <script>
+        /* Mesmo tema escolhido no portfólio */
+        (function () {
+            var t = "vermelho";
+            try { var s = localStorage.getItem("portfolio-tema"); if (/^(azul|cerrado|neon|gibi85)$/.test(s)) t = s; } catch (e) { /* sem armazenamento */ }
+            document.documentElement.dataset.tema = t;
+            document.write('<link rel="stylesheet" href="' + (t === "vermelho" ? "style.css" : "style-" + t + ".css") + '?v=20261009acompanhe">');
+        })();
+    </script>
+    <noscript><link rel="stylesheet" href="style.css"></noscript>
+    <style>
+        .ac { width: min(640px, calc(100% - 32px)); margin: 44px auto 80px; }
+        .ac [hidden] { display: none !important; }
+        .ac .eyebrow::before { content: none; }
+        .ac h1 { margin: 6px 0 8px; font: 400 clamp(2.4rem, 9vw, 3.6rem)/1 Bangers, "Space Grotesk", sans-serif; letter-spacing: .02em; color: var(--cyan); }
+        .ac > p { color: var(--muted); }
+        .ac-barra { position: relative; height: 14px; margin: 26px 0 6px; border: 2px solid var(--text); border-radius: 99px; background: var(--surface); overflow: hidden; }
+        .ac-barra i { position: absolute; inset: 0; background: var(--cyan); transform-origin: 0 50%; transform: scaleX(var(--feito, 0)); transition: transform 1s cubic-bezier(.2, .8, .2, 1); }
+        .ac-pct { margin: 0; color: var(--muted); font: 500 .8rem "DM Mono", monospace; text-align: right; }
+        .ac-linha { display: grid; gap: 14px; margin: 26px 0 0; padding: 0; list-style: none; }
+        .ac-linha li { position: relative; display: grid; grid-template-columns: 54px 1fr; gap: 14px; align-items: start; padding: 14px 16px; border: 2px solid var(--line); border-radius: 14px; background: var(--surface); color: var(--muted); }
+        .ac-linha li b { display: block; margin-bottom: 2px; color: var(--text); font-size: 1.02rem; }
+        .ac-linha li small { display: block; margin-top: 4px; font: 500 .72rem "DM Mono", monospace; letter-spacing: .08em; }
+        .ac-icone { display: grid; place-items: center; width: 54px; height: 54px; border: 2px solid var(--line); border-radius: 50%; font-size: 1.6rem; background: var(--bg); }
+        .ac-linha li.feito { opacity: .75; }
+        .ac-linha li.feito .ac-icone { border-color: var(--cyan); }
+        .ac-linha li.feito small { color: var(--cyan); }
+        .ac-linha li.agora { border-color: var(--text); box-shadow: 6px 6px 0 var(--cyan); color: var(--text); }
+        .ac-linha li.agora .ac-icone { border-color: var(--text); background: var(--cyan); }
+        .ac-linha li.agora small { color: var(--cyan); }
+        .ac-linha li.agora .ac-icone::after { content: ""; position: absolute; left: 16px; top: 14px; width: 54px; height: 54px; border: 2px solid var(--cyan); border-radius: 50%; animation: ac-pulso 1.8s ease-out infinite; pointer-events: none; }
+        .ac-linha li.depois { border-style: dashed; }
+        .ac-linha li.depois .ac-icone { filter: grayscale(1); opacity: .6; }
+        @keyframes ac-pulso { from { transform: scale(1); opacity: .9; } to { transform: scale(1.45); opacity: 0; } }
+        @media (prefers-reduced-motion: reduce) { .ac-linha li.agora .ac-icone::after { animation: none; opacity: 0; } .ac-barra i { transition: none; } }
+        .ac-recado { margin: 26px 0 0; padding: 16px 18px; border: 2px solid var(--text); border-radius: 16px 16px 16px 4px; background: #fff; color: #111; }
+        .ac-recado small { display: block; margin-bottom: 4px; color: #555; font: 500 .72rem "DM Mono", monospace; letter-spacing: .1em; }
+        .ac-acoes { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+        .ac-exemplo { margin: 18px 0 0; padding: 10px 14px; border: 1px dashed var(--line); border-radius: 10px; color: var(--muted); font-size: .85rem; }
+    </style>
+</head>
+<body>
+    <main class="ac">
+        <p class="eyebrow">ANDAMENTO DO SITE</p>
+        <h1 id="acTitulo">Seu site</h1>
+        <p id="acSub">Aqui você vê em que pé está o seu site, sem precisar perguntar.</p>
+
+        <div class="ac-barra" aria-hidden="true"><i id="acBarra"></i></div>
+        <p class="ac-pct" id="acPct">0%</p>
+
+        <ol class="ac-linha" id="acLinha"></ol>
+
+        <div class="ac-recado" id="acRecado" hidden><small>RECADO DO SAMUEL</small><span></span></div>
+
+        <div class="ac-acoes">
+            <a class="botao botao-principal" id="acPrevia" href="#" target="_blank" rel="noopener" hidden>👀 Abrir a prévia</a>
+            <a class="botao botao-secundario" id="acZap" href="https://wa.me/5567996034205" target="_blank" rel="noopener">💬 Falar com o Samuel</a>
+            <a class="botao botao-secundario" href="como-trabalho.html">Como funciona</a>
+        </div>
+        <p class="ac-exemplo" id="acExemplo" hidden>Isto é um exemplo. Cada cliente recebe o próprio link, com o nome do negócio e a etapa certa.</p>
+    </main>
+    <script>
+        (function () {
+            "use strict";
+            const $ = (id) => document.getElementById(id);
+            const q = new URLSearchParams(location.search);
+            const limpo = (v, n) => String(v || "").replace(/\s+/g, " ").trim().slice(0, n);
+            const ETAPAS = [
+                { icone: "💬", titulo: "A gente conversou", texto: "Você me contou como atende hoje: o que vende, como o cliente pede e o que mais dá trabalho." },
+                { icone: "🛠️", titulo: "Estou montando a prévia", texto: "Uma primeira versão com o nome, as cores e os produtos do seu negócio." },
+                { icone: "👀", titulo: "Prévia pronta pra você ver", texto: "Abra no celular, mostre pra quem quiser e me diga o que achou." },
+                { icone: "✏️", titulo: "Terminando o site", texto: "Colocando suas fotos, preços e textos e fazendo os ajustes que você pediu." },
+                { icone: "🚀", titulo: "No ar!", texto: "Seu site está publicado. Agora é divulgar no Instagram e no WhatsApp." },
+            ];
+            const cliente = limpo(q.get("c"), 50);
+            const exemplo = !cliente;
+            const etapa = exemplo ? 2 : Math.min(ETAPAS.length, Math.max(1, parseInt(q.get("etapa"), 10) || 1));
+            const recado = limpo(q.get("msg"), 200);
+            const prazo = /^\d{4}-\d{2}-\d{2}$/.test(q.get("prazo") || "") ? q.get("prazo") : "";
+            let previa = "";
+            try { const u = new URL(q.get("previa") || ""); if (u.protocol === "https:") previa = u.href; } catch (e) { /* sem prévia */ }
+
+            const nome = exemplo ? "Seu negócio" : cliente;
+            $("acTitulo").textContent = nome;
+            document.title = `${nome}: andamento do site | Samuel Mickael`;
+            if (etapa === ETAPAS.length) $("acSub").textContent = "Pronto! 🎉 Obrigado pela confiança.";
+            else if (prazo) {
+                const [a, m, d] = prazo.split("-");
+                $("acSub").textContent = `Previsão de entrega: ${d}/${m}/${a}. Aqui você vê em que pé está, sem precisar perguntar.`;
+            }
+
+            $("acLinha").innerHTML = ETAPAS.map((e, i) => {
+                const n = i + 1, estado = n < etapa ? "feito" : n === etapa ? "agora" : "depois";
+                const rotulo = estado === "feito" ? "✓ FEITO" : estado === "agora" ? "● AGORA" : "EM BREVE";
+                return `<li class="${estado}"${estado === "agora" ? ' aria-current="step"' : ""}><span class="ac-icone" aria-hidden="true">${e.icone}</span><span><b>${e.titulo}</b>${e.texto}<small>${n}/${ETAPAS.length} · ${rotulo}</small></span></li>`;
+            }).join("");
+            const feito = etapa === ETAPAS.length ? 1 : (etapa - 0.5) / ETAPAS.length;
+            $("acPct").textContent = Math.round(feito * 100) + "%";
+            requestAnimationFrame(() => requestAnimationFrame(() => $("acBarra").style.setProperty("--feito", feito)));
+
+            if (recado) { $("acRecado").hidden = false; $("acRecado").querySelector("span").textContent = recado; }
+            if (previa && etapa >= 3) { $("acPrevia").hidden = false; $("acPrevia").href = previa; if (etapa === ETAPAS.length) $("acPrevia").textContent = "🚀 Abrir o site"; }
+            $("acZap").href = "https://wa.me/5567996034205?text=" + encodeURIComponent(`Oi Samuel! Vi o andamento do site${exemplo ? "" : ` (${nome})`} e queria falar com você.`);
+            $("acExemplo").hidden = !exemplo;
+            if (!exemplo) window.addEventListener("load", () => window.ESTATISTICAS?.contar("/evento/acompanhe", "abriu o andamento do site", true));
+        })();
+    </script>
+    <script src="estatisticas.js?v=20261002"></script>
+</body>
+</html>

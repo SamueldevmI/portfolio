@@ -26,7 +26,7 @@
         .gl .eyebrow::before { content: none; }
         .gl-caixa { display: grid; gap: 16px; margin-top: 24px; padding: 22px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); }
         .gl label { display: grid; gap: 6px; color: var(--muted); font-size: .85rem; }
-        .gl input[type=text], .gl input[type=tel], .gl select, .gl textarea { width: 100%; padding: 11px 13px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--text); font: 500 1rem "Space Grotesk", Arial, sans-serif; }
+        .gl input[type=text], .gl input[type=tel], .gl input[type=url], .gl input[type=date], .gl select, .gl textarea { width: 100%; padding: 11px 13px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--text); font: 500 1rem "Space Grotesk", Arial, sans-serif; }
         .gl textarea { min-height: 120px; resize: vertical; line-height: 1.45; }
         .gl input:focus, .gl select:focus, .gl textarea:focus { outline: none; border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(var(--cyan-rgb), .2); }
         .gl-linha { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
@@ -177,6 +177,37 @@
                 <div id="lotePrevia" hidden>
                     <table class="lote-tabela"><thead><tr><th>Negócio</th><th>WhatsApp</th><th>Ramo</th><th></th></tr></thead><tbody id="loteLinhas"></tbody></table>
                     <div class="gl-acoes"><button type="button" class="botao botao-principal" id="loteFila">Pôr todos na fila</button></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="gl-proposta" id="glAndamento" aria-labelledby="andTitulo">
+            <h2 id="andTitulo">📍 Andamento do projeto</h2>
+            <p>Pra cliente com site em produção. O link abre uma linha do tempo com a etapa atual (o <b>acompanhe.html</b>). Mudou de etapa? Gere de novo e mande o link novo.</p>
+            <div class="gl-caixa">
+                <div class="gl-linha">
+                    <label>Negócio<input type="text" id="andNegocio" maxlength="50" value="Eclipse Studio"></label>
+                    <label>Etapa
+                        <select id="andEtapa">
+                            <option value="1">1. A gente conversou</option>
+                            <option value="2" selected>2. Montando a prévia</option>
+                            <option value="3">3. Prévia pronta</option>
+                            <option value="4">4. Terminando o site</option>
+                            <option value="5">5. No ar!</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="gl-linha">
+                    <label>Previsão de entrega (opcional)<input type="date" id="andPrazo"></label>
+                    <label>Link da prévia ou do site (opcional)<input type="url" id="andPrevia" placeholder="https://..."></label>
+                </div>
+                <label>Recado pro cliente (opcional, aparece na página)<input type="text" id="andRecado" maxlength="200" placeholder="Ex.: Só falta você me mandar as fotos dos produtos 📸"></label>
+                <label>WhatsApp do cliente (opcional)<input type="tel" id="andTel" placeholder="(67) 99999-9999"></label>
+                <label>Mensagem (dá pra editar)<textarea id="andMsg"></textarea></label>
+                <div class="gl-acoes">
+                    <button type="button" class="botao botao-principal" id="andWhats">Enviar no WhatsApp</button>
+                    <button type="button" class="botao botao-secundario" id="andCopiar">Copiar mensagem</button>
+                    <a class="botao botao-secundario" id="andVer" href="acompanhe.html" target="_blank" rel="noopener">Ver a página ↗</a>
                 </div>
             </div>
         </section>
@@ -723,6 +754,44 @@
                 try { await navigator.clipboard.writeText($("depoMsg").value); $("depoCopiar").textContent = "Copiada ✓"; }
                 catch (erro) { $("depoMsg").select(); }
                 setTimeout(() => { $("depoCopiar").textContent = "Copiar mensagem"; }, 1800);
+            });
+            montar();
+        })();
+    </script>
+    <script>
+        /* Andamento do projeto: link pro acompanhe.html com o negócio, a etapa e (se tiver) prazo, prévia e recado */
+        (function () {
+            "use strict";
+            const $ = (id) => document.getElementById(id);
+            const base = new URL("acompanhe.html", location.href).href;
+            const FRASE = ["já anotei tudo o que você me contou", "estou montando a prévia do seu site", "a prévia está pronta pra você ver", "estou terminando o site", "seu site está no ar! 🚀"];
+            let editada = false;
+            function link() {
+                const q = new URLSearchParams();
+                if ($("andNegocio").value.trim()) q.set("c", $("andNegocio").value.trim());
+                q.set("etapa", $("andEtapa").value);
+                if ($("andPrazo").value) q.set("prazo", $("andPrazo").value);
+                if (/^https:\/\//.test($("andPrevia").value.trim())) q.set("previa", $("andPrevia").value.trim());
+                if ($("andRecado").value.trim()) q.set("msg", $("andRecado").value.trim());
+                return `${base}?${q}`;
+            }
+            function montar() {
+                $("andVer").href = link();
+                if (editada) return;
+                $("andMsg").value = `Oi! Passando pra atualizar: ${FRASE[Number($("andEtapa").value) - 1]}.\n\nVocê acompanha tudo por aqui, sempre que quiser:\n${link()}`;
+            }
+            $("andMsg").addEventListener("input", () => { editada = true; });
+            ["andNegocio", "andEtapa", "andPrazo", "andPrevia", "andRecado"].forEach((id) => $(id).addEventListener("input", () => { editada = false; montar(); }));
+            $("andEtapa").addEventListener("change", () => { editada = false; montar(); });
+            $("andWhats").addEventListener("click", () => {
+                const tel = $("andTel").value.replace(/\D/g, "");
+                const numero = tel ? (tel.length <= 11 ? "55" + tel : tel) : "";
+                window.open(`https://wa.me/${numero}?text=${encodeURIComponent($("andMsg").value)}`, "_blank", "noopener");
+            });
+            $("andCopiar").addEventListener("click", async () => {
+                try { await navigator.clipboard.writeText($("andMsg").value); $("andCopiar").textContent = "Copiada ✓"; }
+                catch (erro) { $("andMsg").select(); }
+                setTimeout(() => { $("andCopiar").textContent = "Copiar mensagem"; }, 1800);
             });
             montar();
         })();

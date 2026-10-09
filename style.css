@@ -3516,7 +3516,7 @@ a.producao-nome:hover { text-decoration: underline; }
 .jogo-acoes { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
 @keyframes jogo-chega { from { transform: scale(.6); opacity: 0; } }
 @keyframes jogo-vida { to { transform: scaleX(0); } }
-@media (max-width: 560px) { .jogo { height: 500px; box-shadow: 5px 5px 0 var(--cyan); } .jogo-msg { font-size: .85rem; } }
+@media (max-width: 560px) { .jogo { height: 500px; box-shadow: 5px 5px 0 var(--cyan); } .jogo-msg { font-size: .85rem; } .jogo-tela { gap: 10px; padding: 16px 12px; } .jogo-acoes { gap: 6px; } .jogo-acoes .botao-secundario { min-height: 38px; padding: 6px 10px; font-size: .78rem; } }
 @media (prefers-reduced-motion: reduce) { .jogo-msg { animation: none; transition: none; } }
 
 /* Modo madrugada (0h às 5h): vinheta escura parada e uma luz que segue o mouse (só transform) */

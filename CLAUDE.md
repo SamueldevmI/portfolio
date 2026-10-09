@@ -58,7 +58,7 @@ Mais de uma sessão do Claude trabalha neste site ao mesmo tempo. Leia isto ante
   - Só `transform` e `opacity`, nada de filtro ou sobreposição pesada animando o tempo todo.
   - Respeite `prefers-reduced-motion`.
   - **Nada pode mudar a altura da página depois que ela abriu**: no iPhone isso faz a tela pular. Reserve o espaço no HTML ou no CSS.
-- **Ferramentas do Samuel** (escondidas do Google): `prospeccao.html` (links personalizados, mensagens prontas, proposta e depoimento), `painel.html`, `apresentar.html` e `instagram/`.
+- **Ferramentas do Samuel** (escondidas do Google): `prospeccao.html` (links personalizados, mensagens prontas, proposta e depoimento), `painel.html`, `apresentar.html` e `instagram/`. O `acompanhe.html` (andamento do site pro cliente, com `noindex`) tem o link gerado no `prospeccao.html`.
 
 ## Loja da Eclipse Studio (`eclipse-studio/`, cliente: Elizabeth)
 
