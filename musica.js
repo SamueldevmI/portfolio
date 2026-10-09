@@ -758,6 +758,7 @@
         hq() { if (!podeTocarEfeito()) return; const t = agoraMais(); bumbo(t, 0.9, efeitos); barulho(t, "bandpass", 1800, 0.25, 0.12, efeitos); sino(84, t + 0.04, 0.4, 0.5, efeitos); },
         passar() { if (!podeTocarEfeito()) return; varrida(agoraMais(), 2400, 500, 0.25); },
         surpresa() { if (!podeTocarEfeito()) return; const t = agoraMais(); [84, 79, 75, 72, 87].forEach((n, i) => sino(n, t + i * 0.06, 0.6, 0.5, efeitos)); },
+        pagina() { if (!podeTocarEfeito()) return; pagina(); }, // folha de papel virando (modo leitor)
     };
 
     // Efeitos de interação (tocam com ou sem a música, depois que o áudio foi liberado)

@@ -41,4 +41,22 @@ window.DEPOIMENTOS = [
         document.getElementById("casoDepoAutor").textContent = assinatura(daEclipse);
         caso.hidden = false;
     }
+
+    /* Contracapa: os mesmos depoimentos, estilo "cartas dos leitores" de gibi antigo */
+    const ccCartas = document.getElementById("ccCartas");
+    const ccLista = document.getElementById("ccCartasLista");
+    if (ccCartas && ccLista) {
+        lista.slice(0, 3).forEach((d) => {
+            const carta = document.createElement("blockquote");
+            carta.className = "cc-carta";
+            carta.style.setProperty("--giro", (Math.random() * 4 - 2).toFixed(1) + "deg");
+            const texto = document.createElement("p");
+            texto.textContent = `“${d.texto}”`;
+            const rodape = document.createElement("footer");
+            rodape.textContent = assinatura(d);
+            carta.append(texto, rodape);
+            ccLista.appendChild(carta);
+        });
+        ccCartas.hidden = false;
+    }
 })();

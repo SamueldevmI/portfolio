@@ -78,7 +78,7 @@
             document.documentElement.dataset.periodo = hora >= 5 && hora < 12 ? "manha" : hora >= 12 && hora < 18 ? "tarde" : "noite";
             var barra = { azul: "#0e1422", cerrado: "#1e1510", neon: "#0d0b1e", gibi85: "#1b1815" }[tema];
             if (barra) document.querySelector('meta[name="theme-color"]').content = barra;
-            document.write('<link rel="stylesheet" id="folhaTema" href="' + (tema === "vermelho" ? "style.css" : "style-" + tema + ".css") + '?v=20261009leitor">');
+            document.write('<link rel="stylesheet" id="folhaTema" href="' + (tema === "vermelho" ? "style.css" : "style-" + tema + ".css") + '?v=20261009leitor2">');
         })();
         /* Idioma: detectado cedo (antes do resto da página rodar) só pra avisar efeitos como a
            digitação do texto do hero, que senão sobrescreveriam a tradução feita pelo idioma.js. */
@@ -92,7 +92,7 @@
             document.documentElement.dataset.idioma = idioma;
         })();
     </script>
-    <noscript><link rel="stylesheet" href="style.css?v=20261009leitor"></noscript>
+    <noscript><link rel="stylesheet" href="style.css?v=20261009leitor2"></noscript>
     <title id="tituloPagina">Samuel Mickael | Desenvolvedor Web &amp; Mobile</title>
     <script type="application/ld+json">
     {
@@ -878,6 +878,11 @@
             <div class="cc-selo" aria-label="Selo de brincadeira: aprovado pelo Comitê de Clientes Felizes"><small>Aprovado pelo</small><b>CCF</b><small>Comitê de Clientes Felizes</small></div>
             <div class="cc-codigo" aria-hidden="true"><svg viewBox="0 0 64 24" aria-hidden="true"><rect x="2" y="1" width="1.5" height="22"/><rect x="4.5" y="1" width="2" height="22"/><rect x="7.5" y="1" width="1" height="22"/><rect x="9.5" y="1" width="1.5" height="22"/><rect x="12.0" y="1" width="2.5" height="22"/><rect x="15.5" y="1" width="1" height="22"/><rect x="17.5" y="1" width="2" height="22"/><rect x="21.5" y="1" width="1" height="22"/><rect x="23.5" y="1" width="1" height="22"/><rect x="26.5" y="1" width="1" height="22"/><rect x="28.5" y="1" width="1" height="22"/><rect x="30.5" y="1" width="2.5" height="22"/><rect x="35.0" y="1" width="1" height="22"/><rect x="37.0" y="1" width="1" height="22"/><rect x="39.0" y="1" width="1.5" height="22"/><rect x="42.5" y="1" width="1" height="22"/><rect x="44.5" y="1" width="2.5" height="22"/><rect x="48.5" y="1" width="2.5" height="22"/><rect x="52.0" y="1" width="1" height="22"/><rect x="54.0" y="1" width="1.5" height="22"/><rect x="56.5" y="1" width="2.5" height="22"/></svg><small>a partir de R$&nbsp;250</small></div>
         </div>
+        <!-- Cartas dos leitores: reaproveita window.DEPOIMENTOS (depoimentos.js); some sozinha se não tiver nenhum -->
+        <div class="cc-cartas" id="ccCartas" hidden>
+            <p class="cc-cartas-titulo">Cartas dos leitores</p>
+            <div class="cc-cartas-lista" id="ccCartasLista"></div>
+        </div>
         <p class="cc-rodape">Samuel Mickael Comics © <span class="cc-ano">2026</span> · Edição #1 · Impresso em Campo Grande - MS</p>
     </section>
 
@@ -950,21 +955,21 @@
     </div>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-    <script src="estatisticas.js?v=20261009leitor" defer></script>
+    <script src="estatisticas.js?v=20261009leitor2" defer></script>
     <script src="servicos.js?v=20261002" defer></script>
-    <script src="previa-celular.js?v=20261009leitor" defer></script>
-    <script src="filme-celular.js?v=20261009leitor" defer></script>
+    <script src="previa-celular.js?v=20261009leitor2" defer></script>
+    <script src="filme-celular.js?v=20261009leitor2" defer></script>
     <script src="depoimentos.js?v=20261007" defer></script>
     <script src="producao.js?v=20261009" defer></script>
-    <script src="script.js?v=20261009leitor" defer></script>
-    <script src="antes-depois.js?v=20261009leitor" defer></script>
+    <script src="script.js?v=20261009leitor2" defer></script>
+    <script src="antes-depois.js?v=20261009leitor2" defer></script>
     <!-- espanhol sob demanda: o botão ES é leve e o idioma.js só baixa quando alguém pede (os scripts acima se redesenham no "idiomaMudou") -->
-    <script src="idioma-leve.js?v=20261009leitor" defer></script>
+    <script src="idioma-leve.js?v=20261009leitor2" defer></script>
 <script>
     /* Scripts que a página não precisa pra aparecer: o mobile.js só baixa em tela de toque (no computador
        ele não faz nada) e a música só depois que a página terminou de carregar. */
     (function () {
-        var versao = "?v=20261009leitor";
+        var versao = "?v=20261009leitor2";
         function carregar(arquivo) { var s = document.createElement("script"); s.src = arquivo + versao; s.async = false; document.body.appendChild(s); }
         var toque = matchMedia("(pointer: coarse)").matches;
         // o pedido de "instalar app" pode chegar antes do mobile.js: fica guardado pra ele usar
