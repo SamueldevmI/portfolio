@@ -3494,6 +3494,35 @@ a.producao-nome:hover { text-decoration: underline; }
 .vitrine-mic.ouvindo { background: var(--cyan); box-shadow: 0 0 0 6px rgba(var(--cyan-rgb), .25); }
 .vitrine-capa { margin-top: 8px; padding: 6px 4px; border: 0; background: none; color: var(--acento-texto); font: 600 .82rem "Space Grotesk", sans-serif; text-decoration: underline; text-underline-offset: 3px; cursor: var(--cursor-mao); }
 
+/* "Você no Google": simulação de busca. Linhas sem quebra (o nome digitado nunca muda a altura) */
+.busca { width: 100%; max-width: 760px; margin: 44px auto 0; padding: 22px; border: 3px solid var(--text); border-radius: 18px; background: var(--surface); box-shadow: 8px 8px 0 var(--cyan); text-align: center; }
+.busca-selo { margin: 0; color: var(--cyan); font: 500 .75rem "DM Mono", monospace; letter-spacing: .16em; }
+.busca-titulo { margin: 6px 0 14px; font: 400 clamp(1.6rem, 5vw, 2.2rem)/1.05 Bangers, "Space Grotesk", sans-serif; letter-spacing: .03em; }
+.busca-campo { display: flex; align-items: center; gap: 10px; max-width: 460px; margin: 0 auto 16px; padding: 10px 18px; border: 2px solid var(--line); border-radius: 99px; background: #ffffff; color: #202124; box-shadow: 0 2px 8px rgba(0, 0, 0, .25); } /* manter-cor */
+.busca-campo:focus-within { border-color: var(--cyan); }
+.busca-campo input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; color: #202124; font: 500 1rem "Space Grotesk", Arial, sans-serif; } /* manter-cor */
+.busca-lados { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; text-align: left; }
+.busca-lado { display: grid; align-content: start; gap: 8px; min-width: 0; }
+.busca-rotulo { margin: 0; font: 600 .78rem "DM Mono", monospace; letter-spacing: .1em; }
+.busca-sem .busca-rotulo { color: var(--muted); }
+.busca-com .busca-rotulo { color: var(--cyan); }
+.busca-res { display: grid; gap: 3px; min-width: 0; padding: 12px 14px; border-radius: 12px; background: #ffffff; color: #4d5156; font: 400 .82rem/1.35 Arial, "Space Grotesk", sans-serif; } /* manter-cor */
+.busca-res > *, .busca-atalhos { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.busca-res b { color: #202124; font: 400 1.05rem/1.3 Arial, sans-serif; } /* manter-cor */
+.busca-res .busca-link { color: #1a0dab; } /* manter-cor */
+.busca-url { color: #202124; font-size: .78rem; } /* manter-cor */
+.busca-cinza { color: #70757a; font-style: italic; } /* manter-cor */
+.busca-outro { opacity: .92; }
+.busca-sem .busca-res:first-of-type { filter: grayscale(1); opacity: .8; }
+.busca-destaque { padding: 14px; outline: 3px solid var(--cyan); }
+.busca-atalhos { display: flex; gap: 6px; margin-top: 6px; -webkit-mask-image: linear-gradient(90deg, #000000 82%, transparent); mask-image: linear-gradient(90deg, #000000 82%, transparent); }
+.busca-res, .busca-res *, .busca-campo input { text-shadow: none !important; -webkit-text-stroke: 0 !important; }
+.busca-atalhos span { flex: none; padding: 4px 9px; border: 1px solid #dadce0; border-radius: 99px; color: #1a0dab; font-size: .74rem; } /* manter-cor */
+.busca-moral { margin: 2px 0 0; font-weight: 600; font-size: .9rem; }
+.busca-sem .busca-moral { color: var(--muted); }
+.busca-aviso { max-width: 58ch; margin: 14px auto 12px; color: var(--muted); font-size: .8rem; }
+@media (max-width: 620px) { .busca { padding: 18px 14px; box-shadow: 5px 5px 0 var(--cyan); } .busca-lados { grid-template-columns: 1fr; } }
+
 /* Mini-jogo "Atende aí!": altura fixa (reservada antes do script chegar) */
 .jogo { width: 100%; max-width: 760px; height: 460px; margin: 44px auto 0; border: 3px solid var(--text); border-radius: 18px; background: radial-gradient(70% 60% at 50% 0%, rgba(var(--cyan-rgb), .14), transparent 70%), var(--surface); box-shadow: 8px 8px 0 var(--cyan); overflow: hidden; }
 .jogo-tela { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; height: 100%; padding: 22px; text-align: center; }
@@ -3502,6 +3531,8 @@ a.producao-nome:hover { text-decoration: underline; }
 .jogo-texto { max-width: 46ch; margin: 0; color: var(--muted); }
 .jogo-recorde { margin: 0; color: var(--muted); font: 500 .8rem "DM Mono", monospace; }
 .jogo-desafio { margin: 0; padding: 6px 12px; border: 2px dashed var(--cyan); border-radius: 10px; font: 600 .9rem "DM Mono", monospace; }
+.jogo-apelido { width: min(260px, 100%); padding: 8px 12px; border: 2px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--text); font: 500 .9rem "Space Grotesk", sans-serif; text-align: center; }
+.jogo-apelido:focus { outline: none; border-color: var(--cyan); }
 .jogo-placar { display: flex; justify-content: space-between; align-self: stretch; font: 600 1rem "DM Mono", monospace; }
 .jogo-tempo { color: var(--cyan); font-weight: 700; }
 .jogo-area { position: relative; flex: 1; align-self: stretch; }

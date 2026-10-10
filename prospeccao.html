@@ -316,7 +316,7 @@
         </section>
     </main>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
-    <script src="estatisticas.js?v=20261002"></script>
+    <script src="estatisticas.js?v=20261010"></script>
     <script src="servicos.js?v=20261002"></script>
     <script src="previa-celular.js?v=20261003"></script>
     <script src="imagem-previa.js?v=20261003"></script>
@@ -430,8 +430,10 @@
                 $("glLista").replaceChildren(...visiveis.map(cartao));
                 // aviso de configuração do GoatCounter
                 const aviso = $("crmAviso");
-                aviso.hidden = Boolean(est && est.configurado);
-                if (!aviso.hidden) aviso.innerHTML = "🔌 <b>Pra ver quem abriu o link</b> (abriu, viu a prévia, tocou no WhatsApp): crie a conta grátis em goatcounter.com, marque <b>“Allow adding visitor counts on your website”</b> nas configurações e coloque o código da conta no arquivo <b>estatisticas.js</b>.";
+                const bloqueado = Boolean(est && est.estado && est.estado.bloqueado);
+                aviso.hidden = Boolean(est && est.configurado) && !bloqueado;
+                if (bloqueado) aviso.innerHTML = "🔌 <b>Falta 1 clique pra ver quem abriu o link:</b> entre em <b>samueldevmi.goatcounter.com</b> → <b>Settings</b>, marque <b>“Allow adding visitor counts on your website”</b> e salve. Depois é só recarregar esta página.";
+                else if (!aviso.hidden) aviso.innerHTML = "🔌 <b>Pra ver quem abriu o link</b> (abriu, viu a prévia, tocou no WhatsApp): crie a conta grátis em goatcounter.com, marque <b>“Allow adding visitor counts on your website”</b> nas configurações e coloque o código da conta no arquivo <b>estatisticas.js</b>.";
             }
 
             function cartao(c) {
@@ -448,7 +450,7 @@
                 const sn = sinais[c.id];
                 if (est && est.configurado) {
                     if (!sn) s.innerHTML = "<span>checando se abriu…</span>";
-                    else if (sn.abriu === null) s.innerHTML = "<span>não deu pra checar agora</span>";
+                    else if (sn.abriu === null) s.innerHTML = est.estado && est.estado.bloqueado ? "<span>falta ligar o contador no GoatCounter (veja o aviso abaixo)</span>" : "<span>não deu pra checar agora</span>";
                     else {
                         const add = (t, q) => { const e = document.createElement("span"); e.textContent = t; if (q) e.className = "quente"; s.append(e); };
                         add(sn.abriu ? `👀 abriu ${sn.abriu}x` : "ainda não abriu", sn.abriu > 0);
@@ -612,6 +614,7 @@
             async function checarSinais() {
                 if (!est || !est.configurado) return;
                 const lista = ler().filter((c) => !ENCERRADOS.includes(c.status));
+                if (!lista.length) { await est.quantos("/"); desenharHistorico(); return; } // só pra saber se o contador está liberado
                 await Promise.all(lista.map(async (c) => {
                     const sl = slugDoLink(c.link);
                     const [abriu, previa, whats, proposta, aceitou, ajustar] = await Promise.all(["", "/previa", "/whatsapp", "/proposta", "/aceitou", "/ajustar"].map((f) => est.quantos(`/link/${sl}${f}`)));

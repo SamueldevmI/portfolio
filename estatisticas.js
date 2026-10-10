@@ -35,11 +35,14 @@ window.ESTATISTICAS = (function () {
 
     // Quantas vezes um caminho foi contado (precisa do "Allow adding visitor counts" ligado no GoatCounter).
     // null = não deu pra saber (desligado, sem rede); 0 = ninguém ainda.
+    // Se o GoatCounter responder 403, é a opção do contador que está desmarcada: fica em "bloqueado".
+    const estado = { bloqueado: false };
     async function quantos(caminho) {
         if (!CODIGO) return null;
         try {
             const resposta = await fetch(`https://${CODIGO}.goatcounter.com/counter/${encodeURIComponent(caminho)}.json`);
             if (resposta.status === 404) return 0;
+            if (resposta.status === 403) { estado.bloqueado = true; return null; }
             if (!resposta.ok) return null;
             const dados = await resposta.json();
             return Number(String(dados.count).replace(/\D/g, "")) || 0;
@@ -48,5 +51,5 @@ window.ESTATISTICAS = (function () {
         }
     }
 
-    return { codigo: CODIGO, configurado: Boolean(CODIGO), ligado, slug, contar, quantos };
+    return { codigo: CODIGO, configurado: Boolean(CODIGO), ligado, slug, contar, quantos, estado };
 })();

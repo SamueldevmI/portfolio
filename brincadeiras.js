@@ -154,6 +154,42 @@
     window.gerarCapaGibi = gerarCapa;
     document.addEventListener("click", (e) => { if (e.target.closest("[data-capa-gibi]")) { e.preventDefault(); gerarCapa(); } });
 
+    /* ---------- 3b. "Você no Google": a busca simulada com o nome e o ramo da pessoa ---------- */
+    (function vcGoogle() {
+        const caixa = document.getElementById("vcGoogle");
+        if (!caixa) return;
+        const campo = caixa.querySelector("#buscaNome");
+        // o que o atalho e o título prometem, por ramo (pizzaria é o padrão do site)
+        const RAMO = {
+            pizzaria: ["📋 Cardápio", "peça pelo WhatsApp"],
+            barbearia: ["✂️ Agendar horário", "agende seu horário"],
+            "loja de roupa": ["👗 Catálogo", "veja as novidades"],
+            "salão": ["💅 Serviços", "agende pelo WhatsApp"],
+            academia: ["🏋️ Planos", "aula experimental"],
+            "clínica": ["🩺 Agendar consulta", "agende sua consulta"],
+        };
+        const slug = (t) => (window.ESTATISTICAS ? window.ESTATISTICAS.slug(t) : String(t).toLowerCase().replace(/[^a-z0-9]+/g, "-")).replace(/-/g, "");
+        let contou = false;
+        function montar() {
+            const nome = campo.value.replace(/\s+/g, " ").trim().slice(0, 40) || tr("Seu Negócio");
+            const [atalho, acao] = RAMO[ler("portfolio-tipo-negocio")] || RAMO.pizzaria;
+            caixa.querySelectorAll(".busca-nome").forEach((e) => { e.textContent = nome; });
+            caixa.querySelectorAll(".busca-acao").forEach((e) => { e.textContent = tr(acao); });
+            caixa.querySelector(".busca-a1").textContent = tr(atalho);
+            caixa.querySelector(".busca-dominio").textContent = campo.value.trim() ? slug(nome).slice(0, 24) || "seunegocio" : "seunegocio";
+        }
+        if (!campo.value) campo.value = nomeDoNegocio();
+        campo.addEventListener("input", () => {
+            montar();
+            gravar("portfolio-nome-negocio", campo.value.trim().slice(0, 40)); // a capa de gibi e o celular do topo usam o mesmo nome
+            if (!contou && campo.value.trim().length > 2) { contou = true; conta("/evento/voce-no-google", "testou o Você no Google"); }
+        });
+        // o ramo pode ter sido trocado lá em cima: atualiza quando a caixa aparece na tela
+        if ("IntersectionObserver" in window) new IntersectionObserver((es) => { if (es.some((e) => e.isIntersecting)) montar(); }).observe(caixa);
+        document.addEventListener("idiomaMudou", montar);
+        montar();
+    })();
+
     /* ---------- 4. joguinho "Atende aí!" ---------- */
     (function jogo() {
         const caixa = document.getElementById("jogoAtende");
@@ -172,14 +208,31 @@
         const SPAM = ["Bom dia 🌻 repassa pra 10 grupos", "Oi sumido(a) 👀", "🔥 PROMOÇÃO DE CHIP 🔥", "vc viu isso?? 😱 link", "Corrente da sorte 🍀 não quebre", "Parabéns! Você ganhou um iPhone 📱"];
         const CHAVE = "jogo-atende-recorde";
         let rodando = false, fim = 0, proximo = 0, total = 0, atendidos = 0, perdidos = 0, vagas = [], relogio = 0;
-        // veio pelo link de desafio de um amigo (?desafio=18): mostra o placar a bater
-        const desafio = Math.min(60, Math.max(0, parseInt(new URLSearchParams(location.search).get("desafio"), 10) || 0));
+        /* Ranking entre amigos: vai inteiro no link do desafio (?r=Ana:24,João:19), sem servidor.
+           Cada um que joga entra na lista e manda o link adiante. ?desafio=18 é o formato antigo (só o placar). */
+        const CHAVE_APELIDO = "jogo-atende-apelido", MAX_RANKING = 8;
+        const esc = (t) => String(t).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+        const limparNome = (t) => String(t || "").replace(/[:,|<>&"'`]/g, "").replace(/\s+/g, " ").trim().slice(0, 14);
+        const pontos = (v) => Math.min(60, Math.max(0, parseInt(v, 10) || 0));
+        const mesmo = (a, b) => a.toLowerCase() === b.toLowerCase();
+        let ranking = (function () {
+            const q = new URLSearchParams(location.search);
+            const lista = String(q.get("r") || "").split(",").map((par) => { const [n, p] = par.split(":"); return { n: limparNome(n), p: pontos(p) }; }).filter((x) => x.n);
+            if (!lista.length && pontos(q.get("desafio"))) lista.push({ n: "", p: pontos(q.get("desafio")) }); // link antigo: amigo sem nome
+            return lista.sort((a, b) => b.p - a.p).slice(0, MAX_RANKING);
+        })();
+        const nomeNaLista = (x) => (x.n ? esc(x.n) : tr("Seu amigo"));
+        const MEDALHA = ["🥇", "🥈", "🥉"];
 
         function inicio() {
             const recorde = ler(CHAVE);
+            const topo = ranking.length === 1
+                ? `<p class="jogo-desafio">🎯 ${ranking[0].n ? esc(ranking[0].n) + " " + tr("atendeu") : tr("Seu amigo atendeu")} <b>${ranking[0].p}</b>. ${tr("Bate isso!")}</p>`
+                : ranking.length ? `<p class="jogo-desafio">${ranking.slice(0, 3).map((x, i) => `${MEDALHA[i]} ${nomeNaLista(x)} <b>${x.p}</b>`).join(" · ")}${ranking.length > 3 ? " …" : ""}<br>${tr("Bate isso!")}</p>` : "";
             tela.innerHTML = `<p class="jogo-selo">🎮 ${tr("MINI-JOGO")}</p><h3 class="jogo-titulo">${tr("Atende aí!")}</h3>
-                ${desafio ? `<p class="jogo-desafio">🎯 ${tr("Seu amigo atendeu")} <b>${desafio}</b>. ${tr("Bate isso!")}</p>` : ""}
+                ${topo}
                 <p class="jogo-texto">${tr("Toque nas mensagens dos clientes antes que eles desistam. Cuidado com corrente e spam: tocar neles tira ponto. Você tem 20 segundos.")}</p>
+                <input class="jogo-apelido" type="text" maxlength="14" autocomplete="nickname" aria-label="${tr("Seu apelido (pro ranking)")}" placeholder="${tr("Seu apelido (pro ranking)")}" value="${esc(ler(CHAVE_APELIDO))}">
                 <button type="button" class="botao botao-principal jogo-comecar">${tr("Começar")} ▶</button>
                 ${recorde ? `<p class="jogo-recorde">🏆 ${tr("Seu recorde:")} ${recorde}</p>` : ""}`;
         }
@@ -265,10 +318,14 @@
             const frase = perdidos === 0
                 ? tr("Atendeu todo mundo! Agora imagina fazer isso o dia inteiro, todo dia… O site faz.")
                 : `${perdidos} ${perdidos === 1 ? tr("cliente desistiu e foi pro concorrente.") : tr("clientes desistiram e foram pro concorrente.")} ${tr("O site teria atendido os")} ${total}. ${tr("Enquanto você dormia.")}`;
-            const placarDesafio = !desafio ? "" : atendidos > desafio
-                ? `<p class="jogo-desafio">🥇 ${tr("Ganhou do seu amigo!")} (${atendidos} × ${desafio})</p>`
-                : atendidos === desafio ? `<p class="jogo-desafio">🤝 ${tr("Empatou com seu amigo!")} (${atendidos} × ${desafio})</p>`
-                : `<p class="jogo-desafio">😅 ${tr("Seu amigo ainda ganha")} (${atendidos} × ${desafio})</p>`;
+            // entra (ou sobe) no ranking com o apelido; jogando de novo vale a melhor partida
+            const eu = limparNome(ler(CHAVE_APELIDO)) || tr("Você");
+            const tinhaAmigos = ranking.some((x) => !mesmo(x.n, eu));
+            const antes = ranking.find((x) => mesmo(x.n, eu));
+            ranking = ranking.filter((x) => !mesmo(x.n, eu)).concat({ n: eu, p: Math.max(atendidos, antes ? antes.p : 0) })
+                .sort((a, b) => b.p - a.p || mesmo(b.n, eu) - mesmo(a.n, eu)).slice(0, MAX_RANKING);
+            const pos = ranking.findIndex((x) => mesmo(x.n, eu)) + 1;
+            const placarDesafio = !tinhaAmigos ? "" : `<p class="jogo-desafio">${pos === 1 ? "🥇 " + tr("Você lidera o ranking!") : pos ? `${MEDALHA[pos - 1] || "🎯"} ${pos}º ${tr("lugar")}` : "😅 " + tr("Ficou fora do top 8")}<br>${ranking.slice(0, 3).map((x, i) => `${i + 1}. ${nomeNaLista(x)} ${x.p}`).join(" · ")}</p>`;
             tela.innerHTML = `<p class="jogo-selo">${novo ? "🏆 " + tr("NOVO RECORDE!") : "⏱️ " + tr("ACABOU O TEMPO")}</p>
                 <p class="jogo-resultado"><b>${atendidos}</b> ${tr("de")} ${total}</p>${placarDesafio}
                 <p class="jogo-texto">${frase}</p>
@@ -282,7 +339,14 @@
         }
         async function desafiar() {
             const texto = `${tr("Atendi")} ${tela.dataset.atendidos} ${tr("de")} ${tela.dataset.total} ${tr("clientes no “Atende aí!” do Samuel. Duvido você bater 😏")}`;
-            const url = `${location.origin}${location.pathname}?desafio=${Number(tela.dataset.atendidos) || 0}#jogoAtende`;
+            if (!limparNome(ler(CHAVE_APELIDO))) {
+                // sem apelido, o amigo veria "Você" no ranking: pergunta uma vez
+                const nome = limparNome(window.prompt(tr("Seu apelido pro ranking:")) || "") || tr("Anônimo");
+                gravar(CHAVE_APELIDO, nome);
+                ranking.forEach((x) => { if (mesmo(x.n, tr("Você"))) x.n = nome; });
+            }
+            const q = new URLSearchParams({ r: ranking.map((x) => `${x.n || tr("Amigo")}:${x.p}`).join(",") });
+            const url = `${location.origin}${location.pathname}?${q}#jogoAtende`;
             try { if (navigator.share) { await navigator.share({ text: texto, url }); return; } } catch (e) { if (e.name === "AbortError") return; }
             try { await navigator.clipboard.writeText(`${texto} ${url}`); avisar(tr("Desafio copiado! Cola no WhatsApp de alguém 😈")); } catch (e) { /* sem área de transferência */ }
         }
@@ -352,6 +416,8 @@
             avisar(tr("📸 Imagem salva! Posta no story e me marca 😎"));
         }
         window.desenharStoryAtende = desenharStory; // usado no teste
+        caixa.addEventListener("input", (e) => { if (e.target.matches(".jogo-apelido")) gravar(CHAVE_APELIDO, limparNome(e.target.value)); });
+        caixa.addEventListener("keydown", (e) => { if (e.key === "Enter" && e.target.matches(".jogo-apelido")) comecar(); });
         caixa.addEventListener("click", (e) => {
             const msg = e.target.closest(".jogo-msg"); if (msg) { atender(msg); return; }
             if (e.target.closest(".jogo-comecar, .jogo-de-novo")) comecar();
